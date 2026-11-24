@@ -1,0 +1,6 @@
+.release/
+*.zip
+preview/out/
+sim-session/
+__pycache__/
+.env
