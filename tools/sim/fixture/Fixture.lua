@@ -133,8 +133,16 @@ if RLFIX_CASE == "look" then
 	local stand = { ["WoWScrnShot_112026_211430.tga"] = FIX .. "look_nette.tga", ["WoWScrnShot_112026_174502.tga"] = FIX .. "look_beouf.tga" }
 	local idx = getmetatable(UIParent:CreateTexture()).__index
 	local set = idx.SetTexture
+	local fileID = idx.GetTextureFileID
 	idx.SetTexture = function(self, file, ...)
 		local name = type(file) == "string" and file:match("^Screenshots\\(WoWScrnShot_[%d_]+%.tga)$")
+		self.rlStand = name and stand[name] and true or nil
 		return set(self, (name and stand[name]) or file, ...)
+	end
+	-- The sim gives a loose .tga no file ID; in game the screenshot has one (-18422 in the ILL-1276 probe), and
+	-- SaveLook draws a look only when it does. Only the two stand-ins get one here.
+	idx.GetTextureFileID = function(self, ...)
+		if self.rlStand then return -18422 end
+		return fileID and fileID(self, ...)
 	end
 end

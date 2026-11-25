@@ -85,14 +85,21 @@ local function stage()
 	return s
 end
 
--- Portrait framing on the stage model: idle, weapons off, head and shoulders. SetUnit("player") only once per
--- capture: calling it again reloads the model (weapons back on, half drawn).
-local function pose(m)
+-- Portrait framing on the stage model: standing still, weapons off, head and shoulders. SetUnit("player") only once
+-- per capture: calling it again reloads the model (weapons back on, half drawn).
+-- The stand animation frozen on its first frame (CharacterModelBase:FreezeAnimation(anim, variation, frame), as
+-- Blizzard's TransmogSetBaseModelMixin does with 0, 0, 0): a playing stand runs its idle variations, and Andy's first
+-- look caught one mid-shrug with her eyes shut. Without FreezeAnimation the stand animation starts over here and the
+-- shot is taken one frame later (L.Shoot), before an idle variation can begin.
+function L.Pose(m)
 	for _, slot in ipairs(L.WEAPON_SLOTS) do U.Call(m.UndressSlot, m, slot) end
+	U.Call(m.SetSheathed, m, true, true)   -- DressUpModel: sheathed and hidden, for anything UndressSlot left
 	U.Call(m.SetPortraitZoom, m, L.ZOOM)
 	U.Call(m.SetRotation, m, L.ROTATION)
 	U.Call(m.SetAnimation, m, 0)
+	if type(m.FreezeAnimation) == "function" then pcall(m.FreezeAnimation, m, 0, 0, 0) end
 end
+local pose = L.Pose
 
 local function getFormat() return C_CVar and U.Call(C_CVar.GetCVar, "screenshotFormat") end
 
@@ -267,22 +274,23 @@ function L.Menu(owner)
 	end)
 end
 
--- The card's controls (Detail/Card.lua): "Save my look", "Clear look" and the note, for the character you are on.
+-- The card's controls (Detail/Card.lua): "Save my look" and "Clear look" side by side, the note above them, for the
+-- character you are on. In the bubble's column, under it: the figure column stays clear for the live model. The card
+-- anchors the box by its bottom left; the box grows up as the note appears.
+L.CONTROLS_W, L.BUTTON_H = 210, 22
 function L.CardControls(s)
 	local box = CreateFrame("Frame", nil, s)
-	box:SetSize(180, 80)
-	box:SetPoint("TOPRIGHT", -12, -12)
-	box.save = St.MakeButton(box, 124, "Save my look", false)
-	box.save:SetPoint("TOPRIGHT")
+	box:SetSize(L.CONTROLS_W, L.BUTTON_H)
+	box.save = St.MakeButton(box, 124, "Save my look", false, L.BUTTON_H)
+	box.save:SetPoint("BOTTOMLEFT")
 	box.save:SetScript("OnClick", function() L.Save() end)
-	box.clear = St.MakeButton(box, 90, "Clear look", false, 20)
-	box.clear:SetPoint("TOPRIGHT", box.save, "BOTTOMRIGHT", 0, -6)
+	box.clear = St.MakeButton(box, 80, "Clear look", false, L.BUTTON_H)
+	box.clear:SetPoint("LEFT", box.save, "RIGHT", 6, 0)
 	box.clear:SetScript("OnClick", function() L.Clear(ns.MyKey()) end)
 	box.note = ns.Widgets.Text(box, "small", "OVERLAY", 12)
-	box.note:SetWidth(170)
+	box.note:SetWidth(L.CONTROLS_W)
 	box.note:SetWordWrap(true)
-	box.note:SetJustifyH("RIGHT")
-	box.note:SetPoint("TOPRIGHT", box.clear, "BOTTOMRIGHT", 0, -6)
+	box.note:SetPoint("BOTTOMLEFT", box.save, "TOPLEFT", 0, 6)
 	St.Color(box.note, St.CREAM)
 	return box
 end
@@ -292,8 +300,8 @@ function L.UpdateCardControls(box, key, isMe)
 	local c = ns.DB().chars[key]
 	local has = isMe and c and c.look ~= nil
 	box.clear:SetShown(has and true or false)
-	box.note:ClearAllPoints()
-	box.note:SetPoint("TOPRIGHT", has and box.clear or box.save, "BOTTOMRIGHT", 0, -6)
-	box.note:SetText((isMe and L.fresh[key]) and L.SAVED_NOTE or "")
-	box.note:SetShown(isMe and L.fresh[key] and true or false)
+	local fresh = isMe and L.fresh[key] and true or false
+	box.note:SetText(fresh and L.SAVED_NOTE or "")
+	box.note:SetShown(fresh)
+	box:SetHeight(L.BUTTON_H + (fresh and (box.note:GetStringHeight() + 6) or 0))
 end

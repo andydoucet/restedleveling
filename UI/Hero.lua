@@ -126,6 +126,7 @@ function Hero.Create(parent, w, h)
 	f.cta:SetPoint("LEFT", 22, 0)
 	f.open = St.MakeButton(f.action, 120, "View card", true)
 	f.open:SetPoint("RIGHT", -8, 0)
+	f.ctaW = w - 6 - 22 - 120 - 8 - 12   -- from its inset to 12 px short of the button
 	f.open:SetScript("OnClick", function() if f.row and ns.ShowDetail then ns.ShowDetail(f.row.key) end end)
 
 	-- First run: a dimmed portrait and a line in the character's own voice.
@@ -174,6 +175,25 @@ local function say(f, line)
 	f.say:SetWidth(f.sayText:GetStringWidth() + 20)
 end
 
+-- The next step, whole: one line at the normal size, else a smaller one, else two balanced lines (word breaks only),
+-- never "..." and never under the button. A wider font (ElvUI's) clipped it in game: "Then pl" at the button.
+Hero.ACTION_SIZES = { 16, 14, 13 }
+function Hero.FitAction(f, line)
+	local cta, maxW = f.cta, f.ctaW
+	cta:SetHeight(0)
+	for i, size in ipairs(Hero.ACTION_SIZES) do
+		St.Font(cta, "name", size)
+		cta:SetWordWrap(false)
+		cta:SetWidth(maxW)
+		cta:SetText(line)
+		if cta:GetUnboundedStringWidth() <= maxW then return size, 1 end
+		if i == #Hero.ACTION_SIZES then break end
+	end
+	cta:SetWordWrap(true)
+	Wg.Balance(cta, maxW)   -- two lines at the smallest size; the bar is ACTION_H high
+	return Hero.ACTION_SIZES[#Hero.ACTION_SIZES], 2
+end
+
 -- row: the top roster row (nil when there is nobody to suggest); rows: the full order (for "ahead of");
 -- me: the logged-in character record. empty: nobody has rest worth switching to, so `row` is the one that fills
 -- first and the card says so instead of "play next".
@@ -220,7 +240,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 	-- The next step. Any "first, ..." is about the character you are on, never the one to play next.
 	local name = St.ClassText(c.class, c.full or "them")
 	local meName = me and St.ClassText(me.class, me.full or "this character") or nil
-	f.cta:SetText(Wd.Action(name, meName, ns.Snap.RestingNow(), empty))
+	Hero.FitAction(f, Wd.Action(name, meName, ns.Snap.RestingNow(), empty))
 	f.open:SetLabel("View details")   -- the name is right above it
 	local tag = St.AccountTag(c)
 	f.acct:SetText(tag and (c.src == "sync" and (tag .. " · synced") or tag) or "")

@@ -105,34 +105,41 @@ function Wg.Portrait(parent, size)
 	return f
 end
 
--- isMe: the logged-in character, whose real portrait the game can draw (face in the disc, class crest at 4 o'clock).
--- Anyone else: the game cannot draw their real look offline, so the disc shows their class crest and the small
--- badge their race emblem. Honest, and clearly not a face that might be wrong (no stock race portrait). If they
--- saved their look ("Save my look"), that face covers the crest; the race emblem stays as the badge.
+-- Two looks, one rule (Andy, ILL-1279): a face in the disc gets the class crest as its badge; no face, the class crest
+-- is the picture and the badge is the race emblem.
+--   isMe: the logged-in character's live portrait (SetPortraitTexture), class crest badge.
+--   a saved look ("Save my look"): that face, cropped from its screenshot, class crest badge, like the live one.
+--   neither: the game cannot draw their real look offline, so the disc shows their class crest and the badge their
+--   race emblem. Honest, and clearly not a face that might be wrong (no stock race portrait).
+-- Returns "live", "look" or "crest".
 function Wg.SetPortrait(f, c, isMe, state)
 	f.ring:SetShown(not St.HostFrame())   -- under a host skin: no bronze ring, the thin state line only
 	St.Paint(f.stateRing, "ring_" .. (St.STATE[state or ""] and state or "max"))
 	local crest = c.class and ("classicon-" .. c.class:lower()) or nil
-	local badge
+	local dim = state == "max" or state == "done"
 	f.live = isMe and true or false
 	if isMe then
 		SetPortraitTexture(f.tex, "player")
-		badge = crest
+	elseif crest then
+		f.tex:SetAtlas(crest)   -- under a saved look too: where its file does not load, the crest shows through
 	else
-		if crest then f.tex:SetAtlas(crest) else St.Paint(f.tex, "disc_dark") end
-		badge = Wg.RaceAtlas(c)
+		St.Paint(f.tex, "disc_dark")
 	end
+	f.tex:SetDesaturated(dim)
+	local saved = ns.Look.Show(f, not isMe and c or nil, dim)
+	local face = isMe or saved
+	local badge = face and crest or Wg.RaceAtlas(c)
 	if badge then f.crest:SetAtlas(badge) end
 	-- The race emblem partly washed out, so it names the race without claiming a skin or hair colour, and lifted by
-	-- its additive copy so it reads as a face on the dark disc, not a grey blob. The class crest (isMe) as drawn.
-	local lift = badge ~= nil and not isMe
-	f.crest:SetDesaturation(isMe and 0 or 0.5)
+	-- its additive copy so it reads as a face on the dark disc, not a grey blob. The class crest as drawn.
+	local lift = badge ~= nil and not face
+	f.crest:SetDesaturation(face and 0 or 0.5)
 	if lift then f.crestLift:SetAtlas(badge) f.crestLift:SetDesaturation(0.5) end
 	f.crestLift:SetShown(lift)
 	f.crest:SetShown(badge ~= nil)
 	f.crestRing:SetShown(badge ~= nil)
-	f.tex:SetDesaturated(state == "max" or state == "done")
-	ns.Look.Show(f, not isMe and c or nil, state == "max" or state == "done")
+	f.kind = isMe and "live" or (saved and "look" or "crest")
+	return f.kind
 end
 
 -- The segmented rested bar: a real StatusBar (so ElvUI skins frame it: S:HandleStatusBar) cut into `segs` bubbles.

@@ -45,6 +45,7 @@ local function shoot(state) advance(state, state.ns.Look.WAIT) end
 local function world(opts)
 	opts = opts or {}
 	local saved = { chars = { [JETTE] = jette(opts.look) }, lookFormat = opts.lookFormat }
+	for k, c in pairs(opts.chars or {}) do saved.chars[k] = c end
 	-- the screenshots on disk (a file ID in the fake): by default the one LOOK names
 	FakeWoW.screenshots = opts.screenshots or { ["Screenshots\\WoWScrnShot_112526_051821.tga"] = true }
 	local state = { first = "Le", surname = "Nette", class = "MAGE", saved = saved,
@@ -57,6 +58,11 @@ local function world(opts)
 					f.SetUnit = function(_, unit) st.log[#st.log + 1] = "unit:" .. unit end
 					f.UndressSlot = function(_, slot) st.log[#st.log + 1] = "undress:" .. slot end
 					f.SetPortraitZoom = function(_, z) st.log[#st.log + 1] = "zoom:" .. z end
+					f.SetSheathed = function(_, a, b) st.log[#st.log + 1] = ("sheathe:%s:%s"):format(tostring(a), tostring(b)) end
+					f.SetAnimation = function(_, a) st.log[#st.log + 1] = "anim:" .. a end
+					f.FreezeAnimation = not opts.noFreeze and function(_, a, v, fr)
+						st.log[#st.log + 1] = ("freeze:%d:%d:%d"):format(a, v, fr)
+					end or nil
 				elseif name == "RestedLevelingLookStage" and opts.rect then
 					f.__left, f.__bottom, f.__w, f.__h = opts.rect.left, opts.rect.bottom, opts.rect.w, opts.rect.h
 				end
@@ -123,7 +129,7 @@ function cases.save_hides_the_ui_shoots_a_tga_and_puts_everything_back()
 	T.ok(stage:IsShown(), "our stage up")
 	T.ok(stage:GetParent() == env.WorldFrame, "the stage is on WorldFrame, not under UIParent")
 	T.eq(stage.model:GetObjectType(), "DressUpModel", "a dress-up model of the player")
-	T.eq(table.concat(state.log, ","), "unit:player,undress:16,undress:17,undress:18,zoom:0.6", "the player, weapons off, framed")
+	T.eq(table.concat(state.log, ","), "unit:player,undress:16,undress:17,undress:18,sheathe:true:true,zoom:0.6,anim:0,freeze:0:0:0", "the player, weapons off, framed")
 	T.eq(state.shots, 0, "waits for the model before shooting")
 	shoot(state)
 	T.eq(state.shots, 1, "one screenshot")
@@ -271,11 +277,44 @@ function cases.the_shot_re_poses_the_loaded_model_without_reloading_it()
 	local wait
 	for i, fn in ipairs(state.timers) do if state.due[fn] == state.ns.Look.WAIT then wait = table.remove(state.timers, i) break end end
 	wait()
-	T.eq(table.concat(state.log, ","), "undress:16,undress:17,undress:18,zoom:0.6", "posed again, no SetUnit (it reloads the model)")
+	T.eq(table.concat(state.log, ","), "undress:16,undress:17,undress:18,sheathe:true:true,zoom:0.6,anim:0,freeze:0:0:0", "posed again, no SetUnit (it reloads the model)")
 	T.eq(state.shots, 0, "not in the same frame")
 	advance(state, 0)
 	T.eq(state.log[#state.log], "shot", "a frame later")
 	T.eq(state.shots, 1, "one screenshot")
+	h.Fire("SCREENSHOT_SUCCEEDED")
+	restored(h, state)
+	T.clean(h)
+end
+
+-- Andy's first look caught an idle fidget (a shrug, eyes shut): the stand animation is frozen on its first frame,
+-- weapons sheathed and hidden, and the shot waits one frame after that pose.
+function cases.the_shot_is_a_frozen_stand_with_weapons_away()
+	local h, state = world()
+	state.ns.Look.Save()
+	state.log = {}
+	advance(state, state.ns.Look.WAIT)
+	local log = table.concat(state.log, ",")
+	T.ok(log:find("sheathe:true:true", 1, true), "weapons sheathed and hidden: " .. log)
+	local freeze, shot = log:find("freeze:0:0:0", 1, true), log:find("shot", 1, true)
+	T.ok(freeze and shot and freeze < shot, "frozen on the stand's first frame before the shot")
+	h.Fire("SCREENSHOT_SUCCEEDED")
+	restored(h, state)
+	T.clean(h)
+end
+
+function cases.without_freeze_animation_the_stand_restarts_and_the_shot_is_the_next_frame()
+	local h, state = world({ noFreeze = true })
+	state.ns.Look.Save()
+	state.log = {}
+	local wait
+	for i, fn in ipairs(state.timers) do if state.due[fn] == state.ns.Look.WAIT then wait = table.remove(state.timers, i) break end end
+	state.clock = state.ns.Look.WAIT
+	wait()
+	T.eq(state.log[#state.log], "anim:0", "the stand animation set last")
+	T.eq(state.shots, 0, "not in the same frame")
+	advance(state, 0)
+	T.eq(state.shots, 1, "the very next frame")
 	h.Fire("SCREENSHOT_SUCCEEDED")
 	restored(h, state)
 	T.clean(h)
@@ -484,7 +523,7 @@ function cases.a_saved_look_shows_in_the_ring_wherever_an_offline_portrait_does(
 	T.ok(hero.look:IsShown(), "the hero shows her look")
 	T.eq(hero.look:GetTexture(), "Screenshots\\WoWScrnShot_112526_051821.tga", "through the path form that loads")
 	T.eq(hero.tex.__atlas, "classicon-warrior", "the crest stays under it (the fallback)")
-	T.eq(hero.crest.__atlas, "raceicon128-gnome-female", "the race emblem badge stays")
+	T.eq(hero.crest.__atlas, "classicon-warrior", "a face gets the class crest as its badge, like the live portrait")
 	tracking(hero)
 	state.ns.Widgets.SetPortrait(hero, W.DB(h).chars[JETTE], false, "resting")
 	T.eq(table.concat(hero.look.__coords, ","), "0.4111,0.5889,0.342,0.658", "cropped to the model")
@@ -494,6 +533,45 @@ function cases.a_saved_look_shows_in_the_ring_wherever_an_offline_portrait_does(
 	T.eq(card.stage.note:GetText(), "Last seen as a level 46 Gnome Warrior.", "no 'log in to see them' under her own face")
 	T.ok(not card.stage.lookBox:IsShown(), "no Save my look on an offline character")
 	T.ok(not main.current.portrait.look:IsShown(), "the character you are on keeps its live portrait")
+	T.clean(h)
+end
+
+-- Andy's rule (ILL-1279 round 2): no saved look, the class crest is the picture and the race emblem the badge; a saved
+-- look, the face is the picture and the class crest the badge, exactly like the live portrait. Everywhere a portrait
+-- shows: the hero, the rows, the card, the Esc card and the toasts all draw through Widgets.SetPortrait.
+local DETTE = "N:Le Dette@?"
+function cases.portraits_badge_by_what_is_in_the_disc()
+	local dette = { full = "Le Dette", class = "WARLOCK", race = "Orc", sex = 3, level = 21, xpMax = 10000, rested = 100,
+		resting = true, restKind = "inn", zone = "The Barrens", subzone = "Crossroads", t = W.NOW - H }
+	local h, state = world({ look = LOOK, chars = { [DETTE] = dette } })
+	h.Slash("RESTEDLEVELING", "")
+	local main = h.Env().RestedLevelingMain
+	local function check(p, kind, main_, badge, what)
+		T.eq(p.kind, kind, what .. ": " .. kind)
+		if kind == "look" then T.ok(p.look:IsShown(), what .. ": the face drawn") else T.ok(not p.look:IsShown(), what .. ": no face over it") end
+		if main_ then T.eq(p.tex.__atlas, main_, what .. ": the picture") end
+		T.eq(p.crest.__atlas, badge, what .. ": the badge")
+		T.ok(p.crest:IsShown() and p.crestRing:IsShown(), what .. ": the badge shown")
+		T.eq(p.crestLift:IsShown(), kind == "crest", what .. ": only a race emblem is lifted")
+	end
+	-- the hero is Le Jette (more banked), with her saved look; Le Dette is the row under her, with none
+	check(main.hero.portrait, "look", "classicon-warrior", "classicon-warrior", "hero, saved look")
+	local row
+	for _, r in ipairs(main.roster.rows) do if r.data and r.data.key == DETTE and r:IsShown() then row = r end end
+	T.ok(row, "Le Dette's row")
+	check(row.portrait, "crest", "classicon-warlock", "raceicon128-orc-female", "row, no look")
+	check(main.current.portrait, "live", nil, "classicon-mage", "now playing, live")
+	T.ok(#state.portraits > 0 and state.portraits[#state.portraits].unit == "player", "the live face")
+	FakeWoW.RunScript(main.hero, "OnClick")
+	local card = h.Env().RestedLevelingCard
+	check(card.stage.figure, "look", "classicon-warrior", "classicon-warrior", "card, saved look")
+	state.ns.Card.Show(DETTE)
+	check(card.stage.figure, "crest", "classicon-warlock", "raceicon128-orc-female", "card, no look")
+	-- the Esc card and the toasts use the same call: a fresh portrait each way
+	local Wg = state.ns.Widgets
+	local p = Wg.Portrait(h.Env().UIParent, 40)
+	check(p, Wg.SetPortrait(p, W.DB(h).chars[JETTE], false, "resting"), nil, "classicon-warrior", "any portrait, saved look")
+	check(p, Wg.SetPortrait(p, dette, false, "resting"), nil, "raceicon128-orc-female", "then the same one, no look")
 	T.clean(h)
 end
 

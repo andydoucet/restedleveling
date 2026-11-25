@@ -2,10 +2,14 @@
 -- to its state (a lantern-lit inn with drifting z's when it is resting, a cold blue road with fog when it is not),
 -- says a line made from its own data in a speech bubble, and shows its tidbits.
 --
--- Only the logged-in character can be drawn as a live 3D model (PlayerModel:SetUnit("player")), playing the talk
--- animation when the client has it. The game has no way to draw another character's real look (hair, face, skin)
--- while it is offline (see docs/API.md, "Offline appearance"), so everyone else shows their class crest with a race
--- emblem and says so, rather than a stock face that is not theirs.
+-- Only the logged-in character can be drawn as a live 3D model (PlayerModel:SetUnit("player")), framed from the waist
+-- up and playing the talk animation when the client has it. The game has no way to draw another character's real look
+-- (hair, face, skin) while it is offline (see docs/API.md, "Offline appearance"), so everyone else shows their saved
+-- look ("Save my look") or, without one, their class crest with a race emblem, rather than a stock face.
+--
+-- The stage is two columns: the speech bubble on the left, the figure (live model or portrait disc) on the right.
+-- The bubble, tail included, always ends Card.GAP px left of the figure column (Andy, ILL-1279: the bubble ran into
+-- her head).
 
 local _, ns = ...
 local St, Wg, Wd, U, M = ns.Style, ns.Widgets, ns.Words, ns.Util, ns.Model
@@ -14,7 +18,17 @@ ns.Card = Card
 
 local W, STAGE_H, PAD = 460, 300, 22   -- PAD: the band plus a 12 px inset, the same for every section
 local IW = W - PAD * 2
-local FIG_X = 96   -- the figure stands right of centre; the bubble speaks from the upper left
+-- The figure column, in stage pixels from the stage's left edge (the stage is IW = 416 wide, STAGE_H = 300 tall).
+-- FIG_X: the portrait disc's centre right of the stage centre, so its ring starts at Card.FIG_LEFT.
+local FIG_X, DISC = 112, 150
+local MODEL_BOTTOM = 66   -- the live model stops above the name plate and the chip
+Card.FIG_LEFT = math.floor(IW / 2 + FIG_X - DISC * 1.1 / 2)   -- the ring's left edge: 237
+Card.GAP, Card.BUBBLE_LEFT, Card.TAIL = 12, 14, 12   -- clearance; the bubble's left edge; how far the tail sticks out
+Card.MODEL_ZOOM = 0.35   -- PlayerModel:SetPortraitZoom: 0 is the full body, 0.6 Blizzard's head-and-shoulders portrait
+-- The bubble's text width: what is left of the bubble's column after its 12 px insets, the tail and the gap.
+Card.BUBBLE_W = Card.FIG_LEFT - Card.GAP - Card.TAIL - Card.BUBBLE_LEFT - 24
+Card.BUBBLE_TOP = 22
+Card.CONTROLS_BOTTOM = 68   -- "Save my look" sits on the left, above the name plate
 local TALK, TALK_EXCLAIM = 60, 64   -- AnimationData ids (EmoteTalk, EmoteExclamation): checked with HasAnimation
 local ICONS = {
 	["/played"] = "Interface\\Icons\\INV_Misc_PocketWatch_01", Hearth = "Interface\\Icons\\INV_Misc_Rune_01",
@@ -77,10 +91,12 @@ local function makeStage(f)
 	s.shade:SetPoint("BOTTOMRIGHT", -3, 3)
 	s.shade:SetHeight(110)
 	s.zs = { drift(s, "z", 150, 0), drift(s, "z", 162, 1.1), drift(s, "Z", 174, 2.2) }   -- just above the head
-	-- The live model: the logged-in character only.
+	-- The live model: the logged-in character only, in the figure column from the top of the stage down to just
+	-- above the name plate (the frame clips the model: waist up, head in the upper middle).
 	s.model = CreateFrame("PlayerModel", nil, s)
-	s.model:SetPoint("TOPLEFT", 3, -3)
-	s.model:SetPoint("BOTTOMRIGHT", -3, 3)
+	s.model:SetPoint("TOPRIGHT", -3, -3)
+	s.model:SetPoint("BOTTOMLEFT", s, "BOTTOMLEFT", Card.FIG_LEFT, MODEL_BOTTOM)
+	s.model:SetScript("OnModelLoaded", function(m) Card.FrameModel(m) end)   -- loading resets the camera
 	-- The figure for everyone else: portrait art standing on a shadow, breathing.
 	s.floor = s:CreateTexture(nil, "ARTWORK", nil, 1)
 	s.floor:SetTexture(St.MEDIA .. "glow")   -- a soft shadow under the figure
@@ -91,10 +107,10 @@ local function makeStage(f)
 	St.Paint(s.pedestal, "sw_lip")
 	s.pedestal:SetSize(150, 2)
 	s.pedestal:SetPoint("BOTTOM", FIG_X, 76)
-	s.figure = Wg.Portrait(s, 150)
+	s.figure = Wg.Portrait(s, DISC)
 	s.figure:SetPoint("BOTTOM", FIG_X, 78)
 	s.note = Wg.Text(s, "small", "OVERLAY", 12)   -- beside the crest, under the bubble: why there is no face
-	s.note:SetPoint("BOTTOMRIGHT", s.figure, "BOTTOMLEFT", -18, 8)
+	s.note:SetPoint("BOTTOMRIGHT", s.figure, "BOTTOMLEFT", -20, 8)
 	s.note:SetWidth(160)
 	s.note:SetJustifyH("RIGHT")
 	s.note:SetWordWrap(true)
@@ -123,15 +139,15 @@ local function makeStage(f)
 	St.Font(b.hook, "name", 17)
 	b.hook:SetShadowOffset(0, 0)
 	b.hook:SetTextColor(0.95, 0.90, 0.78)
-	b.hook:SetWidth(178)   -- 12 px clear of the figure's ring
+	b.hook:SetWidth(Card.BUBBLE_W)
 	b.hook:SetWordWrap(true)
 	b.hook:SetJustifyH("LEFT")
-	b.hook:SetPoint("TOPLEFT", s, "TOPLEFT", 26, -22)
+	b.hook:SetPoint("TOPLEFT", s, "TOPLEFT", Card.BUBBLE_LEFT + 12, -Card.BUBBLE_TOP)
 	b.text = b:CreateFontString(nil, "OVERLAY")   -- the facts, small
 	St.Font(b.text, "body", 13)
 	b.text:SetShadowOffset(0, 0)
 	b.text:SetTextColor(0.77, 0.72, 0.60)
-	b.text:SetWidth(178)
+	b.text:SetWidth(Card.BUBBLE_W)
 	b.text:SetWordWrap(true)
 	b.text:SetJustifyH("LEFT")
 	b.text:SetPoint("TOPLEFT", b.hook, "BOTTOMLEFT", 0, -4)
@@ -165,7 +181,8 @@ local function makeStage(f)
 	St.Color(s.sub, St.CREAM)
 	s.chip = Wg.Chip(s, 20)
 	s.chip:SetPoint("BOTTOMRIGHT", -14, 40)   -- on the name line, clear of "Seen ..."
-	s.lookBox = ns.Look.CardControls(s)   -- "Save my look", top right: the character you are on only
+	s.lookBox = ns.Look.CardControls(s)   -- "Save my look", under the bubble: the character you are on only
+	s.lookBox:SetPoint("BOTTOMLEFT", Card.BUBBLE_LEFT, Card.CONTROLS_BOTTOM)
 	return s
 end
 
@@ -254,13 +271,17 @@ function Card.Create()
 end
 
 -- The bubble wraps to as many lines as the line needs and grows down the stage; only if it would then reach the note
--- (or the name plate) does it drop one font step. Never "...". Sized for the full line while it types out.
-Card.BUBBLE_W, Card.BUBBLE_TOP = 196, 22
+-- (or the card's buttons, or the name plate) does it drop one font step. Never "...". Sized for the full line while it
+-- types out.
 Card.BUBBLE_SIZES = { { 17, 13 }, { 15, 12 } }   -- hook and facts: the normal size, then one step down
 function Card.BubbleRoom(s)   -- px the bubble may take from its top (inside the 10 px top inset) to what is below it
-	local floor = s.note:IsShown() and (86 + s.note:GetStringHeight() + 8) or 84   -- the note's top, or the plate's
+	local floor = 84   -- the name plate's top
+	if s.note:IsShown() then floor = 86 + s.note:GetStringHeight() + 8 end   -- the note's top
+	if s.lookBox:IsShown() then floor = Card.CONTROLS_BOTTOM + s.lookBox:GetHeight() + 8 end   -- the buttons' top
 	return STAGE_H - Card.BUBBLE_TOP - floor
 end
+-- The bubble's right edge, tail included, in stage pixels: never closer than Card.GAP to the figure column.
+function Card.BubbleRight(s) return Card.BUBBLE_LEFT + s.bubble:GetWidth() + Card.TAIL end
 -- A block's own width: one line as wide as it is, or balanced lines (no orphan word) when it wraps, widened until it
 -- takes no more lines than it would at the full width (long words: "Feathermoon Stronghold inn suits me.").
 local function natural(fs)
@@ -289,6 +310,10 @@ function Card.FitBubble(s, hook, text)
 	for i, size in ipairs(Card.BUBBLE_SIZES) do
 		St.Font(b.hook, "name", size[1])
 		St.Font(b.text, "body", size[2])
+		-- no height left from the last fit: a string held to it measures (and draws) only the lines that fit, so a
+		-- font that settles wider a frame later would keep "Feathermoon Stronghold..." cut (Andy's v1.1.1 card)
+		b.hook:SetHeight(0)
+		b.text:SetHeight(0)
 		b.hook:SetText(b.line[1])
 		b.text:SetText(b.line[2])
 		local w = math.max(natural(b.hook), natural(b.text))
@@ -326,6 +351,13 @@ Card.REST_HELP = {
 	"Each Well Rested rank raises the rate and the cap by 4%, so the time stays the same.",
 }
 
+-- Waist up, turned a little toward the bubble. Again whenever the model (re)loads: loading resets the camera.
+function Card.FrameModel(model)
+	U.Call(model.SetCamDistanceScale, model, 1)
+	U.Call(model.SetPortraitZoom, model, Card.MODEL_ZOOM)
+	U.Call(model.SetRotation, model, -0.35)
+end
+
 -- The 3D figure is the logged-in character only: no other character's look can be drawn offline.
 local function dressModel(model, isMe)
 	if not isMe then
@@ -333,8 +365,7 @@ local function dressModel(model, isMe)
 		return false
 	end
 	model:SetUnit("player")
-	model:SetCamDistanceScale(1.25)
-	model:SetRotation(-0.35)
+	Card.FrameModel(model)
 	local anim = (model:HasAnimation(TALK) and TALK) or (model:HasAnimation(TALK_EXCLAIM) and TALK_EXCLAIM) or 0
 	model:SetAnimation(anim)
 	return true
@@ -420,8 +451,9 @@ function Card.Show(key)
 	s.note:SetShown(not modelShown)
 	s.pedestal:SetShown(false)   -- no rule under the portrait
 	if not modelShown then
-		Wg.SetPortrait(s.figure, c, false, state)   -- class crest with the race emblem: honest, not a face
+		Wg.SetPortrait(s.figure, c, false, state)   -- the saved look, or the class crest with the race emblem
 		s.note:SetText(Card.OfflineNote(c))
+		Wg.Balance(s.note, 160)   -- no "them." alone on the last line
 		St.Paint(s.lvl, host and "disc_dark" or "disc_gold")   -- under ElvUI a restrained dark disc, not a gold medallion
 		s.lvlRing = s.lvlRing or s.figure:CreateTexture(nil, "OVERLAY", nil, 7)
 		St.Paint(s.lvlRing, "ring_bronze")
