@@ -1,0 +1,77 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 8,
+    "state_colours": 7,
+    "character_identity": 7,
+    "default_theme": 7,
+    "elvui_wc3_fit": 5,
+    "alerts_ux": 6,
+    "readability": 6,
+    "layout_polish": 6,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "The roster body is a flat mid-grey slab (~#3a3a3a) under a rich hero card. Give rows a subtle vertical gradient (#2a241c to #1e1a15) with a 1px top highlight (#ffffff at 6% alpha), and alternate row tint at 4% so it matches the hero card's warm inn art.",
+      "The hero card's background art is muddy and almost invisible behind the text. Raise its alpha to about 55%, add a left-to-right black gradient (80% to 0% over the first 45% of the width) so the text stays readable, and let the inn and fire read on the right half.",
+      "Make the PLAY NEXT hero portrait ring glow in the state colour: an outer glow of 4px, #3fd46a at 50%, with a slow 2s pulse. Right now the cyan class ring and the green state stripe compete."
+    ],
+    "play_next_clarity": [
+      "The '#2' at the top right of the hero card is cryptic. Replace it with 'Account 2', or drop it entirely when it matches the account you are on.",
+      "Add a one-line call to action under the reason, e.g. 'Log out \u2192 pick Le Nette', in 12px gold #ffd100. Alternatively, make the whole hero card clickable with a hover state that says 'Open card'.",
+      "The roster numbering starts at '2' with no visible '1'. Put a large '1' badge (18px, gold) on the hero portrait so the ranking reads as one list."
+    ],
+    "state_colours": [
+      "YELLOW (nearly, ~#d8c818) and ORANGE (resting, ~#e0a020) are too close in both the bars and the legend dots. Push orange to #ff7a1a and keep yellow at #f2e33a. Use the same hexes for the bar fill, the left stripe, the chip border and the legend dot.",
+      "The legend dots are 8px and near-identical for 'nearly' and 'resting'. Make them 10px and use the chip icons (check, star, bed, warning) instead of plain dots.",
+      "The GREEN 'FULL' chip is a dark teal-green (#2a6a40) that reads dimmer than the yellow chips. Brighten it to fill #1f7a3a with border #5cff8a so FULL is the loudest state, not the quietest.",
+      "Desaturate the grey MAX LEVEL row further (alpha 0.45). Right now it competes with the RED rows at the bottom."
+    ],
+    "character_identity": [
+      "The class crest overlapping each portrait at the bottom right is 12px and unreadable. Enlarge it to 16px with a 1px black ring, or drop it in favour of the class-coloured name you already have.",
+      "The card's figure is just the 2D portrait in a circle. For the fallback, use a larger 140px portrait with a state-coloured ring and a soft drop shadow onto the stage floor so it sits in the scene, rather than a UI circle pasted on the art.",
+      "Add the race or faction crest and the level as a badge on the card's name plate, e.g. a '22' shield 20px left of the name.",
+      "The place icons (globe, inn, Horde crest) are ambiguous at 16px. Add a tooltip, and in the row show a short place name ('Brill Inn') in 10px grey under the % line instead of the icon alone."
+    ],
+    "default_theme": [
+      "The Blizzard portrait-frame title bar has dark empty blocks either side of the close button and the moon portrait (x\u2248872\u2013930). Fill the title bar fully, or use ButtonFrameTemplate's proper TitleBg.",
+      "The 'Compact' red button sits off the grid, overlapping the title-bar edge. Move it into the inset at 8px from the right and align it with the hero card's top edge.",
+      "The 3px stripe between the hero card and the window border is uneven: about 10px on the left versus 6px on the right. Use a consistent 8px inset everywhere."
+    ],
+    "elvui_wc3_fit": [
+      "Under WC3 the panel is a flat taupe (#4a4238) with tiny dot rivets. It shows none of the oak planks, iron straps or bronze rivets from the reference. Tile the Gatewood plank texture as the frame background at 60% and add two horizontal iron straps (6px, #1a1a1a with #5a3a20 rim), one under the title and one above the footer. Put 8px bronze rivets (#a0743a) at the strap ends.",
+      "Title: the small boxed tab 'Rested Leveling' looks like a stray widget. Use a full-width title strap with centred cream text (#f0e0b0, 13px, outlined).",
+      "'Compact' should be a red enamel button (#8a1a1a fill, #d04040 bevel, cream text), as in the user's UI and the door reference ('QUIT'). The 'Close' and 'Open card' actions should be blue enamel (#1a3a8a), like 'OPTIONS'.",
+      "The row and inset fills in WC3 are the same flat greyish brown as the frame, so there is no depth. Use #1c140e at 85% for insets with a 1px #000 inner border plus a 1px #6a4a28 outer edge.",
+      "The checkbox in the ElvUI footer appears unchecked while the default render shows it checked. Verify the HandleCheckBox state sync."
+    ],
+    "alerts_ux": [
+      "Three alerts fire at once (logout banner, Esc-menu strip and toast), which is redundant noise. Show only the banner while the camp countdown runs, and show the Esc strip only when the banner is not visible.",
+      "The toast copy 'Out of rested. Next up: Le Nette' contradicts the strip above, which says the current character has 0.6 of a level rested left. Only show 'Out of rested' when rested is 0; otherwise say 'Before you go: Le Nette is full'.",
+      "The banner's dismiss hint 'click to dismiss \u00b7 right-click: don't warn again' is about 7px. Make it 10px, and add a visible 16px X at the top right.",
+      "The banner bg (pinkish #4a2a35) clashes with the red Game Menu buttons. Use a dark #1e0e0e at 92% with a 2px #e03a3a left bar. Also add 12px of spacing above the Game Menu title; it currently nearly touches."
+    ],
+    "readability": [
+      "Secondary text (Lv/seen, % \u00b7 full in) is about 9px. Raise it to 11px and use #c8bfae, not dim grey.",
+      "Chip text (FULL / NEARLY / PARK ME) is about 8px small caps. Make it 10px bold, and widen chips to 64px with 4px padding.",
+      "The account tag '#2' and the 'Well Rested' pips at the row's right edge are 7px and unexplained. Hide the account tag when it equals the current account, and give the pips a header label or tooltip.",
+      "The card tile labels (/PLAYED, HEARTH) are 8px. Use 9px labels and 12px values."
+    ],
+    "layout_polish": [
+      "The ElvUI card's reason line is clipped: 'Log in, hearth, log' is cut off. Wrap it to 2 lines or set width-constrained word wrap.",
+      "The card and main window have mismatched bottoms (the card is about 35px shorter). Match their heights, or top-align the card and size it to its content.",
+      "The card has a big dead gap between the tiles and the sparkline (ElvUI ~40px). Anchor the sparkline 8px below the last tile row.",
+      "The sparkline is uniform when the character is full (all identical bars), so it carries no information. Draw a line or area chart with the 100% cap line and an 'inn' and 'outside' background band. Hide it when the data is flat and show 'Full the whole time' instead.",
+      "First run: the legend shows '0 full 0 nearly 0 resting 0 outside'. Hide it when empty. The '/rlvl link <Name>' instruction appears three times; keep it only in step 3.",
+      "The empty-state guide box has about 30px of unused bottom padding. Size it to its content."
+    ],
+    "delight": [
+      "The speech bubble is a plain dark rectangle. Give it a parchment fill (#efe3c4, dark text #2a1a0a) with a curved tail and a 2px ink border so it reads as a character speaking.",
+      "Add a small 'zzz' particle or a fire flicker on the inn stage for rested characters, and drifting fog for outside characters, at 0.3 alpha.",
+      "Show a brief green shine sweep across a bar when it hits 100% while the window is open."
+    ]
+  },
+  "overall_notes": "A strong first build. The hero card, plain-words reasons ('Park me', '1.7 levels of double XP waiting'), the class-coloured roster and the compact/LDB layers all serve the goal well, and the play-next answer is obvious within a second. It falls short of shippable in three main areas. First, the WC3 Gatewood skin barely shows up: there are no planks, straps or enamel buttons, just a flat taupe panel, which is the single biggest gap against the user's request. Second, the yellow and orange states are too close to tell apart quickly. Third, the alerts stack redundantly and one toast contradicts the data. Beyond that, small type (7\u20139px chips and tags), a clipped reason line, mismatched window heights and an uninformative flat sparkline make it look amateur up close. Fix the WC3 skinning, the colour separation, the alert de-duplication and the font sizes, and this could reach 8\u20139.",
+  "model": "claude-opus-5-5"
+}

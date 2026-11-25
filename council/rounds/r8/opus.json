@@ -1,0 +1,73 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 7,
+    "default_theme": 7,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 6,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "The hero's right column (1.7 / levels banked / Then Le Beouf, full for 8h) floats with no anchor. Put it in a 120x70 px inset well (fill #0E0B08, 1 px border #3A2E1E). Centre '1.7' (keep about 34 px) over 'levels banked'. Move the runner-up line under the bar on the right, opposite 'Fully rested for 2 days.'",
+      "The state chips are 96 px boxes with left-aligned text and 30-40 px of dead space on the right. Centre the icon and text as one group, or shrink each chip to its content plus 8 px padding at a fixed 22 px height.",
+      "The row list reads as eight equal slabs. Give row 2 (the runner-up) a 1 px #E6D5A8 at 25% inner highlight so the eye steps hero, then runner-up, then the rest."
+    ],
+    "play_next_clarity": [
+      "'Fully rested for 2 days.' sits about 4 px above the action bar's top edge and reads as a footnote. Give it 8 px of clearance and make it 12 px #9FE08A, so the hero's fact line clearly belongs to the green bar.",
+      "Put a 1 px #5A4A30 divider between the hero and the action bar. The instruction 'First: hearth or reach an inn. Then play Le Nette' should look like the hero's verdict, not a separate strip.",
+      "The NEXT BEST header shows four coloured counts at about 9 px that compete with the label. Raise them to 11 px and space them 14 px apart, or move them to the footer. The header should say only NEXT BEST."
+    ],
+    "state_colours": [
+      "The moons are about 10 px and #6A6050 when empty, so the filled vs empty difference is barely visible. Use 12 px moons, filled #F2D27A and empty #3A3428 at 100% alpha.",
+      "NEARLY FULL yellow (#E0C020-ish) and RESTING orange are close on the bar fills. Push resting to #E07A1E and nearly full to #F0D83A so they separate at a glance.",
+      "The compact strip's dots have no count. Add a 9 px digit badge or group them as '2 \u2713 2 \u25cf 1 \u25cf 2 \u2715' so the strip carries the numbers too."
+    ],
+    "character_identity": [
+      "The card bubble balances into 'Polymorphed the / innkeeper's cat. / Twice.', leaving an orphan 'Twice.' that is clearly under half full, so the Balance test is not catching this case. Force a 2-line fit at about 190 px, or measure the last line against the widest line and not the field width.",
+      "The bubble has no tail and sits 60 px from the portrait, so it does not read as the character speaking. Add an 8 px tail pointing at the portrait's upper-left and pull the bubble to within 16 px of the ring.",
+      "Class colours land very close together in the list (hunter, rogue, druid and warrior read as khaki or gold). Add the 14 px class icon before the name, not only the 10 px corner badge on the portrait.",
+      "The max-level row's desaturated portrait is good. Also dim its name to 70% so the bench character recedes."
+    ],
+    "default_theme": [
+      "The close button is a red box holding a lowercase text 'x'. Draw a proper 10 px X glyph in #F2E6CC on #8A1A12 with a 1 px #C0392B top highlight. Use it everywhere: main, card, banner, toast.",
+      "Compact in the default theme is ElvUI blue next to a red close and a red View button. Make it a quiet bronze ghost button (border #7A5E36, text #E6D5A8) so blue appears only under ElvUI.",
+      "The tinted rows have a 1 px divider plus a tint plus a rail. Drop the tint to 6% so the rail and chip carry the state, as they already do under ElvUI."
+    ],
+    "elvui_wc3_fit": [
+      "The title is cream #E6D5A8. Andy's Options, Reputation and Guild titles are gold, about #F0C84A. Use 13 px #F0C84A to match his skinned windows.",
+      "The inner panel borders (hero, now-playing, list) read as light grey 1 px lines, which is brighter than the dark bronze hairlines in his Character window. Use #2A2118, or drop the inner borders and separate sections with the header bands only.",
+      "The hero still carries the gold '1' medallion and a gold ring around the portrait, which is default-theme hardware. Under ElvUI, use a 1 px class-coloured or state-coloured ring and a plain '#1' text, since the skin is studs and hairlines only.",
+      "The interiors render near-neutral black. Andy's fill is dark brown, so use #15100B for the wells to match the Options window body.",
+      "Make the state chips flatter under ElvUI: 1 px border plus a 15% fill, with no bevel, matching the flat key buttons in his Options window."
+    ],
+    "alerts_ux": [
+      "The alert menu renders as a second full-width panel bolted under the banner. Make it a 180 px dropdown anchored to the gear's bottom-right, with 22 px rows.",
+      "There is a stray 2 px track with end caps under the menu, at about 670-930 px x / 168 px y. If that is the timer, put it inside the banner's bottom edge, inset 8 px. Do not let it float outside.",
+      "The banner renders about 95 px tall, not 112, and its text block crowds the portrait plus 'Up next' button. Give the button row 6 px more top margin.",
+      "Line 3 merges two ideas. Split it to 'Hearth or reach an inn.' and keep the 4x slower note at 11 px muted #B8A888."
+    ],
+    "readability": [
+      "Sub-lines in the rows, the 'none used this session' text and the getting-started body copy are about 10 px. Set a 11 px minimum for the body and #CFC3A8 for secondary text, not the current dim grey.",
+      "The 'STATE / BONUS' and 'NOW PLAYING' labels are about 9 px caps. Use 10 px with 1 px letter spacing in #A08E68.",
+      "The banked-bar captions such as '100% \u00b7 full for 8h' sit tight against the moons. Leave a 10 px gap before the moon group."
+    ],
+    "layout_polish": [
+      "In the card, the 'Seen 4 days ago' text nearly touches the FULL chip. Give it a 12 px minimum gap, or drop the chip onto the name line on the right.",
+      "In first run, 'GETTING STARTED' sits outside and above its box, unlike NEXT BEST which sits on a band. Put it on the same header band for consistency.",
+      "The hero name, bubble and meta lines stack with uneven gaps (about 4, 6 and 10 px). Normalise to 6 px.",
+      "The card frame stops at the tidbits while the main window runs about 140 px further down. Bottom-align the two windows, or top-align them with deliberate spacing, so the pair reads as one composition."
+    ],
+    "delight": [
+      "The jokes land, but the 'zZ' on the stage is a tiny 8 px grey mark. Make it a 3-step animated 'z z Z' rising 12 px over 2 s in #CFC3A8 when the character is fully rested.",
+      "When the hero is FULL, add a slow 3 s shimmer sweep across the green bar, at 15% alpha with a 2 s rest between sweeps. Keep it subtle, and skip it under ElvUI if it is too loud.",
+      "Give the toast a one-shot 0.3 s slide-in from the bottom edge, plus the character's portrait ring pulsing once."
+    ]
+  },
+  "overall_notes": "Solid round. The information hierarchy works: one hero verdict, an ordered list, consistent state rails and chips, and the ElvUI mode is now a plausible sibling of Andy's windows (blue secondary, red close, header bands, flat wells). It falls short of 9 on finish. There is still default-theme hardware under ElvUI (the gold medallion and portrait rings), and the title colour and inner borders are a little off from his skin. The card bubble has an orphan line that the new Balance test should have caught. The chips have dead space, the close glyph is a lowercase x, and the alert menu reads as a second panel with a stray track. Fix these and it is an 8 across the board, with 9 within reach.",
+  "model": "claude-opus-5-5"
+}

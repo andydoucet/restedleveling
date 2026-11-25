@@ -1,0 +1,67 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Make the banked figure the hero: 48px #7DDE5A, with \"levels banked\" at 11px #D4C7A1 only 2px under it. The current cluster competes with the green bar and the action line.",
+      "Drop 8px of the stacked gap between the rest bar, the \"Fully rested\u2026\" line, and the action row so the hero reads as one block, not three bands.",
+      "Replace the doodled zZ with the existing muted moon glyph at 40% opacity; it reads as a sketch on an otherwise finished frame."
+    ],
+    "state_colours": [
+      "Nearly-full is too close to UI gold. Use bar/pill #F0C93A on #3A3208 with label #1A1400, not the same hue as title text.",
+      "Resting orange should be #E36A1E, pill fill #4A240C, label #FFD2B0, so it separates from both gold chrome and the red not-resting pill (#C4382B, label #FFE8E4).",
+      "Add a 2px state-colour rail on the left of each row so green/yellow/orange/red reads before the pill text. Keep the now-playing bar at #3D8FD1 and never reuse it on the roster."
+    ],
+    "character_identity": [
+      "Row portraits are ~24px. Bump to 36px and put a 14px class icon immediately left of the name.",
+      "Class-colour names at full WoW saturation (mage #69CCF0, hunter #ABD473, warrior #C79C6E) instead of washed white/gold.",
+      "Seat the level disc on the portrait ring at 4 o'clock: 28px disc, 14px bold numeral. It currently floats in the corner gap.",
+      "Cap speech at two lines, 13px, with the bubble tail aimed at the mouth."
+    ],
+    "default_theme": [
+      "Title is lost on the three-board rail. Set it at 16px #F3E6C4, rail height 36px, 12px inset from the iron so it isn't sitting in the rivets.",
+      "Inner wells: fill #140E0A, 1px stroke #3A2E22, 8px padding, 6px corner radius so they don't fight the 48px outer frame.",
+      "Keep corner rivets only. Mid-edge rivets make the main window and the card look armored rather than furnished."
+    ],
+    "elvui_wc3_fit": [
+      "The title plank sticks up above the frame. Andy's Character and Options titles sit inside a ~22px top band. Put \"Rested Leveling\" there at 13px #E6D7B0, no outline, no protruding wood sign.",
+      "Match his border: 6\u20138px #1A120C with 6px bronze studs only at the corners. The current portrait-frame weight is heavier than Guild, Reputation, and Options.",
+      "Fill #0C0A09, sub-panels #12100E with a 1px #2A241C line. Vignette the inn painting ~30% so the hero well stays as dark as the area around his character model.",
+      "Footer Compact: blue enamel #1E4E86, 22px tall, 8px above the skin's bottom strip. Primary \"View\" button #8E2A22, same 22px height as Expanded Stats."
+    ],
+    "alerts_ux": [
+      "Banner 420px wide with a 4px left accent #E24B3A. Title 14px, body 12px #F0E6D2. Rewrite the zone line to one sentence: \"Move to cancel. Then hearth \u2014 rest fills 4\u00d7 slower in The Barrens.\"",
+      "Turn \"Or play next: Le Nette\" into a 22px blue text button, not a caption under the warning.",
+      "Attach the right-click menu flush to the banner (0px gap, same left edge and width). It currently floats down-right as a second card.",
+      "On the Esc strip, leave an 8px gap under the menu and don't reuse the Exit Game red, or the alert reads as another menu button."
+    ],
+    "readability": [
+      "Nothing that is a sentence should be under 12px. Row secondary (\"Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago\") at 12px #D9D0C0.",
+      "Lift gray captions from ~#8A8478 to #C4B89A: \"none used this session\", \"scale 0\u2013100% of full\", \"Synced 2d ago from Acct #3\", chart axis labels.",
+      "Pills at 11px bold with 4px horizontal padding so \"NEARLY FULL\" and \"NOT RESTING\" don't crowd the bar."
+    ],
+    "layout_polish": [
+      "Card and main window only share a top edge, so the pair looks unfinished. Pin both title bands to the same y with a 12px gutter, and give the card a min-height that meets the roster footer.",
+      "The 2px #E8C56B open-card stroke is not visible on Colonol Sunders in the ElvUI card scene. Draw it as a 2px inset on the row, above the bar.",
+      "Footer: one 28px row, checkbox and Compact vertically centered to each other, 10px clear of the skin's bottom strip.",
+      "\"NEXT BEST\" and the summary chips should share the row-name x, not the portrait x."
+    ],
+    "delight": [
+      "Lead the toast with the imperative at 14px: \"Play Le Nette \u2014 1.7 levels banked.\" Demote \"rested XP used up\" to 11px #C4B89A.",
+      "Reuse the first-run speech tail on the #1 hero in the main window (max ~42 characters) so the character talks when they are who you should log, not only after the card opens.",
+      "The 48h chart is a flat slab. A 1px #E8C56B baseline and a single \"now\" tick would make \"Full the whole time.\" feel like a record, not an empty green bar."
+    ]
+  },
+  "overall_notes": "Default theme is a real classic-addon frame: oak rail, enamel buttons, sorted roster, and an action line that says what to do. ElvUI mode gets the fill, gold type, red primary, and footer blue right, but the protruding title plank and heavy portrait border do not sit next to Andy's flat Options and Character windows. Play-next is the strongest beat; small gray type, a missing selection stroke, and a muddy yellow-vs-gold state scale are what keep it off a 9.",
+  "model": "grok-4.7"
+}

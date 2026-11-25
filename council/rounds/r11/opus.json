@@ -1,0 +1,61 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "The ElvUI card stage (scene 04) is now a flat #1A120C slab, so the top half of the card reads as empty compared with the default tavern art. Keep his panel colour, but add a subtle radial vignette behind the portrait: centre #2A1D12 to edge #140D08, at 60% alpha. Add a 1 px inner highlight #3A2A1A along the top edge, so it still looks like his skin rather than a black hole.",
+      "The hero in both themes runs bar, status line and hint strip into each other. Give the hero 8 px more bottom padding (see layout_polish) so it reads as a composed banner and not a stacked list."
+    ],
+    "state_colours": [
+      "Row names use class colours, and these collide with the state semantics. Colonol Sunders is in hunter green on a NOT RESTING row, and Le Beouf is in druid orange on a FULL row. A glance at the name column sends the wrong signal.",
+      "Fix for state_colours: render row names in cream #E8DCC0 (ElvUI: his gold-cream #F0D9A0). Let the class come from the existing class badge on the portrait. Alternatively, keep class colour only on a 3 px underline or on the 'Lv 19' token.",
+      "In the compact strip (scene 06), the two red 'x' dots and the two green check dots are only told apart by colour plus a glyph about 8 px wide. Enlarge the dots to 18 px and raise glyph contrast with a #1A120C inner glyph on the coloured fill."
+    ],
+    "character_identity": [
+      "The ElvUI card loses the per-character scene (no tavern backdrop, no 'z z'). Keep the sleep 'z z' and the level badge in ElvUI mode too; they are text and not skin art. At the moment scene 04 shows neither the 'z z' nor the level badge on Colonol (Colonol is not resting, so no 'z z' is fine, but the level badge 'Lv 15' should still sit on the ring as it does for Le Nette).",
+      "The first-run hero (scene 07) uses a Horde crest as the portrait. Use the live player portrait (SetPortraitTexture('player')), with the crest only as fallback, so the welcome screen is about him and not his faction."
+    ],
+    "default_theme": [
+      "The title bar 'Rested Leveling' plus its 16 px icon is small and sits in a plain strip. Raise the title to 15 px, colour #F0C860 with a 1 px #000 shadow, and add a 1 px #6B4E2A rule under the title bar, inset 12 px from each side, to give the frame a header.",
+      "Panel borders on the hero, the now-playing strip and the row list all use the same tan hairline. Step them down so the eye goes to the hero first: hero border #8A6A3A, other panels #4A3620."
+    ],
+    "elvui_wc3_fit": [
+      "The inner panel hairlines are lighter and warmer than his real windows. His Options and Character windows separate sections with near-black #0C0806 lines and slight fill changes, not tan borders. Set the ElvUI inner panel borders to #000000 at 80% alpha. Separate sections by fill: hero #1E150D, list #160F0A.",
+      "Chips in ElvUI mode are outlined boxes with a tinted fill. His UI uses solid enamel fills (blue 'Defaults', red 'Expanded Stats'). Make the chips solid: fill at 70% of the state colour darkened, for example FULL #1F5A2A with text #CFF5C8 and NOT RESTING #6E1A14 with text #FFD8D0, plus a 1 px #000 border.",
+      "There is a lighter brown wood patch at the upper-left inside the frame in scenes 02 and 04 (around x 45-110, y 45-95). Check whether this is our own title-bar backdrop rather than the skin's border strip. If it is ours, anchor it to the title region only or set it to his panel colour."
+    ],
+    "alerts_ux": [
+      "The headline 'Logging out outside a rest area' repeats 'out'. Use 'You're about to log out unrested' (or 'Jacques Hammer isn't resting', as in the ESC banner) so both banners share one voice.",
+      "The floating 'Full' next to the View button has no subject. Change it to 'Le Nette \u00b7 Full', or put a 20 px FULL chip (same chip as the rows) beside the button.",
+      "The gear icon on the banner is unlabelled. Give it a tooltip 'Alert settings', and enlarge the hit area to 24x24 px to match the X.",
+      "The compact toast 'Play Le Nette \u00b7 1.7 levels banked' is a recommendation but uses the red rail. Use a green #3FBF5A rail when the suggested target is full. Keep red only for warnings about the current character."
+    ],
+    "readability": [
+      "'#1 \u00b7 PLAY NEXT', 'NOW PLAYING', 'NEXT BEST' and 'STATE' are tiny small-caps, around 10-11 px. Bring them to 11 px minimum with +1 px letter spacing in #C9A86A.",
+      "Compact list precision is inconsistent with the main window: 'full in about 3d' versus 'full in 3d 14h'. Use the same formatter in both, for example 'full in 3d 14h'.",
+      "The row sub-line 'Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago' is the busiest text. Render 'Lv 19' in #E8DCC0 and the zone and age in #B8AA92, so the level jumps out."
+    ],
+    "layout_polish": [
+      "'Fully rested for 2 days.' sits about 4 px above the hero bottom edge or hint strip in both themes. Add 8 px between the bar and that line, and 8 px from that line to the strip.",
+      "In the first-run screen (scene 07), 'No other account linked yet.' is jammed against the bottom border outside any panel. Either put it inside the Getting Started panel under 'Link account...' (8 px gap), or give the footer 10 px top and bottom padding like the main window's 'Synced 2d ago' footer.",
+      "Align the OUTSIDE A REST AREA pill's right edge to the same 12 px inset as the hero's right column and the row chips. It currently sits about 4 px further right in ElvUI mode.",
+      "The ElvUI card's resting bar starts flush under the stage border with about 10 px gap, while the default theme has about 14 px. Make both 12 px."
+    ],
+    "delight": [
+      "Give the hero a one-shot moment on open: a 300 ms fade-up of the 1.7 number from 0.6 to 1.0 alpha, and a gentle 2 s shimmer sweep across a full green bar. No looping animation in the list.",
+      "In ElvUI mode, keep the personality text (speech bubbles, 'I keep the bench warm') exactly as in default. It does that now, so do not lose it while restyling the stage."
+    ]
+  },
+  "overall_notes": "This is a strong, coherent addon and play-next is unmistakable. Hero, the 1.7 levels banked figure, the 'First: hearth' instruction and the sorted rows with 5 px rails and 20 px chips all work. Amber versus red is now clearly distinct. The button-family cleanup landed: bronze in default, blue plus red in ElvUI matching his Options 'Defaults' and close. The ElvUI version genuinely sits next to his windows. The remaining problems are polish rather than structure. Class-coloured names contradict the state colours (green name on a not-resting row). The ElvUI card stage is bland. The hero bottom and the first-run footer are cramped. Banner copy and the red rail on a positive toast need a pass. Inner hairlines in ElvUI are a shade too tan versus his near-black separators. Fix the name colouring and the spacing and this moves to 9 territory. The broken bottom border strips are accepted as the simulator's REPEAT limit.",
+  "model": "claude-opus-5-5"
+}

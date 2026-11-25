@@ -1,0 +1,61 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing gold outlines inside the main window: retain the outer frame and hero boundary, but use 1 px #40372A separators around the current-character strip and roster. The current stack of framed rectangles feels more assembled than art-directed.",
+      "Reduce the hero's green progress bar from approximately 16 px to 12 px high and soften its texture contrast. Its full-width neon treatment competes with both the portrait and the excellent large banked-XP figure."
+    ],
+    "character_identity": [
+      "The detailed card repeats the hero's joke instead of adding a new character beat. On opening, show a different class-specific line in the stage bubble, while retaining the short roster quip.",
+      "Give the speech bubble a minimum 184 px text width with 12 px horizontal padding and 16 px line spacing. In the default card, the isolated 'Twice.' line weakens the joke's delivery.",
+      "Make the stage's level medallion at least 24 px across with a 12 px numeral. The current small gold badge and intersecting horizontal rule feel like decorative hardware rather than a clear character attribute."
+    ],
+    "default_theme": [
+      "Preserve the inn painting and restrained bronze frame, but reduce the hero painting's contrast beneath metadata with a #100D09 overlay at approximately 35% opacity. The portrait and text should lead; the floor and barrels should remain atmosphere.",
+      "Use a consistent button system: 24 px action-button height, 12 px horizontal text padding, red for the main character action and blue for secondary actions. The current small controls look less finished than the larger illustrated surfaces.",
+      "Increase the main title from its current small treatment to 15 px and keep secondary section labels at 11\u201312 px. The addon name currently has less presence than several pieces of incidental roster copy."
+    ],
+    "elvui_wc3_fit": [
+      "The near-black brown interiors, blue actions, plain title and small bronze studs are appropriately close to the actual Character and Options references. Keep that restraint; do not add Warcraft III door ornament.",
+      "At the supplied render scale, the close controls are much smaller than the user's real red close buttons. Use the host close-button treatment with a visible size of at least 22 \u00d7 22 px and a 28 \u00d7 28 px hit area; align Compact to the same vertical centre.",
+      "Reduce the persistent gold framing around the hero action strip and selected roster row to 1 px #655338. The user's actual windows rely more on quiet dark section bands than on conspicuous nested gold rectangles.",
+      "Match the host's readable font sizing, not merely its font face: use 12 px minimum for metadata and 13\u201314 px for row names. The addon currently appears more miniaturised than the reference Options controls."
+    ],
+    "alerts_ux": [
+      "The open alert menu covers the game's logout countdown. Anchor it to the banner's right side with an 8 px gap, flipping left if necessary, and explicitly reserve the countdown's rectangle. A six-second timeout does not make obscuring logout feedback acceptable.",
+      "Increase the dismiss and gear hit areas to 24 \u00d7 24 px without enlarging their visible artwork. The tiny top-right targets are inappropriate for a time-sensitive logout warning.",
+      "Separate temporary dismissal from permanent suppression more clearly: use 'Dismiss this warning' as the normal row, then an 8 px gap and a muted 'Turn off logout warnings\u2026' row. Open inline settings for the latter rather than disabling immediately.",
+      "Allow the top banner to grow vertically when text wraps, keeping 12 px internal padding and a 24 px action row. Do not depend on the fixture character name fitting the current narrow strip."
+    ],
+    "readability": [
+      "At 1600 \u00d7 900, too much essential information is approximately 10\u201311 px: bar captions, location metadata, footer sync status and alert body copy. Raise these to at least 12 px with 15\u201316 px line spacing; keep tertiary labels no smaller than 11 px.",
+      "Replace the compressed 'STATE / BONUS' heading with 'State' and move the five-moon bonus explanation into a tooltip labelled 'Rest bonus: tier 3 of 5'. Five repeated crescents beside every progress caption create an unexplained second measurement.",
+      "In the compact tooltip, reserve a fixed 165 px right-aligned status column and a minimum 16 px gutter after the character column. The longer 'Nearly full' estimates currently make the rows feel tightly packed.",
+      "Use #E6DDCB for secondary factual text and reserve darker muted colours for genuinely optional labels. Location, last-seen and time-to-full information should not compete with textured backgrounds at low contrast."
+    ],
+    "layout_polish": [
+      "Standardise horizontal alignment: hero text, current-character text and roster names should share a deliberate column grid rather than starting at three slightly different positions. Keep portrait-to-text gaps at 12 px.",
+      "Increase roster row height from approximately 49 px to 54 px when increasing the small text, with 8 px top and bottom breathing room. Preserve the quiet single divider between rows.",
+      "Keep the detailed card's lower information panel at a consistent 12 px inset and use a regular 36 px fact-row rhythm. Its mixture of paired facts and full-width professions currently looks opportunistic rather than systematically laid out.",
+      "Mark account linking as optional in onboarding, and hide the max-level/hidden checkbox until a roster exists. These controls distract from the first-run task of recording characters."
+    ],
+    "delight": [
+      "Give the five-moon bonus indicator a discoverable payoff: on hover, show its tier, the exact benefit and one short character-specific line. At present it is attractive but largely unexplained decoration.",
+      "When the recommended character changes, use one restrained 250 ms portrait-ring pulse and a short nonmodal announcement. Avoid continuously animating the full green bar.",
+      "Use a different opening quip from the roster quip and keep its delivery to two balanced lines where possible. Character humour is the strongest distinctive element here; repeating the same line in adjacent panels wastes it."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon direction with an immediately identifiable first choice, excellent state redundancy and a convincing Classic-era default palette. The ElvUI version is substantially compatible with the user's actual subtle brown/black skin; neither missing models nor stretched tiled-border streaks count against it. It is not yet demanding-user approval quality: small type and tiny controls undermine the otherwise generous window size, the moon system adds unexplained visual bookkeeping, and the alert menu obscuring logout feedback is a genuine UX defect. Prioritise readable scale and alert placement over additional ornament or features.",
+  "model": "gpt-6.1-sol"
+}

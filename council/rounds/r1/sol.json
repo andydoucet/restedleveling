@@ -1,0 +1,81 @@
+{
+  "scores": {
+    "visual_appeal": 6,
+    "play_next_clarity": 8,
+    "state_colours": 7,
+    "character_identity": 7,
+    "default_theme": 6,
+    "elvui_wc3_fit": 5,
+    "alerts_ux": 6,
+    "readability": 6,
+    "layout_polish": 6,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "Replace the broad, flat gray-brown roster surfaces with near-black panels (#191715), restrained alternating rows (#211E19), and 1 px bronze separators (#655239). The current middle section looks like a utility spreadsheet beneath a more atmospheric hero.",
+      "Reduce the cyan portrait halo from a broad glow to a 2\u20133 px class-coloured ring with a faint 6 px outer bloom. It currently competes with the rested-state green and overwhelms the otherwise subdued materials.",
+      "Establish one ornament hierarchy: a substantial title rail, restrained panel edges, and clean interior dividers. The interrupted gold frame sections and floating-looking title area need a more deliberately constructed silhouette."
+    ],
+    "play_next_clarity": [
+      "Keep the hero first, but explicitly label it '#1 \u00b7 PLAY NEXT' and change its reason to 'Rested cap reached \u00b7 capped for 2 days'. 'Full for 2d' is unnecessarily ambiguous.",
+      "Add a quiet 'Next best characters' heading above row #2 so the missing #1 in the roster reads as intentional rather than an indexing error.",
+      "Explain the tie-break in a tooltip or short secondary line, such as 'Ranked by rested reserve, then time at cap', using the actual implemented rule.",
+      "For characters outside resting areas, distinguish an actionable recommendation from a projection: 'Move to an inn \u00b7 27d 22h at current rate' rather than presenting a remote full date as an ordinary queue milestone."
+    ],
+    "state_colours": [
+      "Apply a subtle state tint across each entire row, not just its 3 px edge, bar, and chip: green #182B20, yellow #302D18, orange #322418, red #321C1C. Keep these muted enough for cream text.",
+      "Separate yellow and orange more decisively: use #E7D45B for 90%+ and #E79A36 for resting below 90%. The current orange reads too close to gold.",
+      "Standardize state names across roster, card, and legend: 'FULL', 'NEARLY FULL', 'RESTING', and 'NOT RESTING'. 'PARK ME', 'OUTSIDE', and 'NOT RESTING' currently describe the same problem in three different ways.",
+      "Colour the character-card history consistently with its state or use a neutral history colour. The full character's large yellow history strip contradicts the green full-state treatment."
+    ],
+    "character_identity": [
+      "Preserve the framed stage and environmental art; the simulator's portrait fallback is not itself a defect. Add a persistent 14 px identity line containing level, race, class, and realm/account beneath the 20 px name.",
+      "Reduce the overlaid class crest to about 20 px on roster portraits and 28 px on the large portrait, with a 2 px dark outline. It should identify the character without obscuring the face.",
+      "Give the speech bubble 12 px internal padding and reserve its height independently of the figure. Keep the speech tail clear of the portrait rim and limit lines to a readable 40\u201345 characters.",
+      "Expose last-seen information on the character card, not only in the roster, and replace cryptic '#2' and '#3 synced' labels with meaningful account aliases available on hover."
+    ],
+    "default_theme": [
+      "Rework the title/header into a continuous 32 px dark wood rail with a centered 16 px cream-gold title. The current tiny yellow title sits in an oversized, visually unfinished gap.",
+      "Use cream #E8DCC0 for ordinary headings and reserve gold #D7B66B for section labels and emphasis. Saturated yellow on nearly every control makes the default look more dated than premium.",
+      "Give Compact and Close consistent inset metal framing, a 24 px minimum hit area, and visible hover states. Match their bevel weight rather than mixing a tiny red button with oversized portrait-frame decoration.",
+      "Use a darker, more opaque content backing so the default remains readable over an actual outdoor game scene, not only the simulator's dark background."
+    ],
+    "elvui_wc3_fit": [
+      "The visible ElvUI result is mostly flat taupe panels with thin metal edging, not convincing Gatewood. Introduce low-contrast dark oak planks (#241A13 to #110E0B) on the title and outer rails while keeping text-bearing interiors near-black.",
+      "Use 6\u20138 px black iron perimeter straps (#151719), restrained 3 px bronze rivets (#8E6840), and a thin worn bronze inner edge. Concentrate these details on structural corners rather than adding decoration throughout every row.",
+      "Skin Compact as a small blue enamel control (#193D69) and destructive or close controls as red enamel (#6D201C), with cream labels and a subdued bronze lip. The current gray Compact control loses the requested WC3 character.",
+      "Remove the large opaque brown washes behind the roster and tidbit area. Match the user's real UI with darker, quieter interiors and thin gold-brown boundaries; inheriting skin handlers alone has not produced a cohesive visual match."
+    ],
+    "alerts_ux": [
+      "During the logout countdown, show only one unrested warning beneath the game's countdown. Suppress the redundant Esc-menu strip and defer the play-next toast until this warning is gone.",
+      "Add an explicit 20 \u00d7 20 px close control. Replace the tiny 'click to dismiss \u00b7 right-click: don't warn again' instruction with a visible 'Dismiss' action and an options-level 'Disable logout warnings' setting; permanent suppression should not depend on an obscure right-click.",
+      "Use a dark warm backing (#261B18), red edge #D66B5E, 16 px headline, and 13 px body copy. The current purple-gray backing feels disconnected from both themes.",
+      "Shorten the message to 'Not resting \u2014 move to cancel logout' and 'Find an inn or capital to earn rested XP 4\u00d7 faster.' Keep the warning nonmodal and avoid covering the game's Cancel control.",
+      "Give the next-character toast its own close affordance and a consistent 36 px portrait, with 'Rested XP depleted' as the event and 'Play next: Le Nette \u00b7 Full' as the recommendation."
+    ],
+    "readability": [
+      "At the supplied 1600 \u00d7 900 presentation, many metadata labels are too small for comfortable use. Target 13\u201314 px roster names, 12 px metadata, 11 px minimum microcopy, and 16 px section headings at the final rendered scale.",
+      "Increase row height to 46\u201348 px if necessary rather than shrinking full-time estimates, account tags, and state chips into competing miniature text.",
+      "Use #E8DCC0 for primary text and #B9B0A0 for secondary text against backgrounds no lighter than #29251F. The max-level row is excessively dim; preserve readable text while muting its bar and portrait.",
+      "Replace the card's clipped single-line unrested explanation with a two-line wrapping region at least 36 px tall. The visible 'Log in, hearth, log...' truncation hides the actual instruction.",
+      "In the compact tooltip, separate name, percentage, and time into fixed columns with at least 12 px gutters. Replace 'FULL full 2d' with 'Full \u00b7 capped 2d'."
+    ],
+    "layout_polish": [
+      "Use a shared grid: 12 px outer padding, 8 px section gaps, aligned portrait centers, a fixed bar column, a fixed state column, and a final utility column. The account tags, location icons, and pips currently crowd the right edge.",
+      "Increase the full roster window width to approximately 560\u2013580 px at this presentation scale, or move low-priority pips and account details into tooltips. Do not solve the density by reducing font size.",
+      "Make character-card tiles a consistent 36 px height with 8 px gutters and 12 px side padding. Give long profession values a second line rather than squeezing them into tiny text.",
+      "Reserve a fixed 64 px chart region with a baseline, '48h ago' and 'Now' labels, and a 0\u2013100% scale. The outside character's tiny red marks at the panel bottom currently look like a layout artifact rather than a useful graph.",
+      "Anchor the character card 8\u201312 px from the main window and align both title rails. Normalize their bottom padding and avoid large unexplained blank areas below the shorter tidbit set."
+    ],
+    "delight": [
+      "Keep the data-driven character speech; it is the strongest personality feature. Offer instant text or click-to-complete alongside typewriter playback so repeated card openings remain pleasant.",
+      "Add restrained interaction feedback: a 120 ms row highlight, a 1 px bronze hover outline, and a subtle portrait response when opening a card. Avoid additional permanent glows.",
+      "Give the resting stage a localized warm lantern glow and the outside stage a cool ambient treatment without washing out the figure or text. The stage framing should feel like a character vignette, not just a portrait pasted onto scenery.",
+      "Make milestones feel authored: use a brief, dismissible 'Le Dette is fully rested' toast with that character's portrait, rather than relying on anonymous coloured pips.",
+      "On first run, provide a clearly labelled 'Link account' action that reveals the command and requirements. Repeating a slash command in several text blocks is functional but not engaging onboarding."
+    ]
+  },
+  "overall_notes": "A promising, feature-rich first build with an unmistakable top recommendation, useful portrait identity, and genuine personality in the character speech. It is not yet a demanding-user approval: the roster is dense and visually administrative, the small text struggles at the supplied scale, and the ElvUI variant falls well short of the requested wood-and-iron Gatewood material language. Alert redundancy and inconsistent state terminology also need attention. I am not penalizing missing simulator models or placeholder player portraits; the concerns are the visible framing, hierarchy, materials, and information presentation. Prioritize readable typography, a unified row grid, one alert at a time, and a substantially more convincing WC3 skin before adding further features.",
+  "model": "gpt-6.1-sol"
+}

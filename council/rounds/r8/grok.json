@@ -1,0 +1,63 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Kill the empty well in the ElvUI hero: inset the portrait block 16px with a 1px #3A3428 rim and a #16130F-to-#0E0C0A vertical gradient so the upper 40% is not a flat void.",
+      "Collapse the logout options panel to its two rows. The open menu is a tall empty black card; cap it at 8px padding and 28px per row.",
+      "Default title is lost in the top band. Set it to 16px #F3E6C0, centered, with 8px clear of the Compact button."
+    ],
+    "state_colours": [
+      "Jacques Hammer's now-playing bar is pale blue while the chip says OUTSIDE AN INN. Paint that fill #C4453C on a #2A2420 track so the current character uses the same state scale as the roster.",
+      "Red roster fills are too dark to read at 5% and 30%. Use #D04545 on #1A1212, and thicken the left state rail from 3px to 5px.",
+      "NEARLY FULL chips sit too close to the gold chrome. Use #E8C45A on #3A3014, and draw the moon pips at 14px #F0E6C8 with a 2px gap so bonus stacks are not a dim texture."
+    ],
+    "character_identity": [
+      "Row portraits are ~26px and race/class is missing. Use 36px portraits, a 2px class-color ring, and a subtitle like 'Lv 22 Undead Mage' before the zone.",
+      "ElvUI card stage is an unbounded black rectangle. Give it a 280px well, 2px #6B5A3E rim, portrait centered, level badge overlapping the rim at bottom-right.",
+      "Keep the bubble to one joke. Move 'Hearth me home to fill up.' out of Colonol Sunders' bubble so it does not repeat the why-line. Normalize 'Le jette' to 'Le Jette'."
+    ],
+    "default_theme": [
+      "Tint default rows 8% by state (#14281A, #2A2612, #2C1A10, #2A1214) so the default roster is not the same flat list as ElvUI.",
+      "The blue Compact button clashes with the gold default frame. Make that 22px control #3A2A18 with 1px #8A7040 and #E6D5A8 text; leave the red View button as the only enamel action.",
+      "Keep the inn painting, but vignette it to #0E0C0A at the edges so the portrait ring and the 1.7 figure sit on a frame, not a muddy photo."
+    ],
+    "elvui_wc3_fit": [
+      "Match the Options window edge, not a bright gold stroke: fill #12100E, 1px outer #2A241C, 1px inset #4A3E2A, and 6px #8A7044 studs only at the four corners.",
+      "His Character window uses red enamel for the primary action (Expanded Stats). Make 'View Le Nette' that red (#7A1F1C to #A12822, 22px, cream label). Keep Compact and Link account on the blue enamel used by Defaults and Close.",
+      "Secondary copy is greyer than his gold/cream UI. Use #C6B48A for meta lines; keep the title at 13px #E6D5A8 with no plaque."
+    ],
+    "alerts_ux": [
+      "Do not open a second panel over the logout countdown. Put 'Dismiss this warning' and 'Disable future logout warnings...' as two 28px text buttons in the banner itself, full banner width, 6px padding.",
+      "The Esc strip is wider than the game menu and shifted left. Center a 220px, 36px strip 8px under 'Return to Game', same warning copy and the Up-next button.",
+      "Banner copy is good. Keep the 8px top anchor and the 2px toast timer; drop the gear-opened sheet's empty body entirely."
+    ],
+    "readability": [
+      "Row subtitles look ~10px #6E6454. Raise them to 12px #C8B898, and bar captions to 12px #E4D6B0 on the track, targeting at least 4.5:1.",
+      "Footer 'Synced 2d ago' and the disable-warnings line are too dim. Use 11px #A89878.",
+      "Put 'Acct #3' in a 10px chip (#3A3428 fill, #E6D5A8 text) 6px after the name so it does not collide with the level line. Card why-lines at 13px #E8DCC0 with 16px line-height."
+    ],
+    "layout_polish": [
+      "Main roster is the layout to keep: 12px frame inset, 44px rows once portraits are 36px, chips and bars on one right column.",
+      "Fix the alert stack: banner 112px at top-center is fine, but the flyout below it must not add a second empty height. Esc strip shares the menu's center line with an 8px gap and must not overlap Return to Game.",
+      "Card tidbits: lock a 20px icon column, 16px gutter, 50/50 columns. First-run numbers in a 28px column aligned to the step titles."
+    ],
+    "delight": [
+      "Add an 8px speech tail from the bubble to the portrait so the joke is spoken, not a floating caption.",
+      "Max-level row has no bar and looks unfinished. Replace the empty track with a 14px bench glyph and keep 'Max level. I keep the bench warm.'",
+      "Toast reward line '1.7 levels banked' should be #8FE06A, 14px, not the same tan as the body. On the flat ElvUI card, set the joke in 13px italic #E6D5A8 under the portrait so the stage is not only a stat grid."
+    ]
+  },
+  "overall_notes": "The roster does its job: Le Nette is obviously next, state chips match the four-color rule, and the default hero with the big 1.7 and the class jokes is the part a demanding player would keep. ElvUI mode is close to his real near-black windows but the border is too bright, the primary button should be the red enamel from his Character window, and the hero is an empty well. The logout menu's dead space and the off-center Esc strip are the only screens that look unfinished.",
+  "model": "grok-4.7"
+}

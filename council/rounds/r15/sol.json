@@ -1,0 +1,58 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 7,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce the visual weight of utility surfaces: use a near-black brown such as #18130E for the default roster, reserve #302619 for the selected row, and retain the coloured state rails. The current broad brown bands make the lower half feel like a dense spreadsheet.",
+      "Give the recommendation's 1.7 metric a more explicit caption, such as 'rested levels banked', at 12\u201313 px. Its current oversized numeral is attractive but competes with the character name before its meaning is established."
+    ],
+    "play_next_clarity": [],
+    "state_colours": [],
+    "character_identity": [
+      "In the character card's fallback presentation, reduce the portrait from roughly 150 px to 112\u2013120 px and give it a deliberate dark inset with a 2 px state ring. The enlarged low-resolution portrait currently dominates the stage more than the character's name and personality.",
+      "Keep the live model as the primary stage content, but reserve a consistent lower 56 px identity strip for name, level, class and status. Position the fallback portrait within the same composition rather than letting fallback and live presentations have unrelated visual hierarchies."
+    ],
+    "default_theme": [
+      "Reduce the default card's bright gold portrait rim to 2\u20133 px, with a darker #79603A outer edge. Its medallion treatment is substantially heavier than the otherwise restrained frame.",
+      "Separate the information panel with a 1 px #59472E rule rather than another strong boxed surface. Keep 16 px internal padding and 12 px between information rows so the card feels composed rather than assembled from nested rectangles."
+    ],
+    "elvui_wc3_fit": [
+      "Preserve the existing near-black brown fill, cream/gold typography, blue Compact button and red details/close buttons; these genuinely relate to the supplied Character and Options windows. Do not add a theatrical Warcraft III doorway.",
+      "Fix the visible rectangular end-cap patches along the ElvUI top and bottom edges. On the main window, the upper bronze patch intrudes into the area behind Compact; the card also has conspicuous grey patches near its right edge. Anchor caps to their respective corners, clip strips to the frame bounds and keep border art below controls. This is separate from the simulator's acknowledged tiled-texture streaking.",
+      "Match the reference close-button treatment more closely: use a 24\u201328 px red square with a centred cream X and at least 8 px clearance from the neighbouring control. The addon's tiny close control feels less integrated than its other skinned buttons."
+    ],
+    "alerts_ux": [
+      "Make the logout warning about Jacques Hammer first. Replace the dominant 'View Le Nette's details' button with 'Show rest location' or 'View Jacques Hammer'; keep the next-character suggestion as a secondary line underneath.",
+      "Replace the isolated green FULL badge beside that button with explicit copy such as 'Next: Le Nette \u00b7 Full'. At present, the green status can be misread as reassurance about the character who is actually logging out unrested.",
+      "Use 'Cancel logout, then reach an inn' as the headline and 'Jacques Hammer is outside a rest area. Hearth to Crossroads or reach an inn.' as the supporting copy. Keep the warning orange at #F2B44B, with a 14 px headline and 12\u201313 px body.",
+      "Keep dismissal nonmodal, but enlarge the close hit area to at least 24 \u00d7 24 px and provide 8 px clearance around the settings control. Do not imply that dismissing this banner cancels the game's logout."
+    ],
+    "readability": [
+      "At the actual overview scale, secondary roster text and footer copy are noticeably small. Set roster metadata to at least 12 px and character names to 13\u201314 px at the intended UI scale; use #D8D0BD for metadata instead of lowering its contrast further.",
+      "Give the compact tooltip's left and right columns a fixed minimum 20 px gutter. Allow it to grow horizontally for long names or localised countdowns rather than shrinking the text.",
+      "Replace 'none used this session' with '0 rested XP used this session' and '3 of 5' under Rest Bonus with an explicit unit or descriptive label. These small strings currently require knowledge the interface has not supplied."
+    ],
+    "layout_polish": [
+      "Use a consistent 12 px inset for the header, recommendation, current-character panel, roster and footer. The current mixture of inset boxes, full-width strips and differing border weights makes the main window feel incrementally assembled.",
+      "Give the current-character panel 8 px vertical padding and align its portrait, identity block, blue bar and warning badge to a shared centre line. Keep the blue bar distinct from the roster's state colours.",
+      "On character cards, establish identical two-column anchors for Hearth, Logged Out In, Played, Gold, Guild and Gear, with at least 16 px between columns. Reserve predictable space for optional fields so the default and ElvUI cards retain the same information rhythm."
+    ],
+    "delight": [
+      "Use the existing character speech more selectively: show the line on opening, play one talk animation, then settle into idle after roughly 3\u20134 seconds. Repeated speech or permanent talking would undermine the otherwise useful dashboard.",
+      "Add a restrained 150\u2013200 ms highlight when the recommended character changes, confined to the recommendation rail and portrait ring. Avoid pulsing the whole panel or animating every rested bar.",
+      "Improve the first-run promise from 'I'll sit at the top once I'm full' to 'I'll rise as my rest builds'. Full rest alone should not sound like a guarantee of first position when multiple characters qualify."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon with an immediately identifiable next character, excellent redundant state signalling, useful character details and considerably more personality than a typical roster utility. The default theme is credible Warcraft UI, and the ElvUI version largely belongs beside the user's actual dark, restrained skinned windows. I am not penalising missing simulator models or tiled-border streaking. The remaining shortcomings are real hierarchy and finishing issues: crowded secondary information, inconsistent frame details, conspicuous end-cap patches and, most importantly, logout alerts whose strongest action points at a different character. This is good work, but not yet a demanding-user, 9+ approval.",
+  "model": "gpt-6.1-sol"
+}

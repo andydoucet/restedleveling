@@ -1,0 +1,60 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 8,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing gold outlines: keep the outer frame and hero perimeter, but use 1 px #403528 separators for the current-character panel, roster and detail grid. The current stack reads as several nested boxes rather than one composed window.",
+      "Make the recommendation portrait the dominant circular ornament. Reduce its gold rim to 3 px and the smaller roster portrait rims to 1 px; keep state colour as a separate inner ring."
+    ],
+    "play_next_clarity": [
+      "Replace 'First: hearth or reach an inn. Then play Le Nette' with 'Park Jacques Hammer in an inn, then switch to Le Nette'. Explicitly name the character who needs moving.",
+      "Change 'View Le Nette' to 'Inspect Le Nette' and add a persistent 12 px helper beneath the recommendation: 'Switch characters at character select'. Opening a card is not the same action as playing the recommendation.",
+      "Label the hero's duration 'At full for 2 days' and future durations 'Full in 14h 25m'. This distinguishes time already capped from time until capped without relying on punctuation."
+    ],
+    "character_identity": [
+      "Replace faction-emblem portraits with race-and-sex fallback portraits wherever character artwork is unavailable; retain the faction emblem as a 14 px badge. Jacques Hammer currently reads as a faction marker rather than a person.",
+      "Keep the speech bubble above the live-model silhouette, reserving approximately 180 px of unobstructed vertical space beneath it. Test long two-line speech against the actual animated model, not just the portrait fallback.",
+      "Give each character two or three short class- or location-specific lines and rotate them on opening, without replaying continuously. The existing innkeeper-cat line establishes a good direction."
+    ],
+    "default_theme": [
+      "Give all bronze secondary buttons a consistent 1 px light top bevel and dark bottom bevel, using #8B7042 and #292016 over #594529. Compact, Link account and alert actions currently look flatter than the surrounding Warcraft-style frame.",
+      "Reduce the bright halo behind the default card portrait by roughly 30% opacity. Preserve the inn artwork, but let the face and speech provide the focus instead of the large gold glow."
+    ],
+    "elvui_wc3_fit": [
+      "Inherit the installed ElvUI font face and outline flags for titles, buttons and body text. The addon retains a conspicuous serif presentation beside the user's angular, compact Character and Options typography.",
+      "Preserve the current near-black brown panels, small studs and blue/red button split. Match close-button proportions across the main window and card using a consistent 24 px target with the skin's red enamel treatment; the rendered close controls are noticeably smaller than the user's Character-window close.",
+      "Do not add oversized Warcraft III ornament or repaint the tiled border strips. The remaining fit work is typography and control metrics, not a more elaborate frame."
+    ],
+    "alerts_ux": [
+      "Make the immediate corrective action primary: add a 24 px 'Track nearest inn' button where supported, or a clearly labelled hearth action only when it can actually work. Keep 'Inspect Le Nette' secondary; inspecting another character does not resolve the logout risk.",
+      "Change the active countdown copy to 'Cancel logout, then move Jacques Hammer to an inn'. Keep the warning dismissible and separate from the game's logout dialog.",
+      "Increase the dismiss target to 24 by 24 px while retaining the bronze treatment. Keep at least 8 px between dismiss and settings so the adjacent small controls are not easy to confuse."
+    ],
+    "readability": [
+      "Increase roster metadata to 13 px at the user's actual UI scale, and use 14 px for character names. The full-screen default render makes level, location and last-seen text noticeably harder to scan than the enlarged crops suggest.",
+      "Separate 'Le Bankken' and 'Acct #3' by at least 8 px, rendering the account suffix in 12 px #C4B8A4. It currently runs into the name as another name fragment.",
+      "In compact mode, reserve a fixed 220 px right-aligned status column and use 'Full in ~3d' rather than 'Nearly full \u00b7 full in about 3d'. Keep identity and timing from competing across the same narrow line."
+    ],
+    "layout_polish": [
+      "Increase the hero height by 12 px or move its progress bar upward by 10 px. In both main-window renders, 'Fully rested for 2 days' sits against the instruction-strip boundary, with inadequate bottom clearance.",
+      "Give every hero content element at least 12 px clearance from the instruction strip, including wrapped status text. Add a layout test for two-line location and status strings rather than only the current fixture.",
+      "Align the current-character meter and warning badge to separate columns with a minimum 12 px gap. In the ElvUI render, the badge crowds the meter's right edge and makes the panel feel patched together."
+    ],
+    "delight": [
+      "On opening a character, sequence a short talk animation with the speech line, then settle into an idle pose. Provide a reduced-motion option and avoid restarting the animation when updating data.",
+      "Add a restrained 400 ms green rim pulse when a character first reaches full rest, once per newly observed transition. Avoid looping glows or celebratory effects on every refresh."
+    ]
+  },
+  "overall_notes": "A strong, recognisably Warcraft addon with a clear recommendation hierarchy, excellent state differentiation and useful character flavour. The ElvUI version is substantially aligned with the user's actual understated skin; it should not become a decorative Warcraft III door. I have not penalised missing simulator models, fallback portraits as a rendering limitation, or stretched tiled border textures. The remaining shortcomings are real presentation issues: cramped hero status placement, small metadata at gameplay scale, inconsistent control metrics and warning actions that prioritise inspecting the next character over fixing the current one. Good work, but not yet a demanding-user approval at 9.",
+  "model": "gpt-6.1-sol"
+}

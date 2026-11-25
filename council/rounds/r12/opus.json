@@ -1,0 +1,62 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "The default hero CTA 'View Le Nette' is red (#8A1E1A family). The banner's same action is the bronze bevel button. Use one family for the same action everywhere: bronze in default (#6B4E2A face, #B08A4A edge) and red only under ElvUI, where red means primary.",
+      "The ElvUI hero is a flat black well with nothing in it. Add a 20-25% opacity radial vignette (#2A1D12 centre to #0E0A07 edge) behind the portrait so the hero still reads as a stage without the inn art. Keep it under 30% so it stays as subtle as his Character window."
+    ],
+    "state_colours": [
+      "In the compact tooltip, 'Resting \u00b7 full in about 4d' (Le Bankke) is almost the same yellow-amber as 'Nearly full'. Push resting text to the bar orange (#E08A2E) and keep nearly full at #E8D23A, so rows 3-5 separate at a glance.",
+      "In the default main list, the row tints for yellow and orange rows are nearly invisible on the brown alternation. Raise the state tint to about 8% alpha (e.g. #E08A2E at 0.08), or rely on the 5 px rail alone and drop the tint. Right now it reads as noise rather than signal.",
+      "In the minibar, the resting icon (bed on orange square) is a different shape language from the round check/dot/cross pips. Make it a round orange pip, #E08A2E fill and #7A4A18 ring, with a small 'z' glyph."
+    ],
+    "character_identity": [
+      "In the ElvUI card (Colonol Sunders), there is about 130 px of empty black between the speech bubble and the name. Move the name and level block up to sit under the bubble (top-left column). Alternatively, keep the inn/zone backdrop art at about 30% opacity under ElvUI as well.",
+      "The hero's yellow '1' rank coin overlaps the top-left corner of the green rail and the frame edge. Inset it 6 px right and 6 px down so it sits inside the panel. Alternatively, fold it into the '#1 \u00b7 PLAY NEXT' kicker and remove the coin.",
+      "The hero speech pill 'Water's conjured.' starts flush against the portrait ring with its tail clipped by the class badge. Shift the pill 10 px right so the class badge (bottom-right of the ring) is not touching the tail."
+    ],
+    "default_theme": [
+      "The warm brown is back but very low-key: the hero at #2A2118 next to the list at #1E1711 is about a 4% luminance step. Lift the hero to #33281C or add the inn art at 35% opacity (as the card does), so the default reads as an inn and not 'dark mode'.",
+      "The default title bar 'Rested Leveling' at about 13 px is undersized next to the 1.7 numeral. Use 15 px, colour #E8C87A, with the bronze rule 2 px below it."
+    ],
+    "elvui_wc3_fit": [
+      "The fill, studs, blue 'Compact', red close, red primary and yellow checkbox all match his Options and Character windows well.",
+      "On the main window's left edge at about y=400 (top of the NEXT BEST strip), the outer border appears to step or break between the upper and lower sections. Make the outer frame one continuous backdrop and draw the inner wells inside it with a uniform 10 px inset.",
+      "The list well's right edge (state chips end around x=777, wells around x=787) sits about 10 px inside the hero/now-playing right edge (about x=797). Align all three wells to the same right inset. If a scrollbar gutter is reserved, hide it when there is no overflow.",
+      "The ElvUI hero numeral '1.7' is cream while the default is green. Under ElvUI, use his gold #F2C94C for the numeral (like 'Level 25' in his Character window) so it ties to his palette rather than a generic cream."
+    ],
+    "alerts_ux": [
+      "The logout banner says 'Cancel the logout, then hearth to Crossroads or reach an inn.' The Esc banner says 'Reach an inn or a city first.' The headlines also differ ('isn't resting' vs 'isn't resting.'). Use one headline without a period. Use the hearth-named body line in both, because he gets the same fix in both places.",
+      "The banner's primary button 'View Le Nette' is secondary to the actual task, which is cancelling the logout. Label it 'Switch to Le Nette', or put a muted hint under the body: 'Then switch to Le Nette (Full)'. The chip then has a clear subject.",
+      "The Esc banner (420 px) is more than twice the game menu's width. Fine as is, but centre-align its top to the menu's bottom with a 12 px gap, and add a subtle 1 px #4A3620 top rule so it reads as attached rather than floating."
+    ],
+    "readability": [
+      "The row secondary lines ('Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago') at 12 px in #B8A888 on brown are on the edge of legible at his 1600x900 scale. Use #CFC0A0.",
+      "Legend items in the NEXT BEST strip ('1 resting', '2 not resting') are about 11 px. Bring them to the 12 px floor you set elsewhere.",
+      "In the compact list, the timing copy mixes 'full in 14h 25m' and 'full in about 3d'. Use one format (e.g. '14h', '3d 14h') to match the main list."
+    ],
+    "layout_polish": [
+      "In the card, the level coin '22' sits on a thin rule directly above the FULL chip with about 2 px between them. Give 6 px, or put the level in the name line only and drop the coin.",
+      "In the first run screen, 'No other account linked yet.' still hugs the bottom-left frame edge. Use 12 px padding left and bottom and centre it vertically in a 28 px footer strip, matching the main window's 'Synced 2d ago' footer.",
+      "In the first run hero, there is about 70% empty space between the 'I'll sit at the top' pill and the instruction line. Tighten it by 16 px, or let the welcome hero be 20 px shorter.",
+      "In the now playing strip, 'none used this session' and '0.6 rested levels left' sit on different baselines. Align both secondary lines to the same baseline."
+    ],
+    "delight": [
+      "Speech lines are charming ('Polymorphed the innkeeper's cat. Twice.'). Let the hero and the main window rotate a line each time they open. A static line on the list gets stale.",
+      "Add a 300 ms fill tween on the hero bar and a soft one-time glow on the FULL chip when a character crosses to full, so the green state feels earned."
+    ]
+  },
+  "overall_notes": "A mature round. Play-next clarity is excellent: the #1 hero, the 'levels banked' numeral, the 'Then Le Beouf' fallback and the ordered rows with fixed-width chips make the choice instant. The ElvUI mode now genuinely sits next to his Options and Character windows: near-black fill, studs, blue secondary, red primary, yellow checkbox. What keeps this from 9s is small but visible amateurism. The default hero CTA is red while the banner's identical action is bronze. The ElvUI main border appears to step at the NEXT BEST strip, and the right edges of the wells don't align. The ElvUI card stage is a barren black field. Alert copy differs between the logout and Esc banners. Resting and nearly-full blur together in the compact tooltip. The default theme is warmer but still close to dark mode. Fix those and this is a 9.",
+  "model": "claude-opus-5-5"
+}

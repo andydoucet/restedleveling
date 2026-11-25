@@ -1,0 +1,68 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "The hero's right column is the weakest area. '1.7' is large, but 'levels banked' and 'Then Le Beouf, full for 8h' sit at different right insets. Right-align all three to one x, 12 px inside the hero edge.",
+      "Put a 6 px gap between 'levels banked' and 'Then...', and dim the 'Then' line to #B8A888 so the eye reads it last.",
+      "The hero bar reads as a long flat strip. Add a 1 px inner highlight (#FFFFFF at 12% alpha) along its top edge, and give it the same segment ticks the card bar has, so the two bars feel related."
+    ],
+    "state_colours": [
+      "Two of the RESTING row's cues look like the NOT RESTING rows. The orange rail #E07A2A and the red rail are close at 3 px width. Widen all rails to 4 px.",
+      "Shift resting toward amber-orange (#E8902E) and keep not-resting at #D23A2A, so they are clearly different hues.",
+      "The red row tint on rows 6-7 is good. Give the resting row a matching faint tint (#E8902E at 6% alpha) so all four states use the same system.",
+      "Under ElvUI the filled chips (saturated green, yellow and red fills) are louder than anything in his windows. Drop the chip fill alpha to about 35%, keep the 1 px coloured border, and keep the label at full colour."
+    ],
+    "character_identity": [
+      "The row portraits are 34 px and the class badge overlaps them at about 12 px. The badge reads as noise: raise it to 14 px with a 1 px dark ring (#120C08) so it separates from the face.",
+      "On the card, the 'z z' sleep glyph floats detached above the ring. Anchor it to the ring's top-right at a 4 px offset, and fade it at 70%.",
+      "Ring colour already encodes state. Add a 2 px outer dark halo (#000000 at 60%) to the card ring so it reads against both the inn art and the black ElvUI stage."
+    ],
+    "default_theme": [
+      "The #1 disc in the hero's top-left corner now looks orphaned from the portrait. Move it to sit on the ring at 10 o'clock, 4 px outside the ring stroke, or fold it into the '#1 \u00b7 PLAY NEXT' kicker.",
+      "The Compact button's bronze face (#7A5A32-ish) is muddy at 20 px tall. Lift the face to #8C6A3A, add a 1 px top highlight (#C8A060 at 40%), and keep the label in cream #F0E0B8.",
+      "The footer 'Synced 2d ago from Acct #3' is 11-12 px grey on brown. Use 12 px #A89878, and align its baseline with the checkbox label."
+    ],
+    "elvui_wc3_fit": [
+      "The title still reads near-white cream in both ElvUI renders (main and card), not the #F0D890 gold of his Options and Character titles. Verify that the colour is applied after the skin's SetTextColor; it looks overridden.",
+      "The ElvUI card stage is pure black with a lighter wood strip above it from the frame header. Fill the stage with his panel colour (#1A120C) plus a very subtle bottom vignette, so it is not a black hole next to his dark-brown windows.",
+      "The ElvUI card's bar butts directly against the stage bottom (about 4 px). Give it 10 px, as in the default card.",
+      "The hero name in Mage cyan at 26 px is the brightest element under ElvUI. Keep the class colour, but render it at about 90% brightness, matching how his Character window keeps the level/class line restrained.",
+      "Chip fills: see state_colours. Translucent fills with crisp borders match his Options window's flat dark cells far better."
+    ],
+    "alerts_ux": [
+      "The banner title uses a pinkish #F0B0A0. Use the cream-gold #F0D890 for the headline and keep the red only on the left rail and icon, so it matches his windows and is less shrill.",
+      "The 'Up next: Le Nette \u00b7 Full' button is 20 px tall with 12 px text. Make it 22 px, and colour 'Full' in the state green #5AC85A so the reason to switch is visible at a glance.",
+      "The gear and close icons sit at different sizes (14 vs 18 px). Make both 16 px, 6 px apart, vertically centred on the title line.",
+      "Toast (scene 06): 'Jacques Hammer: rested XP used up' at 11-12 px muted is the reason for the toast. Raise it to 12 px #D8C8A8."
+    ],
+    "readability": [
+      "The moons are too dim when empty (about #3A3020 on #1C140E) and only about 10 px. Raise them to 12 px, set empty moons to #5A4A34, and set filled moons to #E8D8A8.",
+      "The legend line in the header band ('2 full \u00b7 2 nearly full...') is about 11 px. Make it 12 px, and give its icons 4 px gaps from the text.",
+      "Row sub-lines ('Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago') are grey #A0A0A0 on dark. Use #B8AC94, warm to match the theme, at 12 px."
+    ],
+    "layout_polish": [
+      "In default, the Now Playing pill 'OUTSIDE A REST AREA' is right-aligned but taller than the chips below (about 18 vs 20 px). Make all pills and chips 20 px tall with 8 px horizontal padding.",
+      "The STATE header sits slightly left of the chip centre in default (about 4 px). Recentre it.",
+      "The max-level row's 'Max level. I keep the bench warm.' starts at the bar column. Italicise it or tint it #9A8A70 so it does not read as data.",
+      "The ElvUI main window has about 22 px of left gutter versus about 20 px on the right. Equalise the gutters."
+    ],
+    "delight": [
+      "The speech lines are good. Give the hero tag ('Water's conjured.') the same two-line treatment as the card, with a dim second line such as 'Brill inn can spare me now.', since it is the first thing seen.",
+      "On the first-run screen, swap the faction-crest portrait for the 'Log each alt in once' illustration once he logs a second character, so the empty state visibly 'fills in'.",
+      "Add a 150 ms fade/slide on the #1 hero when the sort order changes, so the new top character is noticed."
+    ]
+  },
+  "overall_notes": "This is a strong, coherent round. Play-next hierarchy is excellent: hero, the instruction band with one red action, now playing, then a clean ranked roster with a consistent rail, bar and chip state system. The default theme is warm and unified now that the buttons share a family. The remaining gaps are small but visible. In ElvUI mode the titles still render near-white rather than his gold, the saturated chip fills are louder than his subtle skin, and the ElvUI card stage is a black void with the bar crammed under it. Readability nits remain: the moons are too dim and the legend text is too small. The alerts are concise and useful, with a slightly shrill pink headline. This is not yet a 9 overall for a demanding user, but it is close.",
+  "model": "claude-opus-5-5"
+}

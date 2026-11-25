@@ -1,0 +1,62 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing ornament inside the roster: retain the outer frame and state rails, but remove every second horizontal bronze separator and use a 1 px #352D23 divider between ordinary rows.",
+      "Simplify the hero's repeated information. Keep the large banked-level figure, decision bubble and progress bar; replace the additional full-rest sentence with one short duration label. Give the remaining elements at least 8 px vertical separation."
+    ],
+    "state_colours": [
+      "The green, yellow, orange and red sequence reads correctly, and labels provide a useful non-colour cue. However, the nearly-full chip appears olive rather than decisively yellow. Use #514810 for its fill and #FFF08A for its label, retaining a bright yellow state rail.",
+      "The five moons introduce another gold-coded system without explaining its relationship to rested XP. Rename the column to 'STATE / REST TIER', add a tooltip defining each tier, and use #DCC68A for active moons versus #554A35 for inactive moons.",
+      "Keep ordinary red-row background washes at approximately 10\u201312% so two adjacent unsafe characters do not become one large burgundy block."
+    ],
+    "character_identity": [
+      "The portraits, class colours, location-specific lines and character facts establish identity well. Make the detail-card name 18 px and its level/race/class line 13 px; these should remain the primary identifiers rather than the large state chip.",
+      "Give the card speech bubble a consistent 12 px inset and a maximum width around 180 px. The troll's two text blocks currently wrap into a relatively tall, boxy panel; use 14 px dialogue with 17 px line spacing and 12 px supporting copy.",
+      "When a portrait is unavailable, prefer a race/class fallback over a large faction emblem where possible. The welcome scene currently gives the faction symbol more personality weight than the character."
+    ],
+    "default_theme": [
+      "The restrained oak-and-bronze treatment is coherent, but the repeating miniature corner hardware on compact panels is disproportionately prominent. Use a 1 px #6B5344 outline with only four 3 px corner studs for tooltips and toasts.",
+      "Increase the title-bar label to 15 px and use the same title treatment on the roster and character card. Keep blue secondary buttons and red close/view actions, but standardize their heights to 24 px."
+    ],
+    "elvui_wc3_fit": [
+      "Preserve the actual skin's near-black brown wells, bronze studs, blue enamel secondary buttons and red close buttons. Those choices are substantially closer to the references than a decorative Warcraft III doorway would be.",
+      "The interiors still look like the default addon transplanted into a skinned shell: dense gold micro-labels, moon ornaments and portrait rings dominate more than in the user's real Options window. In ElvUI mode, use #120D08 wells, #171717 section bands and 1 px #403426 separators; reserve gold for headings and important values.",
+      "Inherit the configured ElvUI font face and size as well as its outline. The rendered addon text remains much smaller and more serif-heavy in appearance than the reference windows. Set ordinary content to at least 13 px and section labels to 12 px at the intended UI scale.",
+      "Validate the title plate and frame junctions in the real client before approval. Do not compensate for simulator-only tiled-border streaks by adding custom Gatewood decoration."
+    ],
+    "alerts_ux": [
+      "The alerts are nonmodal and correctly tell the player to move, but the logout warning has three competing actions: movement, an up-next button and settings. Make 'Move to cancel logout' the 14 px primary instruction, place the inn guidance below it, and keep the recommendation visually secondary.",
+      "Replace the bright yellow settings gear with a muted #B5A58A 16 px icon inside a 24 px target. Its current visual emphasis competes with the warning symbol.",
+      "Inset the expanded warning menu by 8 px beneath its parent and remove the doubled horizontal frame seam. Use 28 px menu rows and label the destructive preference 'Disable future logout warnings\u2026'."
+    ],
+    "readability": [
+      "Increase roster secondary text and compact-tooltip rows to 13 px, with a minimum 16 px line height. The current location, last-seen and duration strings are readable only with deliberate attention at the supplied full-screen scale.",
+      "Increase the character-fact labels from tiny uppercase text to 12 px and their values to 13 px. Use #C8B894 for labels and #F0E6D2 for values.",
+      "Shorten 'REST CAPACITY \u00b7 LAST 48 HOURS SEEN' to 'RESTED XP \u00b7 LAST 48H'. Keep the chart title at 12 px and axis labels at 11\u201312 px; the current narrow strip makes the heading and summary look compressed."
+    ],
+    "layout_polish": [
+      "Use a consistent 12 px internal gutter across the roster, detail card, facts panel and chart. Align the card's name, progress description and fact-panel content to that gutter.",
+      "Keep the full-state chart in the same 96 px chart container used for partial histories, or replace it with a deliberately designed 32 px summary panel. The current thin full-state strip looks like a collapsed leftover compared with the partial-history card.",
+      "Standardize Compact placement between themes. It is top-right in the default window but bottom-right in ElvUI; retain one location unless the inherited frame genuinely prevents it."
+    ],
+    "delight": [
+      "Keep the decision-first character dialogue; it is the strongest personality feature. Add several short variants per class/state so the same persistent line does not become wallpaper.",
+      "Show the longer flavour line briefly when opening a card, then settle to a smaller bubble without obscuring the stage. Respect Reduce motion and keep the roster recommendation stable.",
+      "Give the first-run state a more immediate task: add a 24 px-high 'How to record an alt' control next to the first step, and mark account linking explicitly as optional."
+    ]
+  },
+  "overall_notes": "A strong, recognizably Warcraft addon with an excellent answer to 'who should I play next?'. The hero hierarchy, explicit state labels, portraits and nonmodal warnings work. It is not yet a demanding-user approval: small secondary typography, redundant status presentation and heavily ornamented compact surfaces prevent a 9. ElvUI compatibility is credible at the shell and button level, but the interior typography and density still feel more like the addon's own theme than the user's real skinned windows. No deduction was made for unavailable 3D models, portrait fallbacks themselves, simulator-only border streaks or the game's logout countdown.",
+  "model": "gpt-6.1-sol"
+}

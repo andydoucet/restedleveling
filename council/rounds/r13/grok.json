@@ -1,0 +1,60 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Cut the hero rest bar from ~14px to 8px, track #1A140E, fill #3F8F4A, so the portrait and 1.7 figure lead instead of a generic meter.",
+      "Replace the web-style state pills with 20px-tall milled buttons: 1px #6B5428 border, 12px icon, 4px corner radius max, cream label.",
+      "Add a 1px inner edge highlight #5C4A32 at 40% opacity on default panels so the inn frame reads as carved wood, not a flat fill."
+    ],
+    "character_identity": [
+      "Class-color every roster name (mage #69CCF0, hunter #ABD473, and so on) and put a 16px class icon 6px left of the name.",
+      "Draw an 18px level coin on every card portrait, lower-left, 4px inset: fill #1A120C, ring #C4A574, numeral 11px #F3E6C4. Colonol Sunders currently has none.",
+      "Move the hero speech pill another 8px right so the tail clears the class badge by at least 8px."
+    ],
+    "default_theme": [
+      "Set the title to 16px gold #F3E6C4 and the header rule to 2px #A68448, inset 12px; the current gold sinks into #382B1E.",
+      "Raise row subtitles to 12px #C8B89A. #8A7D6C on #32261C is too dim for location and last-seen.",
+      "Center the first-run 'Link account' control as a 140x26 bronze button under step 3; the small left ghost button looks unfinished."
+    ],
+    "elvui_wc3_fit": [
+      "Skin secondary actions (Compact, View details, Link) as his blue enamel: fill #1E4C7A, top highlight #3D7AB5, 1px border #0E2438, cream label. Keep red #8C1E1E for Close and destructive only. The alert's flat brown button does not match Options.",
+      "Give the Esc alert the same near-black well #0E0C0A, 1px #3A2E22 border, and 6px bronze corner studs as Guild and Character. It currently reads as a borderless toast.",
+      "Match the card frame to the character window: thin dark outer edge with studs only at the corners, not a heavier gold picture frame. UI labels stay #F0E2B6; reserve green for hunter class color only."
+    ],
+    "alerts_ux": [
+      "On the Esc strip, keep two lines: 'Cancel logout first.' at 13px #F3E6C4, then 'Hearth to Crossroads or reach an inn.' at 12px #C8B89A. Drop the trailing period. The hearth-only line loses the safety step.",
+      "Cap 'View Le Nette's details' at 220x26 and put 16px between it and the FULL chip so the chip is status, not a second button.",
+      "Gear icon 14px #8A8070 inside a 28px hit target, 12px left of a 22px red close control."
+    ],
+    "readability": [
+      "Row meta 'Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago' to 12px #D2C4AE (about 7:1 on #32261C). 11px #7A6E60 fails.",
+      "Pair 'none used this session' at 12px #B7AA96 with '0.6 rested levels left' at 13px #F0E2B6 on one baseline.",
+      "Compact right column: drop the repeated state word, show only 'full for 2d' at 12px #7DCEA0; names 13px #F3E6C4.",
+      "Hero kicker '#1 \u00b7 PLAY NEXT' at 11px #E6C89A with slight tracking so it does not disappear above the name."
+    ],
+    "layout_polish": [
+      "Lock chips in a 110px right column and end every rest bar 8px before that column. 'NEARLY FULL' currently pushes the bar.",
+      "Keep card state chips top-right of the portrait with an 8px gap from the level coin.",
+      "First-run steps as 44px rows, 16px icon column; 'No other account linked yet.' 12px #A89880, centered, 8px under the button.",
+      "Give the OUTSIDE chip 8px of left margin from the now-playing bar so they cannot collide."
+    ],
+    "delight": [
+      "Speech pills max 280px wide, 13px #F7F0E0, 10px tail. Show zzz only on full or resting portraits.",
+      "Put the max-level aside on the row itself in 12px italic #C8B89A ('I keep the bench warm.'), not only as tiny right-side type.",
+      "Compact toast: 32px portrait, 8px padding, one speech line. Do not stack three lines that all say Full."
+    ]
+  },
+  "overall_notes": "The roster job is solved: play-next, the four rest states, and the inn-versus-ElvUI split are clear and close to his real WC3 Gatewood windows. It is not a 9 yet. Dim row meta, brown alert buttons that are neither his blue enamel nor his red primary, a missing level coin on the unrested card, and a compact line that says Full twice are the gaps a demanding user would still mark.",
+  "model": "grok-4.7"
+}

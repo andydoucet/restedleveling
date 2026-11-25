@@ -1,0 +1,4 @@
+{
+  "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 189 (char 188)",
+  "model": "claude-opus-5-5"
+}

@@ -1,0 +1,68 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 7,
+    "default_theme": 7,
+    "elvui_wc3_fit": 6,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 6,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "Drop the third repeat of the banked number: keep the 56px '1.7' and the bubble, delete the caption 'Fully rested for 2 days. 1.7 levels of double XP waiting.'",
+      "Recolor the giant figure from mage-cyan to cream #F4E8C8, with a 2px class-color underline (#69CCF0 for the mage) so the stat sits in the gold UI instead of looking like a mobile counter.",
+      "Hero backdrop is a muddy vignette; replace it with a flat #16110C well and a 1px #51412B edge so the portrait, bubble and number are the only contrast."
+    ],
+    "play_next_clarity": [
+      "The NOW PLAYING band splits the decision in half. Move it to a 28px strip under the footer, and let the roster start immediately under the 'First: hearth...' bar so #1 then rows 2-8 read as one list.",
+      "'View Le Nette' uses the same red enamel as NOT RESTING and the close box. Make it the blue secondary #1E4F86 (22px tall) and reserve red for logout/danger only.",
+      "Prefix the instruction with the rank, 13px cream: 'Play next: Le Nette' and demote 'First: hearth or reach an inn.' to 11px #A89880 under it."
+    ],
+    "state_colours": [
+      "NEARLY FULL bar #E4F06A on the brown row reads olive. Use a brighter fill #D6E34A and a 1px #F4F0A8 top edge so it separates from UI gold #C6A15B.",
+      "STATE / BONUS is an 11px mystery label. Rename the column header to 'REST' and show the five moons at 14px with 4px gaps; at 12px the partial moons cannot be counted.",
+      "Add a one-line legend under the list, 11px: green FULL, yellow 90%+, orange RESTING, red NOT RESTING, using the same chip fills (#1B5C34, #3A4210, #5A3412, #6E2222)."
+    ],
+    "character_identity": [
+      "Roster names are all cream, so Le Nette / Le Dette / Le jette blur. Class-color every row name at 14px (mage #69CCF0, hunter #ABD473, and so on) and fix 'Le jette' to 'Le Jette'.",
+      "Card title 'Colonol Sunders' is gold plaque text; color it hunter green #ABD473 and put race/class in the subtitle you already use on Le Nette.",
+      "Anchor the 'z z z' to the portrait: 11px #C8BBA0, 4px under the ring, not floating in the empty right margin. Bump row portraits from ~24px to 32px."
+    ],
+    "default_theme": [
+      "One border system only: outer frame 1px #6B5344, inner wells 1px #51412B, 10px padding, 8px between rows. The hero painting and the flat list currently look like two addons.",
+      "Section labels ('NOW PLAYING', 'STATE / BONUS', 'GETTING STARTED') at 11px #8A7A62, 8px above their block, tracking +1px, so cream stays on names and the #1 only.",
+      "Rank discs: #1 at 22px gold #C6A15B; rows 2-8 at 16px #3A3128 with 11px #E6D5A8 numerals. The current discs compete with the FULL chip."
+    ],
+    "elvui_wc3_fit": [
+      "Kill the solid gold title plaque. Match Guild/Options: 22px bar #100C09, title 13px #E6D5A8 centered, 1px border #2A241C, 4px bronze studs #8A6A3E at the four corners. No filled gold band.",
+      "Scene 02 drops Compact into the footer and crowds 'Show max level and hidden'. Put Compact back on the title row, 22px tall, blue enamel #163E72 / border #2E6CB5, 8px left of the 18px red close #8C1E1E.",
+      "Hero and card wells should be flat #120D08 like the Options list, not a painted stage. Row wash at 10% of the state color, not 20%. Card title 'Colonol Sunders' must be text on the dark bar, same as 'Le Jette' on the real character window."
+    ],
+    "alerts_ux": [
+      "The logout panel stacks under the countdown and reads as a second dialog. Dock a 420px banner 16px above the action bar, full width of the toast, not center-screen.",
+      "'Disable logout warnings...' has the same weight as 'Dismiss this warning'. Make dismiss a 22px blue button; put disable in 11px #8A7A62 text, 16px below, so it cannot be mis-hit.",
+      "Color only the words '4x slower' in #E08A3C and keep the rest #F3E6C8. Lead the toast with the name already used on the banner: 'Jacques Hammer is not resting.'"
+    ],
+    "readability": [
+      "Comparison line 'Full for 2d \u00b7 Le Beouf full for 8h' is 12px on the painting and fails. Set it 13px #E6D5A8 on a #16110C chip, 8px under 'levels banked'.",
+      "Row meta 'Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago' at low grey on #211B14 is the scan line players actually need. Raise it to 12px #C9BBA4; keep the percent at 13px #F4E8C8.",
+      "Chart gutter labels 0/50/100 are tiny and the plot is an empty black well. Use 11px #E6D5A8, add 1px gridlines #3A3128 at 50 and 100, and a 12px caption inside the plot when the series is flat."
+    ],
+    "layout_polish": [
+      "ElvUI footer is two controls fighting one row. Footer height 28px: checkbox left, 12px gap, Compact only in the title. Do not move buttons between themes.",
+      "Card header has a dead zone right of the ring where 'z z z' sits. Fix the top band to 148px: bubble 12px left of the ring, tail on the ring edge, meta stacked under the name with 4px leading, no loose glyphs.",
+      "The 48h chart well is ~90% empty black, so it looks unloaded. Cap the chart height at 72px, baseline at 1px #6B5344, labels in a 36px right gutter, and hide the well entirely when the summary is 'Full the whole time'."
+    ],
+    "delight": [
+      "The bubble is a flat #1C1914 rect. Give it a 10px radius, 1px #6B5344 edge, and a 8px baked tail that actually touches the ring; offset the card bubble 12px but keep a 2px gap so it never covers the level badge.",
+      "One speech line, not three facts: hero bubble 'Send me. Water's conjured.' and leave '1.7 levels banked' to the big figure only.",
+      "Empty and max-level rows get no voice. Give Le jette a 12px muted line 'Max level. I keep the bench warm.' and a single 400ms gold ring only when a chip flips to FULL."
+    ]
+  },
+  "overall_notes": "The decision path is real: #1, a banked-XP figure, labeled state chips and a sorted roster. It is not yet a sibling of this user's UI. Default and ElvUI still share one ornate dashboard; his Guild, Character and Options windows are flat near-black, thin borders, quiet gold type, blue secondary and red only for close. The gold title plaque, footer-trapped Compact, floating z's, a blank 48h well, and a center-screen logout card are the amateur tells. Say the number once, class-color every name, and skin the chrome exactly like Options.",
+  "model": "grok-4.7"
+}

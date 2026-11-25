@@ -1,0 +1,55 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing ornament in roster rows: keep the state rail, progress bar and labelled state chip, but show the five-moon meter only on hover or in the character card. The current combination makes each row feel like several separate widgets rather than one composed entry.",
+      "Give the default secondary buttons an actual restrained bronze bevel: a #594527 face, 1 px #967442 upper edge and #241C12 lower edge. Their current flat tan rectangles look unfinished beside the red primary buttons."
+    ],
+    "character_identity": [
+      "In the character card, bring the name and race/class line 12\u201316 px closer to the portrait, or place them directly beneath its frame. The current lower-left identification and upper-right face feel disconnected.",
+      "Anchor the speech bubble tail toward the portrait or live model's head rather than into the empty middle of the stage. Keep at least 12 px between the bubble and portrait silhouette.",
+      "Make the level badge a consistent 24 px disc at the portrait's lower-right edge. The default card's small gold '22' badge currently reads more like an incidental token than a deliberate identity element."
+    ],
+    "default_theme": [
+      "Standardize secondary controls to a 24 px height with identical bronze borders, 12\u201313 px cream labels and 10 px horizontal padding. Apply this to Compact, Up next and Link account.",
+      "Reduce the default portrait halo's brightness and width: use a 2 px bronze outer ring with a separate 2 px state ring instead of the broad luminous gold treatment. Preserve the illustrated inn background as the main atmospheric element."
+    ],
+    "elvui_wc3_fit": [
+      "Fix the visibly disconnected horizontal border pieces and exposed brown end blocks along the main window's bottom edge and the card's lower-right edge. Anchor each strip between the corner studs with correct end-cap placement; this is separate from the simulator's known tiled-texture streaking.",
+      "Match the user's existing secondary buttons more closely: sample the Options window's desaturated blue enamel rather than using the relatively saturated blue-purple Compact face. Use the same 1 px bronze-gray outline and restrained top highlight.",
+      "Reduce nested bronze outlining inside the ElvUI card. Retain the outer host-skin frame, then use #17120D panel fills and a single subdued #443624 divider so the card feels as quiet as the actual Options window."
+    ],
+    "alerts_ux": [
+      "Change the logout warning action label from 'Up next: Le Nette \u00b7 Full' to 'View Le Nette'. A hover explanation is insufficient when the banner also tells the player to cancel logout; the button should make clear that it opens a card rather than switches characters.",
+      "Standardize dismiss controls to the same red 20\u201322 px button family used elsewhere, with a minimum 24 px clickable area. The bright yellow X and heavy gray surround look like a different addon.",
+      "Replace 'Hearth first' with 'Reach an inn or city first' in the escape-menu alert, or use 'Hearth or reach a rest area'. The instruction should not imply that a hearthstone is the only solution."
+    ],
+    "readability": [
+      "Increase the smallest supporting text, especially 'none used this session', footer sync text and compact roster ranks, to 13 px at the displayed scale. Use #D8CDB8 rather than muted brown for essential metadata.",
+      "Shorten the now-playing caption to '0.6 rested levels left' and reserve a fixed text lane beneath its bar. Keep 12 px separation from the right-aligned rest-area warning.",
+      "Replace 'tier 3 of 5' with 'Rest bonus: 3/5' and provide the mechanical explanation on hover. The current label is readable but not self-explanatory."
+    ],
+    "layout_polish": [
+      "Repair the ElvUI border strip endpoints before release; the bottom-edge fragments are the most conspicuous finishing defect in this set.",
+      "Use a shared 12 px inner gutter for card panels, progress bars and metadata. The default card's details box and the ElvUI card's details box currently feel independently positioned rather than governed by one grid.",
+      "Give the compact roster tooltip 16 px more width and fixed right-column alignment. Long time estimates currently create a cramped boundary between character identification and status."
+    ],
+    "delight": [
+      "Carry the character voice into the compact experience with a single optional one-line quip on hover, while retaining the factual next-character label.",
+      "On reaching full rest, use a single restrained 400\u2013600 ms portrait-ring pulse rather than adding persistent decoration. This would reward the core achievement without increasing the roster's already substantial visual density."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon with an immediately understandable recommendation and useful personality. The default inn treatment is engaging, and the ElvUI version substantially belongs beside the user's actual dark, understated windows; it does not need theatrical Warcraft III architecture. State communication is particularly successful because colour is reinforced with labels and icons. It is not yet a demanding-user approval: malformed ElvUI border endpoints, inconsistent secondary and dismiss buttons, redundant roster instrumentation and some small supporting text keep it below excellent. No deduction is assigned for missing simulator models, live portrait substitutions or tiled-texture streaking. The rendered portrait-stage composition is judged on its framing, not on the simulator's inability to show animation.",
+  "model": "gpt-6.1-sol"
+}

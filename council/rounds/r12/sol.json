@@ -1,0 +1,63 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce the nested-box effect: retain the outer frame, hero outline and state rails, but replace the roster well's additional outline and most interior panel outlines with 1 px separators in #4A3620.",
+      "Give the recommendation a cleaner hierarchy: keep the character name at 24\u201326 px, reduce the 1.7 statistic to 32 px, and use 12 px muted-cream labels. The current oversized number competes with the character rather than supporting it."
+    ],
+    "play_next_clarity": [],
+    "state_colours": [],
+    "character_identity": [
+      "On the character card, move the level badge out of the portrait/status junction. Place a 24 px badge on the portrait's lower-left edge and keep at least 8 px between it and the FULL chip.",
+      "Carry a short character-specific speech line into each expanded card and provide several variants per character. The innkeeper-cat line has personality; generic rest-management instructions are less effective as character dialogue.",
+      "Keep labelled portrait fallback art within the same stage geometry as the live model, with a consistent name baseline and 16 px safe inset. Do not let switching between model and fallback layouts move the identity or status controls."
+    ],
+    "default_theme": [
+      "Preserve the restored warm-brown palette, but brighten the inn artwork locally behind the stage by approximately 15%, with a dark gradient behind text. In the main hero, the environment currently reads mostly as black rather than as an inviting inn.",
+      "Standardize secondary controls to a 24\u201328 px bronze button family with a 1 px highlight in #A48045. Compact, Link account and dismiss controls currently have noticeably different visual weight.",
+      "Use the textured wood treatment primarily on the outer frame and title bar; keep data wells flatter so the warm theme feels intentional rather than uniformly brown."
+    ],
+    "elvui_wc3_fit": [
+      "Match the actual reference controls more closely: use the installed skin's blue enamel treatment for Compact and other secondary actions, its red treatment for primary actions and close controls, and its native font objects rather than retaining so much of the default theme's typography.",
+      "Correct the exposed rectangular brown and gray end pieces around the top-right and bottom-right frame edges. Anchor corner pieces inside the outer frame bounds, crop adjoining strips beneath them, and keep all frame art below buttons and labels. This is separate from the simulator's acknowledged tiled-texture streaking.",
+      "Reduce the empty title-bar depth to approximately 30\u201334 px and use the reference window's near-black brown fill around #140F09. The current tall dark band and retained brown inset make the addon look partially reskinned rather than fully inherited.",
+      "Keep bronze studs small, approximately 6\u20138 px, and restrict them to corners and genuine structural joins. Match the subtle reference frame rather than adding stronger fantasy decoration."
+    ],
+    "alerts_ux": [
+      "Change the logout-banner action to 'View rested character' or 'View Le Nette's details'. 'View Le Nette' next to a logout countdown can imply a character-switch action; opening details does not cancel logout or switch characters.",
+      "Make the first instruction explicitly 'Cancel logout first.' in 14 px bold, followed by the hearth destination in 13 px regular text. This separates the immediate safety action from the subsequent travel advice.",
+      "Give dismiss and settings controls consistent 24 \u00d7 24 px hit regions with at least 8 px separation. Preserve their nonmodal behavior and keep the warning clear of the countdown.",
+      "Use the same destination-specific advice in the Escape-menu strip as in the logout banner, wrapping to a second line if necessary rather than reverting to generic inn-or-city copy."
+    ],
+    "readability": [
+      "Use a regular-weight 13 px font for roster metadata and reserve bold for names and state labels. The current pervasive heavy serif text makes the lower roster and tidbit grid feel dense.",
+      "Replace 'Full \u00b7 2d' in compact mode with 'Full for 2d', and use the same wording for every full character. The abbreviated duration is otherwise easy to mistake for time remaining until full.",
+      "Clarify the character-card tidbit 'REST BONUS 3 of 5' with a specific label or explanatory tooltip identifying what is being counted. It currently introduces an unexplained metric beside otherwise concrete information.",
+      "Use #D8CDB9 for secondary metadata and #F2E5C7 for primary text, while retaining the state colors. Keep less important timestamps visibly subordinate without dropping below a 12 px rendered size."
+    ],
+    "layout_polish": [
+      "Align the roster's state header with the center of the fixed-width state chips and align the summary strip's left edge with the name column. The current headings do not cleanly describe the columns beneath them.",
+      "Standardize internal padding to 12 px in narrow strips and 16 px in major panels. In particular, align the current-character portrait, roster portrait column and card information-grid inset to deliberate shared anchors.",
+      "On the default character card, add at least 12 px of vertical separation between the portrait badge/status chip and the name block. The portrait, level badge and FULL label currently form a crowded cluster.",
+      "Resolve the ElvUI frame end-cap placement before further decorative tuning; visible patches at the frame edges undermine an otherwise orderly layout."
+    ],
+    "delight": [
+      "Extend the strongest existing idea\u2014the character speaking from an inn\u2014with two or three short state-specific lines per character, changing on opening rather than continuously. Keep bubbles to two lines and avoid covering the face.",
+      "When the recommended character changes, use a restrained 200\u2013300 ms portrait-ring highlight and a brief 'Next up' label transition. Avoid perpetual glow or movement in the roster.",
+      "Replace some generic instruction copy with characterful but equally explicit wording, while keeping safety alerts literal. 'Brill inn can spare me now' is a good tonal model; the main recommendation currently feels more like a dashboard than a character invitation."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon presentation with excellent recommendation hierarchy and unusually clear state encoding. The warm default theme is meaningfully distinct from the ElvUI variant, and the roster remains useful rather than becoming decorative theater. It is not yet demanding-user approval quality: typography is heavy, nested framing is excessive, and the ElvUI version still looks partially adapted rather than native beside the supplied Character and Options windows. The visible frame end pieces are a real polish issue; the simulator's tiled-border streaks and inability to render live models are not being scored as defects. The nonmodal warnings are directionally right, but their action wording should more clearly distinguish viewing a recommendation from canceling logout or switching characters.",
+  "model": "gpt-6.1-sol"
+}

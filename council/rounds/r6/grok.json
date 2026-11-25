@@ -1,0 +1,75 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Replace the beige speech sticker with a dark bubble: fill #1C1914, 1px border #6B5344, text #F3E6C8 at 13px, padding 8px, max width 240px, 8px tail. The cream rect is the one element that does not belong on the oak UI.",
+      "Multiply the hero and card paintings by #0E0C0A at 45% so they sit behind type instead of glowing. Keep the portrait ring at 2px #C4A36A.",
+      "Drop the 9px moons out of the row chrome, or draw them at 12px with 3px gaps: filled #E8D5A3, empty #3A342C. Five specks under a chip read as noise, not a reward.",
+      "Chart bars: 6px tall, 2px gap, 1px radius, state colour at full opacity. The current blocks look like a debug histogram."
+    ],
+    "state_colours": [
+      "Lock the four chips so none sit on UI gold. Full: fill #1B5C34 text #E5FFE8 bar #3DDC7A. Nearly full: fill #3A4210 text #E4F06A bar #D2E14A (not #C9A227). Resting: fill #5A3412 text #F0C48A bar #E08A3C. Not resting: fill #6E2222 text #FFD4D4 bar #E04B4B.",
+      "Add a 3px state stripe on the left of every row, inset 0, so colour is readable before the chip.",
+      "Legend: 10px squares in those exact fills, 12px labels #C4B89A, 16px between items. Retire the check, diamond and triangle; they do not match the chips.",
+      "MAX LEVEL stays fill #2A2A2A text #9A9488 with no bar, and must not inherit the red 'outside an inn' treatment."
+    ],
+    "character_identity": [
+      "Card stage: cap the painting at 112px tall. Put an 84px ring on the right, vertically centered, level disc 20px at 4 o'clock. Speech occupies the left 58% with the tail touching the ring. The current portrait floats in the corner of a dead inn.",
+      "Roster portraits 28px, then a 16px class icon, then the name. Class-as-text-only at row size is not identity.",
+      "When names collide (Le Bankke / Le Bankken), show 'Acct #3' in 11px #E8D5A3 under the name, not as a tiny suffix on the same line.",
+      "Keep one voice line in the hero, but lead with the decision: 'Send me. 1.7 levels banked.' Flavor ('Water's conjured.') is the second sentence on the card only."
+    ],
+    "default_theme": [
+      "Interior #12100E, frame band 10px, corner studs 6px #8C6A3A only. Title 16px #F3E6C8 on one 36px rail. One 1px rule #3A3126 under the rail and above the footer. No second gold plate.",
+      "Buttons one family, 24px, 1px rim #8C6A3A. Primary (View) #8B2E2E. Secondary (Compact) #1A4F86. Do not mix a beige bubble into this set.",
+      "Section labels (NEXT BEST, REST BONUS) 11px #A89880, tracking 0.5px. Reserve #F3E6C8 for the #1 name and the 48px banked figure."
+    ],
+    "elvui_wc3_fit": [
+      "Match the guild and options panels: fill #0C0B0A, border the skin's thin dark edge with 4px bronze studs, title 13px #E8D7A8. Scene 02 still reads as the default theme. If the skin plate is taller than 22px, do not add the addon's own rail under it.",
+      "Hero and card wells flat #101010. No painting above 30% opacity. Andy's windows have no illustrated banners.",
+      "Row wash at 35% of the state colour over #0E0D0C. At 55% the yellow and red rows are louder than anything in his quest tracker.",
+      "Compact, Up next and Link account must be the options-window blue enamel, about #1A4F86, 22px, 1px top highlight #3D6EAE. Close is the skin's red square, 18px, not a custom X.",
+      "Inset content 10px from the skin border so chips and the 48px '1.7' never crowd the studs."
+    ],
+    "alerts_ux": [
+      "Title must name the character: 'Jacques Hammer is logging out outside an inn'. Line 2: 'Move to cancel the logout.' Line 3: 'Hearth or reach an inn. Rest builds 4x slower in The Barrens.' with '4x slower' in #E08A3C.",
+      "Do not leave Dismiss and Disable drawn as body copy. Gear opens a menu the same width as the alert, 4px below, items 28px, hover #2A2418. After disable, replace the menu with 'Logout warnings off' plus a 22px Undo and Options. No popup.",
+      "Gear and close are 24px targets, 8px apart, 8px from the corner. Close is a #C4B89A 'x', not red enamel, so it is not a second logout button.",
+      "If the strip that reads '4Second:Seconds' is yours, it is a broken format. It must say '15 seconds until logout' in 13px #E8D7A8 on #1A1814, plain x, 12px under the alert. Do not duplicate the game logout dialog.",
+      "Esc toast: 340px, 8px below the Game Menu, action 15px #F3E6C8 ('Play Le Nette \u00b7 1.7 levels banked'), cause 11px #A89880 above it. It already does not block the menu; keep it that way."
+    ],
+    "readability": [
+      "Move the hero bubble onto its own row, 4px under the name, one line, ellipsis. It currently crowds 'Le Nette' and the identity line.",
+      "Row meta 'Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago' at 12px #C4B89A. 'levels banked' at 12px, 4px under the 48px figure.",
+      "Bar percent and time ('93% \u00b7 full in 14h 25m') at 12px #F3E6C8, left-aligned inside the bar if the fill is past 40%, else 4px to the right of the fill.",
+      "Chart '100%', '50%' and 'now' at 11px #C4B89A, with 8px between 'now' and the last bar so they do not collide.",
+      "Compact header: drop the mystery dots or label them. 'Next: Le Nette \u00b7 Full' at 14px is the line that matters; 'best to play first' at 12px #C4B89A under it, not right-aligned into the corner."
+    ],
+    "layout_polish": [
+      "Fix the chip column at 118px and the bar at 218x8, vertically centered on the name, 8px before the chip. FULL, NEARLY FULL, NOT RESTING and MAX LEVEL must not shove the row.",
+      "Card grid: 12px inset, two columns, 12px gutter, label column 96px right-aligned 11px #A89880, values 13px #F3E6C8, row height 22px. Same inset for stage, bar, details and chart.",
+      "When the chart collapses, the card shrinks with it. A 44px strip saying 'Full the whole time.' is right; do not keep a 180px empty stage above it.",
+      "Alert width 420px, padding 12px. The right-click menu is not part of the resting height.",
+      "First-run steps: 28px icon, 8px to the text, 12px between steps, blue Link account aligned to the text column not the icon."
+    ],
+    "delight": [
+      "Hero line is the product. Use the empty-state voice: 'I'll sit at the top once I'm full.' Decision first, joke second. 'Water's conjured.' alone is a tooltip, not a character.",
+      "zzz only while that character is resting: 12px #C4B89A, 4px above the ring, never over the level disc.",
+      "Selection on the open row is a 1px #C4A36A outline, shown immediately, plus a 3px #C4A36A bar on the left. No extra rivets.",
+      "Toast portrait 32px with a 2px ring in the state colour. The action line is the delight; the cause stays quiet above it."
+    ]
+  },
+  "overall_notes": "The roster does the job: #1, the 1.7, the sort and the four states are legible, and the empty state is the best writing in the set. It is not shippable for this user yet. ElvUI mode still looks like the default theme with a painting in it, the card stage is a small portrait in a dead backdrop, and the beige bubbles plus 9px moons keep it from feeling authored. Fix the interior to his near-black panels, put the character and the decision line in charge, and this is a 9.",
+  "model": "grok-4.7"
+}

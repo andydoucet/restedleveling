@@ -1,0 +1,61 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "The main-window hero (scene 01) still reads as a dark slab next to the card's hero (scene 03). Only the far right of the inn painting shows. Keep the 20% overlay, but cut the left-side fade to about 45% of the hero width (it currently reaches about 70%). The barrels and hearth should then show behind the 1.7 column.",
+      "The hero XP bar stops about 130 px short of the hero's right edge, leaving a dead dark band under 'Then Le Beouf, full for 8h'. Choose one fix: extend the bar to 12 px from the right inner edge, or end it under the 'levels banked' column with a right-aligned '100%' label at 11 px."
+    ],
+    "play_next_clarity": [
+      "Check the 1.7 figure. The Classic rested cap is 1.5 levels' worth at logout level, and later levels cost more, so a full pool should read at most about 1.5. Le Nette at 100% showing 1.7 will make a numbers-minded user distrust the hero. If you count it differently, change the label so it matches what you count, for example 'levels of double XP'.",
+      "The hero action strip says 'View Le Nette' while both alerts say 'View Le Nette's details'. Use 'View details' in the hero strip, because the name is already 14 px above it."
+    ],
+    "state_colours": [
+      "In the compact tooltip, the Resting orange is too close to the Nearly-full yellow at 12 px text. Push Resting to about #FF8C3A and keep Nearly full at about #F2D23C.",
+      "In the roster summary strip, '2 not resting' is drawn in orange-red at about 9 px, next to an orange 'resting'. Use the same red as the NOT RESTING chip (about #E0443A) for that count."
+    ],
+    "character_identity": [
+      "The Now Playing row uses the Horde crest instead of Jacques' own portrait. Use his live portrait, 36 px in a red ring for NOT RESTING, with the faction badge as the corner glyph. He should look like a character, not a guild.",
+      "Card (scene 03): the new level badge at lower-left overlaps the green ring by about 6 px. A 1 px bronze rule also runs from the badge across under the portrait, which looks like a stray line. Drop the rule, or move it 6 px lower and start it after the badge.",
+      "ElvUI card (scene 04): the left 55% of the hero below the speech bubble is about 300x120 px of empty near-black. Move the name and level block up 24 px to sit under the bubble. You could also add a very faint 8% class-coloured radial behind the portrait, which stays within his subtle skin."
+    ],
+    "default_theme": [
+      "The rows are warm now, but the title bar and footer are still flat grey-brown. Give the title strip about #30251A with a 1 px #6B5232 bottom edge. Give the footer the same strip colour, so the window has a top and a bottom.",
+      "The hero's left state stripe (green, 4 px) runs into the corner of the hero frame. Inset it 2 px from the top and bottom so it does not touch the bronze corner."
+    ],
+    "elvui_wc3_fit": [
+      "This is close to his Character and Options windows: near-black brown fill, gold small title, blue Compact button, red close and primary buttons. The remaining mismatch is the footer. 'Synced 2d ago' and the checkbox sit only about 6 px below the list well, on the outer frame. Give the footer 10 px top padding and an inset well like his Options window's bottom strip, or drop the text to the frame baseline with 12 px side padding.",
+      "The inner wells use a slightly lighter brown border than his windows (they use about #1A1410 fill with a near-black 1 px edge). Darken the hero and list borders to about #2A2018 so the bronze studs carry the accent, as in image 2.",
+      "Hero kicker '#1 \u00b7 PLAY NEXT' is grey. In his skin, secondary labels are cream (see 'General' and 'Primary Attributes'). Use about #D8C8A0 at 10 px."
+    ],
+    "alerts_ux": [
+      "The banner shows Le Nette's portrait and a FULL chip, but no words connect her to the warning. Add a 11 px muted line left of the button: 'Next up: Le Nette', or put the name in the chip ('Le Nette \u00b7 FULL').",
+      "The headline is 14 px and the two body lines are 12 px with about 2 px leading. Add 4 px between 'Cancel the logout first.' and 'Then hearth...', and bold or cream-colour the 'Cancel the logout first.' line. It is the safety action and currently looks like the second line.",
+      "The gear and X sit on different baselines: the gear about 2 px higher. Centre both on the headline's cap height."
+    ],
+    "readability": [
+      "The roster sub-lines ('Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago') are about 10 px grey on #32261C, with weak contrast. Lift them to about #B8A890 and 11 px.",
+      "The 'Show max level and hidden' footer label and the summary strip counts are about 9-10 px. Make them at least 11 px."
+    ],
+    "layout_polish": [
+      "The hero action strip copy 'First: hearth or reach an inn.  Then play Le Nette' has a double space and inconsistent full stops. Use 'First, hearth or reach an inn. Then play Le Nette.'",
+      "The Now Playing chip 'OUTSIDE A REST AREA' is about 30 px wider than the roster chips, and its right edge is not aligned with them. Right-align it to the STATE column chips, or shorten it to 'NOT RESTING' to match the vocabulary."
+    ],
+    "delight": [
+      "The speech lines are the best part. Rotate two or three lines per state per class, so 'Water's conjured.' does not repeat every open.",
+      "Give the FULL chip on the #1 hero a slow 2 s gold pulse at 20% alpha, once on open. That small reward makes the hero feel alive without the 3D model."
+    ]
+  },
+  "overall_notes": "This is a strong round. The warmer default rows, the shorter first-run hero, the shared Now Playing baseline and the clearer alert copy all landed. The ElvUI mode now plausibly sits next to his Character and Options windows: near-black brown fill, gold title, blue secondary button, red primary and close buttons. The play-next hierarchy is immediately readable. What keeps it out of 9 territory: the main hero painting is still mostly hidden, there is dead space in the hero and in the ElvUI card, the Now Playing row uses a crest instead of a portrait, and there are small contrast and copy-consistency nits. The 1.7 'levels banked' figure should also be checked against the 1.5-level rested cap; a demanding user will notice a number that seems impossible. The ElvUI border streaks and the logout dialog's raw format string are simulator issues and were not penalised.",
+  "model": "claude-opus-5-5"
+}

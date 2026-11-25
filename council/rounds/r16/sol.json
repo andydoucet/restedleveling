@@ -1,0 +1,57 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce the repeated box-within-box treatment: retain the outer frame, hero frame and row separators, but remove the additional inset border around the roster. Use 1 px separators in #493C28 rather than outlining every content region.",
+      "Give the hero a cleaner hierarchy by increasing the gap between its character metadata and progress bar to 10 px, and keeping its secondary queue prediction at 13 px in #BCAF97. The portrait, character name and banked-level number currently compete with several equally emphatic supporting labels."
+    ],
+    "character_identity": [
+      "For portrait fallbacks, cap the visible portrait at approximately 96 px rather than enlarging the low-resolution source to the current detail-card size. Keep the larger stage available for the live model; this is a fallback-art improvement, not a penalty for the simulator's missing model.",
+      "Move the detail-card level badge from the portrait's outer edge to an 8 px overlap inside the lower-left ring, and give it a consistent 22 px diameter. The ElvUI card's small black badge reads more like a detached annotation than an integrated character token.",
+      "Add the character's race to the detail-card subtitle consistently, for example 'Level 15 Troll Hunter', while preserving the class-coloured name and the location-specific speech."
+    ],
+    "default_theme": [
+      "Lighten the roster's brown row fills by reducing their opacity or saturation; use a base near #241F18 with restrained state tints. Preserve the bright left state rail and coloured progress bars so the roster does not become a large muddy brown slab.",
+      "Give default-theme primary buttons a more finished treatment: 24 px height, 1 px dark outer border and a subtle top highlight. The small flat red 'View details' rectangle looks less crafted than the surrounding portrait rings and frame.",
+      "Use the same corner construction on the compact panel and toast as on the main window. Their interrupted gold rules and isolated square corner marks currently look like a simpler, separate widget family."
+    ],
+    "elvui_wc3_fit": [
+      "Inherit the user's configured ElvUI font face and flags for titles, labels and buttons rather than retaining the addon's serif-like typography throughout. Keep the title at 16 px, body text at 13\u201314 px, and preserve class colours for character names.",
+      "Match the actual reference buttons more closely: blue enamel for 'Compact' and other secondary controls, red enamel for the primary details action and close control, with a thin bevel and restrained top highlight. Correct colour alone does not reproduce the reference controls' finish.",
+      "Use the skin's near-black brown, approximately #160F09, consistently across the hero and information panels. Reduce the extra warm gradient in the detail-card header so it sits more naturally beside the user's Character window."
+    ],
+    "alerts_ux": [
+      "Add an actual nonmodal 'Cancel logout' action to the countdown banner when the client API permits it. A headline telling the player to cancel, while the only labelled button opens another character's details, still leaves the crucial action outside the alert.",
+      "Reduce the next-character line to 12\u201313 px in #BCAF97 and label its button 'Next details'. Keep the warning headline at 15 px in #F2B64E so the secondary recommendation cannot be mistaken for the remedy.",
+      "Give dismiss and settings controls at least 24 by 24 px hit areas, with 8 px separation. Keep dismissal visually distinct from cancelling logout; closing the warning must not imply that logout has been made safe."
+    ],
+    "readability": [
+      "Increase default-theme roster metadata and time estimates to at least 13 px at native UI scale, and use #D3C8B5 instead of muted grey-brown. The full-window view's location and last-seen lines are noticeably harder to scan than the names.",
+      "Shorten compact-mode status copy to aligned values such as '93% \u00b7 full in 14h 25m'. Repeating 'Nearly full \u00b7 full in...' makes the right column dense and pushes the name and status columns too close together.",
+      "Use regular-weight body text for secondary information and reserve bold for names, warnings and key values. The current near-universal heavy text makes the tidbit grid and onboarding instructions unnecessarily busy."
+    ],
+    "layout_polish": [
+      "Standardize status badges at 116 by 20 px in the main roster, with their centres aligned to the progress-bar centres. Use the same internal icon-to-label spacing in FULL, NEARLY FULL, RESTING and NOT RESTING.",
+      "Give the first-run instructional panel a consistent 20 px left content inset and 16 px vertical spacing between steps. Align the 'Link account...' button with the step's text rather than treating it as a separate inset element.",
+      "Reflow the compact view into fixed name and status columns with at least a 16 px gutter. Keep all right-hand values on the same right edge and prevent long character names from entering the status column."
+    ],
+    "delight": [
+      "Use the existing character voice more selectively in functional copy: replace 'Max level. I keep the bench warm.' in the roster with 'Max level \u00b7 excluded from queue', and retain the playful line on the character card where it can be enjoyed without slowing scanning.",
+      "When a character becomes fully rested, briefly illuminate its portrait ring for 600\u2013800 ms and update its queue position without repeated flashing. Respect reduced-motion settings and do not add another popup.",
+      "Make the compact strip's state icons interactive with character-name and rested-time tooltips. Its coloured tokens could become a useful miniature roster rather than primarily decorative status counts."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon presentation, but not yet a demanding-user approval at 9+. The top recommendation is unmistakable, state colours have excellent redundant labels, and the character cards provide considerably more personality than a typical utility addon. The warning copy is substantially clearer, although the countdown banner still tells the player to perform an action it does not itself offer. The default theme is attractive but over-boxed and typographically dense. ElvUI mode broadly belongs beside the supplied real windows: dark brown-black surfaces, restrained metal framing, gold text and appropriately coloured controls. Its remaining mismatch is chiefly typography and control finish, not a lack of theatrical Warcraft III ornament. No deduction is made for missing simulator models or stretched tiled border textures. Animation quality and live interaction cannot be approved from these stills.",
+  "model": "gpt-6.1-sol"
+}
