@@ -90,7 +90,19 @@ function Frame:CreateTexture(_, layer, _, sub)
 	table.insert(self.__regions, t)
 	return t
 end
-function Frame:SetTexture(file) self.__tex = file; self.__atlas = nil; return true end   -- success, as in the game
+-- SetTexture returns true for any path, as in game; only a file that exists gets a file ID. A screenshot exists only
+-- when a test lists it in FakeWoW.screenshots (the client draws nothing for a missing one, ILL-1276 probe).
+FakeWoW.screenshots = {}
+local fileIDs, lastID = {}, -18000   -- loose files get negative IDs in game (the probe's screenshot: -18422)
+function Frame:SetTexture(file)
+	self.__tex, self.__atlas, self.__fileID = file, nil, nil
+	if type(file) == "string" and (not file:find("^Screenshots\\") or FakeWoW.screenshots[file]) then
+		if not fileIDs[file] then lastID = lastID - 1 fileIDs[file] = lastID end
+		self.__fileID = fileIDs[file]
+	end
+	return true
+end
+function Frame:GetTextureFileID() return self.__fileID end
 function Frame:SetAtlas(atlas) self.__atlas = atlas; self.__tex = nil end
 function Frame:GetTexture() return self.__tex end
 function Frame:SetDrawLayer(layer, sub) self.__layer, self.__sub = layer, sub or 0 end

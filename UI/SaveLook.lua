@@ -24,14 +24,18 @@ local nameIndex = {}   -- per look file: which of its candidate names SetTexture
 -- Portraits -------------------------------------------------------------------------------------------------------
 
 -- Draw `c`'s saved look in a portrait (Widgets.Portrait), over the class crest it already shows. Each candidate name
--- is tried in order until SetTexture says it took one (true; nil, false or an error moves on); a file that does not
--- load leaves the crest showing. Returns true when a look is drawn.
+-- is tried in order until one has a file ID: in game SetTexture returns true even for a path that draws nothing, and
+-- only GetTextureFileID told the two apart (docs/API.md, the ILL-1276 probe). A file that does not load leaves the
+-- crest showing. Returns true when a look is drawn.
 function L.Show(f, c, desaturate)
 	local look = c and LD.Valid(c.look)
 	if not look then f.look:Hide() return false end
 	local names = LD.Names(look)
 	for i = nameIndex[look.file] or 1, #names do
-		if U.Call(f.look.SetTexture, f.look, LD.DIR .. names[i]) == true then
+		U.Call(f.look.SetTexture, f.look, nil)   -- no file ID left over from the last character drawn here
+		local ok = U.Call(f.look.SetTexture, f.look, LD.DIR .. names[i])
+		local id = ok ~= false and ok ~= nil and U.Call(f.look.GetTextureFileID, f.look)
+		if id and id ~= 0 then
 			nameIndex[look.file] = i
 			f.look:SetTexCoord(look.l, look.r, look.t, look.b)
 			f.look:SetDesaturated(desaturate and true or false)

@@ -140,6 +140,7 @@ return {
 		["GetStringWidth"] = true,
 		["GetText"] = true,
 		["GetTexture"] = true,
+		["GetTextureFileID"] = true,
 		["GetTop"] = true,
 		["GetUnboundedStringWidth"] = true,
 		["GetVertexColor"] = true,

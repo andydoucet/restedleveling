@@ -76,6 +76,16 @@ ILL-1276 asked, with a hidden `/rlvl shotprobe` (now removed): can a screenshot 
 a texture? Andy ran it on Forever (`refs/ingame/andy_probe_take.png`, `andy_probe_show.png`): after a full client
 restart, `Screenshots\\WoWScrnShot_112526_051821.tga` loaded as a texture at full resolution, named from the second of
 `SCREENSHOT_SUCCEEDED`. The forms `..\\Screenshots\\<file>` and `Interface\\..\\Screenshots\\<file>` drew nothing.
+What the probe recorded for each form (`RestedLevelingDB.probe.shown`):
+
+| Path form | `SetTexture` returned | `GetTextureFileID` | `GetTextureFilePath` | `IsObjectLoaded` | Drew |
+|---|---|---|---|---|---|
+| `Screenshots\\WoWScrnShot_112526_051821.tga` | true | -18422 | -18422 | true | yes |
+| `..\\Screenshots\\WoWScrnShot_112526_051821.tga` | true | nil | nil | true | no |
+| `Interface\\..\\Screenshots\\WoWScrnShot_112526_051821.tga` | true | nil | nil | true | no |
+
+So `SetTexture` returns true and the texture reports loaded even for a path that draws nothing; only the file ID
+matched what showed on screen.
 So "Save my look" (ILL-1279) shoots the logged-in character as `.tga` and other characters' portraits draw that
 file through `Screenshots\\<file>` (about 8 MB per save; old screenshots in `_forever_\\Screenshots` can be
 deleted). Checked against the Forever UI source:
@@ -92,13 +102,13 @@ deleted). Checked against the Forever UI source:
 | `DressUpModel:SetUnit("player")`, `UndressSlot(16/17/18)` | doc | FrameAPICharacterModelBase / FrameAPIDressUpModel. INVSLOT_MAINHAND/OFFHAND/RANGED are 16/17/18 (Constants.lua). Each call guarded. |
 | `SetPortraitZoom`, `SetRotation`, `SetAnimation`, `ClearModel` | doc | Portrait framing (QuestNPCModel uses zoom 0.6). Guarded. Framing verified in game: not yet. |
 | `OnModelLoaded` script | used | Blizzard_Wardrobe.xml. Shoots 0.25 s after it, or after 1 s if it never fires; gives up after 6 s. |
-| `Texture:SetTexture(path)`, `SetTexCoord` | doc | Returns `success`. Each candidate name is tried until one returns true (nil, false or an error moves on); the crop goes over the class crest, so a file that does not load leaves the crest. |
+| `Texture:SetTexture(path)`, `GetTextureFileID()`, `SetTexCoord` | doc | SimpleTextureBaseAPIDocumentation.lua. `SetTexture` returns true even for a path that draws nothing (probe above), so a candidate name counts only when `SetTexture` did not return false or error and `GetTextureFileID` then gives a file ID (guarded; nil or 0 moves on). The texture is cleared before each try, so no ID is left over from the last character. The crop goes over the class crest, so a file that does not load leaves the crest. |
 | `MenuUtil.CreateContextMenu` | used | Blizzard_Menu (AddonList uses it); guarded. Without it a right-click opens the card. |
 
 Verified in game: the file name and the `Screenshots\\` path form (probe). Not yet: the capture itself, the model
-framing, whether a new file loads in the same session (the card says it shows after a restart), and whether
-`SetTexture` returns true for a loose screenshot that loads (only an explicit true draws the look; otherwise the crest
-shows).
+framing, whether a new file loads in the same session (the card says it shows after a restart), and that
+`GetTextureFileID` is nil for a candidate second with no file (seen only for the wrong path forms, not yet for a
+missing file name).
 """
 
 

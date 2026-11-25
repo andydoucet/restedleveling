@@ -45,6 +45,8 @@ local function shoot(state) advance(state, state.ns.Look.WAIT) end
 local function world(opts)
 	opts = opts or {}
 	local saved = { chars = { [JETTE] = jette(opts.look) }, lookFormat = opts.lookFormat }
+	-- the screenshots on disk (a file ID in the fake): by default the one LOOK names
+	FakeWoW.screenshots = opts.screenshots or { ["Screenshots\\WoWScrnShot_112526_051821.tga"] = true }
 	local state = { first = "Le", surname = "Nette", class = "MAGE", saved = saved,
 		cvars = { screenshotFormat = opts.format or "jpeg" }, shots = 0, log = {}, setup = function(game, h, st)
 			clocked(game, st)
@@ -495,7 +497,31 @@ function cases.a_saved_look_shows_in_the_ring_wherever_an_offline_portrait_does(
 	T.clean(h)
 end
 
-function cases.a_look_that_does_not_load_falls_back_to_the_crest_silently()
+-- In game SetTexture returns true even for a screenshot that is not there (ILL-1276 probe); only a file ID means it
+-- drew. The fake does the same: true for every path, a file ID only for the screenshots a test lists.
+local function at(ts) return "Screenshots\\WoWScrnShot_" .. os.date("%m%d%y_%H%M%S", ts) .. ".tga" end
+
+function cases.a_look_whose_file_is_not_there_falls_back_to_the_crest_silently()
+	local h = world({ look = LOOK, screenshots = {} })
+	h.Slash("RESTEDLEVELING", "")
+	local p = h.Env().RestedLevelingMain.hero.portrait
+	T.ok(not p.look:IsShown(), "nothing drawn over the crest, though SetTexture said true")
+	T.eq(p.tex.__atlas, "classicon-warrior", "the crest")
+	T.ok(p.crest:IsShown(), "and the race badge")
+	T.clean(h)
+end
+
+function cases.a_wrong_second_moves_on_to_the_candidate_that_has_a_file()
+	local h = world({ look = LOOK, screenshots = { [at(LOOK.at + 1)] = true } })
+	h.Slash("RESTEDLEVELING", "")
+	local p = h.Env().RestedLevelingMain.hero.portrait
+	T.ok(p.look:IsShown(), "drawn")
+	T.eq(p.look:GetTexture(), at(LOOK.at + 1), "from the second the file was really written in")
+	T.ok(p.look:GetTextureFileID() ~= nil, "a real file")
+	T.clean(h)
+end
+
+function cases.a_look_that_set_texture_refuses_is_not_drawn()
 	local h = world({ look = LOOK, extra = function(game)
 		local create = game.CreateFrame
 		game.CreateFrame = function(...)
@@ -503,9 +529,11 @@ function cases.a_look_that_does_not_load_falls_back_to_the_crest_silently()
 			local ct = f.CreateTexture
 			f.CreateTexture = function(self, ...)
 				local t = ct(self, ...)
+				local set = t.SetTexture
 				t.SetTexture = function(tx, file)
+					set(tx, file)
 					if type(file) == "string" and file:find("^Screenshots") then return false end
-					tx.__tex = file
+					return true
 				end
 				return t
 			end
@@ -514,52 +542,8 @@ function cases.a_look_that_does_not_load_falls_back_to_the_crest_silently()
 	end })
 	h.Slash("RESTEDLEVELING", "")
 	local p = h.Env().RestedLevelingMain.hero.portrait
-	T.ok(not p.look:IsShown(), "nothing drawn over the crest")
-	T.eq(p.tex.__atlas, "classicon-warrior", "the crest")
-	T.ok(p.crest:IsShown(), "and the race badge")
+	T.ok(not p.look:IsShown(), "false is a no, file ID or not")
 	T.clean(h)
-end
-
--- Only an explicit true from SetTexture draws: nil (no answer) moves on to the next candidate name.
-local function answering(fn)
-	return function(game)
-		local create = game.CreateFrame
-		game.CreateFrame = function(...)
-			local f = create(...)
-			local ct = f.CreateTexture
-			f.CreateTexture = function(self, ...)
-				local t = ct(self, ...)
-				t.SetTexture = function(tx, file)
-					tx.__tex = file
-					if type(file) == "string" and file:find("^Screenshots") then return fn(file) end
-					return true
-				end
-				return t
-			end
-			return f
-		end
-	end
-end
-
-function cases.a_look_draws_only_when_set_texture_says_it_loaded()
-	local want = "Screenshots\\WoWScrnShot_" .. os.date("%m%d%y_%H%M%S", LOOK.at) .. ".tga"
-	local tried = {}
-	local h = world({ look = LOOK, extra = answering(function(file)
-		tried[#tried + 1] = file
-		if file == want then return true end
-	end) })
-	h.Slash("RESTEDLEVELING", "")
-	local p = h.Env().RestedLevelingMain.hero.portrait
-	T.ok(p.look:IsShown(), "drawn")
-	T.eq(p.look:GetTexture(), want, "from the candidate that said true")
-	T.eq(tried[1], "Screenshots\\" .. LOOK.file, "after the saved name gave no answer")
-	T.clean(h)
-	local h2 = world({ look = LOOK, extra = answering(function() end) })
-	h2.Slash("RESTEDLEVELING", "")
-	local p2 = h2.Env().RestedLevelingMain.hero.portrait
-	T.ok(not p2.look:IsShown(), "no answer from any: the crest")
-	T.eq(p2.tex.__atlas, "classicon-warrior", "the crest")
-	T.clean(h2)
 end
 
 function cases.a_bad_look_from_saved_data_is_never_drawn()
