@@ -21,6 +21,7 @@ read_globals = {
 	"CreateFrame",
 	"ERR_CHAT_PLAYER_NOT_FOUND_S",
 	"ElvUI",
+	"GameTooltip",
 	"GetMaxLevelForPlayerExpansion",
 	"GetMaxPlayerLevel",
 	"GetRealZoneText",
