@@ -21,3 +21,5 @@ Core\Util.lua
 Core\Model.lua
 Core\Identity.lua
 Core\Snapshot.lua
+Core\Core.lua
+Core\Slash.lua

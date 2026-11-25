@@ -3,6 +3,7 @@
 return {
 	globals = {
 		["C_Spell"] = "t",
+		["C_Timer"] = "t",
 		["C_Traits"] = "t",
 		["C_UnitAuras"] = "t",
 		["CreateFrame"] = "f",
@@ -46,6 +47,7 @@ return {
 	},
 	namespaces = {
 		["C_Spell"] = { ["GetSpellName"] = "f" },
+		["C_Timer"] = { ["After"] = "f", ["NewTicker"] = "f" },
 		["C_Traits"] = { ["GetConfigIDBySystemID"] = "f", ["GetConfigInfo"] = "f", ["GetDefinitionInfo"] = "f", ["GetEntryInfo"] = "f", ["GetNodeInfo"] = "f", ["GetTreeNodes"] = "f" },
 		["C_UnitAuras"] = { ["GetPlayerAuraBySpellID"] = "f" },
 	},
