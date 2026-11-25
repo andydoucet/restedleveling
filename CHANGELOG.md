@@ -46,6 +46,9 @@ Save my look (ILL-1279):
 - On your own card (click the NOW PLAYING strip, or right-click it for a menu): "Save my look". Out of combat, the
   UI hides for about a second, your character stands alone on a dark backdrop, the game takes one .tga screenshot and
   everything comes back (Esc or a click cancels; combat, a failed shot or a loading screen also put everything back).
+  It is refused while a merchant, bank, mailbox, quest, trade or similar window or a popup is open ("Close the merchant
+  window first."), since hiding the UI would close it. Each save is about 8 MB; old screenshots in
+  `_forever_\Screenshots` can be deleted.
 - After a game restart, that character's portrait everywhere else (hero, rows, card, alerts, and on your linked
   account) is its own face, cropped from the screenshot into the usual ring. If the file is gone it quietly shows the
   class crest again. "Clear look" removes it. The character you are on always shows its live portrait.

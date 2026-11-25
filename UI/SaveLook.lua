@@ -24,14 +24,18 @@ local nameIndex = {}   -- per look file: which of its candidate names SetTexture
 -- Portraits -------------------------------------------------------------------------------------------------------
 
 -- Draw `c`'s saved look in a portrait (Widgets.Portrait), over the class crest it already shows. Each candidate name
--- is tried in order until SetTexture takes one; a file that does not load leaves the crest showing. Returns true
--- when a look is drawn.
+-- is tried in order until one has a file ID: in game SetTexture returns true even for a path that draws nothing, and
+-- only GetTextureFileID told the two apart (docs/API.md, the ILL-1276 probe). A file that does not load leaves the
+-- crest showing. Returns true when a look is drawn.
 function L.Show(f, c, desaturate)
 	local look = c and LD.Valid(c.look)
 	if not look then f.look:Hide() return false end
 	local names = LD.Names(look)
 	for i = nameIndex[look.file] or 1, #names do
-		if U.Call(f.look.SetTexture, f.look, LD.DIR .. names[i]) ~= false then
+		U.Call(f.look.SetTexture, f.look, nil)   -- no file ID left over from the last character drawn here
+		local ran, ok = pcall(f.look.SetTexture, f.look, LD.DIR .. names[i])
+		local id = ran and ok ~= false and U.Call(f.look.GetTextureFileID, f.look)
+		if id and id ~= 0 then
 			nameIndex[look.file] = i
 			f.look:SetTexCoord(look.l, look.r, look.t, look.b)
 			f.look:SetDesaturated(desaturate and true or false)
@@ -69,17 +73,21 @@ local function stage()
 		end
 	end)
 	s:EnableMouse(true)
-	s:EnableKeyboard(true)   -- every key while it is up (about a second); Esc cancels
-	s:SetScript("OnKeyDown", function(_, key) if key == "ESCAPE" and run then L.Finish(run, false, "cancelled") end end)
+	s:EnableKeyboard(true)   -- Esc cancels
+	s:SetScript("OnKeyDown", function(self, key)
+		-- every other key still reaches the game (movement, push-to-talk); setting this is protected in combat
+		if not U.Call(InCombatLockdown) then U.Call(self.SetPropagateKeyboardInput, self, key ~= "ESCAPE") end
+		if key == "ESCAPE" and run then L.Finish(run, false, "cancelled") end
+	end)
 	s:SetScript("OnMouseDown", function() if run then L.Finish(run, false, "cancelled") end end)
 	s:Hide()
 	L.stage = s
 	return s
 end
 
--- Portrait framing on the stage model: the player, idle, weapons off, head and shoulders.
-local function frame(m)
-	U.Call(m.SetUnit, m, "player")
+-- Portrait framing on the stage model: idle, weapons off, head and shoulders. SetUnit("player") only once per
+-- capture: calling it again reloads the model (weapons back on, half drawn).
+local function pose(m)
 	for _, slot in ipairs(L.WEAPON_SLOTS) do U.Call(m.UndressSlot, m, slot) end
 	U.Call(m.SetPortraitZoom, m, L.ZOOM)
 	U.Call(m.SetRotation, m, L.ROTATION)
@@ -90,36 +98,81 @@ local function getFormat() return C_CVar and U.Call(C_CVar.GetCVar, "screenshotF
 
 function L.Busy() return run ~= nil end
 
+-- Open Blizzard windows that UIParent:Hide() would close: their OnHide ends the NPC interaction (the merchant,
+-- the bank, the mailbox...) and a hidden StaticPopup runs its OnHide (a group invite is declined). Names
+-- from the Forever FrameXML; the trainer and auction house load on demand, so any of them may be nil.
+local function blocker()
+	if not UIParent:IsShown() then return nil end   -- already hidden (Alt-Z): hiding it again closes nothing
+	local open = {
+		{ MerchantFrame, "the merchant window" }, { BankFrame, "the bank" }, { MailFrame, "the mailbox" },
+		{ GossipFrame, "the conversation window" }, { QuestFrame, "the quest window" }, { LootFrame, "the loot window" },
+		{ TradeFrame, "the trade window" }, { ItemTextFrame, "the book" }, { TaxiFrame, "the flight map" },
+		{ ClassTrainerFrame, "the trainer window" }, { AuctionHouseFrame, "the auction house" },
+		{ PetitionFrame, "the petition" }, { GuildRegistrarFrame, "the guild registrar" },
+		{ StaticPopup1, "the open dialog" }, { StaticPopup2, "the open dialog" }, { StaticPopup3, "the open dialog" },
+		{ StaticPopup4, "the open dialog" },
+	}
+	for _, o in ipairs(open) do
+		local f = o[1]
+		if type(f) == "table" and U.Call(f.IsShown, f) then return o[2] end
+	end
+end
+
+-- The player's screenshot format, kept in the saved data while it is set to tga: a crash mid-capture would otherwise
+-- leave every later screenshot a .tga. Put back on the next login.
+function L.Recover()
+	local d = ns.DB()
+	local saved = d.lookFormat
+	if saved == nil or run then return end
+	d.lookFormat = nil
+	if type(saved) == "string" and getFormat() == "tga" and C_CVar and C_CVar.SetCVar then
+		U.Call(C_CVar.SetCVar, "screenshotFormat", saved)
+	end
+end
+ns.RegisterCallback(L, "LOGIN_DONE", function() L.Recover() end)
+
 -- "Save my look": the logged-in character only, out of combat. Returns true when a capture started.
 function L.Save()
 	if run then return false end
 	local key = ns.MyKey()
 	if not key or not ns.Me() then return false end
 	if U.Call(InCombatLockdown) then U.Print("Leave combat first.") return false end
+	local open = blocker()
+	if open then U.Print("Close " .. open .. " first.") return false end
 	local s = stage()
 	local card = ns.Card and ns.Card.frame
 	-- hiding UIParent hides the card too (and its OnHide clears the selection): open it again after
 	run = { key = key, ui = UIParent:IsShown(), card = card and card:IsShown() and ns.selectedKey or nil }
+	local this = run
+	C_Timer.After(L.TIMEOUT, function() L.Finish(this, false, "timeout") end)   -- first: whatever happens next
 	for _, e in ipairs({ "SCREENSHOT_SUCCEEDED", "SCREENSHOT_FAILED", "PLAYER_REGEN_DISABLED", "PLAYER_LEAVING_WORLD" }) do
 		events:RegisterEvent(e)
 	end
-	if run.ui then UIParent:Hide() end   -- like Alt-Z: allowed out of combat
-	s:Show()
-	local _, physH = U.Call(GetPhysicalScreenSize)
-	local size = LD.ModelSize(physH, s:GetHeight())
-	s.model:SetSize(size, size)
-	frame(s.model)
-	local this = run
+	local ok = pcall(function()
+		if this.ui then UIParent:Hide() end   -- like Alt-Z: allowed out of combat
+		s:Show()
+		local _, physH = U.Call(GetPhysicalScreenSize)
+		local size = LD.ModelSize(physH, s:GetHeight())
+		s.model:SetSize(size, size)
+		U.Call(s.model.SetUnit, s.model, "player")
+		pose(s.model)
+	end)
+	if not ok then L.Finish(this, false, "failed") return false end   -- an error here must not leave the UI hidden
 	C_Timer.After(L.WAIT, function() L.Shoot(this) end)
-	C_Timer.After(L.TIMEOUT, function() L.Finish(this, false, "timeout") end)
 	return true
 end
 
 -- Take the screenshot (once): as .tga, the only format the client loads back, then the player's format again.
 function L.Shoot(r)
+	if run ~= r or r.posed then return end
+	r.posed = true
+	pose(L.stage.model)   -- again once loaded: undressing before the model loads does nothing
+	C_Timer.After(0, function() L.Snap(r) end)   -- one frame for the new pose to draw
+end
+
+function L.Snap(r)
 	if run ~= r or r.asked then return end
 	local s = L.stage
-	frame(s.model)   -- again once loaded: undressing before the model loads does nothing
 	local sl, sb, sw, sh = s:GetLeft() or 0, s:GetBottom() or 0, s:GetWidth(), s:GetHeight()
 	local ml, mb, mw, mh = s.model:GetLeft(), s.model:GetBottom(), s.model:GetWidth(), s.model:GetHeight()
 	if not ml then   -- not laid out: the model is centred
@@ -130,6 +183,7 @@ function L.Shoot(r)
 	local format = getFormat()
 	if format ~= "tga" and C_CVar and C_CVar.SetCVar then
 		r.restore = format or "jpeg"
+		ns.DB().lookFormat = r.restore   -- L.Recover puts it back after a crash
 		U.Call(C_CVar.SetCVar, "screenshotFormat", "tga")
 	end
 	r.asked = time()
@@ -141,7 +195,10 @@ function L.Finish(r, ok, why)
 	if run ~= r then return end
 	run = nil
 	events:UnregisterAllEvents()
-	if r.restore then U.Call(C_CVar.SetCVar, "screenshotFormat", r.restore) end
+	if r.restore then
+		U.Call(C_CVar.SetCVar, "screenshotFormat", r.restore)
+		ns.DB().lookFormat = nil
+	end
 	if L.stage then
 		L.stage:Hide()
 		U.Call(L.stage.model.ClearModel, L.stage.model)
@@ -149,13 +206,17 @@ function L.Finish(r, ok, why)
 	if r.ui and not UIParent:IsShown() then
 		if U.Call(InCombatLockdown) then events:RegisterEvent("PLAYER_REGEN_ENABLED") else UIParent:Show() end
 	end
-	local c = ns.DB().chars[r.key]
-	if ok and c then
-		local at = time()
-		c.look = { file = LD.FileName(at), l = r.l, r = r.r, t = r.t, b = r.b, at = at, asked = r.asked }
-		L.fresh[r.key] = true
+	local key = ns.MyKey() or r.key   -- the key can move during the capture (N: to G: once the GUID reads)
+	local c = ns.DB().chars[key]
+	local at = time()
+	local look = ok and LD.Valid({ file = LD.FileName(at), l = r.l, r = r.r, t = r.t, b = r.b, at = at, asked = r.asked })
+	if look and c then
+		c.look, c.lookCleared = look, nil
+		L.fresh[key] = true
 		U.Print(L.SAVED_NOTE)
 		ns.Snapshot(true)   -- a fresh snapshot time, so the other account takes the record
+	elseif ok and not look then   -- the crop came out empty or outside the screenshot: keep the look there was
+		U.Print("Look not saved: couldn't frame the character.")
 	elseif why == "combat" then
 		U.Print("Look not saved: you entered combat.")
 	elseif why ~= "cancelled" then
@@ -186,7 +247,7 @@ end)
 function L.Clear(key)
 	local c = key and ns.DB().chars[key]
 	if not (c and c.look) then return end
-	c.look, L.fresh[key] = nil, nil
+	c.look, c.lookCleared, L.fresh[key] = nil, true, nil   -- the token tells the other account to clear it too
 	if ns.MyKey() == key then ns.Snapshot(true) end
 	if ns.Card and ns.Card.frame and ns.Card.frame:IsShown() and ns.selectedKey == key then ns.Card.Show(key) end
 	ns.Fire("ROSTER_CHANGED")

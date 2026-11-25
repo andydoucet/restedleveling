@@ -9,6 +9,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 
 | kind | name | Forever | classic_era | guarded |
 |---|---|---|---|---|
+| global | `AuctionHouseFrame` | used | used | yes |
+| global | `BankFrame` | used | used | yes |
 | global | `C_CVar` | doc | doc |  |
 | global | `C_ChatInfo` | doc | doc |  |
 | global | `C_Container` | doc | doc |  |
@@ -21,6 +23,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `C_UnitAuras` | doc | doc | yes |
 | global | `ChatFrameUtil` | used | used |  |
 | global | `ChatFrame_AddMessageEventFilter` | used | used |  |
+| global | `ClassTrainerFrame` | used | used | yes |
 | global | `CreateFrame` | used | used |  |
 | global | `ERR_CHAT_PLAYER_NOT_FOUND_S` | used | used |  |
 | global | `ElvUI` | - | - | yes |
@@ -41,18 +44,26 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GetTime` | doc | used |  |
 | global | `GetTitleName` | doc | doc |  |
 | global | `GetXPExhaustion` | doc | doc |  |
+| global | `GossipFrame` | used | used | yes |
+| global | `GuildRegistrarFrame` | used | used | yes |
 | global | `InCombatLockdown` | used | used |  |
 | global | `IsInGroup` | used | used |  |
 | global | `IsInGuild` | doc | doc |  |
 | global | `IsInInstance` | doc | doc |  |
 | global | `IsInRaid` | used | used |  |
 | global | `IsResting` | doc | used |  |
+| global | `ItemTextFrame` | used | used | yes |
 | global | `LibStub` | - | - | yes |
+| global | `LootFrame` | used | used | yes |
+| global | `MailFrame` | used | used | yes |
 | global | `MenuUtil` | used | used | yes |
+| global | `MerchantFrame` | used | used | yes |
 | harness | `Minimap` | used | used |  |
 | global | `NUM_CHAT_WINDOWS` | used | used |  |
+| global | `PetitionFrame` | used | used | yes |
 | global | `PlaySound` | used | used |  |
 | global | `PlayerHasToy` | used | used |  |
+| global | `QuestFrame` | used | used | yes |
 | global | `RAID_CLASS_COLORS` | used | used |  |
 | global | `RequestTimePlayed` | doc | doc |  |
 | global | `SOUNDKIT` | used | used |  |
@@ -60,6 +71,12 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `Settings` | used | used | yes |
 | global | `SlashCmdList` | used | used |  |
+| global | `StaticPopup1` | used | used | yes |
+| global | `StaticPopup2` | used | used | yes |
+| global | `StaticPopup3` | used | used | yes |
+| global | `StaticPopup4` | used | used | yes |
+| global | `TaxiFrame` | used | used | yes |
+| global | `TradeFrame` | used | used | yes |
 | global | `UIParent` | used | used |  |
 | global | `UISpecialFrames` | used | used |  |
 | global | `UnitAffectingCombat` | doc | used |  |
@@ -142,6 +159,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetStringWidth` | doc | doc |  |
 | method | `GetText` | doc | doc |  |
 | method | `GetTexture` | doc | doc |  |
+| method | `GetTextureFileID` | doc | doc |  |
 | method | `GetTop` | doc | doc |  |
 | method | `GetUnboundedStringWidth` | doc | doc |  |
 | method | `GetVertexColor` | doc | doc |  |
@@ -192,6 +210,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetOrder` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
 | method | `SetPortraitZoom` | doc | doc |  |
+| method | `SetPropagateKeyboardInput` | doc | doc |  |
 | method | `SetRotation` | doc | doc |  |
 | method | `SetScale` | doc | doc |  |
 | method | `SetScaleFrom` | doc | doc |  |
@@ -307,8 +326,19 @@ ILL-1276 asked, with a hidden `/rlvl shotprobe` (now removed): can a screenshot 
 a texture? Andy ran it on Forever (`refs/ingame/andy_probe_take.png`, `andy_probe_show.png`): after a full client
 restart, `Screenshots\WoWScrnShot_112526_051821.tga` loaded as a texture at full resolution, named from the second of
 `SCREENSHOT_SUCCEEDED`. The forms `..\Screenshots\<file>` and `Interface\..\Screenshots\<file>` drew nothing.
+What the probe recorded for each form (`RestedLevelingDB.probe.shown`):
+
+| Path form | `SetTexture` returned | `GetTextureFileID` | `GetTextureFilePath` | `IsObjectLoaded` | Drew |
+|---|---|---|---|---|---|
+| `Screenshots\WoWScrnShot_112526_051821.tga` | true | -18422 | -18422 | true | yes |
+| `..\Screenshots\WoWScrnShot_112526_051821.tga` | true | nil | nil | true | no |
+| `Interface\..\Screenshots\WoWScrnShot_112526_051821.tga` | true | nil | nil | true | no |
+
+So `SetTexture` returns true and the texture reports loaded even for a path that draws nothing; only the file ID
+matched what showed on screen.
 So "Save my look" (ILL-1279) shoots the logged-in character as `.tga` and other characters' portraits draw that
-file through `Screenshots\<file>`. Checked against the Forever UI source:
+file through `Screenshots\<file>` (about 8 MB per save; old screenshots in `_forever_\Screenshots` can be
+deleted). Checked against the Forever UI source:
 
 | API | Forever | Use and guard |
 |---|---|---|
@@ -316,14 +346,16 @@ file through `Screenshots\<file>`. Checked against the Forever UI source:
 | `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload. Only counted after our own `Screenshot()` call. |
 | `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | Set to `tga` for the one shot, the player's format put back on every way out. |
 | `UIParent:Hide()`, `UIParent:Show()` | used | MovieFrame.lua does the same. UIParent holds secure frames, so it is only hidden out of combat (`InCombatLockdown`, doc), and `PLAYER_REGEN_DISABLED` (fires before the lockdown starts) ends the capture and shows it again. If combat came first anyway, it is shown on `PLAYER_REGEN_ENABLED`. Alt-Z itself calls `SetUIVisibility`, which also hides nameplates; our opaque stage covers those. |
-| `CreateFrame("Frame", name, nil)` | used | The stage has no parent, so it stays up while UIParent is hidden; `SetAllPoints(WorldFrame)`, strata FULLSCREEN_DIALOG, `EnableKeyboard` for Esc. |
+| `CreateFrame("Frame", name, WorldFrame)` | used | The stage is parented to WorldFrame, not UIParent, so it stays up while UIParent is hidden; `SetAllPoints(WorldFrame)`, strata FULLSCREEN_DIALOG, `EnableKeyboard` for Esc, `SetPropagateKeyboardInput` (doc, out of combat) so every other key still reaches the game. |
+| `MerchantFrame`, `BankFrame`, `MailFrame`, `GossipFrame`, `QuestFrame`, `LootFrame`, `TradeFrame`, `ItemTextFrame`, `TaxiFrame`, `ClassTrainerFrame`, `AuctionHouseFrame`, `PetitionFrame`, `GuildRegistrarFrame`, `StaticPopup1`-`4` | used | Hiding UIParent runs their OnHide, which ends the NPC interaction (`CloseMerchant`, `C_Bank.CloseBankFrame`, `CloseMail`, `C_GossipInfo.CloseGossip`, `CloseQuest`, `CloseLoot`, `CloseTrade`, ...) or answers a popup (PARTY_INVITE's OnHide calls `DeclineGroup`). Save is refused while one is shown ("Close the merchant window first."). Each guarded: the trainer and auction house load on demand. |
 | `GetPhysicalScreenSize()` | doc | ScreenDocumentation.lua; guarded. The model square is 512 physical px (at most 80% of the screen height). |
 | `DressUpModel:SetUnit("player")`, `UndressSlot(16/17/18)` | doc | FrameAPICharacterModelBase / FrameAPIDressUpModel. INVSLOT_MAINHAND/OFFHAND/RANGED are 16/17/18 (Constants.lua). Each call guarded. |
 | `SetPortraitZoom`, `SetRotation`, `SetAnimation`, `ClearModel` | doc | Portrait framing (QuestNPCModel uses zoom 0.6). Guarded. Framing verified in game: not yet. |
 | `OnModelLoaded` script | used | Blizzard_Wardrobe.xml. Shoots 0.25 s after it, or after 1 s if it never fires; gives up after 6 s. |
-| `Texture:SetTexture(path)`, `SetTexCoord` | doc | Returns `success`. Each candidate name is tried until one is not refused; the crop goes over the class crest, so a file that does not load leaves the crest. |
+| `Texture:SetTexture(path)`, `GetTextureFileID()`, `SetTexCoord` | doc | SimpleTextureBaseAPIDocumentation.lua. `SetTexture` returns true even for a path that draws nothing (probe above), so a candidate name counts only when `SetTexture` did not return false or error and `GetTextureFileID` then gives a file ID (guarded; nil or 0 moves on). The texture is cleared before each try, so no ID is left over from the last character. The crop goes over the class crest, so a file that does not load leaves the crest. |
 | `MenuUtil.CreateContextMenu` | used | Blizzard_Menu (AddonList uses it); guarded. Without it a right-click opens the card. |
 
 Verified in game: the file name and the `Screenshots\` path form (probe). Not yet: the capture itself, the model
-framing, whether a new file loads in the same session (the card says it shows after a restart), and whether
-`SetTexture` returns false for a missing loose file (if it does not, only the first name is tried; the crest shows).
+framing, whether a new file loads in the same session (the card says it shows after a restart), and that
+`GetTextureFileID` is nil for a candidate second with no file (seen only for the wrong path forms, not yet for a
+missing file name).
