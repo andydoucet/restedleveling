@@ -1,0 +1,21 @@
+## Interface: 16001
+## Title: Rested Leveling |cff7fd4ff@project-version@|r
+## Notes: Never level unrested. Every character's rested XP, sorted so the top one is who to play next. /rlvl
+## IconTexture: Interface\Icons\Spell_Nature_Sleep
+## Author: Andy Doucet
+## Version: @project-version@
+## X-License: GPL-3.0
+## X-Website: https://github.com/andydoucet/restedleveling
+## X-Credits: Builds on Rested Watch by doc_biddle (GPL-3.0): projection, calibration, Well Rested rank reader, sleeping-bag logic.
+# ## X-Curse-Project-ID: 000000
+# ## X-Wago-ID: xxxxxxxx
+## SavedVariables: RestedLevelingDB
+## OptionalDeps: ElvUI
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+Core\Util.lua
+Core\Model.lua
