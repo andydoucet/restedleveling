@@ -5,7 +5,7 @@ local W = dofile("tests/world.lua")
 local H = 3600
 
 local function pure()
-	return W.Pure({ "Core/Util.lua", "Core/Model.lua", "Core/Identity.lua", "Sync/Codec.lua" })
+	return W.Pure({ "Core/Util.lua", "Core/Model.lua", "Core/Identity.lua", "Core/Look.lua", "Sync/Codec.lua" })
 end
 
 local function rec(full, t, extra)

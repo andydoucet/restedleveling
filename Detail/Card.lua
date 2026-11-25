@@ -165,6 +165,7 @@ local function makeStage(f)
 	St.Color(s.sub, St.CREAM)
 	s.chip = Wg.Chip(s, 20)
 	s.chip:SetPoint("BOTTOMRIGHT", -14, 40)   -- on the name line, clear of "Seen ..."
+	s.lookBox = ns.Look.CardControls(s)   -- "Save my look", top right: the character you are on only
 	return s
 end
 
@@ -429,6 +430,7 @@ function Card.Show(key)
 		s.lvlText:SetTextColor(unpack(host and { 0.95, 0.90, 0.77 } or { 0.14, 0.09, 0.03 }))
 		s.breathe:Play()
 	end
+	ns.Look.UpdateCardControls(s.lookBox, key, isMe)
 	s.plate:SetText(St.ClassText(c.class, c.full or "?"))
 	s.lvlText:SetText(c.level or "?")
 	local raceName = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
@@ -459,11 +461,13 @@ function Card.Show(key)
 end
 
 -- Under the crest of a character that is not logged in: "Last seen as a level 46 Gnome Warrior. Log in to see them."
+-- With a saved look the face is theirs, so only the first sentence.
 function Card.OfflineNote(c)
 	local race = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
 	local class = c.class and (c.class:sub(1, 1) .. c.class:sub(2):lower()) or ""
 	local who = (race .. " " .. class):gsub("^%s+", ""):gsub("%s+$", "")
-	return ("Last seen as a level %s %s. Log in to see them."):format(c.level or "?", who ~= "" and who or "character")
+	local line = ("Last seen as a level %s %s."):format(c.level or "?", who ~= "" and who or "character")
+	return c.look and line or (line .. " Log in to see them.")
 end
 
 ns.ShowDetail = Card.Show

@@ -1,6 +1,6 @@
 -- Rested Leveling: the current-character strip. The logged-in character is not in the queue; this shows its live
 -- rested XP, roughly how many double-XP kills are left and how much rest this session has used. It sits on the same
--- column grid as the roster rows below it, so its bar lines up with theirs.
+-- column grid as the roster rows below it, so its bar lines up with theirs. Click it for your own card.
 
 local _, ns = ...
 local St, Wg, Wd, S = ns.Style, ns.Widgets, ns.Words, ns.Snap
@@ -10,9 +10,14 @@ ns.Current = Cur
 local X = 4   -- the roster rows sit 4 px inside the list well
 
 function Cur.Create(parent, w, h)
-	local f = CreateFrame("Frame", nil, parent, "BackdropTemplate")
+	local f = CreateFrame("Button", nil, parent, "BackdropTemplate")
 	f:SetSize(w, h)
 	St.Panel(f, "strip")
+	-- Click: your own card (where "Save my look" is). Right-click: the same as a small menu.
+	f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	f:SetScript("OnClick", function(self, button)
+		if button == "RightButton" then ns.Look.Menu(self) elseif ns.MyKey() then ns.ShowDetail(ns.MyKey()) end
+	end)
 	local C = Wg.COL
 	f.portrait = Wg.Portrait(f, 44)
 	f.portrait:SetPoint("LEFT", X + C.portrait, 0)
