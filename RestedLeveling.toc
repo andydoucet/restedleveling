@@ -42,3 +42,4 @@ UI\Main.lua
 
 Detail\Lines.lua
 Detail\Tidbits.lua
+Detail\Card.lua

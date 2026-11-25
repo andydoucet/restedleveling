@@ -91,6 +91,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_UnitAuras.GetPlayerAuraBySpellID` | doc | doc | yes |
 | method | `AddMaskTexture` | doc | doc |  |
 | method | `ClearAllPoints` | doc | doc |  |
+| method | `ClearModel` | doc | doc |  |
 | method | `CreateAnimation` | doc | doc |  |
 | method | `CreateAnimationGroup` | doc | doc |  |
 | method | `CreateFontString` | doc | doc |  |
@@ -108,12 +109,15 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetParent` | doc | doc |  |
 | method | `GetRegions` | doc | doc |  |
 | method | `GetStatusBarTexture` | doc | doc |  |
+| method | `GetStringHeight` | doc | doc |  |
 | method | `GetStringWidth` | doc | doc |  |
 | method | `GetText` | doc | doc |  |
 | method | `GetTexture` | doc | doc |  |
+| method | `GetTop` | doc | doc |  |
 | method | `GetUnboundedStringWidth` | doc | doc |  |
 | method | `GetVertexColor` | doc | doc |  |
 | method | `GetWidth` | doc | doc |  |
+| method | `HasAnimation` | doc | doc |  |
 | method | `Hide` | doc | doc |  |
 | method | `HookScript` | doc | doc |  |
 | method | `IsEventRegistered` | doc | doc |  |
@@ -126,10 +130,13 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `RegisterForDrag` | doc | doc |  |
 | method | `SetAllPoints` | doc | doc |  |
 | method | `SetAlpha` | doc | doc |  |
+| method | `SetAnimation` | doc | doc |  |
 | method | `SetAtlas` | doc | doc |  |
 | method | `SetBlendMode` | doc | doc |  |
+| method | `SetCamDistanceScale` | doc | doc |  |
 | method | `SetChecked` | doc | doc |  |
 | method | `SetClampedToScreen` | doc | doc |  |
+| method | `SetCustomRace` | - | - | yes |
 | method | `SetDesaturated` | doc | doc |  |
 | method | `SetDrawLayer` | doc | doc |  |
 | method | `SetDuration` | doc | doc |  |
@@ -144,17 +151,23 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetHitRectInsets` | doc | doc |  |
 | method | `SetHorizTile` | doc | doc |  |
 | method | `SetJustifyH` | doc | doc |  |
+| method | `SetJustifyV` | doc | doc |  |
+| method | `SetLooping` | doc | doc |  |
 | method | `SetMinMaxValues` | doc | doc |  |
 | method | `SetMovable` | doc | doc |  |
 | method | `SetOffset` | doc | doc |  |
 | method | `SetOrder` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
+| method | `SetRotation` | doc | doc |  |
 | method | `SetScale` | doc | doc |  |
+| method | `SetScaleFrom` | doc | doc |  |
+| method | `SetScaleTo` | doc | doc |  |
 | method | `SetScript` | doc | doc |  |
 | method | `SetShadowColor` | doc | doc |  |
 | method | `SetShadowOffset` | doc | doc |  |
 | method | `SetShown` | doc | doc |  |
 | method | `SetSize` | doc | doc |  |
+| method | `SetSmoothing` | doc | doc |  |
 | method | `SetStartDelay` | doc | doc |  |
 | method | `SetStatusBarColor` | doc | doc |  |
 | method | `SetStatusBarTexture` | doc | doc |  |
@@ -165,6 +178,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetToAlpha` | doc | doc |  |
 | method | `SetToFinalAlpha` | doc | doc |  |
 | method | `SetToplevel` | doc | doc |  |
+| method | `SetUnit` | doc | doc |  |
 | method | `SetValue` | doc | doc |  |
 | method | `SetVertTile` | doc | doc |  |
 | method | `SetVertexColor` | doc | doc |  |
@@ -172,6 +186,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetWordWrap` | doc | doc |  |
 | method | `Show` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
+| method | `TryOn` | doc | doc |  |
+| method | `Undress` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
 | method | `UnregisterEvent` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
@@ -184,12 +200,14 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `BOTTOM` | used | used |  |
 | event | `BOTTOMLEFT` | used | used |  |
 | event | `BOTTOMRIGHT` | used | used |  |
+| event | `BOUNCE` | used | used |  |
 | event | `CENTER` | used | used |  |
 | event | `CHAT_MSG_ADDON` | doc | doc |  |
 | event | `CHAT_MSG_SYSTEM` | doc | doc |  |
 | event | `CLAMPTOBLACKADDITIVE` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
+| event | `IN_OUT` | used | used |  |
 | event | `MEDIUM` | used | used |  |
 | event | `OVERLAY` | used | used |  |
 | event | `PLAYER_CAMPING` | doc | doc |  |
