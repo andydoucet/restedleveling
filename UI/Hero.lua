@@ -175,8 +175,9 @@ local function say(f, line)
 end
 
 -- row: the top roster row (nil when there is nobody to suggest); rows: the full order (for "ahead of");
--- me: the logged-in character record.
-function Hero.Update(f, row, now, me, rows)
+-- me: the logged-in character record. empty: nobody has rest worth switching to, so `row` is the one that fills
+-- first and the card says so instead of "play next".
+function Hero.Update(f, row, now, me, rows, empty)
 	local fresh = f.row == nil or (row and f.row.key ~= row.key)
 	f.row = row
 	if not row or row.group == 5 then
@@ -190,7 +191,7 @@ function Hero.Update(f, row, now, me, rows)
 	end
 	setShown(f, true)
 	f.portrait:SetAlpha(1)
-	f.kicker:SetText("#1  ·  PLAY NEXT")
+	f.kicker:SetText(empty and "NOBODY RESTED YET" or "#1  ·  PLAY NEXT")
 	local c, p = row.c, row.p
 	local r, g, b = St.StateColor(row.state)
 	St.Paint(f.edge, "st_" .. row.state)
@@ -203,16 +204,23 @@ function Hero.Update(f, row, now, me, rows)
 		U.Ago(now - (c.t or now))))
 	local calibrated = ns.DB().calib.n ~= nil
 	Wg.SetBubbleBar(f.bar, p.pct, row.state, not calibrated)
-	f.stat:SetText(("%.1f"):format(math.floor(p.levels * 10 + 0.5) / 10))
+	if empty then   -- nothing banked anywhere: the figure is the real-life wait, not a 0.0
+		f.stat:SetText(U.Duration(p.left))
+		f.statSub:SetText("until full")
+		f.why:SetText(("Nobody is rested yet. %s fills first: Full in %s."):format(c.full or "?", U.Duration(p.left)))
+		f.ahead:SetText("full " .. Wd.When(now + p.left, now))   -- the clock time under the wait
+	else
+		f.stat:SetText(("%.1f"):format(math.floor(p.levels * 10 + 0.5) / 10))
+		f.statSub:SetText("levels banked")
+		f.why:SetText(Wd.HeroWhy(row, now))   -- the state, then the real-life time to full
+		f.ahead:SetText(rows and Wd.Ahead(rows, now) or "")
+	end
 	if St.HostFrame() then f.stat:SetTextColor(0.94, 0.74, 0.25) else f.stat:SetTextColor(r, g, b) end   -- host: his gold
-	f.statSub:SetText("levels banked")
-	f.why:SetText((Wd.Why(row, now):match("^[^%.]+%.")))   -- one short sentence; the figure carries the number
 	f.why:SetTextColor(0.5 + r * 0.5, 0.5 + g * 0.5, 0.5 + b * 0.5)   -- it belongs to the bar: a light state colour
-	f.ahead:SetText(rows and Wd.Ahead(rows, now) or "")
-	-- The next step: play the next one, but not before parking the current character if it is outside.
+	-- The next step. Any "first, ..." is about the character you are on, never the one to play next.
 	local name = St.ClassText(c.class, c.full or "them")
-	f.cta:SetText(ns.Snap.RestingNow() and ("Next, log out. Then play %s."):format(name)
-		or ("First, hearth or reach an inn. Then play %s."):format(name))
+	local meName = me and St.ClassText(me.class, me.full or "this character") or nil
+	f.cta:SetText(Wd.Action(name, meName, ns.Snap.RestingNow(), empty))
 	f.open:SetLabel("View details")   -- the name is right above it
 	local tag = St.AccountTag(c)
 	f.acct:SetText(tag and (c.src == "sync" and (tag .. " · synced") or tag) or "")

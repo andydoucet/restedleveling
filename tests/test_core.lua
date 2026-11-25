@@ -127,7 +127,7 @@ function cases.slash_lists_other_characters_and_never_the_current_one()
 	h.Slash("RESTEDLEVELING", "list")
 	local out = table.concat(h.Printed(), "\n")
 	T.has(out, "Le Nette", "alt listed")
-	T.has(out, "full for 9h", "full for 9h")
+	T.has(out, "Full for 9h", "full for 9h")
 	T.lacks(out, "Le Jette", "current character not in the queue")
 	T.clean(h)
 end

@@ -218,6 +218,17 @@ function Card.Create()
 	f.why:SetJustifyV("TOP")
 	f.why:SetWordWrap(true)
 	St.Color(f.why, St.CREAM)
+	f.whyHit = CreateFrame("Frame", nil, f)   -- the rest line explains its own maths on hover
+	f.whyHit:SetAllPoints(f.why)
+	f.whyHit:EnableMouse(true)
+	f.whyHit:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_TOP")
+		for i, line in ipairs(Card.REST_HELP) do
+			if i == 1 then GameTooltip:AddLine(line) else GameTooltip:AddLine(line, 1, 1, 1, true) end
+		end
+		GameTooltip:Show()
+	end)
+	f.whyHit:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	makeTiles(f)
 	f.typer:SetScript("OnUpdate", function(self, elapsed)
 		self.t = (self.t or 0) + elapsed
@@ -250,6 +261,14 @@ local function talk(f, hook, text)
 	b.pop:Play()
 	f.stage.settle:Play()
 end
+
+-- How rest fills, for the rest line's tooltip (Andy asked whether ~10 days from empty is right: it is).
+Card.REST_HELP = {
+	"How rest fills",
+	"Rest fills 5% of a level every 8h in an inn or city; full is 1.5 levels.",
+	"So empty to full takes 10 days in an inn, 40 days outside (4x slower).",
+	"Each Well Rested rank raises the rate and the cap by 4%, so the time stays the same.",
+}
 
 local function dressModel(model, c, isMe)
 	if isMe then
@@ -371,7 +390,7 @@ function Card.Show(key)
 		days >= 1 and (days .. (days == 1 and " day" or " days")) or U.Long(ago), tag and ("  ·  " .. tag) or ""))
 	Wg.SetChip(s.chip, isMe and "resting" or state, isMe and "NOW PLAYING" or Wd.Chip(row))
 	Wg.SetBubbleBar(f.bar, p and p.pct or 0, state, false)
-	f.why:SetText(isMe and "This is the character you're on." or Wd.Why(row, now))
+	f.why:SetText(isMe and "This is the character you're on." or Wd.Why(row, now))   -- ends with the real-life time to full
 	Wg.Balance(f.why, IW - 20)
 	local n = fillTiles(f, c, now)
 	-- Sit next to the main window, top edges level.

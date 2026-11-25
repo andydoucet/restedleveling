@@ -3,11 +3,11 @@
 -- Columns: rank, name in class colour, level, then state word and time in the state colour.
 
 local _, ns = ...
-local St, Wg, U = ns.Style, ns.Widgets, ns.Util
+local St, Wg, Wd = ns.Style, ns.Widgets, ns.Words
 local Tip = {}
 ns.Tip = Tip
 
-local W, ROW, MAX = 446, 20, 12
+local W, ROW, MAX = 520, 20, 12   -- wide enough for "93%  ·  Full in 9d 23h (Thu 4 Dec, 22:40)"
 
 local function create()
 	St.Ensure()
@@ -73,13 +73,12 @@ function Tip.Show(owner)
 			local s = St.STATE[r.state] or St.STATE.max
 			line.rank:SetText(i)
 			line.name:SetText(St.ClassText(r.c.class, r.c.full or "?", true) .. ("  |cffb9b0a0· Lv %d|r"):format(r.c.level or 0))
-			-- one phrase per row, in the main list's precision: "Full for 2d", "Nearly full · full in 3d 14h"
-			local p, detail = r.p, nil
-			if r.state == "outside" then detail = "park in an inn"
-			elseif p and p.left == 0 then detail = nil
-			elseif p then detail = "full in " .. U.Duration(p.left) end
-			local word = (r.state == "full" and p) and ("Full for " .. U.Short(now - (p.fullSince or now)))
-				or ((p and r.state ~= "outside") and (math.floor(p.pct * 100) .. "%")) or s.word   -- "93% · full in 14h 25m"
+			-- one phrase per row, with the real-life time to full: "Full for 2d 4h", "93% · Full in 3h (today 07:00)"
+			local p = r.p
+			local word, detail
+			if not p then word = s.word
+			elseif p.left == 0 then word = Wd.FullLine(p, now)
+			else word, detail = (r.state == "outside" and "Outside" or (math.floor(p.pct * 100) .. "%")), Wd.FullLine(p, now) end
 			line.state:SetText(("|c%s%s|r|cffb8a88a%s|r"):format(St.Hex(s.r, s.g, s.b), word, detail and ("  ·  " .. detail) or ""))
 		end
 	end

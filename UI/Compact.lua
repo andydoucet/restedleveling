@@ -16,8 +16,7 @@ local function pipTooltip(pip)
 	local s = St.STATE[r.state] or St.STATE.max
 	GameTooltip:AddLine("|T" .. s.icon .. ":14|t " .. s.word .. "  " .. Wd.Chip(r), s.r, s.g, s.b)
 	if r.p then
-		local fullIn, clock = Wd.FullIn(r.p, time())
-		GameTooltip:AddLine(("%d%% rested  ·  %s"):format(math.floor(r.p.pct * 100), fullIn .. (clock ~= "" and (" (" .. clock .. ")") or "")), 1, 1, 1)
+		GameTooltip:AddLine(("%d%% rested  ·  %s"):format(math.floor(r.p.pct * 100), Wd.FullLine(r.p, time())), 1, 1, 1)
 		GameTooltip:AddLine(Wd.Levels(r.p.levels) .. " of double XP", 0.85, 0.85, 0.85)
 	end
 	GameTooltip:AddLine(Wd.Place(r.c), 0.75, 0.72, 0.66)

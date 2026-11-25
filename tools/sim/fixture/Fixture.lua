@@ -9,10 +9,13 @@ local realTime = time
 time = function(t) if t then return realTime(t) end return T0 + math.floor(GetTime() - startGT) end
 
 -- The logged-in character: Jacques Hammer, level 24 Orc shaman, out in the Barrens, not resting.
-RLFIX = { rested = 15200, xp = 9100, xpMax = 25200, level = 24, resting = false }
+RLFIX = { rested = 15200, xp = 9100, xpMax = 25200, level = 24, resting = false, first = "Jacques", surname = "Hammer" }
+if RLFIX_CASE == "andy" then   -- Andy's first in-game run (ILL-1274): on Le Nette, level 1, nothing rested, outside
+	RLFIX = { rested = 0, xp = 120, xpMax = 400, level = 1, resting = false, first = "Le", surname = "Nette" }
+end
 local function wrap(name, fn) local orig = _G[name]; _G[name] = function(...) return fn(orig, ...) end end
-wrap("UnitNameUnmodified", function(o, u, ...) if u == "player" then return "Jacques", "Hammer" end return o(u, ...) end)
-wrap("UnitName", function(o, u, ...) if u == "player" then return "Jacques", "Hammer" end return o(u, ...) end)
+wrap("UnitNameUnmodified", function(o, u, ...) if u == "player" then return RLFIX.first, RLFIX.surname end return o(u, ...) end)
+wrap("UnitName", function(o, u, ...) if u == "player" then return RLFIX.first, RLFIX.surname end return o(u, ...) end)
 wrap("UnitLevel", function(o, u, ...) if u == "player" then return RLFIX.level end return o(u, ...) end)
 wrap("UnitXP", function(o, u, ...) if u == "player" then return RLFIX.xp end return o(u, ...) end)
 wrap("UnitXPMax", function(o, u, ...) if u == "player" then return RLFIX.xpMax end return o(u, ...) end)
@@ -45,7 +48,7 @@ RestedLevelingDB = {
 	calib = { rate = 1.0, n = 3 }, opts = { style = RLFIX_STYLE or "auto", showGrey = true, minimap = { hide = false } },
 	xpTable = { [22] = 23200, [21] = 21300, [19] = 17700, [17] = 14400, [15] = 11400, [12] = 7600, [6] = 2800 },
 	hidden = {}, alertsOff = {},
-	sync = { links = { Lebankken = true }, peers = { [B] = { name = "Lebankken", seen = T0 - 2 * D, lastSync = T0 - 2 * D, label = "#3" } } },
+	sync = { links = { Lebankken = true }, confirmed = { lebankken = B }, peers = { [B] = { name = "Lebankken", seen = T0 - 2 * D, lastSync = T0 - 2 * D, label = "#3" } } },
 	chars = {
 		-- Full for ~2 days in Brill's inn.
 		["N:Le Nette@?"] = char("N:Le Nette@?", { full = "Le Nette", class = "MAGE", race = "Scourge", sex = 3, level = 22,
@@ -98,4 +101,18 @@ dette.played, dette.bind, dette.money, dette.profs = 2 * D + 19 * H, "Crossroads
 if RLFIX_EMPTY then
 	-- First run: only the account itself, nothing saved or synced yet.
 	RestedLevelingDB = { version = 1, account = A, opts = { style = RLFIX_STYLE or "auto", minimap = { hide = false } } }
+end
+if RLFIX_CASE == "andy" then
+	-- Andy's roster when he first ran v1: Le Jette, a level 46 gnome warrior, parked in the Feathermoon Stronghold inn
+	-- five minutes ago with nothing banked yet, and her professions saved twice (the duplicate the card showed).
+	RestedLevelingDB = { version = 1, account = A, accountLabels = { [A] = "#2" }, calib = { rate = 1.0, n = 1 },
+		opts = { style = RLFIX_STYLE or "auto", showGrey = true, minimap = { hide = false } }, hidden = {}, alertsOff = {},
+		chars = {
+			["N:Le Jette@?"] = char("N:Le Jette@?", { full = "Le Jette", class = "WARRIOR", race = "Gnome", sex = 3, level = 46,
+				xpMax = 80000, rested = 400, resting = true, restKind = "inn", zone = "Feralas", subzone = "Feathermoon Stronghold",
+				ranks = 3, ago = 5 * 60, bind = "Feathermoon Stronghold", played = 5 * D + 15 * H, money = 63800,
+				guild = "Exodar", gearQ = "5 rare, 11 uncommon",
+				profs = "Blacksmithing 185, Blacksmithing 185, Mining 201, Mining 201, Cooking 216, Cooking 216, First Aid 276, First Aid 276, Fishing 183, Fishing 183, Riding 75" }),
+		},
+	}
 end

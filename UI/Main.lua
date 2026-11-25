@@ -158,12 +158,15 @@ function Main.Refresh()
 	local rows = ns.Rows()
 	local hero = rows[1]
 	if hero and hero.group == 5 then hero = nil end
-	ns.Hero.Update(f.hero, hero, now, ns.Me(), rows)
+	-- Nothing banked anywhere: the hero shows who fills first instead of sending you to a 0.0.
+	local empty = Wd.NothingBanked(hero)
+	if empty then hero = Wd.FillsFirst(rows) or hero end
+	ns.Hero.Update(f.hero, hero, now, ns.Me(), rows, empty)
 	f.heroH = hero and f.fullHeroH or (f.fullHeroH - 50)   -- the welcome card has no action bar
 	f.hero:SetHeight(f.heroH)
 	ns.Current.Update(f.current)
 	local list = {}
-	for i = hero and 2 or 1, #rows do list[#list + 1] = rows[i] end
+	for _, r in ipairs(rows) do if r ~= hero then list[#list + 1] = r end end
 	ns.Roster.Update(f.roster, list, now, hero and 2 or 1)
 	-- Fit the window to the roster: between 3 and 9 rows tall (the first-run guide needs about 4).
 	local shown = math.max(3, math.min(Main.VISIBLE, #list))

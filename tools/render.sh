@@ -4,7 +4,7 @@
 # Each scene in tools/sim/scenes/NN_name.lua runs in a fresh sandbox: a copy of the addon, the render fixture
 # (tools/sim/fixture: Andy's roster as saved data, a pinned clock) and, for *_elvui scenes, read-only copies of
 # ElvUI + ElvUI_WC3 with a sim shim. Never touches the real WTF or AddOns. Exits non-zero on any Lua error from our
-# addon. Writes at most 8 PNGs named scene_NN_<name>.png.
+# addon. Writes at most 10 PNGs named scene_NN_<name>.png.
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -42,7 +42,7 @@ for scene in "$ROOT"/tools/sim/scenes/[0-9][0-9]_*.lua; do
 	name=$(basename "$scene" .lua)
 	[[ -n "$FILTER" && "$name" != *"$FILTER"* ]] && continue
 	count=$((count + 1))
-	[[ $count -gt 8 ]] && { echo "more than 8 scenes" >&2; exit 2; }
+	[[ $count -gt 10 ]] && { echo "more than 10 scenes" >&2; exit 2; }
 	box="$WORK/$name"
 	mkdir -p "$box/AddOns" "$box/wtf"
 	stage_addon "$box/AddOns"
@@ -55,20 +55,21 @@ for scene in "$ROOT"/tools/sim/scenes/[0-9][0-9]_*.lua; do
 		cp -r "$ROOT/tools/sim/elvui" "$box/AddOns/!RLSimElvUI"
 	fi
 	# Per-scene options from a "-- render:" header line: --width/--height/--crop pass to the screenshot,
-	# --empty starts from an empty roster (first run).
+	# --empty starts from an empty roster (first run), --case <name> picks a fixture case (tools/sim/fixture).
 	opts=$(sed -n 's/^-- render: //p' "$scene" | head -1)
-	width=1920 height=1080 crop=() empty=false
+	width=1920 height=1080 crop=() empty=false case=
 	read -r -a words <<<"$opts"
 	for ((i = 0; i < ${#words[@]}; i++)); do
 		case "${words[$i]}" in
 			--empty) empty=true ;;
+			--case) case=${words[$((i + 1))]}; i=$((i + 1)) ;;
 			--width) width=${words[$((i + 1))]}; i=$((i + 1)) ;;
 			--height) height=${words[$((i + 1))]}; i=$((i + 1)) ;;
 			--crop) crop=(--crop "${words[$((i + 1))]}"); i=$((i + 1)) ;;
 		esac
 	done
 	shot=(--width "$width" --height "$height" "${crop[@]}")
-	printf "RLFIX_STYLE = '%s'\nRLFIX_EMPTY = %s\n" "$style" "$empty" > "$box/AddOns/!RLSimFixture/Style.lua"
+	printf "RLFIX_STYLE = '%s'\nRLFIX_EMPTY = %s\nRLFIX_CASE = '%s'\n" "$style" "$empty" "$case" > "$box/AddOns/!RLSimFixture/Style.lua"
 	sed -i 's/^Fixture.lua$/Style.lua\nFixture.lua/' "$box/AddOns/!RLSimFixture/!RLSimFixture.toc"
 	# The scene runs as sandbox code 4 s after PLAYER_ENTERING_WORLD (our login work runs at +2 s), inside the startup
 	# delay, so animations such as the card's speech typewriter finish before the screenshot.
