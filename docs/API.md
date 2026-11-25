@@ -9,11 +9,15 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 
 | kind | name | Forever | classic_era | guarded |
 |---|---|---|---|---|
+| global | `C_ChatInfo` | doc | doc |  |
 | global | `C_Spell` | doc | doc | yes |
 | global | `C_Timer` | doc | doc |  |
 | global | `C_Traits` | doc | doc | yes |
 | global | `C_UnitAuras` | doc | doc | yes |
+| global | `ChatFrameUtil` | used | used |  |
+| global | `ChatFrame_AddMessageEventFilter` | used | used |  |
 | global | `CreateFrame` | used | used |  |
+| global | `ERR_CHAT_PLAYER_NOT_FOUND_S` | used | used |  |
 | global | `GetMaxLevelForPlayerExpansion` | doc | doc | yes |
 | global | `GetMaxPlayerLevel` | doc | used |  |
 | global | `GetRealZoneText` | doc | doc |  |
@@ -21,6 +25,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GetSubZoneText` | doc | doc |  |
 | global | `GetTime` | doc | used |  |
 | global | `GetXPExhaustion` | doc | doc |  |
+| global | `IsInGroup` | used | used |  |
+| global | `IsInGuild` | doc | doc |  |
+| global | `IsInRaid` | used | used |  |
 | global | `IsResting` | doc | used |  |
 | global | `LibStub` | - | - | yes |
 | harness | `Minimap` | used | used |  |
@@ -52,6 +59,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | harness | `tinsert` | used | used |  |
 | harness | `tremove` | used | used |  |
 | harness | `wipe` | used | used |  |
+| field | `C_ChatInfo.AreOutgoingAddonChatMessagesRestricted` | doc | doc | yes |
+| field | `C_ChatInfo.RegisterAddonMessagePrefix` | doc | doc |  |
+| field | `C_ChatInfo.SendAddonMessage` | doc | doc |  |
 | field | `C_Spell.GetSpellName` | doc | doc | yes |
 | field | `C_Timer.After` | doc | doc |  |
 | field | `C_Timer.NewTicker` | doc | doc |  |
@@ -101,6 +111,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `Stop` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
+| event | `CHAT_MSG_ADDON` | doc | doc |  |
+| event | `CHAT_MSG_SYSTEM` | doc | doc |  |
+| event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `PLAYER_CAMPING` | doc | doc |  |
 | event | `PLAYER_ENTERING_WORLD` | doc | doc |  |
 | event | `PLAYER_LEAVING_WORLD` | doc | doc |  |
@@ -111,4 +124,5 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `PLAYER_XP_UPDATE` | doc | doc |  |
 | event | `TRAIT_CONFIG_UPDATED` | doc | doc |  |
 | event | `UPDATE_EXHAUSTION` | doc | doc |  |
+| event | `WHISPER` | used | used |  |
 | event | `ZONE_CHANGED_NEW_AREA` | doc | doc |  |

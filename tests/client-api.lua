@@ -2,11 +2,15 @@
 -- The game names this addon uses that the real client has; the fake client may define only these.
 return {
 	globals = {
+		["C_ChatInfo"] = "t",
 		["C_Spell"] = "t",
 		["C_Timer"] = "t",
 		["C_Traits"] = "t",
 		["C_UnitAuras"] = "t",
+		["ChatFrameUtil"] = "f",
+		["ChatFrame_AddMessageEventFilter"] = "f",
 		["CreateFrame"] = "f",
+		["ERR_CHAT_PLAYER_NOT_FOUND_S"] = "t",
 		["GetMaxLevelForPlayerExpansion"] = "f",
 		["GetMaxPlayerLevel"] = "f",
 		["GetRealZoneText"] = "f",
@@ -14,6 +18,9 @@ return {
 		["GetSubZoneText"] = "f",
 		["GetTime"] = "f",
 		["GetXPExhaustion"] = "f",
+		["IsInGroup"] = "f",
+		["IsInGuild"] = "f",
+		["IsInRaid"] = "f",
 		["IsResting"] = "f",
 		["Minimap"] = "t",
 		["SlashCmdList"] = "t",
@@ -46,6 +53,7 @@ return {
 		["wipe"] = "f",
 	},
 	namespaces = {
+		["C_ChatInfo"] = { ["AreOutgoingAddonChatMessagesRestricted"] = "f", ["RegisterAddonMessagePrefix"] = "f", ["SendAddonMessage"] = "f" },
 		["C_Spell"] = { ["GetSpellName"] = "f" },
 		["C_Timer"] = { ["After"] = "f", ["NewTicker"] = "f" },
 		["C_Traits"] = { ["GetConfigIDBySystemID"] = "f", ["GetConfigInfo"] = "f", ["GetDefinitionInfo"] = "f", ["GetEntryInfo"] = "f", ["GetNodeInfo"] = "f", ["GetTreeNodes"] = "f" },
