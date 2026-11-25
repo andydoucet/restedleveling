@@ -33,8 +33,8 @@ function L.Show(f, c, desaturate)
 	local names = LD.Names(look)
 	for i = nameIndex[look.file] or 1, #names do
 		U.Call(f.look.SetTexture, f.look, nil)   -- no file ID left over from the last character drawn here
-		local ok = U.Call(f.look.SetTexture, f.look, LD.DIR .. names[i])
-		local id = ok ~= false and ok ~= nil and U.Call(f.look.GetTextureFileID, f.look)
+		local ran, ok = pcall(f.look.SetTexture, f.look, LD.DIR .. names[i])
+		local id = ran and ok ~= false and U.Call(f.look.GetTextureFileID, f.look)
 		if id and id ~= 0 then
 			nameIndex[look.file] = i
 			f.look:SetTexCoord(look.l, look.r, look.t, look.b)
