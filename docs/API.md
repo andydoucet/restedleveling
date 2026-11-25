@@ -34,18 +34,21 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GetMaxLevelForPlayerExpansion` | doc | doc | yes |
 | global | `GetMaxPlayerLevel` | doc | used |  |
 | global | `GetMoney` | doc | used |  |
+| global | `GetPhysicalScreenSize` | doc | used | yes |
 | global | `GetRealZoneText` | doc | doc |  |
 | global | `GetRealmName` | doc | doc |  |
 | global | `GetSubZoneText` | doc | doc |  |
 | global | `GetTime` | doc | used |  |
 | global | `GetTitleName` | doc | doc |  |
 | global | `GetXPExhaustion` | doc | doc |  |
+| global | `InCombatLockdown` | used | used |  |
 | global | `IsInGroup` | used | used |  |
 | global | `IsInGuild` | doc | doc |  |
 | global | `IsInInstance` | doc | doc |  |
 | global | `IsInRaid` | used | used |  |
 | global | `IsResting` | doc | used |  |
 | global | `LibStub` | - | - | yes |
+| global | `MenuUtil` | used | used | yes |
 | harness | `Minimap` | used | used |  |
 | global | `NUM_CHAT_WINDOWS` | used | used |  |
 | global | `PlaySound` | used | used |  |
@@ -70,7 +73,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `UnitSex` | doc | doc |  |
 | global | `UnitXP` | doc | used |  |
 | global | `UnitXPMax` | doc | used |  |
-| harness | `WorldFrame` | used | used |  |
+| global | `WorldFrame` | used | used |  |
 | global | `date` | used | used |  |
 | harness | `debugstack` | used | used |  |
 | harness | `format` | used | used |  |
@@ -120,6 +123,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `CreateFontString` | doc | doc |  |
 | method | `CreateMaskTexture` | doc | doc |  |
 | method | `CreateTexture` | doc | doc |  |
+| method | `EnableKeyboard` | doc | doc |  |
 | method | `EnableMouse` | doc | doc |  |
 | method | `EnableMouseWheel` | doc | doc |  |
 | method | `GetBottom` | doc | doc |  |
@@ -130,6 +134,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetFrameLevel` | doc | doc |  |
 | method | `GetHeight` | doc | doc |  |
 | method | `GetID` | doc | doc |  |
+| method | `GetLeft` | doc | doc |  |
 | method | `GetParent` | doc | doc |  |
 | method | `GetRegions` | doc | doc |  |
 | method | `GetStatusBarTexture` | doc | doc |  |
@@ -186,6 +191,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetOffset` | doc | doc |  |
 | method | `SetOrder` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
+| method | `SetPortraitZoom` | doc | doc |  |
 | method | `SetRotation` | doc | doc |  |
 | method | `SetScale` | doc | doc |  |
 | method | `SetScaleFrom` | doc | doc |  |
@@ -215,6 +221,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetWordWrap` | doc | doc |  |
 | method | `Show` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
+| method | `UndressSlot` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
 | method | `UnregisterAllEvents` | doc | doc |  |
 | method | `UnregisterEvent` | doc | doc |  |
@@ -234,6 +241,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `CHAT_MSG_SYSTEM` | doc | doc |  |
 | event | `CLAMPTOBLACKADDITIVE` | used | used |  |
 | event | `DIALOG` | used | used |  |
+| event | `ESCAPE` | used | used |  |
 | event | `FULLSCREEN_DIALOG` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
@@ -249,6 +257,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `PLAYER_LOGOUT` | doc | doc |  |
 | event | `PLAYER_MONEY` | doc | doc |  |
 | event | `PLAYER_QUITING` | doc | doc |  |
+| event | `PLAYER_REGEN_DISABLED` | doc | doc |  |
+| event | `PLAYER_REGEN_ENABLED` | doc | doc |  |
 | event | `PLAYER_UPDATE_RESTING` | doc | doc |  |
 | event | `PLAYER_XP_UPDATE` | doc | doc |  |
 | event | `REPEAT` | used | used |  |
@@ -291,21 +301,29 @@ every other character shows its class crest (`classicon-<class>`) with its race 
 Verified in game: not yet. The race atlas is verified only through the simulator, which reads the installed client's
 atlas data.
 
-## Screenshot probe
+## Saved looks (screenshot portraits)
 
-`/rlvl shotprobe` (hidden, ILL-1276) tests one question in game: can a screenshot the addon takes be drawn again later
-as a texture? Checked against the Forever UI source:
+ILL-1276 asked, with a hidden `/rlvl shotprobe` (now removed): can a screenshot the addon takes be drawn again later as
+a texture? Andy ran it on Forever (`refs/ingame/andy_probe_take.png`, `andy_probe_show.png`): after a full client
+restart, `Screenshots\WoWScrnShot_112526_051821.tga` loaded as a texture at full resolution, named from the second of
+`SCREENSHOT_SUCCEEDED`. The forms `..\Screenshots\<file>` and `Interface\..\Screenshots\<file>` drew nothing.
+So "Save my look" (ILL-1279) shoots the logged-in character as `.tga` and other characters' portraits draw that
+file through `Screenshots\<file>`. Checked against the Forever UI source:
 
-| API | Forever | Notes |
+| API | Forever | Use and guard |
 |---|---|---|
-| `Screenshot()` | doc | ClientDocumentation.lua; no restriction flags. FrameXML calls it (AddonList, EditModeDialogs). |
-| `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload (no file name). ActionStatus.lua listens the same way. |
-| `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | CVarDocumentation.lua. The CVar name is the client's, not in the UI source: read with a fallback to jpeg. |
-| `Texture:SetTexture(path)` | doc | Returns `success` (SimpleTextureBaseAPIDocumentation.lua). |
-| `Texture:GetTextureFileID()`, `GetTextureFilePath()` | doc | SimpleTextureBaseAPIDocumentation.lua; called guarded. |
-| `Region:IsObjectLoaded()` | doc | SimpleRegionAPIDocumentation.lua; called guarded, a second after SetTexture. |
+| `Screenshot()` | doc | ClientDocumentation.lua; no restriction flags. The SCREENSHOT binding calls it. |
+| `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload. Only counted after our own `Screenshot()` call. |
+| `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | Set to `tga` for the one shot, the player's format put back on every way out. |
+| `UIParent:Hide()`, `UIParent:Show()` | used | MovieFrame.lua does the same. UIParent holds secure frames, so it is only hidden out of combat (`InCombatLockdown`, doc), and `PLAYER_REGEN_DISABLED` (fires before the lockdown starts) ends the capture and shows it again. If combat came first anyway, it is shown on `PLAYER_REGEN_ENABLED`. Alt-Z itself calls `SetUIVisibility`, which also hides nameplates; our opaque stage covers those. |
+| `CreateFrame("Frame", name, nil)` | used | The stage has no parent, so it stays up while UIParent is hidden; `SetAllPoints(WorldFrame)`, strata FULLSCREEN_DIALOG, `EnableKeyboard` for Esc. |
+| `GetPhysicalScreenSize()` | doc | ScreenDocumentation.lua; guarded. The model square is 512 physical px (at most 80% of the screen height). |
+| `DressUpModel:SetUnit("player")`, `UndressSlot(16/17/18)` | doc | FrameAPICharacterModelBase / FrameAPIDressUpModel. INVSLOT_MAINHAND/OFFHAND/RANGED are 16/17/18 (Constants.lua). Each call guarded. |
+| `SetPortraitZoom`, `SetRotation`, `SetAnimation`, `ClearModel` | doc | Portrait framing (QuestNPCModel uses zoom 0.6). Guarded. Framing verified in game: not yet. |
+| `OnModelLoaded` script | used | Blizzard_Wardrobe.xml. Shoots 0.25 s after it, or after 1 s if it never fires; gives up after 6 s. |
+| `Texture:SetTexture(path)`, `SetTexCoord` | doc | Returns `success`. Each candidate name is tried until one is not refused; the crop goes over the class crest, so a file that does not load leaves the crest. |
+| `MenuUtil.CreateContextMenu` | used | Blizzard_Menu (AddonList uses it); guarded. Without it a right-click opens the card. |
 
-Not verifiable from the UI source: the file name. The client's pattern is `WoWScrnShot_MMDDYY_HHMMSS.<jpg|png|tga>` in
-`_forever_\Screenshots\`; the probe records the second of the success event and the seconds around it, and the
-show step tries `Screenshots\<file>`, `..\Screenshots\<file>` and `Interface\..\Screenshots\<file>`. Verified in game: not
-yet (Andy runs it).
+Verified in game: the file name and the `Screenshots\` path form (probe). Not yet: the capture itself, the model
+framing, whether a new file loads in the same session (the card says it shows after a restart), and whether
+`SetTexture` returns false for a missing loose file (if it does not, only the first name is tried; the crest shows).

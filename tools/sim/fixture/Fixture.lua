@@ -116,3 +116,25 @@ if RLFIX_CASE == "andy" then
 		},
 	}
 end
+if RLFIX_CASE == "look" then
+	-- Saved looks (ILL-1279): Le Nette and Le Beouf each saved one. The sim has no screenshots and draws no 3D model,
+	-- so each "screenshot" is a stand-in made the way the capture stage lays out (look_*.tga, 960x540: the stage's
+	-- dark #0B0908 backdrop with a stock race portrait in the centred model square, at half the 1920x1080 size; the
+	-- texcoords are fractions, so the size does not matter). Texture:SetTexture is redirected for those two names only.
+	local box = { l = 0.3667, r = 0.6333, t = 0.263, b = 0.737 }
+	local function look(file, ago)
+		local t = { file = file, at = T0 - ago, asked = T0 - ago - 1 }
+		for k, v in pairs(box) do t[k] = v end
+		return t
+	end
+	RestedLevelingDB.chars["N:Le Nette@?"].look = look("WoWScrnShot_112026_211430.tga", 4 * D + 2 * H)
+	RestedLevelingDB.chars["N:Le Beouf@?"].look = look("WoWScrnShot_112026_174502.tga", 3 * D + 11 * H)
+	local FIX = "Interface\\AddOns\\!RLSimFixture\\"
+	local stand = { ["WoWScrnShot_112026_211430.tga"] = FIX .. "look_nette.tga", ["WoWScrnShot_112026_174502.tga"] = FIX .. "look_beouf.tga" }
+	local idx = getmetatable(UIParent:CreateTexture()).__index
+	local set = idx.SetTexture
+	idx.SetTexture = function(self, file, ...)
+		local name = type(file) == "string" and file:match("^Screenshots\\(WoWScrnShot_[%d_]+%.tga)$")
+		return set(self, (name and stand[name]) or file, ...)
+	end
+end

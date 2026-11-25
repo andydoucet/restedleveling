@@ -21,12 +21,12 @@ LUACHECK = os.environ.get("LUACHECK", os.path.expanduser("~/.luarocks/bin/luache
 FALLBACKS = {
     "UnitNameUnmodified", "GetMaxLevelForPlayerExpansion", "C_Traits", "C_UnitAuras", "C_Spell",
     "ElvUI", "LibStub", "issecretvalue", "Settings", "BackdropTemplateMixin", "C_Texture",
-    "C_ChatInfo.AreOutgoingAddonChatMessagesRestricted",
+    "C_ChatInfo.AreOutgoingAddonChatMessagesRestricted", "MenuUtil", "GetPhysicalScreenSize",
 }
 # Globals that are tables (frames, constants) rather than functions.
 TABLES = {"SlashCmdList", "UIParent", "Minimap", "GameMenuFrame", "GameTooltip", "Settings", "SOUNDKIT",
           "RAID_CLASS_COLORS", "CLASS_ICON_TCOORDS", "ElvUI", "BackdropTemplateMixin", "ChatFrame1", "Enum",
-          "DEFAULT_CHAT_FRAME", "UISpecialFrames"}
+          "DEFAULT_CHAT_FRAME", "UISpecialFrames", "MenuUtil"}
 # Real client globals the fake client (tests/fakewow.lua) always defines.
 HARNESS = {"CreateFrame", "UIParent", "WorldFrame", "Minimap", "SlashCmdList", "hooksecurefunc", "issecretvalue", "GetTime",
            "time", "date", "strsplit", "wipe", "tinsert", "tremove", "format", "strmatch", "strfind", "debugstack",
@@ -66,24 +66,32 @@ Verified in game: not yet. The race atlas is verified only through the simulator
 atlas data.
 """
 
-SHOT_PROBE = """## Screenshot probe
+SAVED_LOOK = """## Saved looks (screenshot portraits)
 
-`/rlvl shotprobe` (hidden, ILL-1276) tests one question in game: can a screenshot the addon takes be drawn again later
-as a texture? Checked against the Forever UI source:
+ILL-1276 asked, with a hidden `/rlvl shotprobe` (now removed): can a screenshot the addon takes be drawn again later as
+a texture? Andy ran it on Forever (`refs/ingame/andy_probe_take.png`, `andy_probe_show.png`): after a full client
+restart, `Screenshots\\WoWScrnShot_112526_051821.tga` loaded as a texture at full resolution, named from the second of
+`SCREENSHOT_SUCCEEDED`. The forms `..\\Screenshots\\<file>` and `Interface\\..\\Screenshots\\<file>` drew nothing.
+So "Save my look" (ILL-1279) shoots the logged-in character as `.tga` and other characters' portraits draw that
+file through `Screenshots\\<file>`. Checked against the Forever UI source:
 
-| API | Forever | Notes |
+| API | Forever | Use and guard |
 |---|---|---|
-| `Screenshot()` | doc | ClientDocumentation.lua; no restriction flags. FrameXML calls it (AddonList, EditModeDialogs). |
-| `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload (no file name). ActionStatus.lua listens the same way. |
-| `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | CVarDocumentation.lua. The CVar name is the client's, not in the UI source: read with a fallback to jpeg. |
-| `Texture:SetTexture(path)` | doc | Returns `success` (SimpleTextureBaseAPIDocumentation.lua). |
-| `Texture:GetTextureFileID()`, `GetTextureFilePath()` | doc | SimpleTextureBaseAPIDocumentation.lua; called guarded. |
-| `Region:IsObjectLoaded()` | doc | SimpleRegionAPIDocumentation.lua; called guarded, a second after SetTexture. |
+| `Screenshot()` | doc | ClientDocumentation.lua; no restriction flags. The SCREENSHOT binding calls it. |
+| `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload. Only counted after our own `Screenshot()` call. |
+| `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | Set to `tga` for the one shot, the player's format put back on every way out. |
+| `UIParent:Hide()`, `UIParent:Show()` | used | MovieFrame.lua does the same. UIParent holds secure frames, so it is only hidden out of combat (`InCombatLockdown`, doc), and `PLAYER_REGEN_DISABLED` (fires before the lockdown starts) ends the capture and shows it again. If combat came first anyway, it is shown on `PLAYER_REGEN_ENABLED`. Alt-Z itself calls `SetUIVisibility`, which also hides nameplates; our opaque stage covers those. |
+| `CreateFrame("Frame", name, nil)` | used | The stage has no parent, so it stays up while UIParent is hidden; `SetAllPoints(WorldFrame)`, strata FULLSCREEN_DIALOG, `EnableKeyboard` for Esc. |
+| `GetPhysicalScreenSize()` | doc | ScreenDocumentation.lua; guarded. The model square is 512 physical px (at most 80% of the screen height). |
+| `DressUpModel:SetUnit("player")`, `UndressSlot(16/17/18)` | doc | FrameAPICharacterModelBase / FrameAPIDressUpModel. INVSLOT_MAINHAND/OFFHAND/RANGED are 16/17/18 (Constants.lua). Each call guarded. |
+| `SetPortraitZoom`, `SetRotation`, `SetAnimation`, `ClearModel` | doc | Portrait framing (QuestNPCModel uses zoom 0.6). Guarded. Framing verified in game: not yet. |
+| `OnModelLoaded` script | used | Blizzard_Wardrobe.xml. Shoots 0.25 s after it, or after 1 s if it never fires; gives up after 6 s. |
+| `Texture:SetTexture(path)`, `SetTexCoord` | doc | Returns `success`. Each candidate name is tried until one is not refused; the crop goes over the class crest, so a file that does not load leaves the crest. |
+| `MenuUtil.CreateContextMenu` | used | Blizzard_Menu (AddonList uses it); guarded. Without it a right-click opens the card. |
 
-Not verifiable from the UI source: the file name. The client's pattern is `WoWScrnShot_MMDDYY_HHMMSS.<jpg|png|tga>` in
-`_forever_\\Screenshots\\`; the probe records the second of the success event and the seconds around it, and the
-show step tries `Screenshots\\<file>`, `..\\Screenshots\\<file>` and `Interface\\..\\Screenshots\\<file>`. Verified in game: not
-yet (Andy runs it).
+Verified in game: the file name and the `Screenshots\\` path form (probe). Not yet: the capture itself, the model
+framing, whether a new file loads in the same session (the card says it shows after a restart), and whether
+`SetTexture` returns false for a missing loose file (if it does not, only the first name is tried; the crest shows).
 """
 
 
@@ -113,7 +121,8 @@ def used_names(files):
     fields = set(re.findall(r"\b((?:C_[A-Za-z]+|Settings|Enum))\.([A-Za-z_]+)", src))
     libsrc = "\n".join(open(os.path.join(dp, n)).read() for dp, _, ns_ in os.walk(os.path.join(ROOT, "Libs"))
                        for n in ns_ if n.endswith(".lua"))
-    methods = set(re.findall(r":([A-Z][A-Za-z]+)\(", src + libsrc)) | set(re.findall(r"pcall\(\w+\.([A-Z]\w+),", src))
+    methods = (set(re.findall(r":([A-Z][A-Za-z]+)\(", src + libsrc)) | set(re.findall(r"pcall\(\w+\.([A-Z]\w+),", src))
+               | set(re.findall(r"U\.Call\([\w.]+\.([A-Z]\w+), ", src)))   # guarded method calls: U.Call(obj.Method, obj, ...)
     strings = set(re.findall(r'"([A-Z][A-Z_]{5,})"', src))
     return globs - LUA51, fields, methods, strings
 
@@ -221,7 +230,7 @@ def main():
         lines.append("| %s | `%s` | %s | %s | %s |" % (kind, name, a, b, "yes" if guarded else ""))
     lines.append("")
     lines += OFFLINE_APPEARANCE.splitlines() + [""]
-    lines += SHOT_PROBE.splitlines() + [""]
+    lines += SAVED_LOOK.splitlines() + [""]
     md = "\n".join(lines)
     md_path = os.path.join(ROOT, "docs", "API.md")
 

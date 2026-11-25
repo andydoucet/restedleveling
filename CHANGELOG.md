@@ -40,8 +40,16 @@ Speech bubble (ILL-1276):
 - The card's speech bubble never cuts a line short ("Give me 9 days 2..."): it wraps to as many lines as the line
   needs, in balanced lines without an orphan word, and grows down the stage. Only if it would reach the note under it
   does it drop one font step. It measures again a frame after the card opens, when ElvUI's wider font has settled.
-- Hidden: `/rlvl shotprobe take` / `show`, a one-off in-game test of whether a screenshot can be drawn back as a
-  texture. Nothing runs unless typed.
+
+Save my look (ILL-1279):
+
+- On your own card (click the NOW PLAYING strip, or right-click it for a menu): "Save my look". Out of combat, the
+  UI hides for about a second, your character stands alone on a dark backdrop, the game takes one .tga screenshot and
+  everything comes back (Esc or a click cancels; combat, a failed shot or a loading screen also put everything back).
+- After a game restart, that character's portrait everywhere else (hero, rows, card, alerts, and on your linked
+  account) is its own face, cropped from the screenshot into the usual ring. If the file is gone it quietly shows the
+  class crest again. "Clear look" removes it. The character you are on always shows its live portrait.
+- The hidden `/rlvl shotprobe` experiment is gone; what it found is in docs/API.md.
 
 ## 1.0.0 (unreleased)
 

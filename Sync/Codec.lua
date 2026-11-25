@@ -5,7 +5,7 @@
 -- few per record, so VERSION changes only on a breaking change. Other modules add fields to the schema (Codec.FIELDS).
 
 local _, ns = ...
-local U, I = ns.Util, ns.Identity
+local U, I, LD = ns.Util, ns.Identity, ns.LookData
 local C = {}
 ns.Codec = C
 
@@ -20,6 +20,8 @@ C.FIELDS = {
 	level = { "l", "n" }, xp = { "x", "n" }, xpMax = { "xm", "n" }, rested = { "r", "n" }, resting = { "rs", "b" },
 	restKind = { "rk", "s" }, atMax = { "am", "b" }, t = { "t", "n" }, ranks = { "wr", "n" }, account = { "a", "s" },
 	zone = { "z", "s" }, subzone = { "zz", "s" }, wasted = { "w", "n" }, online = { "o", "b" },
+	-- the saved look (Core/Look.lua packs c.look into these four; an older version skips them as unknown)
+	lookFile = { "lf", "s" }, lookBox = { "lc", "s" }, lookAt = { "la", "n" }, lookAsked = { "lq", "n" },
 }
 
 local function wireIndex()
@@ -110,7 +112,7 @@ function C.DecodeRecord(s, now)
 		end
 	end
 	if not valid(c, now) then return nil end
-	return c
+	return LD.Unpack(c)   -- a look that fails its checks is dropped, the record kept
 end
 
 -- A whole roster: version, sender account, then records. Returns the string.
@@ -120,7 +122,7 @@ function C.EncodeRoster(chars, account)
 	for k in pairs(chars) do keys[#keys + 1] = k end
 	table.sort(keys)
 	for _, k in ipairs(keys) do
-		local c = U.Copy(chars[k])
+		local c = LD.Pack(U.Copy(chars[k]))
 		c.key = k
 		out[#out + 1] = C.EncodeRecord(c)
 	end
@@ -160,6 +162,7 @@ function C.Merge(chars, recs, via, now, hidden, myAccount)
 		if not ours and (not mine or (r.t or 0) > (mine.t or 0)) then   -- a remote record never overwrites ours
 			local merged = mine and I.Merge(mine, r) or r
 			merged.key = key
+			merged.look = r.look   -- the owner's latest: a cleared look clears here too
 			if r.account and r.account == myAccount then
 				merged.src, merged.via, merged.syncedAt = "local", nil, nil
 			else
@@ -174,10 +177,14 @@ function C.Merge(chars, recs, via, now, hidden, myAccount)
 end
 
 -- A short fingerprint of what a roster knows (each key with its snapshot time, in 15-minute steps so the online
--- character's constant updates do not defeat the resend guard). Equal digests: nothing to swap.
+-- character's constant updates do not defeat the resend guard, and when its look was saved). Equal digests: nothing
+-- to swap.
 function C.Digest(chars)
 	local keys = {}
-	for k, c in pairs(chars) do keys[#keys + 1] = k .. "@" .. tostring(math.floor((c.t or 0) / 900)) end
+	for k, c in pairs(chars) do
+		local look = type(c.look) == "table" and ("L" .. tostring(c.look.at)) or ""
+		keys[#keys + 1] = k .. "@" .. tostring(math.floor((c.t or 0) / 900)) .. look
+	end
 	table.sort(keys)
 	return ("%08x"):format(U.Hash(table.concat(keys, ",")))
 end

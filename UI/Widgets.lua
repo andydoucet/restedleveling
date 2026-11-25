@@ -69,6 +69,12 @@ function Wg.Portrait(parent, size)
 	f.mask:SetTexture(MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 	f.mask:SetAllPoints(f.tex)
 	f.tex:AddMaskTexture(f.mask)
+	-- A saved look (UI/SaveLook.lua): the screenshot crop over the crest, in the same disc and mask. Where the file
+	-- does not load it draws nothing and the crest shows through.
+	f.look = f:CreateTexture(nil, "ARTWORK", nil, 1)
+	f.look:SetAllPoints(f.tex)
+	f.look:AddMaskTexture(f.mask)
+	f.look:Hide()
 	-- A bronze ring with a thin inner line in the state colour; class colour stays on the name.
 	f.ring = f:CreateTexture(nil, "OVERLAY")
 	St.Paint(f.ring, "ring_bronze")
@@ -101,7 +107,8 @@ end
 
 -- isMe: the logged-in character, whose real portrait the game can draw (face in the disc, class crest at 4 o'clock).
 -- Anyone else: the game cannot draw their real look offline, so the disc shows their class crest and the small
--- badge their race emblem. Honest, and clearly not a face that might be wrong (no stock race portrait).
+-- badge their race emblem. Honest, and clearly not a face that might be wrong (no stock race portrait). If they
+-- saved their look ("Save my look"), that face covers the crest; the race emblem stays as the badge.
 function Wg.SetPortrait(f, c, isMe, state)
 	f.ring:SetShown(not St.HostFrame())   -- under a host skin: no bronze ring, the thin state line only
 	St.Paint(f.stateRing, "ring_" .. (St.STATE[state or ""] and state or "max"))
@@ -125,6 +132,7 @@ function Wg.SetPortrait(f, c, isMe, state)
 	f.crest:SetShown(badge ~= nil)
 	f.crestRing:SetShown(badge ~= nil)
 	f.tex:SetDesaturated(state == "max" or state == "done")
+	ns.Look.Show(f, not isMe and c or nil, state == "max" or state == "done")
 end
 
 -- The segmented rested bar: a real StatusBar (so ElvUI skins frame it: S:HandleStatusBar) cut into `segs` bubbles.
