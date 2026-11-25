@@ -10,6 +10,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | kind | name | Forever | classic_era | guarded |
 |---|---|---|---|---|
 | global | `C_ChatInfo` | doc | doc |  |
+| global | `C_Container` | doc | doc |  |
+| global | `C_Item` | doc | doc |  |
 | global | `C_SkillInfo` | doc | doc |  |
 | global | `C_Spell` | doc | doc | yes |
 | global | `C_Timer` | doc | doc |  |
@@ -38,19 +40,23 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GetXPExhaustion` | doc | doc |  |
 | global | `IsInGroup` | used | used |  |
 | global | `IsInGuild` | doc | doc |  |
+| global | `IsInInstance` | doc | doc |  |
 | global | `IsInRaid` | used | used |  |
 | global | `IsResting` | doc | used |  |
 | global | `LibStub` | - | - | yes |
 | harness | `Minimap` | used | used |  |
 | global | `NUM_CHAT_WINDOWS` | used | used |  |
 | global | `PlaySound` | used | used |  |
+| global | `PlayerHasToy` | used | used |  |
 | global | `RAID_CLASS_COLORS` | used | used |  |
 | global | `RequestTimePlayed` | doc | doc |  |
 | global | `SOUNDKIT` | used | used |  |
 | global | `SetPortraitTexture` | doc | doc |  |
+| global | `Settings` | used | used | yes |
 | global | `SlashCmdList` | used | used |  |
 | global | `UIParent` | used | used |  |
 | global | `UISpecialFrames` | used | used |  |
+| global | `UnitAffectingCombat` | doc | used |  |
 | global | `UnitClass` | doc | doc |  |
 | global | `UnitFactionGroup` | doc | doc |  |
 | global | `UnitGUID` | doc | doc |  |
@@ -80,6 +86,10 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_ChatInfo.AreOutgoingAddonChatMessagesRestricted` | doc | doc | yes |
 | field | `C_ChatInfo.RegisterAddonMessagePrefix` | doc | doc |  |
 | field | `C_ChatInfo.SendAddonMessage` | doc | doc |  |
+| field | `C_Container.GetContainerItemID` | doc | doc |  |
+| field | `C_Container.GetContainerNumSlots` | doc | doc |  |
+| field | `C_Container.GetItemCooldown` | doc | doc |  |
+| field | `C_Item.GetItemNameByID` | doc | doc |  |
 | field | `C_SkillInfo.GetNumSkillLines` | doc | - |  |
 | field | `C_SkillInfo.GetSkillLineInfo` | doc | - |  |
 | field | `C_Spell.GetSpellName` | doc | doc | yes |
@@ -92,6 +102,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_Traits.GetNodeInfo` | doc | doc | yes |
 | field | `C_Traits.GetTreeNodes` | doc | doc | yes |
 | field | `C_UnitAuras.GetPlayerAuraBySpellID` | doc | doc | yes |
+| field | `Settings.OpenToCategory` | used | used | yes |
+| field | `Settings.RegisterAddOnCategory` | used | used | yes |
+| field | `Settings.RegisterCanvasLayoutCategory` | used | used | yes |
 | method | `AddMaskTexture` | doc | doc |  |
 | method | `ClearAllPoints` | doc | doc |  |
 | method | `ClearModel` | doc | doc |  |
@@ -109,6 +122,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetEffectiveScale` | doc | doc |  |
 | method | `GetFrameLevel` | doc | doc |  |
 | method | `GetHeight` | doc | doc |  |
+| method | `GetID` | doc | doc |  |
 | method | `GetParent` | doc | doc |  |
 | method | `GetRegions` | doc | doc |  |
 | method | `GetStatusBarTexture` | doc | doc |  |
