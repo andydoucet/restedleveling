@@ -19,3 +19,5 @@ Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
 
 Core\Util.lua
 Core\Model.lua
+Core\Identity.lua
+Core\Snapshot.lua
