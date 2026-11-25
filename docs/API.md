@@ -205,6 +205,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `CHAT_MSG_ADDON` | doc | doc |  |
 | event | `CHAT_MSG_SYSTEM` | doc | doc |  |
 | event | `CLAMPTOBLACKADDITIVE` | used | used |  |
+| event | `FULLSCREEN_DIALOG` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
 | event | `IN_OUT` | used | used |  |

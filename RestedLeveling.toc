@@ -43,3 +43,6 @@ UI\Main.lua
 Detail\Lines.lua
 Detail\Tidbits.lua
 Detail\Card.lua
+
+Alerts\Rules.lua
+Alerts\Menu.lua
