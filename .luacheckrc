@@ -12,6 +12,7 @@ globals = {
 }
 read_globals = {
 	C_Spell = { fields = { "GetSpellName" } },
+	C_Timer = { fields = { "After", "NewTicker" } },
 	C_Traits = { fields = { "GetConfigIDBySystemID", "GetConfigInfo", "GetDefinitionInfo", "GetEntryInfo", "GetNodeInfo", "GetTreeNodes" } },
 	C_UnitAuras = { fields = { "GetPlayerAuraBySpellID" } },
 	"CreateFrame",
@@ -23,6 +24,7 @@ read_globals = {
 	"GetTime",
 	"GetXPExhaustion",
 	"IsResting",
+	"LibStub",
 	"Minimap",
 	"UIParent",
 	"UnitClass",
