@@ -19,6 +19,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `CreateFrame` | used | used |  |
 | global | `ERR_CHAT_PLAYER_NOT_FOUND_S` | used | used |  |
 | global | `ElvUI` | - | - | yes |
+| global | `GameTooltip` | used | used |  |
 | global | `GetMaxLevelForPlayerExpansion` | doc | doc | yes |
 | global | `GetMaxPlayerLevel` | doc | used |  |
 | global | `GetRealZoneText` | doc | doc |  |
@@ -35,7 +36,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `RAID_CLASS_COLORS` | used | used |  |
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `SlashCmdList` | used | used |  |
-| harness | `UIParent` | used | used |  |
+| global | `UIParent` | used | used |  |
 | global | `UnitClass` | doc | doc |  |
 | global | `UnitFactionGroup` | doc | doc |  |
 | global | `UnitGUID` | doc | doc |  |
@@ -82,6 +83,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `CreateFontString` | doc | doc |  |
 | method | `CreateMaskTexture` | doc | doc |  |
 | method | `CreateTexture` | doc | doc |  |
+| method | `EnableMouse` | doc | doc |  |
+| method | `GetBottom` | doc | doc |  |
 | method | `GetCenter` | doc | doc |  |
 | method | `GetChecked` | doc | doc |  |
 | method | `GetDrawLayer` | doc | doc |  |
@@ -109,7 +112,10 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetAllPoints` | doc | doc |  |
 | method | `SetAlpha` | doc | doc |  |
 | method | `SetAtlas` | doc | doc |  |
+| method | `SetBlendMode` | doc | doc |  |
+| method | `SetClampedToScreen` | doc | doc |  |
 | method | `SetDesaturated` | doc | doc |  |
+| method | `SetDrawLayer` | doc | doc |  |
 | method | `SetDuration` | doc | doc |  |
 | method | `SetFixedFrameLevel` | doc | doc |  |
 | method | `SetFixedFrameStrata` | doc | doc |  |
@@ -123,6 +129,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetHorizTile` | doc | doc |  |
 | method | `SetJustifyH` | doc | doc |  |
 | method | `SetMinMaxValues` | doc | doc |  |
+| method | `SetMovable` | doc | doc |  |
+| method | `SetOffset` | doc | doc |  |
 | method | `SetOrder` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
 | method | `SetScale` | doc | doc |  |
@@ -149,6 +157,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `Stop` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
+| event | `ANCHOR_BOTTOM` | used | used |  |
 | event | `ARTWORK` | used | used |  |
 | event | `BACKGROUND` | used | used |  |
 | event | `BORDER` | used | used |  |
@@ -161,6 +170,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `CLAMPTOBLACKADDITIVE` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
+| event | `MEDIUM` | used | used |  |
 | event | `OVERLAY` | used | used |  |
 | event | `PLAYER_CAMPING` | doc | doc |  |
 | event | `PLAYER_ENTERING_WORLD` | doc | doc |  |
@@ -171,9 +181,11 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `PLAYER_UPDATE_RESTING` | doc | doc |  |
 | event | `PLAYER_XP_UPDATE` | doc | doc |  |
 | event | `REPEAT` | used | used |  |
+| event | `TOOLTIP` | used | used |  |
 | event | `TOPLEFT` | used | used |  |
 | event | `TOPRIGHT` | used | used |  |
 | event | `TRAIT_CONFIG_UPDATED` | doc | doc |  |
 | event | `UPDATE_EXHAUSTION` | doc | doc |  |
+| event | `WELCOME` | used | used |  |
 | event | `WHISPER` | used | used |  |
 | event | `ZONE_CHANGED_NEW_AREA` | doc | doc |  |
