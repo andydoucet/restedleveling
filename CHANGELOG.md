@@ -21,6 +21,20 @@ Fixes from the first in-game run (ILL-1274):
   the menu and hangs under it, Details sits on the right edge in line with the close X, and the next-character line
   is shortened instead of pushing the button out. Nobody is offered as "next" when nobody has rest banked.
 
+Review follow-ups (ILL-1274):
+
+- With nothing banked anywhere, the Esc-menu card and the logout banner now name the same character as the hero: the
+  one that fills first (least time to full), not the one with a little more banked outside.
+- When the hero is the one that fills first, the roster below it is numbered from 1 in sort order.
+- The inline link field closes (and lets go of the keyboard) when its window hides mid-edit. A link that does not take
+  (at most 8 links) keeps the field open with the name and says why under it.
+- Shortened lines never cut a character in half ("·", accented names).
+- Roster rows drop the clock time when full is more than two days away ("~30% · Full in 27d 22h"), so the line never
+  clips; the tooltip and the card keep it.
+- The race emblem on offline portraits is only partly washed out and slightly lifted, so the race reads at a glance.
+- Riding is no longer listed as a profession.
+- Not changed: Unlink still acts at once, without a confirmation step (it is one click to link again).
+
 ## 1.0.0 (unreleased)
 
 First release.

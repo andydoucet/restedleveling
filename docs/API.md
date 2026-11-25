@@ -158,6 +158,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetChecked` | doc | doc |  |
 | method | `SetClampedToScreen` | doc | doc |  |
 | method | `SetDesaturated` | doc | doc |  |
+| method | `SetDesaturation` | doc | doc |  |
 | method | `SetDrawLayer` | doc | doc |  |
 | method | `SetDuration` | doc | doc |  |
 | method | `SetFixedFrameLevel` | doc | doc |  |

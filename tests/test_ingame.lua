@@ -139,6 +139,7 @@ function cases.offline_portraits_show_crest_and_race_emblem_not_a_stock_face()
 	T.ok(p.tex:GetTexture() == nil or not tostring(p.tex:GetTexture()):find("TemporaryPortrait"), "no stock race portrait")
 	T.eq(p.crest.__atlas, "raceicon128-gnome-female", "her race emblem in the badge")
 	T.ok(p.crest:IsShown(), "badge shown")
+	T.ok(p.crestLift:IsShown() and p.crestLift.__atlas == p.crest.__atlas, "lifted by an additive copy, not a grey blob")
 	T.ok(not p.live, "not a live portrait")
 	local cur = main.current.portrait
 	T.ok(cur.live, "Le Nette (logged in) keeps her real portrait")
@@ -146,6 +147,7 @@ function cases.offline_portraits_show_crest_and_race_emblem_not_a_stock_face()
 	for _, call in ipairs(state.portraits) do if call.tex == cur.tex and call.unit == "player" then drew = true end end
 	T.ok(drew, "drawn with SetPortraitTexture(player)")
 	T.eq(cur.crest.__atlas, "classicon-mage", "her class crest in the badge")
+	T.ok(not cur.crestLift:IsShown(), "her own class crest drawn as is")
 	T.clean(h)
 end
 
@@ -247,6 +249,71 @@ function cases.professions_are_listed_once()
 	local me = W.Char(h, "Le Nette")
 	T.eq(me.profs, "Blacksmithing 185, Mining 201, Cooking 216", "each profession once, highest rank")
 	T.eq(W.Char(h, "Le Jette").profs, "Blacksmithing 185, Mining 201, Cooking 216", "saved duplicates cleaned on login")
+	T.clean(h)
+end
+
+-- 7. Review of ILL-1274: when the hero is the one that fills first (not rows[1]), the rest are numbered in sort order
+-- from 1, so the most-banked empty alt is not shown as #2 under a hero that has no number.
+function cases.roster_numbers_from_one_when_the_hero_is_not_rows_1()
+	local h = andy(nil, {
+		["N:Le Jette@?"] = { full = "Le Jette", class = "WARRIOR", race = "Gnome", sex = 3, level = 46, xpMax = 80000,
+			rested = 400, resting = true, restKind = "inn", zone = "Feralas", subzone = "Feathermoon Stronghold", t = W.NOW },
+		["N:Aa Outside@?"] = { full = "Aa Outside", class = "WARRIOR", race = "Orc", sex = 2, level = 20, xpMax = 10000,
+			rested = 375, resting = false, restKind = "outside", zone = "Durotar", t = W.NOW },
+		["N:Bb Empty@?"] = { full = "Bb Empty", class = "WARRIOR", race = "Orc", sex = 2, level = 20, xpMax = 10000,
+			rested = 0, resting = false, restKind = "outside", zone = "Durotar", t = W.NOW },
+	})
+	h.Slash("RESTEDLEVELING", "")
+	local main = h.Env().RestedLevelingMain
+	T.eq(strip(main.hero.name:GetText()), "Le Jette", "the hero is who fills first")
+	T.eq(strip(main.roster.rows[1].name:GetText()), "Aa Outside", "then the roster in sort order")
+	T.eq(tostring(main.roster.rows[1].rank:GetText()), "1", "numbered from 1")
+	T.eq(strip(main.roster.rows[2].name:GetText()), "Bb Empty", "in sort order")
+	T.eq(tostring(main.roster.rows[2].rank:GetText()), "2", "then 2")
+	T.clean(h)
+end
+
+-- 8. The link field closes when its window hides mid-edit, and a link that did not take keeps the field open.
+function cases.link_field_closes_on_hide_and_stays_open_when_the_link_fails()
+	local h, state = andy()
+	h.Slash("RESTEDLEVELING", "")
+	local main = h.Env().RestedLevelingMain
+	local link = main.roster.guide.link
+	FakeWoW.RunScript(link.open, "OnClick")
+	link.edit:SetText("Le Bank")
+	T.ok(link.editing and link.edit:HasFocus(), "editing")
+	main:Hide()
+	FakeWoW.RunScript(link, "OnHide")
+	T.ok(not link.editing and not link.edit:IsShown(), "hiding the window closes the field")
+	T.ok(not link.edit:HasFocus(), "and drops the focus")
+	main:Show()
+	-- Eight links already (made with /rlvl link): a ninth from the field does not take.
+	local links = W.DB(h).sync.links
+	for i = 1, state.ns.Sync.MAX_LINKS do links["Alt" .. i] = true end
+	FakeWoW.RunScript(link.open, "OnClick")
+	link.edit:SetText("Le Bankken")
+	FakeWoW.RunScript(link.edit, "OnEnterPressed")
+	T.ok(not links["Le Bankken"], "not linked: at the cap")
+	T.ok(link.edit:IsShown(), "the field stays open")
+	T.eq(link.edit:GetText(), "Le Bankken", "with the name kept")
+	T.ok(link.err:IsShown(), "and the reason shown")
+	T.has(link.err:GetText(), "at most 8 links", "the reason")
+	FakeWoW.RunScript(link.cancel, "OnClick")
+	T.ok(not link.err:IsShown(), "cancel clears it")
+	T.clean(h)
+end
+
+-- 9. Riding is not a profession: dropped from the client's list and from saved lists.
+function cases.riding_is_not_listed_as_a_profession()
+	local h, state = andy(function(game)
+		local lines = {
+			{ name = "Cooking", rank = 216, skillLineCategoryID = 9 },
+			{ name = "Riding", rank = 75, skillLineCategoryID = 9 },
+		}
+		game.C_SkillInfo = { GetNumSkillLines = function() return #lines end, GetSkillLineInfo = function(i) return lines[i] end }
+	end)
+	T.eq(W.Char(h, "Le Nette").profs, "Cooking 216", "no Riding from the client")
+	T.eq(state.ns.Tidbits.CleanProfs("Cooking 216, Riding 75, Fishing 183"), "Cooking 216, Fishing 183", "nor from saved data")
 	T.clean(h)
 end
 

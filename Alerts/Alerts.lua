@@ -30,7 +30,8 @@ local function altLine(f)
 	end)
 	f.altBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
-local function setAlt(f, alt)
+-- empty: nobody has rest worth switching to (Words.NothingBanked on the top row), so `alt` is the one that fills first.
+local function setAlt(f, alt, empty)
 	f.alt:SetShown(alt ~= nil)
 	f.altBtn:SetShown(alt ~= nil)
 	f.altText:SetShown(alt ~= nil)
@@ -39,7 +40,7 @@ local function setAlt(f, alt)
 	Wg.SetPortrait(f.alt, alt.c, false, alt.state)
 	f.altBtn.key, f.altBtn.name = alt.key, alt.c.full
 	local st = St.STATE[alt.state] or St.STATE.max
-	if ns.Words.NothingBanked(alt) then   -- no "Next: X · 0.0 banked": nobody is worth switching to yet, so say who fills
+	if empty then   -- no "Next: X · 0.0 banked": nobody is worth switching to yet, so say who fills
 		-- the wait only (the clock time is one click away, on the card): the row is narrow
 		f.altLine = ("%s fills first: full in %s"):format(alt.c.full or "?", U.Duration(alt.p.left))
 	else
@@ -70,9 +71,13 @@ A.LayoutAlt = layoutAlt
 -- Font metrics and the Game Menu's own size settle a frame after show; lay out again then, so the first open looks
 -- like every later one.
 local function relayout(f, fn) C_Timer.After(0, function() if f:IsShown() then fn(f) end end) end
+-- The next character and whether nobody has rest banked. Then it is the one that fills first (least time to full,
+-- the same as the hero's Words.FillsFirst), not rows[1], which is sorted by banked levels and then name.
 local function nextUp()
 	local rows = ns.Rows({ hideGrey = true })
-	return rows[1] and rows[1].group ~= 5 and rows[1] or nil
+	local top = rows[1] and rows[1].group ~= 5 and rows[1] or nil
+	if ns.Words.NothingBanked(top) then return ns.Words.FillsFirst(rows) or top, true end
+	return top, false
 end
 
 -- The shared alert surface: the iron-edged panel plus a 4 px enamel stripe down the left in the state colour.
@@ -133,8 +138,9 @@ function A.Banner()
 	return f
 end
 
--- alt: an optional roster row offered as the alternative ("Or play next: Le Nette · Full").
-function A.ShowBanner(title, text, state, action, alt)
+-- alt: an optional roster row offered as the alternative ("Or play next: Le Nette · Full"); empty: nobody has rest
+-- banked, so alt is the one that fills first.
+function A.ShowBanner(title, text, state, action, alt, empty)
 	local f = A.Banner()
 	local s = St.STATE[state] or St.STATE.outside
 	surface(f, "warn", state)
@@ -148,7 +154,7 @@ function A.ShowBanner(title, text, state, action, alt)
 	Wg.Balance(f.action, 380)
 	f.action:SetShown(action ~= nil and action ~= "")
 	f.title:SetTextColor(0.98, 0.55, 0.15)   -- warning orange: the instruction reads before the explanation
-	setAlt(f, alt)
+	setAlt(f, alt, empty)
 	A.LayoutBanner(f)
 	f:Show()
 	relayout(f, A.LayoutBanner)
@@ -303,10 +309,10 @@ A.Context = context
 
 function A.OnCamping()
 	if not enabled("logout") or not Ru.LogoutWarning(context()) then return end
-	local top = nextUp()
+	local top, empty = nextUp()
 	local me = ns.Me()
 	A.ShowBanner("Cancel the logout first", ((me and me.full) or "This character") .. " is outside a rest area.", "outside",
-		A.HearthLine(me), top)
+		A.HearthLine(me), top, empty)
 	pcall(PlaySound, SOUNDKIT.RAID_WARNING)
 	chat("logout", "|cffff5a45logging out outside a rested area.|r Move to cancel, then find an inn or a city.")
 end
@@ -319,7 +325,7 @@ function A.OnMenuShown()
 			local me = ns.Me()   -- name who, like the banner
 			f.who:SetText(((me and me.full) or "This character") .. " is outside a rest area.")
 			f.action:SetText(me and me.bind and ("Hearth to %s or find an inn."):format(me.bind) or "Hearth or find an inn.")
-			setAlt(f, nextUp())
+			setAlt(f, nextUp())   -- the alt and whether nobody has rest banked
 			A.LayoutStrip(f)
 			relayout(f, A.LayoutStrip)
 		end

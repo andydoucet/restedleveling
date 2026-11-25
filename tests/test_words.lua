@@ -130,8 +130,10 @@ end
 
 function cases.rows_show_the_real_time_to_full_even_outside()
 	local Wd = load().Words
-	local t = Wd.RowTime(row("outside", { pct = 0.3, levels = 0.45, left = 27 * D }), NOW, true, utc)
-	T.eq(t, "30%  ·  Full in 27d (Thu 10 Dec, 20:00)", "outside")
+	local t = Wd.RowTime(row("outside", { pct = 0.3, levels = 0.45, left = 27 * D + 22 * H }), NOW, false, utc)
+	T.eq(t, "~30%  ·  Full in 27d 22h", "over two days: no clock time, so the row never clips")
+	t = Wd.RowTime(row("resting", { pct = 0.8, levels = 1.2, left = 2 * D }), NOW, true, utc)
+	T.eq(t, "80%  ·  Full in 2d (Sun 15 Nov, 20:00)", "two days: still the clock")
 	t = Wd.RowTime(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, false, utc)
 	T.eq(t, "~93%  ·  Full in 2h (today 22:00)", "projected rows carry a ~")
 end
@@ -160,6 +162,35 @@ function cases.hero_says_why_number_one_beats_number_two()
 	local c = row("resting", { pct = 0.5, levels = 0.8, left = H }, { full = "Le Bankke" })
 	c.group = 3
 	T.eq(Wd.Ahead({ a, c }, NOW), nil, "different groups need no explanation")
+end
+
+-- Wg.Fit cuts whole UTF-8 characters only: never half a "·" or an accented letter (review of ILL-1274).
+function cases.fit_never_leaves_half_a_character()
+	local state = {}
+	local _, h = W.New(state)
+	local Wg = state.ns.Widgets
+	local fs = Wg.Text(h.Env().UIParent, "small")
+	local function valid(str)
+		local i = 1
+		while i <= #str do
+			local b = str:byte(i)
+			local n = b < 0x80 and 1 or (b >= 0xF0 and 4 or (b >= 0xE0 and 3 or (b >= 0xC0 and 2 or 0)))
+			if n == 0 or i + n - 1 > #str then return false end
+			for j = i + 1, i + n - 1 do local c = str:byte(j); if c < 0x80 or c >= 0xC0 then return false end end
+			i = i + n
+		end
+		return true
+	end
+	for _, text in ipairs({ "Le Nette · Full · 1.7 levels banked", "Zoë Bérénice fills first: full in 9d 21h" }) do
+		for width = 12, #text * 6 do
+			local out = Wg.Fit(fs, text, width)
+			T.ok(valid(out), ("whole characters only at %d px: %q"):format(width, out))
+		end
+	end
+	T.eq(Wg.DropPartial("Le Nette \194"), "Le Nette ", "half a middle dot dropped")
+	T.eq(Wg.DropPartial("Zo\195\171"), "Zo\195\171", "a whole ë kept")
+	T.eq(Wg.DropPartial("Zo\195"), "Zo", "half an ë dropped")
+	T.clean(h)
 end
 
 return cases

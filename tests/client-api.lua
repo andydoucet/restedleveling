@@ -140,6 +140,7 @@ return {
 		["SetChecked"] = true,
 		["SetClampedToScreen"] = true,
 		["SetDesaturated"] = true,
+		["SetDesaturation"] = true,
 		["SetDrawLayer"] = true,
 		["SetDuration"] = true,
 		["SetFixedFrameLevel"] = true,
