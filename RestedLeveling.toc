@@ -39,3 +39,6 @@ UI\Tip.lua
 UI\Compact.lua
 UI\Roster.lua
 UI\Main.lua
+
+Detail\Lines.lua
+Detail\Tidbits.lua

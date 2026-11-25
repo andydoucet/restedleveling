@@ -10,6 +10,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | kind | name | Forever | classic_era | guarded |
 |---|---|---|---|---|
 | global | `C_ChatInfo` | doc | doc |  |
+| global | `C_SkillInfo` | doc | doc |  |
 | global | `C_Spell` | doc | doc | yes |
 | global | `C_Timer` | doc | doc |  |
 | global | `C_Traits` | doc | doc | yes |
@@ -20,12 +21,19 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `ERR_CHAT_PLAYER_NOT_FOUND_S` | used | used |  |
 | global | `ElvUI` | - | - | yes |
 | global | `GameTooltip` | used | used |  |
+| global | `GetBindLocation` | doc | doc |  |
+| global | `GetCurrentTitle` | doc | doc |  |
+| global | `GetGuildInfo` | used | used |  |
+| global | `GetInventoryItemLink` | used | used |  |
+| global | `GetInventoryItemQuality` | used | - |  |
 | global | `GetMaxLevelForPlayerExpansion` | doc | doc | yes |
 | global | `GetMaxPlayerLevel` | doc | used |  |
+| global | `GetMoney` | doc | used |  |
 | global | `GetRealZoneText` | doc | doc |  |
 | global | `GetRealmName` | doc | doc |  |
 | global | `GetSubZoneText` | doc | doc |  |
 | global | `GetTime` | doc | used |  |
+| global | `GetTitleName` | doc | doc |  |
 | global | `GetXPExhaustion` | doc | doc |  |
 | global | `IsInGroup` | used | used |  |
 | global | `IsInGuild` | doc | doc |  |
@@ -33,7 +41,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `IsResting` | doc | used |  |
 | global | `LibStub` | - | - | yes |
 | harness | `Minimap` | used | used |  |
+| global | `NUM_CHAT_WINDOWS` | used | used |  |
 | global | `RAID_CLASS_COLORS` | used | used |  |
+| global | `RequestTimePlayed` | doc | doc |  |
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `SlashCmdList` | used | used |  |
 | global | `UIParent` | used | used |  |
@@ -67,6 +77,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_ChatInfo.AreOutgoingAddonChatMessagesRestricted` | doc | doc | yes |
 | field | `C_ChatInfo.RegisterAddonMessagePrefix` | doc | doc |  |
 | field | `C_ChatInfo.SendAddonMessage` | doc | doc |  |
+| field | `C_SkillInfo.GetNumSkillLines` | doc | - |  |
+| field | `C_SkillInfo.GetSkillLineInfo` | doc | - |  |
 | field | `C_Spell.GetSpellName` | doc | doc | yes |
 | field | `C_Timer.After` | doc | doc |  |
 | field | `C_Timer.NewTicker` | doc | doc |  |
@@ -104,6 +116,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetWidth` | doc | doc |  |
 | method | `Hide` | doc | doc |  |
 | method | `HookScript` | doc | doc |  |
+| method | `IsEventRegistered` | doc | doc |  |
 | method | `IsObjectType` | doc | doc |  |
 | method | `IsShown` | doc | doc |  |
 | method | `LockHighlight` | doc | doc |  |
@@ -160,6 +173,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `Show` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
+| method | `UnregisterEvent` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
 | event | `ANCHOR_BOTTOM` | used | used |  |
 | event | `ANCHOR_RIGHT` | used | used |  |
@@ -180,13 +194,17 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `OVERLAY` | used | used |  |
 | event | `PLAYER_CAMPING` | doc | doc |  |
 | event | `PLAYER_ENTERING_WORLD` | doc | doc |  |
+| event | `PLAYER_EQUIPMENT_CHANGED` | doc | doc |  |
 | event | `PLAYER_LEAVING_WORLD` | doc | doc |  |
 | event | `PLAYER_LEVEL_UP` | doc | doc |  |
 | event | `PLAYER_LOGOUT` | doc | doc |  |
+| event | `PLAYER_MONEY` | doc | doc |  |
 | event | `PLAYER_QUITING` | doc | doc |  |
 | event | `PLAYER_UPDATE_RESTING` | doc | doc |  |
 | event | `PLAYER_XP_UPDATE` | doc | doc |  |
 | event | `REPEAT` | used | used |  |
+| event | `SKILL_LINES_CHANGED` | doc | doc |  |
+| event | `TIME_PLAYED_MSG` | doc | doc |  |
 | event | `TOOLTIP` | used | used |  |
 | event | `TOPLEFT` | used | used |  |
 | event | `TOPRIGHT` | used | used |  |
