@@ -1,0 +1,16 @@
+{
+ "tables": [
+  "C_LootHistory",
+  "C_NamePlateManager"
+ ],
+ "funcs": [
+  "CanCompareUnitTokens",
+  "GetTotemDuration",
+  "UnitSelectionType",
+  "issecrettable"
+ ],
+ "methods": [
+  "SetCountdownFormatter",
+  "SetRGBA"
+ ]
+}
