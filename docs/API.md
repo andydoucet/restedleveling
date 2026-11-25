@@ -9,11 +9,31 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 
 | kind | name | Forever | classic_era | guarded |
 |---|---|---|---|---|
+| global | `C_Spell` | doc | doc | yes |
+| global | `C_Traits` | doc | doc | yes |
+| global | `C_UnitAuras` | doc | doc | yes |
 | harness | `CreateFrame` | used | used |  |
-| harness | `GetTime` | doc | used |  |
+| global | `GetMaxLevelForPlayerExpansion` | doc | doc | yes |
+| global | `GetMaxPlayerLevel` | doc | used |  |
+| global | `GetRealZoneText` | doc | doc |  |
+| global | `GetRealmName` | doc | doc |  |
+| global | `GetSubZoneText` | doc | doc |  |
+| global | `GetTime` | doc | used |  |
+| global | `GetXPExhaustion` | doc | doc |  |
+| global | `IsResting` | doc | used |  |
 | harness | `Minimap` | used | used |  |
 | harness | `SlashCmdList` | used | used |  |
 | harness | `UIParent` | used | used |  |
+| global | `UnitClass` | doc | doc |  |
+| global | `UnitFactionGroup` | doc | doc |  |
+| global | `UnitGUID` | doc | doc |  |
+| global | `UnitLevel` | doc | used |  |
+| global | `UnitName` | doc | doc |  |
+| global | `UnitNameUnmodified` | doc | doc | yes |
+| global | `UnitRace` | doc | used |  |
+| global | `UnitSex` | doc | doc |  |
+| global | `UnitXP` | doc | used |  |
+| global | `UnitXPMax` | doc | used |  |
 | harness | `WorldFrame` | used | used |  |
 | global | `date` | used | used |  |
 | harness | `debugstack` | used | used |  |
@@ -30,6 +50,14 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | harness | `tinsert` | used | used |  |
 | harness | `tremove` | used | used |  |
 | harness | `wipe` | used | used |  |
+| field | `C_Spell.GetSpellName` | doc | doc | yes |
+| field | `C_Traits.GetConfigIDBySystemID` | doc | doc | yes |
+| field | `C_Traits.GetConfigInfo` | doc | doc | yes |
+| field | `C_Traits.GetDefinitionInfo` | doc | doc | yes |
+| field | `C_Traits.GetEntryInfo` | doc | doc | yes |
+| field | `C_Traits.GetNodeInfo` | doc | doc | yes |
+| field | `C_Traits.GetTreeNodes` | doc | doc | yes |
+| field | `C_UnitAuras.GetPlayerAuraBySpellID` | doc | doc | yes |
 | method | `ClearAllPoints` | doc | doc |  |
 | method | `CreateAnimation` | doc | doc |  |
 | method | `CreateAnimationGroup` | doc | doc |  |
