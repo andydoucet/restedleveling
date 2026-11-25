@@ -20,6 +20,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `CreateFrame` | used | used |  |
 | global | `ERR_CHAT_PLAYER_NOT_FOUND_S` | used | used |  |
 | global | `ElvUI` | - | - | yes |
+| global | `GameMenuFrame` | used | used |  |
 | global | `GameTooltip` | used | used |  |
 | global | `GetBindLocation` | doc | doc |  |
 | global | `GetCurrentTitle` | doc | doc |  |
@@ -42,8 +43,10 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `LibStub` | - | - | yes |
 | harness | `Minimap` | used | used |  |
 | global | `NUM_CHAT_WINDOWS` | used | used |  |
+| global | `PlaySound` | used | used |  |
 | global | `RAID_CLASS_COLORS` | used | used |  |
 | global | `RequestTimePlayed` | doc | doc |  |
+| global | `SOUNDKIT` | used | used |  |
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `SlashCmdList` | used | used |  |
 | global | `UIParent` | used | used |  |
@@ -205,10 +208,12 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `CHAT_MSG_ADDON` | doc | doc |  |
 | event | `CHAT_MSG_SYSTEM` | doc | doc |  |
 | event | `CLAMPTOBLACKADDITIVE` | used | used |  |
+| event | `DIALOG` | used | used |  |
 | event | `FULLSCREEN_DIALOG` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
 | event | `IN_OUT` | used | used |  |
+| event | `LOGOUT_CANCEL` | doc | doc |  |
 | event | `MEDIUM` | used | used |  |
 | event | `OVERLAY` | used | used |  |
 | event | `PLAYER_CAMPING` | doc | doc |  |

@@ -46,3 +46,4 @@ Detail\Card.lua
 
 Alerts\Rules.lua
 Alerts\Menu.lua
+Alerts\Alerts.lua
