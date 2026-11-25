@@ -33,6 +33,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `LibStub` | - | - | yes |
 | harness | `Minimap` | used | used |  |
 | global | `RAID_CLASS_COLORS` | used | used |  |
+| global | `SetPortraitTexture` | doc | doc |  |
 | global | `SlashCmdList` | used | used |  |
 | harness | `UIParent` | used | used |  |
 | global | `UnitClass` | doc | doc |  |
@@ -74,10 +75,12 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_Traits.GetNodeInfo` | doc | doc | yes |
 | field | `C_Traits.GetTreeNodes` | doc | doc | yes |
 | field | `C_UnitAuras.GetPlayerAuraBySpellID` | doc | doc | yes |
+| method | `AddMaskTexture` | doc | doc |  |
 | method | `ClearAllPoints` | doc | doc |  |
 | method | `CreateAnimation` | doc | doc |  |
 | method | `CreateAnimationGroup` | doc | doc |  |
 | method | `CreateFontString` | doc | doc |  |
+| method | `CreateMaskTexture` | doc | doc |  |
 | method | `CreateTexture` | doc | doc |  |
 | method | `GetCenter` | doc | doc |  |
 | method | `GetChecked` | doc | doc |  |
@@ -87,8 +90,11 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetHeight` | doc | doc |  |
 | method | `GetParent` | doc | doc |  |
 | method | `GetRegions` | doc | doc |  |
+| method | `GetStatusBarTexture` | doc | doc |  |
 | method | `GetStringWidth` | doc | doc |  |
+| method | `GetText` | doc | doc |  |
 | method | `GetTexture` | doc | doc |  |
+| method | `GetUnboundedStringWidth` | doc | doc |  |
 | method | `GetVertexColor` | doc | doc |  |
 | method | `GetWidth` | doc | doc |  |
 | method | `Hide` | doc | doc |  |
@@ -102,6 +108,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `RegisterForDrag` | doc | doc |  |
 | method | `SetAllPoints` | doc | doc |  |
 | method | `SetAlpha` | doc | doc |  |
+| method | `SetAtlas` | doc | doc |  |
+| method | `SetDesaturated` | doc | doc |  |
 | method | `SetDuration` | doc | doc |  |
 | method | `SetFixedFrameLevel` | doc | doc |  |
 | method | `SetFixedFrameStrata` | doc | doc |  |
@@ -112,6 +120,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetHeight` | doc | doc |  |
 | method | `SetHighlightTexture` | doc | doc |  |
 | method | `SetHitRectInsets` | doc | doc |  |
+| method | `SetHorizTile` | doc | doc |  |
+| method | `SetJustifyH` | doc | doc |  |
+| method | `SetMinMaxValues` | doc | doc |  |
 | method | `SetOrder` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
 | method | `SetScale` | doc | doc |  |
@@ -121,6 +132,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetShown` | doc | doc |  |
 | method | `SetSize` | doc | doc |  |
 | method | `SetStartDelay` | doc | doc |  |
+| method | `SetStatusBarColor` | doc | doc |  |
 | method | `SetStatusBarTexture` | doc | doc |  |
 | method | `SetTexCoord` | doc | doc |  |
 | method | `SetText` | doc | doc |  |
@@ -128,8 +140,11 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetTexture` | doc | doc |  |
 | method | `SetToAlpha` | doc | doc |  |
 | method | `SetToFinalAlpha` | doc | doc |  |
+| method | `SetValue` | doc | doc |  |
+| method | `SetVertTile` | doc | doc |  |
 | method | `SetVertexColor` | doc | doc |  |
 | method | `SetWidth` | doc | doc |  |
+| method | `SetWordWrap` | doc | doc |  |
 | method | `Show` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
@@ -137,11 +152,13 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `ARTWORK` | used | used |  |
 | event | `BACKGROUND` | used | used |  |
 | event | `BORDER` | used | used |  |
+| event | `BOTTOM` | used | used |  |
 | event | `BOTTOMLEFT` | used | used |  |
 | event | `BOTTOMRIGHT` | used | used |  |
 | event | `CENTER` | used | used |  |
 | event | `CHAT_MSG_ADDON` | doc | doc |  |
 | event | `CHAT_MSG_SYSTEM` | doc | doc |  |
+| event | `CLAMPTOBLACKADDITIVE` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
 | event | `OVERLAY` | used | used |  |
@@ -153,6 +170,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `PLAYER_QUITING` | doc | doc |  |
 | event | `PLAYER_UPDATE_RESTING` | doc | doc |  |
 | event | `PLAYER_XP_UPDATE` | doc | doc |  |
+| event | `REPEAT` | used | used |  |
 | event | `TOPLEFT` | used | used |  |
 | event | `TOPRIGHT` | used | used |  |
 | event | `TRAIT_CONFIG_UPDATED` | doc | doc |  |

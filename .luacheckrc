@@ -35,6 +35,7 @@ read_globals = {
 	"LibStub",
 	"Minimap",
 	"RAID_CLASS_COLORS",
+	"SetPortraitTexture",
 	"UIParent",
 	"UnitClass",
 	"UnitFactionGroup",
