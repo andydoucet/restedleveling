@@ -2,6 +2,7 @@
 -- The game names this addon uses that the real client has; the fake client may define only these.
 return {
 	globals = {
+		["C_CVar"] = "t",
 		["C_ChatInfo"] = "t",
 		["C_Container"] = "t",
 		["C_Item"] = "t",
@@ -43,6 +44,7 @@ return {
 		["RAID_CLASS_COLORS"] = "t",
 		["RequestTimePlayed"] = "f",
 		["SOUNDKIT"] = "t",
+		["Screenshot"] = "f",
 		["SetPortraitTexture"] = "f",
 		["Settings"] = "t",
 		["SlashCmdList"] = "t",
@@ -77,6 +79,7 @@ return {
 		["wipe"] = "f",
 	},
 	namespaces = {
+		["C_CVar"] = { ["GetCVar"] = "f", ["SetCVar"] = "f" },
 		["C_ChatInfo"] = { ["AreOutgoingAddonChatMessagesRestricted"] = "f", ["RegisterAddonMessagePrefix"] = "f", ["SendAddonMessage"] = "f" },
 		["C_Container"] = { ["GetContainerItemID"] = "f", ["GetContainerNumSlots"] = "f", ["GetItemCooldown"] = "f" },
 		["C_Item"] = { ["GetItemNameByID"] = "f" },
@@ -139,6 +142,7 @@ return {
 		["SetCamDistanceScale"] = true,
 		["SetChecked"] = true,
 		["SetClampedToScreen"] = true,
+		["SetColorTexture"] = true,
 		["SetDesaturated"] = true,
 		["SetDesaturation"] = true,
 		["SetDrawLayer"] = true,
@@ -193,6 +197,7 @@ return {
 		["Show"] = true,
 		["Stop"] = true,
 		["UnlockHighlight"] = true,
+		["UnregisterAllEvents"] = true,
 		["UnregisterEvent"] = true,
 	},
 }

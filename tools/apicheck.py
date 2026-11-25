@@ -66,6 +66,26 @@ Verified in game: not yet. The race atlas is verified only through the simulator
 atlas data.
 """
 
+SHOT_PROBE = """## Screenshot probe
+
+`/rlvl shotprobe` (hidden, ILL-1276) tests one question in game: can a screenshot the addon takes be drawn again later
+as a texture? Checked against the Forever UI source:
+
+| API | Forever | Notes |
+|---|---|---|
+| `Screenshot()` | doc | ClientDocumentation.lua; no restriction flags. FrameXML calls it (AddonList, EditModeDialogs). |
+| `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload (no file name). ActionStatus.lua listens the same way. |
+| `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | CVarDocumentation.lua. The CVar name is the client's, not in the UI source: read with a fallback to jpeg. |
+| `Texture:SetTexture(path)` | doc | Returns `success` (SimpleTextureBaseAPIDocumentation.lua). |
+| `Texture:GetTextureFileID()`, `GetTextureFilePath()` | doc | SimpleTextureBaseAPIDocumentation.lua; called guarded. |
+| `Region:IsObjectLoaded()` | doc | SimpleRegionAPIDocumentation.lua; called guarded, a second after SetTexture. |
+
+Not verifiable from the UI source: the file name. The client's pattern is `WoWScrnShot_MMDDYY_HHMMSS.<jpg|png|tga>` in
+`_forever_\\Screenshots\\`; the probe records the second of the success event and the seconds around it, and the
+show step tries `Screenshots\\<file>`, `..\\Screenshots\\<file>` and `Interface\\..\\Screenshots\\<file>`. Verified in game: not
+yet (Andy runs it).
+"""
+
 
 def addon_files():
     toc = open(os.path.join(ROOT, "RestedLeveling.toc")).read().splitlines()
@@ -201,6 +221,7 @@ def main():
         lines.append("| %s | `%s` | %s | %s | %s |" % (kind, name, a, b, "yes" if guarded else ""))
     lines.append("")
     lines += OFFLINE_APPEARANCE.splitlines() + [""]
+    lines += SHOT_PROBE.splitlines() + [""]
     md = "\n".join(lines)
     md_path = os.path.join(ROOT, "docs", "API.md")
 

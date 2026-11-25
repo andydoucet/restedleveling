@@ -9,6 +9,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 
 | kind | name | Forever | classic_era | guarded |
 |---|---|---|---|---|
+| global | `C_CVar` | doc | doc |  |
 | global | `C_ChatInfo` | doc | doc |  |
 | global | `C_Container` | doc | doc |  |
 | global | `C_Item` | doc | doc |  |
@@ -52,6 +53,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `RAID_CLASS_COLORS` | used | used |  |
 | global | `RequestTimePlayed` | doc | doc |  |
 | global | `SOUNDKIT` | used | used |  |
+| global | `Screenshot` | doc | doc |  |
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `Settings` | used | used | yes |
 | global | `SlashCmdList` | used | used |  |
@@ -84,6 +86,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `tinsert` | used | used |  |
 | harness | `tremove` | used | used |  |
 | harness | `wipe` | used | used |  |
+| field | `C_CVar.GetCVar` | doc | doc |  |
+| field | `C_CVar.SetCVar` | doc | doc |  |
 | field | `C_ChatInfo.AreOutgoingAddonChatMessagesRestricted` | doc | doc | yes |
 | field | `C_ChatInfo.RegisterAddonMessagePrefix` | doc | doc |  |
 | field | `C_ChatInfo.SendAddonMessage` | doc | doc |  |
@@ -157,6 +161,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetCamDistanceScale` | doc | doc |  |
 | method | `SetChecked` | doc | doc |  |
 | method | `SetClampedToScreen` | doc | doc |  |
+| method | `SetColorTexture` | doc | doc |  |
 | method | `SetDesaturated` | doc | doc |  |
 | method | `SetDesaturation` | doc | doc |  |
 | method | `SetDrawLayer` | doc | doc |  |
@@ -211,6 +216,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `Show` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
+| method | `UnregisterAllEvents` | doc | doc |  |
 | method | `UnregisterEvent` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
 | event | `ANCHOR_BOTTOM` | used | used |  |
@@ -246,6 +252,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `PLAYER_UPDATE_RESTING` | doc | doc |  |
 | event | `PLAYER_XP_UPDATE` | doc | doc |  |
 | event | `REPEAT` | used | used |  |
+| event | `SCREENSHOT_FAILED` | doc | doc |  |
+| event | `SCREENSHOT_SUCCEEDED` | doc | doc |  |
 | event | `SKILL_LINES_CHANGED` | doc | doc |  |
 | event | `TIME_PLAYED_MSG` | doc | doc |  |
 | event | `TOOLTIP` | used | used |  |
@@ -282,3 +290,22 @@ every other character shows its class crest (`classicon-<class>`) with its race 
 `C_Texture.GetAtlasInfo` finds it), and the card says "Last seen as a level 46 Gnome Warrior. Log in to see them."
 Verified in game: not yet. The race atlas is verified only through the simulator, which reads the installed client's
 atlas data.
+
+## Screenshot probe
+
+`/rlvl shotprobe` (hidden, ILL-1276) tests one question in game: can a screenshot the addon takes be drawn again later
+as a texture? Checked against the Forever UI source:
+
+| API | Forever | Notes |
+|---|---|---|
+| `Screenshot()` | doc | ClientDocumentation.lua; no restriction flags. FrameXML calls it (AddonList, EditModeDialogs). |
+| `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload (no file name). ActionStatus.lua listens the same way. |
+| `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | CVarDocumentation.lua. The CVar name is the client's, not in the UI source: read with a fallback to jpeg. |
+| `Texture:SetTexture(path)` | doc | Returns `success` (SimpleTextureBaseAPIDocumentation.lua). |
+| `Texture:GetTextureFileID()`, `GetTextureFilePath()` | doc | SimpleTextureBaseAPIDocumentation.lua; called guarded. |
+| `Region:IsObjectLoaded()` | doc | SimpleRegionAPIDocumentation.lua; called guarded, a second after SetTexture. |
+
+Not verifiable from the UI source: the file name. The client's pattern is `WoWScrnShot_MMDDYY_HHMMSS.<jpg|png|tga>` in
+`_forever_\Screenshots\`; the probe records the second of the success event and the seconds around it, and the
+show step tries `Screenshots\<file>`, `..\Screenshots\<file>` and `Interface\..\Screenshots\<file>`. Verified in game: not
+yet (Andy runs it).

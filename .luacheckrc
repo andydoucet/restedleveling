@@ -11,6 +11,7 @@ globals = {
 	"SlashCmdList",
 }
 read_globals = {
+	C_CVar = { fields = { "GetCVar", "SetCVar" } },
 	C_ChatInfo = { fields = { "AreOutgoingAddonChatMessagesRestricted", "RegisterAddonMessagePrefix", "SendAddonMessage" } },
 	C_Container = { fields = { "GetContainerItemID", "GetContainerNumSlots", "GetItemCooldown" } },
 	C_Item = { fields = { "GetItemNameByID" } },
@@ -54,6 +55,7 @@ read_globals = {
 	"RAID_CLASS_COLORS",
 	"RequestTimePlayed",
 	"SOUNDKIT",
+	"Screenshot",
 	"SetPortraitTexture",
 	Settings = { fields = { "OpenToCategory", "RegisterAddOnCategory", "RegisterCanvasLayoutCategory" } },
 	"UIParent",

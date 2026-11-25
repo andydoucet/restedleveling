@@ -135,8 +135,7 @@ local function makeStage(f)
 	b.text:SetWordWrap(true)
 	b.text:SetJustifyH("LEFT")
 	b.text:SetPoint("TOPLEFT", b.hook, "BOTTOMLEFT", 0, -4)
-	b:SetPoint("TOPLEFT", b.hook, "TOPLEFT", -12, 10)
-	b:SetPoint("BOTTOMRIGHT", b.text, "BOTTOMRIGHT", 12, -10)
+	b:SetPoint("TOPLEFT", b.hook, "TOPLEFT", -12, 10)   -- Card.FitBubble sizes it around both blocks
 	Wg.PointTail(b, "right")   -- on the right edge, pointing at the figure
 	b.tail:ClearAllPoints()
 	b.tail:SetPoint("LEFT", b, "BOTTOMRIGHT", -1, 20)
@@ -245,7 +244,7 @@ function Card.Create()
 		b.text:SetText(n > #hook and text:sub(1, n - #hook) or "")
 		local talking = n < #hook + #text
 		f.stage.figure:SetPoint("BOTTOM", FIG_X, 78 + (talking and math.abs(math.sin(self.t * 14)) * 3 or 0))
-		if not talking then b.hook:SetText(hook); b.text:SetText(text); self:Hide() end
+		if not talking then b.hook:SetText(hook); b.text:SetText(text); Card.FitBubble(f.stage); self:Hide() end
 	end)
 	f:HookScript("OnHide", function() ns.selectedKey = nil; if ns.Main then ns.Main.Refresh() end end)
 	Card.frame = f
@@ -253,15 +252,65 @@ function Card.Create()
 	return f
 end
 
+-- The bubble wraps to as many lines as the line needs and grows down the stage; only if it would then reach the note
+-- (or the name plate) does it drop one font step. Never "...". Sized for the full line while it types out.
+Card.BUBBLE_W, Card.BUBBLE_TOP = 196, 22
+Card.BUBBLE_SIZES = { { 17, 13 }, { 15, 12 } }   -- hook and facts: the normal size, then one step down
+function Card.BubbleRoom(s)   -- px the bubble may take from its top (inside the 10 px top inset) to what is below it
+	local floor = s.note:IsShown() and (86 + s.note:GetStringHeight() + 8) or 84   -- the note's top, or the plate's
+	return STAGE_H - Card.BUBBLE_TOP - floor
+end
+-- A block's own width: one line as wide as it is, or balanced lines (no orphan word) when it wraps, widened until it
+-- takes no more lines than it would at the full width (long words: "Feathermoon Stronghold inn suits me.").
+local function natural(fs)
+	local maxW = Card.BUBBLE_W
+	local one = fs:GetUnboundedStringWidth()
+	if one <= maxW then
+		local w = math.min(maxW, math.ceil(one) + 4)
+		fs:SetWidth(w)
+		return w
+	end
+	fs:SetWidth(maxW)
+	local fewest = fs:GetStringHeight()
+	local w = Wg.Balance(fs, maxW)
+	while w < maxW and fs:GetStringHeight() > fewest do
+		w = math.min(maxW, w + 8)
+		fs:SetWidth(w)
+	end
+	return w
+end
+function Card.FitBubble(s, hook, text)
+	local b = s.bubble
+	b.line = hook and { hook, text } or b.line
+	if not b.line then return end
+	local shownHook, shownText = b.hook:GetText(), b.text:GetText()   -- mid-typing: measured on the full line
+	local room = Card.BubbleRoom(s)
+	for i, size in ipairs(Card.BUBBLE_SIZES) do
+		St.Font(b.hook, "name", size[1])
+		St.Font(b.text, "body", size[2])
+		b.hook:SetText(b.line[1])
+		b.text:SetText(b.line[2])
+		local w = math.max(natural(b.hook), natural(b.text))
+		local hh, th = b.hook:GetStringHeight(), b.text:GetStringHeight()
+		b.size = i
+		if 10 + hh + 4 + th + 10 <= room or i == #Card.BUBBLE_SIZES then
+			b.hook:SetHeight(hh + 2)   -- a little slack: the last line is never cut
+			b.text:SetHeight(th + 2)
+			b:SetSize(w + 24, 10 + hh + 2 + 4 + th + 2 + 10)
+			break
+		end
+	end
+	b.hook:SetText(shownHook or "")
+	b.text:SetText(shownText or "")
+end
+
 local function talk(f, hook, text)
 	local b = f.stage.bubble
-	b.hook:SetText(hook)   -- size the bubble for the full line first, both blocks one balanced width
-	b.text:SetText(text)
-	local w = math.max(Wg.Balance(b.hook, 196), Wg.Balance(b.text, 196))
-	b.hook:SetWidth(w)
-	b.text:SetWidth(w)
-	b.hook:SetHeight(b.hook:GetStringHeight())
-	b.text:SetHeight(b.text:GetStringHeight())
+	b.hook:SetText("")
+	b.text:SetText("")
+	Card.FitBubble(f.stage, hook, text)
+	-- Fonts (ElvUI's especially) settle a frame after show; measure again then, as the Esc card does.
+	C_Timer.After(0, function() if f:IsShown() then Card.FitBubble(f.stage) end end)
 	f.typer.hook, f.typer.text, f.typer.t = hook, text, 0
 	f.typer:Show()
 	b.pop:Play()
