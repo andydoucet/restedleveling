@@ -23,3 +23,6 @@ Core\Identity.lua
 Core\Snapshot.lua
 Core\Core.lua
 Core\Slash.lua
+
+Sync\Codec.lua
+Sync\Sync.lua
