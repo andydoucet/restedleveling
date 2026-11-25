@@ -34,3 +34,24 @@ function RLCrop(...)
 	-- the simulator logs only errors, so the crop is reported as one (render.sh reads it and does not count it)
 	if l < r then error(("RLSIM_CROP %.5f %.5f %.5f %.5f %d"):format(l / uw, b / uh, r / uw, t / uh, RLCROP_MARGIN or 40), 0) end
 end
+-- The simulator draws no 3D model. On scenes that show the live model, a labelled box marks the model's frame (the
+-- figure column, cut above the name plate) and the head's place in it, so the bubble's clearance can be checked.
+function RLModelPlaceholder(stage)
+	local m = stage.model
+	local ph = CreateFrame("Frame", nil, m)
+	ph:SetAllPoints(m)
+	local fill = ph:CreateTexture(nil, "ARTWORK")
+	fill:SetAllPoints()
+	fill:SetColorTexture(0.35, 0.55, 0.85, 0.22)
+	local head = ph:CreateTexture(nil, "OVERLAY")
+	head:SetColorTexture(0.85, 0.65, 0.35, 0.45)
+	head:SetSize(m:GetWidth() * 0.6, 84)   -- the head box: the middle 60%, room for pigtails
+	head:SetPoint("TOP", ph, "TOP", 0, -28)
+	local t = ph:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	t:SetPoint("BOTTOM", ph, "BOTTOM", 0, 8)
+	t:SetWidth(m:GetWidth() - 8)
+	t:SetText("live 3D model, waist up\n(not drawn in the sim)")
+	local ht = ph:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	ht:SetPoint("CENTER", head, "CENTER")
+	ht:SetText("head")
+end

@@ -143,6 +143,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `EnableKeyboard` | doc | doc |  |
 | method | `EnableMouse` | doc | doc |  |
 | method | `EnableMouseWheel` | doc | doc |  |
+| method | `FreezeAnimation` | doc | doc |  |
 | method | `GetBottom` | doc | doc |  |
 | method | `GetCenter` | doc | doc |  |
 | method | `GetChecked` | doc | doc |  |
@@ -218,6 +219,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetScript` | doc | doc |  |
 | method | `SetShadowColor` | doc | doc |  |
 | method | `SetShadowOffset` | doc | doc |  |
+| method | `SetSheathed` | doc | doc |  |
 | method | `SetShown` | doc | doc |  |
 | method | `SetSize` | doc | doc |  |
 | method | `SetSmoothing` | doc | doc |  |

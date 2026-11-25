@@ -107,19 +107,28 @@ local function card(scale)
 	FakeWoW.fontScale = scale
 	return h, state, f
 end
+-- The height a string's lines need, whatever height it is held to (a held string measures only what fits).
+local function need(fs)
+	local held = fs:GetHeight()
+	fs:SetHeight(0)
+	local h = fs:GetStringHeight()
+	fs:SetHeight(held)
+	return h
+end
 local function fits(Card, s, what)
 	local b = s.bubble
 	for _, fs in ipairs({ b.hook, b.text }) do
 		local shown = fs:GetText()
 		fs:SetText(b.line and (fs == b.hook and b.line[1] or b.line[2]) or shown)
-		T.ok(fs:GetHeight() >= fs:GetStringHeight(), what .. ": every line of " .. tostring(fs:GetText()) .. " has room")
+		T.ok(fs:GetHeight() >= need(fs), what .. ": every line of " .. tostring(fs:GetText()) .. " has room")
 		T.ok(fs:GetWidth() <= Card.BUBBLE_W, what .. ": inside the bubble width")
-		local w, lines = fs:GetWidth(), fs:GetStringHeight()
+		local w, lines = fs:GetWidth(), need(fs)
 		fs:SetWidth(Card.BUBBLE_W)
-		T.eq(lines, fs:GetStringHeight(), what .. ": no more lines than at the full width (no orphan): " .. tostring(fs:GetText()))
+		T.eq(lines, need(fs), what .. ": no more lines than at the full width (no orphan): " .. tostring(fs:GetText()))
 		fs:SetWidth(w)
 		fs:SetText(shown)
 	end
+	T.ok(Card.BubbleRight(s) <= Card.FIG_LEFT - Card.GAP, what .. ": the bubble and its tail end 12 px left of the figure")
 	T.ok(10 + b.hook:GetHeight() + 4 + b.text:GetHeight() + 10 <= Card.BubbleRoom(s) + 4 or b.size == #Card.BUBBLE_SIZES,
 		what .. ": the bubble stays above the note")
 	T.lacks((b.hook:GetText() or "") .. (b.text:GetText() or ""), "...", what .. ": never an ellipsis")
@@ -140,8 +149,8 @@ function cases.bubble_wraps_andys_line_under_a_wider_font()
 	local b = f.stage.bubble
 	T.eq(b.hook:GetText(), "Give me 9 days 23 hours.", "the whole hook")
 	T.eq(b.text:GetText(), "Then I'm full at Thunder Bluff inn.", "the whole follow-up")
-	T.ok(b.hook:GetHeight() >= b.hook:GetStringHeight(), "room for every line of the hook (was one line: 'Give me 9 days 2...')")
-	T.ok(b.text:GetHeight() >= b.text:GetStringHeight(), "and of the follow-up (was 'Then I'm full at Thunder...')")
+	T.ok(b.hook:GetHeight() >= need(b.hook), "room for every line of the hook (was one line: 'Give me 9 days 2...')")
+	T.ok(b.text:GetHeight() >= need(b.text), "and of the follow-up (was 'Then I'm full at Thunder...')")
 	T.ok(b.hook:GetHeight() >= 28, "the hook took a second line instead of '...'")
 	T.ok(b.hook:GetWidth() < state.ns.Card.BUBBLE_W, "balanced lines, not one long and an orphan 'hours.'")
 	fits(state.ns.Card, f.stage, "Andy's line")
@@ -180,6 +189,110 @@ function cases.bubble_fits_every_line_in_the_bank()
 	end
 	T.ok(n > 40, "every bank line checked")
 	FakeWoW.fontScale = nil
+	T.clean(h)
+end
+
+-- Andy's v1.1.1 card: "Then I'm full at / Feathermoon Stronghold..." The first fit held the text to two lines; when the
+-- wider font settled a frame later, the re-fit measured the held string (two lines) and kept it cut.
+function cases.a_refit_under_a_wider_font_lets_the_old_height_go()
+	local h, state, f = card(1)
+	local Card, b = state.ns.Card, f.stage.bubble
+	Card.FitBubble(f.stage, "Give me 9 days 14 hours.", "Then I'm full at Feathermoon Stronghold inn.")
+	b.text:SetText(b.line[2])   -- typed out
+	local before = need(b.text)
+	FakeWoW.fontScale = 1.35
+	Card.FitBubble(f.stage)   -- the next frame's re-measure
+	b.text:SetText(b.line[2])
+	T.ok(need(b.text) > before, "the wider font takes another line")
+	T.ok(b.text:GetHeight() >= need(b.text), "and the string is given it: 'inn.' is not cut")
+	fits(Card, f.stage, "after the re-fit")
+	FakeWoW.fontScale = nil
+	T.clean(h)
+end
+
+-- Andy (ILL-1279 round 2): the bubble ran into her head. Two columns: the bubble left, the figure right, the bubble
+-- (tail included) ending Card.GAP px left of the figure column, on your own card (live model) and anyone else's.
+function cases.the_bubble_stays_left_of_the_figure_on_every_card()
+	local h, state = world()
+	h.Slash("RESTEDLEVELING", "")
+	local Card, L = state.ns.Card, state.ns.Lines
+	local f = Card.Create()
+	local s = f.stage
+	-- the live model's frame is the figure column, cut above the name plate: waist up
+	local pts = {}
+	for _, p in ipairs(s.model.__points) do pts[p[1]] = p end
+	T.ok(pts.BOTTOMLEFT and pts.BOTTOMLEFT[4] == Card.FIG_LEFT, "the model starts at the figure column")
+	T.ok(pts.TOPRIGHT, "and runs to the stage's right edge")
+	T.ok(pts.BOTTOMLEFT[5] >= 60, "its bottom above the name plate: the model is cut at the waist, not the feet")
+	-- the disc's ring starts at the figure column too
+	local fig = s.figure.__points[#s.figure.__points]
+	T.ok(416 / 2 + fig[2] - s.figure:GetWidth() * 1.1 / 2 >= Card.FIG_LEFT, "the portrait's ring inside the figure column")
+	-- the card's buttons sit in the bubble's column
+	T.ok(Card.BUBBLE_LEFT + state.ns.Look.CONTROLS_W <= Card.FIG_LEFT - Card.GAP, "Save my look in the left column")
+	FakeWoW.fontScale = 1.35
+	local long = { time = "9 days 23 hours", levels = "1.5 levels", pct = "93%", left = "9 days 23 hours",
+		clock = "Fri 4 Dec, 03:12", place = "Feathermoon Stronghold inn", zone = "Stranglethorn Vale", level = "60" }
+	local function fill(t) return (t:gsub("{(%w+)}", long)) end
+	for _, key in ipairs({ state.ns.MyKey(), "N:Amdo Moto@?" }) do
+		Card.Show(key)
+		local live = key == state.ns.MyKey()
+		T.eq(s.model:IsShown(), live, key .. ": the live model only for the character you are on")
+		for state_, bank in pairs(L.BANK) do
+			for i, pair in ipairs(bank) do
+				Card.FitBubble(s, fill(pair[1]), fill(pair[2]))
+				fits(Card, s, key .. " " .. state_ .. " " .. i)
+			end
+		end
+	end
+	FakeWoW.fontScale = nil
+	T.clean(h)
+end
+
+function cases.the_live_model_is_framed_waist_up_whenever_it_loads()
+	local h, state = world()
+	h.Slash("RESTEDLEVELING", "")
+	local Card = state.ns.Card
+	local f = Card.Create()
+	local calls = {}
+	f.stage.model.SetPortraitZoom = function(_, z) calls[#calls + 1] = "zoom:" .. z end
+	f.stage.model.SetCamDistanceScale = function(_, d) calls[#calls + 1] = "dist:" .. d end
+	Card.Show(state.ns.MyKey())
+	T.eq(table.concat(calls, ","), "dist:1,zoom:" .. Card.MODEL_ZOOM, "framed on show")
+	FakeWoW.RunScript(f.stage.model, "OnModelLoaded")
+	T.eq(#calls, 4, "and again once the model has loaded (loading resets the camera)")
+	T.ok(Card.MODEL_ZOOM > 0 and Card.MODEL_ZOOM < 0.6, "between the full body and Blizzard's head-and-shoulders")
+	T.clean(h)
+end
+
+-- The hero's action line above NOW PLAYING was cut at the button under a wider font ("Then pl"). It fits whole: a
+-- smaller size, or two balanced lines; never "..." and never under the button.
+function cases.the_hero_action_line_is_never_cut()
+	local h, state = world()
+	h.Slash("RESTEDLEVELING", "")
+	local Hero, hero = state.ns.Hero, h.Env().RestedLevelingMain.hero
+	T.ok(hero.cta:GetText() and #hero.cta:GetText() > 10, "an action line")
+	local lines = {
+		"Next, log |cffc69b6dLe Jedde|r out here. Then play |cffc69b6dLe Jette|r.",
+		"First, take |cffc69b6dColonol Sunders|r to an inn (hearth). Then play |cff3fc7ebAmdo Moto|r.",
+		"Nobody to switch to yet. When you stop, log |cffc69b6dColonol Sunders|r out in an inn.",
+	}
+	for _, scale in ipairs({ 1, 1.35, 1.6 }) do
+		FakeWoW.fontScale, FakeWoW.sizeAware = scale, true
+		for _, line in ipairs(lines) do
+			local size, n = Hero.FitAction(hero, line)
+			local cta, what = hero.cta, ("x%.2f %s"):format(scale, line)
+			T.eq(cta:GetText(), line, what .. ": the whole line")
+			T.ok(cta:GetWidth() <= hero.ctaW, what .. ": short of the button")
+			if n == 1 then
+				T.ok(cta:GetUnboundedStringWidth() <= hero.ctaW, what .. ": one line that fits")
+			else
+				T.ok(cta.__wrap, what .. ": wraps on words")
+				T.ok(need(cta) <= 2 * 14, what .. ": two lines at most, inside the 41 px bar")
+				T.eq(size, Hero.ACTION_SIZES[#Hero.ACTION_SIZES], what .. ": only after the smaller sizes")
+			end
+		end
+	end
+	FakeWoW.fontScale, FakeWoW.sizeAware = nil, nil
 	T.clean(h)
 end
 

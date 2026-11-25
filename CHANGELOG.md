@@ -54,6 +54,18 @@ Save my look (ILL-1279):
   class crest again. "Clear look" removes it. The character you are on always shows its live portrait.
 - The hidden `/rlvl shotprobe` experiment is gone; what it found is in docs/API.md.
 
+Save my look, round 2 (ILL-1279, from Andy's 1.1.1 run):
+
+- Your own card frames the live model from the waist up in the right half of the stage, and the speech bubble stays in
+  the left half: it ends, tail included, at least 12 px short of the figure (it ran into her head). Lines that need
+  the room wrap instead. Same on everyone else's card, against their portrait. "Save my look" moved under the bubble.
+- The shot is a still stand: the stand animation is frozen on its first frame with weapons sheathed and hidden, so it
+  no longer catches an idle fidget (a shrug, eyes shut).
+- Badges follow what is in the disc: a face (your live portrait or a saved look) gets the class crest as its badge; no
+  face, the class crest is the picture and the race emblem the badge.
+- A card line is no longer cut ("Feathermoon Stronghold...") when ElvUI's wider font settles after the card opens.
+- The next-step line above NOW PLAYING fits whole: a smaller size or two lines, never under the button.
+
 ## 1.0.0 (unreleased)
 
 First release.

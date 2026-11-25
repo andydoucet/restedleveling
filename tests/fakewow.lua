@@ -140,7 +140,12 @@ function Frame:CreateFontString()
 		end
 		return lines
 	end
-	function fs:GetStringHeight() return 14 * fs.Lines(self) end
+	-- As in game, a string held to a height measures only the lines that fit in it (SetHeight(0) lets it go).
+	function fs:GetStringHeight()
+		local full = 14 * fs.Lines(self)
+		if self.__h and self.__h > 0 then return math.min(full, math.max(14, math.floor(self.__h / 14) * 14)) end
+		return full
+	end
 	function fs:GetText() return self.__text end
 	function fs:SetFormattedText(fmt, ...) self.__text = fmt:format(...) end
 	return fs
