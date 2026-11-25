@@ -4,7 +4,7 @@
 # Each scene in tools/sim/scenes/NN_name.lua runs in a fresh sandbox: a copy of the addon, the render fixture
 # (tools/sim/fixture: Andy's roster as saved data, a pinned clock) and, for *_elvui scenes, read-only copies of
 # ElvUI + ElvUI_WC3 with a sim shim. Never touches the real WTF or AddOns. Exits non-zero on any Lua error from our
-# addon. Writes at most 10 PNGs named scene_NN_<name>.png.
+# addon. Writes at most 12 PNGs named scene_NN_<name>.png.
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -42,7 +42,7 @@ for scene in "$ROOT"/tools/sim/scenes/[0-9][0-9]_*.lua; do
 	name=$(basename "$scene" .lua)
 	[[ -n "$FILTER" && "$name" != *"$FILTER"* ]] && continue
 	count=$((count + 1))
-	[[ $count -gt 10 ]] && { echo "more than 10 scenes" >&2; exit 2; }
+	[[ $count -gt 12 ]] && { echo "more than 12 scenes" >&2; exit 2; }
 	box="$WORK/$name"
 	mkdir -p "$box/AddOns" "$box/wtf"
 	stage_addon "$box/AddOns"

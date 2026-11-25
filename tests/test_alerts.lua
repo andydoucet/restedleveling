@@ -189,7 +189,102 @@ function cases.banner_uses_the_one_button_family()
 	T.eq(banner.close.label and banner.close.label:GetText(), "X", "the dismiss is the bronze secondary button, not a yellow X")
 	T.eq(banner.altBtn:GetHeight(), 22, "the next character is secondary to the warning")
 	T.eq(banner.altBtn.label:GetText(), "Details", "a small Details button")
-	T.has(banner.altText:GetText(), "Next: Le Nette  ·  Full", "a line that says who is next and why")
+	T.has(banner.altText:GetText(), "Next: Le Nette · Full", "a line that says who is next and why")
+	T.clean(h)
+end
+
+-- The anchors a frame has now: { point, relativeTo, relativePoint, x, y } each.
+local function points(f) return f.__points or {} end
+-- The anchor named `name`, as { point, relativeTo, relativePoint, x, y } (SetPoint(point, x, y) is relative to the
+-- parent's same point).
+local function pointOf(f, name)
+	for _, pt in ipairs(points(f)) do
+		if pt[1] == name then
+			if type(pt[2]) == "number" then return { pt[1], f:GetParent(), pt[1], pt[2], pt[3] } end
+			return pt
+		end
+	end
+end
+
+-- Andy (ILL-1274): on the first Esc the card was wider than the menu, overlapped its bottom, and Details overhung the
+-- card's right edge; once straightened, Details still sat off the row and off the close X's edge.
+function cases.esc_strip_lays_out_from_its_own_edges_the_same_on_every_show()
+	local saved = { chars = { ["N:Le Nette Bergamotte-Longname@?"] = alt("Le Nette Bergamotte-Longname", 1.5, 2 * D, true) } }
+	local _, h, state = world({ saved = saved, resting = false })
+	local menu = h.Env().GameMenuFrame
+	menu:SetWidth(280)
+	menu:Show()
+	FakeWoW.RunScript(menu, "OnShow")
+	local f = h.Env().RestedLevelingMenuStrip
+	T.ok(f:IsShown(), "strip shown")
+	local A = state.ns.Alerts
+	-- Sized from the menu, hung under it with a gap.
+	T.eq(f:GetWidth(), 448, "a little wider than the 280 px menu (280 x 1.6)")
+	local top = pointOf(f, "TOP")
+	T.ok(top and top[2] == menu and top[3] == "BOTTOM" and top[5] == -A.STRIP_GAP, "TOP under the menu's BOTTOM, with a gap")
+	T.eq(#points(f), 1, "one anchor: nothing else pulls it over the menu")
+	-- Details: on the card's right edge with the close X's inset, 22 px, top level with the 22 px portrait.
+	local btn, close = f.altBtn, f.close
+	local bp, cp = pointOf(btn, "TOPRIGHT"), pointOf(close, "TOPRIGHT")
+	T.ok(bp and bp[2] == f and bp[3] == "TOPRIGHT", "Details anchored to the card's right edge")
+	T.eq(bp[4], -A.INSET, "Details' right edge = card right - inset")
+	T.eq(bp[4], cp[4], "the same right inset as the close X")
+	T.eq(btn:GetHeight(), 22, "22 px, like the other inline buttons")
+	local ap = pointOf(f.alt, "TOPLEFT")
+	T.eq(ap[5], bp[5], "same top as the portrait: centred on one row")
+	T.eq(f.alt:GetHeight(), btn:GetHeight(), "and the same height")
+	-- The line sits between the portrait and Details, shortened, never pushing the button.
+	local tr = pointOf(f.altText, "RIGHT")
+	T.ok(tr and tr[2] == btn and tr[3] == "LEFT" and tr[4] == -10, "text ends 10 px left of Details")
+	local room = f:GetWidth() - 54 - 22 - 12 - 10 - btn:GetWidth() - A.INSET
+	T.ok(f.altText:GetStringWidth() <= room, "the long line is shortened to fit")
+	T.has(f.altText:GetText(), "...", "with an ellipsis")
+	-- The first show matches the next: the queued relayout and a second Esc change nothing.
+	local function snapshot()
+		local out = { f:GetWidth(), f:GetHeight(), f.altText:GetText() }
+		for _, fr in ipairs({ f, f.alt, btn, f.altText }) do
+			for _, pt in ipairs(points(fr)) do
+				for i = 1, 5 do out[#out + 1] = tostring(type(pt[i]) == "table" and (pt[i] == f and "f" or pt[i] == menu and "menu" or "x") or pt[i]) end
+			end
+		end
+		return table.concat(out, "|")
+	end
+	local first = snapshot()
+	W.RunTimers(state)   -- the one-frame-later relayout
+	T.eq(snapshot(), first, "relayout after a frame is a no-op once settled")
+	menu:Hide()
+	menu:Show()
+	FakeWoW.RunScript(menu, "OnShow")
+	W.RunTimers(state)
+	T.eq(snapshot(), first, "a second Esc lays out exactly like the first")
+	T.clean(h)
+end
+
+function cases.esc_strip_width_stays_between_min_and_max()
+	local _, h, state = world({ resting = false })
+	local menu = h.Env().GameMenuFrame
+	local A = state.ns.Alerts
+	for _, case in ipairs({ { 100, A.STRIP_MIN }, { 0, A.STRIP_MIN }, { 600, A.STRIP_MAX } }) do
+		menu:SetWidth(case[1])
+		menu:Show()
+		FakeWoW.RunScript(menu, "OnShow")
+		T.eq(h.Env().RestedLevelingMenuStrip:GetWidth(), case[2], "menu " .. case[1] .. " px")
+		menu:Hide()
+	end
+	T.clean(h)
+end
+
+-- The logout banner shares the row: same right edge as its close X, and nobody offered when nobody is rested.
+function cases.banner_row_shares_the_layout_and_never_offers_an_empty_alt()
+	local saved = { chars = { ["N:Le Dette@?"] = alt("Le Dette", 0.01, 5 * 60, true) } }   -- the player is Le Jette
+	local _, h, state = world({ saved = saved, resting = false })
+	h.Fire("PLAYER_CAMPING")
+	local b = h.Env().RestedLevelingBanner
+	local bp = pointOf(b.altBtn, "TOPRIGHT")
+	T.ok(bp and bp[2] == b and bp[4] == -state.ns.Alerts.INSET, "Details on the banner's right edge, the close X's inset")
+	T.eq(pointOf(b.close, "TOPRIGHT")[4], bp[4], "lined up with the close X")
+	T.has(b.altText:GetText(), "Nobody rested yet", "no Next: Le Dette, 0.0 banked")
+	T.has(b.altText:GetText(), "Le Dette full in 9d 22h", "says how long instead (0.01 banked, 5 min resting)")
 	T.clean(h)
 end
 
