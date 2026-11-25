@@ -16,6 +16,7 @@ read_globals = {
 	C_Item = { fields = { "GetItemNameByID" } },
 	C_SkillInfo = { fields = { "GetNumSkillLines", "GetSkillLineInfo" } },
 	C_Spell = { fields = { "GetSpellName" } },
+	C_Texture = { fields = { "GetAtlasInfo" } },
 	C_Timer = { fields = { "After", "NewTicker" } },
 	C_Traits = { fields = { "GetConfigIDBySystemID", "GetConfigInfo", "GetDefinitionInfo", "GetEntryInfo", "GetNodeInfo", "GetTreeNodes" } },
 	C_UnitAuras = { fields = { "GetPlayerAuraBySpellID" } },

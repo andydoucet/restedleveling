@@ -11,6 +11,15 @@ Fixes from the first in-game run (ILL-1274):
 - When nobody has rest banked, the hero no longer says "play next" a 0.0: it says who fills first and when. "First,
   take ... to an inn" is always about the character you are on.
 - Professions are listed once each (Forever reported some twice); saved duplicates are cleaned on login.
+- "Link account..." links in place: it opens a name field in the guide (or the footer), Enter links the same way as
+  /rlvl link, Esc cancels. The field then says "Linked to ... Waiting for them to link you back" or "Paired with ...,
+  synced 5m ago", with Unlink.
+- Offline characters show their class crest with a grey race emblem instead of a stock face that was not theirs (the
+  game cannot draw another character's look while it is offline; see docs/API.md). Only the character you are on is
+  drawn live, on the card's 3D stage too.
+- The Esc-menu card and the logout banner lay out the same on the first open as on later ones: the card is sized from
+  the menu and hangs under it, Details sits on the right edge in line with the close X, and the next-character line
+  is shortened instead of pushing the button out. Nobody is offered as "next" when nobody has rest banked.
 
 ## 1.0.0 (unreleased)
 

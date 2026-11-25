@@ -33,6 +33,7 @@ Style\ElvUI.lua
 
 UI\Words.lua
 UI\Widgets.lua
+UI\Link.lua
 UI\Hero.lua
 UI\Current.lua
 UI\Tip.lua

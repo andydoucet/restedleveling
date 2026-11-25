@@ -13,16 +13,15 @@ local dismissable, closeButton, optionsButton = A.Dismissable, A.CloseButton, A.
 local function enabled(kind) return Ru.Enabled(ns.DB(), kind) end
 
 
--- The next character, secondary to the warning: her portrait, "Next: Le Nette · Full · 1.7 levels banked", and a
--- small Details button that opens her card. The warning itself is about the character logging out.
-local function altLine(f, anchor)
-	f.alt = Wg.Portrait(f, 22)
-	f.alt:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 2, -8)
+-- The next character, secondary to the warning: a portrait, "Next: Le Nette · Full · 1.7 levels banked", and a
+-- small Details button that opens the card. The warning itself is about the character logging out.
+-- Laid out by layoutAlt, every time the card is shown, from the card's own edges (never chained off the text).
+A.ROW_H, A.INSET = 22, 8   -- the row's height (portrait and Details); Details' right inset, the same as the close X
+local function altLine(f)
+	f.alt = Wg.Portrait(f, A.ROW_H)
 	f.altText = Wg.Text(f, "small", nil, 13)
-	f.altText:SetPoint("LEFT", f.alt, "RIGHT", 12, 0)
 	St.Color(f.altText, St.SECOND)
-	f.altBtn = St.MakeButton(f, 72, "Details", false, 22)
-	f.altBtn:SetPoint("LEFT", f.altText, "RIGHT", 12, 0)
+	f.altBtn = St.MakeButton(f, 72, "Details", false, A.ROW_H)
 	f.altBtn:SetScript("OnClick", function(self) if self.key and ns.ShowDetail then ns.ShowDetail(self.key) end end)
 	f.altBtn:SetScript("OnEnter", function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
@@ -35,13 +34,42 @@ local function setAlt(f, alt)
 	f.alt:SetShown(alt ~= nil)
 	f.altBtn:SetShown(alt ~= nil)
 	f.altText:SetShown(alt ~= nil)
+	f.altLine = nil
 	if not alt then return end
 	Wg.SetPortrait(f.alt, alt.c, false, alt.state)
 	f.altBtn.key, f.altBtn.name = alt.key, alt.c.full
 	local st = St.STATE[alt.state] or St.STATE.max
-	f.altText:SetText(("Next: %s  ·  %s%s"):format(alt.c.full or "?", st.word,
-		alt.p and ("  ·  " .. ns.Words.Levels(alt.p.levels) .. " banked") or ""))
+	if ns.Words.NothingBanked(alt) then   -- no "Next: X · 0.0 banked": nobody is worth switching to yet, so say who fills
+		-- the wait only (the clock time is one click away, on the card): the row is narrow
+		f.altLine = ("%s fills first: full in %s"):format(alt.c.full or "?", U.Duration(alt.p.left))
+	else
+		f.altLine = ("Next: %s · %s%s"):format(alt.c.full or "?", st.word,
+			alt.p and (" · " .. ns.Words.Levels(alt.p.levels) .. " banked") or "")
+	end
+	f.altText:SetText(f.altLine)
 end
+
+-- The row `top` px below the card's top: the portrait at `left`, Details on the card's right edge (the close X's
+-- inset), both 22 px and so centred on one line, and the text between them, shortened with "..." so it never
+-- pushes the button out. Returns the y just under the row.
+local function layoutAlt(f, left, top)
+	f.alt:ClearAllPoints()
+	f.alt:SetPoint("TOPLEFT", f, "TOPLEFT", left, -top)
+	f.altBtn:ClearAllPoints()
+	f.altBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -A.INSET, -top)
+	f.altText:ClearAllPoints()
+	f.altText:SetPoint("LEFT", f.alt, "RIGHT", 12, 0)
+	f.altText:SetPoint("RIGHT", f.altBtn, "LEFT", -10, 0)
+	if f.altLine then
+		Wg.Fit(f.altText, f.altLine, f:GetWidth() - left - A.ROW_H - 12 - 10 - f.altBtn:GetWidth() - A.INSET)
+	end
+	return top + A.ROW_H
+end
+A.LayoutAlt = layoutAlt
+
+-- Font metrics and the Game Menu's own size settle a frame after show; lay out again then, so the first open looks
+-- like every later one.
+local function relayout(f, fn) C_Timer.After(0, function() if f:IsShown() then fn(f) end end) end
 local function nextUp()
 	local rows = ns.Rows({ hideGrey = true })
 	return rows[1] and rows[1].group ~= 5 and rows[1] or nil
@@ -89,7 +117,7 @@ function A.Banner()
 	f.action:SetWidth(380)   -- the inn guidance on one line where it can be
 	f.action:SetWordWrap(true)
 	St.Color(f.action, St.CREAM)   -- only "4x slower" is coloured
-	altLine(f, f.action)
+	altLine(f)
 	f.close = closeButton(f)   -- a 32 px column on the right holds close and options
 	f.options = optionsButton(f, "logout")
 	f.fade = f:CreateAnimationGroup()
@@ -118,16 +146,20 @@ function A.ShowBanner(title, text, state, action, alt)
 	Wg.Balance(f.text, 380)   -- a long hearth name wraps evenly; the banner grows to fit
 	f.action:SetText(action or "")
 	Wg.Balance(f.action, 380)
-	local hasAction = action ~= nil and action ~= ""
-	f.action:SetShown(hasAction)
-	f.alt:ClearAllPoints()
-	f.alt:SetPoint("TOPLEFT", hasAction and f.action or f.text, "BOTTOMLEFT", 2, -8)
+	f.action:SetShown(action ~= nil and action ~= "")
 	f.title:SetTextColor(0.98, 0.55, 0.15)   -- warning orange: the instruction reads before the explanation
 	setAlt(f, alt)
-	local h = 10 + f.title:GetStringHeight() + 3 + f.text:GetStringHeight() + (hasAction and (3 + f.action:GetStringHeight()) or 0) + 8 + 22 + 10
-	f:SetHeight(math.max(84, h))   -- grows when a long name or line wraps
+	A.LayoutBanner(f)
 	f:Show()
+	relayout(f, A.LayoutBanner)
 	f.fade:Play()
+end
+
+-- The banner grows when a long name or line wraps; the next-character row sits under the last line.
+function A.LayoutBanner(f)
+	local top = 10 + f.title:GetStringHeight() + 3 + f.text:GetStringHeight()
+		+ (f.action:IsShown() and (3 + f.action:GetStringHeight()) or 0) + 8
+	f:SetHeight(math.max(84, layoutAlt(f, 60, top) + 10))   -- 60: under the title, right of the warning icon
 end
 
 -- Toasts: at the bottom, where the game's own alerts appear; a portrait, a title line, the news, an 8 s timer bar.
@@ -227,11 +259,11 @@ end
 local function chat(kind, text) if enabled(kind) then U.Print(text) end end
 
 -- The Esc-menu strip: informational only, under the Game Menu while not resting and no banner is up.
+A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 420, 460, 12   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
 function A.MenuStrip()
 	if A.strip or not GameMenuFrame then return A.strip end
 	local f = CreateFrame("Frame", "RestedLevelingMenuStrip", GameMenuFrame, "BackdropTemplate")
-	f:SetSize(460, 112)   -- the next-character line and its Details button fit inside
-	f:SetPoint("TOP", GameMenuFrame, "BOTTOM", 0, -12)
+	f:SetSize(A.STRIP_MAX, 112)   -- A.LayoutStrip sizes it from the menu on every show
 	surface(f, "toast", "outside")   -- a neutral panel: it must not read as another red menu button
 	local s = St.STATE.outside
 	f.icon = f:CreateTexture(nil, "ARTWORK")
@@ -248,7 +280,7 @@ function A.MenuStrip()
 	f.action = Wg.Text(f, "name", nil, 13)
 	f.action:SetPoint("TOPLEFT", f.who, "BOTTOMLEFT", 0, -3)
 	St.Color(f.action, St.CREAM)
-	altLine(f, f.action)
+	altLine(f)
 	f.close = closeButton(f)
 	f:SetScript("OnHide", function() A.Flush() end)
 	dismissable(f, "menu")
@@ -288,8 +320,23 @@ function A.OnMenuShown()
 			f.who:SetText(((me and me.full) or "This character") .. " is outside a rest area.")
 			f.action:SetText(me and me.bind and ("Hearth to %s or find an inn."):format(me.bind) or "Hearth or find an inn.")
 			setAlt(f, nextUp())
+			A.LayoutStrip(f)
+			relayout(f, A.LayoutStrip)
 		end
 	end
+end
+
+-- Sized from the menu (a little wider than it, within min/max) and hung under its bottom edge with a gap, never over
+-- it; the text block, then the next-character row, decide the height.
+function A.LayoutStrip(f)
+	local menu = f:GetParent()
+	local mw = menu and menu.GetWidth and menu:GetWidth() or 0
+	f:SetWidth(math.max(A.STRIP_MIN, math.min(A.STRIP_MAX, math.floor(mw * 1.6))))
+	f:ClearAllPoints()
+	f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
+	local top = 14 + f.text:GetStringHeight() + 4 + f.who:GetStringHeight() + 3 + f.action:GetStringHeight() + 8
+	local bottom = f.alt:IsShown() and layoutAlt(f, 54, top) or (top - 8)   -- 54: under the text, right of the icon
+	f:SetHeight(bottom + 12)
 end
 
 local lastRested

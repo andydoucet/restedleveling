@@ -160,7 +160,10 @@ local function onHello(body, sender, channel)
 	peer.name, peer.seen, peer.label = sender, time(), label ~= "" and label or nil
 	d.accountLabels = d.accountLabels or {}
 	if peer.label and not d.accountLabels[account] then d.accountLabels[account] = peer.label end
-	if newly then enqueue(hello(sender), "WHISPER", sender) end   -- confirm back once, so they send theirs too
+	if newly then
+		enqueue(hello(sender), "WHISPER", sender)   -- confirm back once, so they send theirs too
+		ns.Fire("LINK_CHANGED")
+	end
 	if newly or digest ~= C.Digest(d.chars) then sendRoster(sender) end
 	S.Pump()
 end
@@ -217,6 +220,22 @@ function S.Status()
 	return out
 end
 
+-- For the inline link field: every linked name, confirmed (paired) ones first, then by name.
+-- Each: { name, confirmed (they linked us back), account, lastSync }.
+function S.Links()
+	local s, out = sync(), {}
+	for name in pairs(s.links) do
+		local account = s.confirmed[S.NameKey(name)]
+		local peer = account and s.peers[account]
+		out[#out + 1] = { name = name, confirmed = account ~= nil, account = account, lastSync = peer and peer.lastSync }
+	end
+	table.sort(out, function(a, b)
+		if a.confirmed ~= b.confirmed then return a.confirmed end
+		return S.NameKey(a.name) < S.NameKey(b.name)
+	end)
+	return out
+end
+
 -- Hide the client's "No player named X is currently playing" for our own hello whispers to offline names.
 local function filterSystem(_, _, msg)
 	if type(msg) ~= "string" or type(ERR_CHAT_PLAYER_NOT_FOUND_S) ~= "string" then return false end
@@ -258,6 +277,7 @@ ns.slash.link = function(arg)
 	enqueue(hello(name), "WHISPER", name)
 	S.Pump()
 	U.Print("linked " .. name .. ". Type /rlvl link <this character> on the other account too; then the rosters swap.")
+	ns.Fire("LINK_CHANGED")
 end
 ns.slash.unlink = function(arg)
 	local name, s = S.CleanName(arg), sync()
@@ -265,6 +285,7 @@ ns.slash.unlink = function(arg)
 	if not stored then U.Print("not linked: " .. tostring(name)) return end
 	s.links[stored], s.confirmed[S.NameKey(name)] = nil, nil
 	U.Print("unlinked " .. stored .. ".")
+	ns.Fire("LINK_CHANGED")
 end
 ns.slash.sync = function()
 	S.Announce()

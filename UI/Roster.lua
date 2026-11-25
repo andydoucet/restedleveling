@@ -118,12 +118,12 @@ end
 local STEPS = {
 	{ "Interface\\Icons\\INV_Misc_Note_01", "Log each character in once", "Every character you log in and out joins the queue, best rested on top." },
 	{ "Interface\\Icons\\INV_Drink_05", "Log out in an inn or a city", "Rest builds 4x faster there. The addon warns you before you log out anywhere else." },
-	{ "Interface\\Icons\\INV_Letter_15", "Optional: link your other account", "With both online on the same realm and faction: |cffd6b56b/rlvl link <Name>|r." },
+	{ "Interface\\Icons\\INV_Letter_15", "Optional: link your other account", "Same realm and faction, both online. Type a character's name from the other account (or |cffd6b56b/rlvl link <Name>|r)." },
 }
 function R.Guide(parent, w)
 	local g = CreateFrame("Frame", nil, parent)
 	g:SetPoint("TOPLEFT", 8, -10)
-	g:SetSize(w - 16, 3 * 58 + 22)
+	g:SetSize(w - 16, 3 * 58 + 40)   -- room for the link field's two-line state under step 3
 	for i, step in ipairs(STEPS) do
 		local icon = g:CreateTexture(nil, "ARTWORK")
 		icon:SetSize(34, 34)
@@ -143,12 +143,8 @@ function R.Guide(parent, w)
 		d:SetText(step[3])
 		St.Color(d, St.CREAM)
 	end
-	g.link = St.MakeButton(g, 130, "Link account...")
+	g.link = ns.Link.Create(g, w - 90)   -- the inline name field: links in place, no popup
 	g.link:SetPoint("TOPLEFT", 66, -(3 * 58) - 4)   -- on the step text's left edge, 8 px under it
-	g.link:SetScript("OnClick", function()
-		U.Print("to link your other WoW account: log a character in on it (same realm, same faction), then type")
-		print("  |cffd6b56b/rlvl link <that character's name>|r here. The rosters swap at once and every time both are online.")
-	end)
 	g:Hide()
 	return g
 end

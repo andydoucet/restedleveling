@@ -2,21 +2,22 @@
 -- place badges and Well Rested pips. All drawing goes through ns.Style so ElvUI skins apply.
 
 local _, ns = ...
-local St = ns.Style
+local St, U = ns.Style, ns.Util
 local Wg = {}
 ns.Widgets = Wg
 
 local MASK = "Interface\\CharacterFrame\\TempPortraitAlphaMask"
 
--- Race file tokens to the portrait art the client ships (Interface\CharacterFrame\TemporaryPortrait-<Sex>-<Race>).
-local RACES = { Human = 1, Dwarf = 1, NightElf = 1, Gnome = 1, Orc = 1, Tauren = 1, Troll = 1, Scourge = 1,
-	BloodElf = 1, Draenei = 1, Goblin = 1, Worgen = 1, Pandaren = 1 }
-
-function Wg.PortraitPath(c)
-	local race = c and c.race
-	if race == "Undead" then race = "Scourge" end
-	if not race or not RACES[race] then return nil end
-	return ("Interface\\CharacterFrame\\TemporaryPortrait-%s-%s"):format(c.sex == 3 and "Female" or "Male", race)
+-- The race emblem (the client's own race icon atlas, as Blizzard's GetRaceAtlas names it): "raceicon128-gnome-female".
+-- Only when the client has that atlas (C_Texture.GetAtlasInfo), else nil and no emblem.
+local RACE_ATLAS = { scourge = "undead", undead = "undead", highmountaintauren = "highmountain",
+	lightforgeddraenei = "lightforged", zandalaritroll = "zandalari" }
+function Wg.RaceAtlas(c)
+	local race = c and type(c.race) == "string" and c.race:lower()
+	if not race or race == "" then return nil end
+	local atlas = ("raceicon128-%s-%s"):format(RACE_ATLAS[race] or race, c.sex == 3 and "female" or "male")
+	if not (C_Texture and C_Texture.GetAtlasInfo and U.Call(C_Texture.GetAtlasInfo, atlas)) then return nil end
+	return atlas
 end
 
 -- The roster's column grid (x offsets inside a row), shared with the current-character strip so bars line up.
@@ -80,21 +81,26 @@ function Wg.Portrait(parent, size)
 	return f
 end
 
--- isMe: the logged-in character, whose real portrait the game can draw. Everyone else gets race/sex art.
+-- isMe: the logged-in character, whose real portrait the game can draw (face in the disc, class crest at 4 o'clock).
+-- Anyone else: the game cannot draw their real look offline, so the disc shows their class crest and the small
+-- badge their race emblem. Honest, and clearly not a face that might be wrong (no stock race portrait).
 function Wg.SetPortrait(f, c, isMe, state)
 	f.ring:SetShown(not St.HostFrame())   -- under a host skin: no bronze ring, the thin state line only
 	St.Paint(f.stateRing, "ring_" .. (St.STATE[state or ""] and state or "max"))
-	local path = Wg.PortraitPath(c)
+	local crest = c.class and ("classicon-" .. c.class:lower()) or nil
+	local badge
+	f.live = isMe and true or false
 	if isMe then
 		SetPortraitTexture(f.tex, "player")
-	elseif path then
-		f.tex:SetTexture(path)
-	elseif c.class then
-		f.tex:SetAtlas("classicon-" .. c.class:lower())
+		badge = crest
+	else
+		if crest then f.tex:SetAtlas(crest) else St.Paint(f.tex, "disc_dark") end
+		badge = Wg.RaceAtlas(c)
 	end
-	if c.class then f.crest:SetAtlas("classicon-" .. c.class:lower()) end
-	f.crest:SetShown(c.class ~= nil)
-	f.crestRing:SetShown(c.class ~= nil)
+	if badge then f.crest:SetAtlas(badge) end
+	f.crest:SetDesaturated(not isMe)   -- grey: the race icon names the race, it must not claim a hair colour
+	f.crest:SetShown(badge ~= nil)
+	f.crestRing:SetShown(badge ~= nil)
 	f.tex:SetDesaturated(state == "max" or state == "done")
 end
 

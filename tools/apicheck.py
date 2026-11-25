@@ -20,7 +20,7 @@ LUACHECK = os.environ.get("LUACHECK", os.path.expanduser("~/.luarocks/bin/luache
 # Names used only after an existence check (`if X then`, `X and X.Fn`), so absence in a client is safe.
 FALLBACKS = {
     "UnitNameUnmodified", "GetMaxLevelForPlayerExpansion", "C_Traits", "C_UnitAuras", "C_Spell",
-    "ElvUI", "LibStub", "issecretvalue", "Settings", "BackdropTemplateMixin", "SetCustomRace",
+    "ElvUI", "LibStub", "issecretvalue", "Settings", "BackdropTemplateMixin", "C_Texture",
     "C_ChatInfo.AreOutgoingAddonChatMessagesRestricted",
 }
 # Globals that are tables (frames, constants) rather than functions.
@@ -36,6 +36,35 @@ OWN = {"RestedLevelingDB", "SLASH_RESTEDLEVELING1", "SLASH_RESTEDLEVELING2", "Re
 LUA51 = set("""assert collectgarbage dofile error getfenv getmetatable ipairs load loadfile loadstring module next pairs
 pcall print rawequal rawget rawset require select setfenv setmetatable tonumber tostring type unpack xpcall
 coroutine debug io math os package string table _G _VERSION newproxy gcinfo""".split())
+
+
+# Research notes kept with the verification table (ILL-1274): why offline characters show a crest, not a face.
+OFFLINE_APPEARANCE = """## Offline appearance
+
+Andy saw Le Jette (red pigtails) drawn as a stock blue-haired gnome: v1 used `TemporaryPortrait-<sex>-<race>` art for
+characters that are not logged in. ILL-1274 looked for any way to draw an offline character's real look on Forever.
+Checked against the Forever UI source (Blizzard_APIDocumentationGenerated and Blizzard's own FrameXML callers):
+
+| API | Forever | Can it show an offline character's real look? |
+|---|---|---|
+| `C_PlayerInfo.GetDisplayID`, `GetNativeDisplayID` | doc | No. The logged-in player's creature display ID (race/sex model). FrameXML uses it only for shapeshift forms, together with the active player's customizations. Hair, face and skin are not in it. |
+| `ModelSceneActor:SetModelByCreatureDisplayID(id, useActivePlayerCustomizations)` | doc | No. Customizations can only come from the active player: it would put Le Nette's hair on Le Jette. |
+| `PlayerModel:SetDisplayInfo(displayID)` | doc | No. Draws the display with default choices: another stock face. |
+| `ModelSceneActor:SetPlayerModelFromGlues(characterIndex, ...)` | doc | No. FrameXML calls it only when `C_Glue.IsOnGlueScreen()` (character select, shop); addons never run there. |
+| `ModelSceneActor:SetFrontEndLobbyModelFromDefaultCharacterDisplay` | doc | No. Glue lobby only (GluePartyPoseUI, AccountStore). |
+| `C_BarberShop.GetAvailableCustomizations`, `GetCurrentCharacterData`, `SetCustomizationChoice` | doc | No. The logged-in character's barber-shop preview only; nothing applies saved choices to another model. |
+| `C_PlayerInfo.GetPlayerCharacterData` | doc | No. Name, file name, sex, alternate form and an icon atlas; no customization choices. |
+| `UnitCreatureDisplayID` | - | Not in the Forever client. |
+| `PlayerModel:SetCustomRace` | - | Not in the Forever client (v1 guarded it; it would also keep the active player's look). Removed. |
+
+Result: nothing on Forever reproduces another character's appearance while it is offline. So the logged-in character
+keeps its real portrait (`SetPortraitTexture(tex, "player")`) and the 3D stage (`PlayerModel:SetUnit("player")`);
+every other character shows its class crest (`classicon-<class>`) with its race emblem as a small badge
+(`raceicon128-<race>-<sex>`, named as Blizzard's `GetRaceAtlas` in SharedUtils.lua names it, used only when
+`C_Texture.GetAtlasInfo` finds it), and the card says "Last seen as a level 46 Gnome Warrior. Log in to see them."
+Verified in game: not yet. The race atlas is verified only through the simulator, which reads the installed client's
+atlas data.
+"""
 
 
 def addon_files():
@@ -171,6 +200,7 @@ def main():
     for kind, name, a, b, guarded in rows:
         lines.append("| %s | `%s` | %s | %s | %s |" % (kind, name, a, b, "yes" if guarded else ""))
     lines.append("")
+    lines += OFFLINE_APPEARANCE.splitlines() + [""]
     md = "\n".join(lines)
     md_path = os.path.join(ROOT, "docs", "API.md")
 
