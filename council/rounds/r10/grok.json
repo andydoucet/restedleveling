@@ -1,0 +1,63 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Raise all secondary copy from the muddy grey-brown to #C8BBA4 so the dashboard matches the cream/gold of his real windows.",
+      "Remove the moon glyphs from the default row (keep the hover explanation on the chip only); they are a second status system fighting the rail and the chip.",
+      "Replace the hero's inline 'Water's conjured' tag with a real bubble: max-width 280px, 12px padding, fill #1A140E, 1px #8A7040 border, sitting fully above the name."
+    ],
+    "state_colours": [
+      "Make the left rail 6px, full row height, using full #3DDC7A, nearly #E6C84A, resting #E8943A, not-resting #E04B4B, max #6E6A66.",
+      "Mix class-coloured names 40% toward #F0E6D2 so warrior brown and max-level grey do not outrank the state chip; keep class hue only as a tint.",
+      "Paint the now-playing remaining-XP bar in that same state hue at 80% instead of the generic blue-grey."
+    ],
+    "character_identity": [
+      "Bump row portraits from ~28px to 36px with a 2px class-colour ring so the similar Forsaken faces separate.",
+      "Put a 14px class icon immediately before each row name; do not add race/class text (it would ellipsize the place).",
+      "Use the card's speech-bubble component on the hero, with an 8px tail aimed at the portrait, not a one-line caption colliding with 'Level 22'."
+    ],
+    "default_theme": [
+      "One secondary button only: face #6B4E2E, 1px border #C4A574, label #F4E8C8, height 26px. Compact currently reads blue-steel like ElvUI's Defaults; no blue in the default theme.",
+      "Title 15px #F0D890, 1px shadow #000000 at 40% opacity, centred like the Character window title.",
+      "Fill #100C09, outer border 1px #3A2A1C, 8px bronze studs at the four corners only."
+    ],
+    "elvui_wc3_fit": [
+      "Match the Options window, not a decorated door: fill #0E0C0A, 1px border #2A241C, corner studs 4px #8A7048. Drop the extra inner stroke and the illustrated hero vignette; use the flat panel behind Controls.",
+      "Compact must be the same blue enamel as Defaults: face #1E4F86, top highlight #3D7EC4, height 22px, cream label.",
+      "Title 14px #F0D890, same weight as 'Controls' / 'Le Jette'. Close X 16px red enamel, identical hit size to the Character window X."
+    ],
+    "alerts_ux": [
+      "Make Up next an obvious 28px button, min-width 160px, label 'Open Le Nette' (theme bronze or ElvUI blue), not a quiet name chip.",
+      "On the esc menu, anchor the alert 8px under the Log Out row at the menu width (~280px) with a 1px upward tick so it reads as about logout.",
+      "Drop the unlabeled gear or replace it with 13px 'Options'. Keep the dismiss target 20px. Body 13px #F4E8C8, second line 12px #C8BBA4, left accent 4px #E04B4B."
+    ],
+    "readability": [
+      "Floor every string at 12px. Row sublines ('Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago', 'none used this session', 'Synced 2d ago') at 12px #C4B8A4, not #7A7368.",
+      "Bar captions, 'levels banked', and toast body at 13-14px. Speech at 14px #F4E8C8.",
+      "Force name contrast: warrior #E0C090, max-level grey #D0D0D0, plus a 1px #000000 outline at 50%. Target 4.5:1 on every gold-on-brown pair."
+    ],
+    "layout_polish": [
+      "Hero cluster: 12px gap between the #1 disc and the portrait ring; the speech bubble's baseline must clear 'Level 22' by 8px.",
+      "Optically centre the 1.7 on the bar's right edge and put 8px between it and 'levels banked'. Chips a fixed 88px wide so 'NEARLY FULL' matches 'FULL'.",
+      "Card tidbit icon-to-label gap 8px, row height 22px. Window padding 16px; 8px between the now-playing strip and the NEXT BEST band."
+    ],
+    "delight": [
+      "Card bubble needs an 8px tail into the portrait and a 12px italic #E8DCC0 emote under it ('yawns', 'shivers') so the stage reads as a character, not a stat card.",
+      "Toast: 40px portrait, 15px 'Play Le Nette', the '1.7 levels banked' line in #7DDE8A. That moment is the product; it should be louder than the dashboard.",
+      "First-run step numbers as 20px gold discs on #6B4E2E so the empty state feels as finished as the roster."
+    ]
+  },
+  "overall_notes": "Play-next is the part that already ships: #1, the sorted roster, the red outside-rest pill, and 'hearth, then play Le Nette' are unambiguous. The rest is a strong 8. ElvUI mode is close to his real near-black panels but still a notch more ornamented than Options/Character, and the default Compact button still looks like ElvUI blue. Secondary type is too dim, moons duplicate the chips, and the hero speech is a cramped tag instead of the card's bubble. Fix contrast, one button family per theme, and the hero cluster before this is a 9 for a demanding ElvUI user.",
+  "model": "grok-4.7"
+}

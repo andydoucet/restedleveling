@@ -1,0 +1,78 @@
+{
+  "scores": {
+    "visual_appeal": 6,
+    "play_next_clarity": 8,
+    "state_colours": 7,
+    "character_identity": 7,
+    "default_theme": 6,
+    "elvui_wc3_fit": 5,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 6
+  },
+  "changes": {
+    "visual_appeal": [
+      "The frame still reads as a flat near-black panel with a hairline, not a gate. Use a 16px 9-slice: 3px iron #141414, 2px bronze lip #8c6a3a, oak face #4a3424 with vertical grain, and 28\u00d728 iron L-straps with 6px rivets #b08d57 inset 8px at every corner.",
+      "Title rail should be 36px of oak plus a 6px iron strap and two rivets; interior fill #1c140e at 92% opacity, not #000, so the wood shows.",
+      "Make the hero figure 48px #f3e6c8 with a 1px bronze underline. The cyan 1.7 fights the wood/metal palette.",
+      "Open card at 120\u00d728, enamel #8e1e1e, top highlight #c45a4a, label #f4ead8. The current red button looks like a stock Blizzard button."
+    ],
+    "play_next_clarity": [
+      "Put the #1 disc fully outside the portrait: 40px, fill #c6a15b, numeral 18px #1a1208. It currently clips the bronze ring.",
+      "Action bar 44px tall, fill #2a1810, 4px left stripe #3d9a4a, sentence 16px #f4ead8. Rename the button PLAY LE NETTE; Open card does not say what to do.",
+      "Replace '1d ahead of Le Beouf (full for 8h)' with 'Most rested \u00b7 1 day ahead of Le Beouf' at 14px #e6d7c3 directly under the big number. 'Ahead' is undefined.",
+      "Row 2's full green bar is as loud as the hero. Drop list-bar height to 8px and keep only the hero bar at 14px so the eye cannot pick Le Beouf as the next character."
+    ],
+    "state_colours": [
+      "Chips are muddy. Lock them: full #1e6b32/#b6f0c4, nearly #6a5a10/#ffe08a, resting #8a3e12/#ffb07a, not resting #7a1c1c/#ff8d8d. RESTING must not sit on theme brown.",
+      "Left rail 6px at 100% state color. The 4px rail and 6% row tint disappear on the black rows.",
+      "Bars: full #3dbe5a, nearly #e2c15a, resting #e07a2f, not #d64545. Yellow and green are too close at 8px height.",
+      "Tint not-resting rows 10% #d64545 so Colonol and Le Bankken scan as red before the chip is read."
+    ],
+    "character_identity": [
+      "List portraits are ~28px. Make them 40px, 2px bronze ring #b08d57, 2px inner state ring, class crest 16px sitting 4px outside the ring at 4 o'clock.",
+      "The card is a bust pasted on a room photo with a dead center. Build a 220\u00d7260 alcove, 2px pedestal line #b08d57, 40px floor shadow, portrait centered on it.",
+      "Anchor the speech tail to the mouth with an 8px gap. Hook 18px #f4ead8, fact line 13px #e6d7c3. The bubble currently floats in the top-left void.",
+      "Add a 14px class icon beside 'Undead Mage' / 'Troll Hunter'. Class color on the name alone is not enough at roster size."
+    ],
+    "default_theme": [
+      "Default chrome is the same dark spreadsheet as ElvUI, minus gold titles. Ship the oak/iron/rivet 9-slice on every top-level frame, including the tip, toast, banner, and empty-state window.",
+      "Body text cream #f3e6c8, titles 16px #e6c98a. White titles on the default window break the Gatewood ink.",
+      "Blue buttons #1e4f86 and red #9b2c2c, both 26px with a 1px top highlight and bronze edge. Compact still looks like a generic dark button.",
+      "Add an 8px iron strap above the footer so the sync line and checkbox sit on a rail, not in empty black."
+    ],
+    "elvui_wc3_fit": [
+      "With the skin loaded I still see no planks, straps, or rivets, and default vs ElvUI chrome is almost identical. Confirm S:HandlePortraitFrame is the only frame and leave 10px of padding so the skin edge is not covered.",
+      "Titles must use the skin gold #ffd100 at 16px on the skin title plate, matching the guild frame in the user's UI. Scene 02 only tints the title yellow.",
+      "Force WC3 enamel: Open card red and at least 96px wide; Compact and Link account blue with end caps. Compact in the ElvUI shot is a plain dark ElvUI button.",
+      "Body copy cream #f3e6c8, not pure white. Drop any leftover gold hairline so the skin is the only border."
+    ],
+    "alerts_ux": [
+      "Logout banner 440\u00d7128, 16px under the logout popup, 6px left stripe #d64545. Headline 16px #ffb4b4: 'Not resting \u2014 moving cancels logout'. It currently blends into the logout box.",
+      "Used-up toast title and left stripe #e85d5d, not gold. 'RESTED XP USED UP' currently reads as a loot reward.",
+      "Esc warning at 16px, 8px above the game menu, and add 'Play Le Nette (full)'. The one-line scold is easy to miss and names no alternative.",
+      "Right-click menu 180px wide, 28px rows, same oak surface: 'Dismiss this warning' and 'Disable these warnings'. It is promised and never shown."
+    ],
+    "readability": [
+      "Zone and '3d ago' are ~#9a8b78 on black. Raise all secondary type to #e6d7c3 at 13px minimum.",
+      "Chip text 12px bold, contrast at least 7:1. RESTING tan-on-brown fails. 'levels banked \u00b7 100%' under the hero at 13px #f4ead8, not small gray.",
+      "Moons at 16px with an 11px 'RANK' word, not an icon-only header. Chart axis and 'peak 16% of full' at 12\u201313px #e6d7c3 / #e6c98a.",
+      "Now-playing '0.6 of a level of rested XP left' at 14px #f4ead8 beside the OUTSIDE AN INN chip. It is the current-character warning and it is the dimmest line on the panel."
+    ],
+    "layout_polish": [
+      "Snap the hero to an 8px grid: portrait left 16px, name block at y=24, 1.7 right-aligned with 16px inset, action sentence and button vertically centered in the 44px bar.",
+      "Open-card row needs a visible 2px gold #e6c98a marker. Colonol's row in the docked card shot has none.",
+      "Keep an 8px gap between main window and card, equal heights, 12px padding before the chart so tidbit rows don't collide with the plot.",
+      "'Acct #3' as an 11px chip #3a2e22/#e6d7c3, not a superscript on the name. Summary icons 14px, 8px gaps, aligned to cap height."
+    ],
+    "delight": [
+      "Give every speech bubble a 2px bronze border and a tail; set the hook in the class color at 17px. The flat rectangle kills the voice.",
+      "When #1 changes, leave a static 30% #e6c98a sheen on the action bar so the moment still reads in a still screenshot.",
+      "Le Nette's chart is a solid green slab. Use a 2px line, 35% area fill, and cream 'Full the whole time' above the fill, not inside it. Dashed baseline #6a5a48 for empty hours, as on the low series.",
+      "Empty-state quote belongs in a speech bubble on the portrait, not a beige rectangle. Add a 14px hearth icon on resting rows."
+    ]
+  },
+  "overall_notes": "The information design is ahead of the art. Who to play next is legible, the sort and the four states mostly work, and the alerts stay non-modal. It does not yet look like Gatewood: no readable oak, iron, or rivets, default and ElvUI chrome are nearly the same, RESTING is brown-on-brown, and the character card is a floating bust in a dead stage rather than someone talking to you. I would not approve it for a demanding user until the material frame actually shows and the hero action is visually louder than row 2.",
+  "model": "grok-4.7"
+}

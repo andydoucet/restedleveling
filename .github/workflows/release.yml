@@ -1,0 +1,30 @@
+name: Release
+
+# Tags v* build the addon zip with the BigWigs packager and attach it (with release.json for WowUp) to a GitHub
+# release. CurseForge and Wago uploads happen only once their tokens exist as repository secrets and the TOC's
+# X-Curse-Project-ID / X-Wago-ID lines are filled in (both are commented placeholders for now).
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+      CF_API_KEY: ${{ secrets.CF_API_TOKEN }}
+      WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Lua 5.1 and luacheck
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lua5.1 lua-check
+      - name: Checks before packaging
+        run: luacheck . && lua5.1 tests/run.lua
+      - name: Package and release
+        uses: BigWigsMods/packager@v2

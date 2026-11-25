@@ -1,0 +1,68 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 6,
+    "alerts_ux": 7,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Replace the flat brown title wash with a real oak-plank texture (horizontal grain, 34px rail) plus 8px bronze rivets inset 10px from each corner and a 2px #1A120C iron line under the rail.",
+      "Stop using the same saturated red as NOT RESTING for Compact and close: Compact 72x22 enamel #6E1C1C with 1px #C9A36A rim; close 18x18. Keep #E33B3B only for unrested state.",
+      "Hero XP bar is a flat neon slab. Give it 2px #1A120C end caps, a 1px #F4E8C4 highlight on the top edge, and move '100%' to the right of the bar in 12px #F3E6C4 so the bar stays a material, not a web widget."
+    ],
+    "play_next_clarity": [
+      "Two rows are FULL, so '#1 PLAY NEXT' does not say why Le Nette beats Le Beouf. Add 12px gold under the reason: 'Most banked on this account \u00b7 1.7 levels vs 0.x'.",
+      "The '0.6 of a level rested left' block sits in the hero's right margin and reads as hers. Move it into the NOW PLAYING row, right of Jacques Hammer, 12px #E7D3A1, single line, no wrap.",
+      "Datatext header 'play next, top first' is cryptic. Replace with 'Sorted by banked rested XP'."
+    ],
+    "state_colours": [
+      "Row tint is nearly invisible. Paint a 4px left bar in the state colour and a full-row wash at about 18% (#3DDC6A / #F2DB3B / #F07D28 / #E33B3B over #12100E).",
+      "Gold rank numerals and gold moons sit on the yellow NEARLY FULL bar and collapse into it. Ranks #F3E6C4, moons #E8C56B only on FULL/NEARLY FULL; dim moons to #6A6248 on orange/red.",
+      "NEARLY FULL chip text on #F2DB3B needs 11px #1A120C bold with 6px horizontal padding inside the 98px chip so the words do not touch the edge."
+    ],
+    "character_identity": [
+      "The card stage is a large dead black field with a ~64px face. Scale the fallback portrait to 160px, drop a 220x28 floor ellipse at 40% black under it, and pin the z's 8px above the head.",
+      "Class crest at 4 o'clock is a speck. Use a 22px disc, 2px #0E0C0A stroke, icon 16px, so class reads at roster size.",
+      "List subtitle is zone-only. Lead with race/class colour pip: 'Undead Mage \u00b7 Brill inn \u00b7 4d' at 12px so identity does not depend on opening the card."
+    ],
+    "default_theme": [
+      "Oak rail reads as a brown gradient, not the door's planks. Use a repeating plank texture, 3 vertical seams, and a 6px #2A2118 inner shadow under the rail.",
+      "Inner wells are featureless #near-black. Add a 1px #3A2E1C top edge and 1px #000 bottom edge so panels have the same cut as the WC3 iron straps.",
+      "Corner rivets are too small to register at 1080p. 8px circles, #8A6A3A fill, #E6C98A highlight at 2px offset."
+    ],
+    "elvui_wc3_fit": [
+      "ElvUI scenes show a flat 1px brown frame and a ~12px title, no planks, straps, or rivets, while texture pixels would have shown Gatewood if it were applied. Do not rely on HandlePortraitFrame alone: draw a 36px wood title plate, 16px black-iron L corners, and four rivets in the addon frame.",
+      "Match the user's panel type: title 16px #F3E6C4 centred, tracking 1px; close is a 22px red enamel square, not a tiny glyph.",
+      "ElvUI inner rows went greyer and lost the bronze 1px separators. Force separators to a baked #6B5428 texture so the sim's colour curve cannot wash them out."
+    ],
+    "alerts_ux": [
+      "Scene 05 banner almost touches the logout dialog. Drop it 28px below that dialog, min-height 76px, 2px #E33B3B edge, title 16px #F4E4C4, body 13px #E7D7C3, and an 18px hit-target close.",
+      "Scene 06 shows the Esc warning and the play-next toast together. Queue the toast until the logout warning is gone, per the one-surface rule.",
+      "Esc strip is a passive sentence. Make it 44px tall with a gold 'Hearth first' and the same red edge as the banner. Toast needs a real 3px #F2DB3B timer along the bottom, portrait 36px, title 13px."
+    ],
+    "readability": [
+      "Subtitles (#A89880-class grey on #14110E) are the weak layer. Set all 12px meta to #D4C4A8 and the 11px hints to 12px #CDB892.",
+      "Hero right column wraps 'nothing used this session yet' into a ragged block. Keep one line, 12px, or drop it to the tooltip.",
+      "Footer 'Synced 2d ago from Acct #3' is ~10px. Bump to 12px #CDB892 and left-align it to the rank column, not the window edge."
+    ],
+    "layout_polish": [
+      "NOW PLAYING bar is ~200px while roster bars are much longer, so the eye loses the column. Use the same bar x/width as the rows beneath.",
+      "Hero puts 100% inside the bar; rows put it beside the bar. One rule: percent always left of the duration, 12px, never inside the fill.",
+      "Card tile grid wraps unevenly (professions vs hearth). Lock tiles to 168x52, icon 16px at 8px inset, two-line cap, 8px gap. Pin the card 10px from the main window and top-align titles on the same 34px rail height."
+    ],
+    "delight": [
+      "When the 48h chart is flat, the solid gold block has no sentence. Centre 13px #F3E6C4 'Full the whole time' on the plot; on the unrested chart the ticks are nearly invisible \u2014 use 3px columns, #E33B3B below full and #3DDC6A only at the full line.",
+      "First-run blows a crest icon up to hero size inside a thick cyan ring. Use a 96px dimmed portrait, the quote in 14px italic #F3E6C4, and a parchment speech bubble so the empty state matches the card.",
+      "Stage mood is too shy. Warm pool should be a 280px radial #E7A24A at 35% under rested characters; unrested a #1C3A55 fog gradient from the top. Keep the speech bubble parchment but add a 2px #6B5428 stroke and a 12px tail so it belongs to the bronze UI."
+    ]
+  },
+  "overall_notes": "Default chrome, the play-next hero, and the one-word state chips are a coherent utility and close to shippable. It still misses a demanding Gatewood bar: ElvUI mode is a flat dark frame with none of the door's planks, iron, or rivets, the card stage is an empty void, and logout warnings split across a small Esc note plus a simultaneous toast. Fix the inherited frame with real textures, unify the bar column, and make the unrested alert one loud non-modal surface.",
+  "model": "grok-4.7"
+}

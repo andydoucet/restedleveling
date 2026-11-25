@@ -1,0 +1,58 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce the main hero's XP bar from approximately 20 px to 12\u201314 px high. Its current saturated green mass competes with the portrait and name; retain the percentage divisions and place the rested-duration caption 8 px below.",
+      "Simplify the hero's right-hand metric hierarchy: keep '1.7' prominent, but put 'levels banked' directly beneath it with a 4 px gap and move 'Then Le Beouf, full for 8h' into a quieter 13 px queue-preview line. The current three competing alignments make that corner feel assembled rather than composed."
+    ],
+    "character_identity": [
+      "Reduce the detail-card portrait from roughly 150\u2013165 px to 112\u2013128 px. The enlarged source portrait visibly exposes its low resolution and dominates the character scene; give the recovered space to the stage and character context.",
+      "Use a consistent 24 px level badge with 13 px cream numerals, a 1 px bronze outline, and a deliberate 4 px overlap on the portrait ring. The ElvUI card's black level disc currently looks detached and less finished than its default-theme counterpart.",
+      "Keep the speech bubble anchored to a consistent stage position with 12\u201316 px internal padding and a maximum width around 240 px. Preserve space for the live animated model rather than allowing the portrait and bubble to become the entire scene."
+    ],
+    "default_theme": [
+      "Darken the ordinary roster-row fill toward #211B14 and reduce the red-row wash toward #33201B. Keep the existing bright state rails, bars, and chips; they communicate status without requiring such large muddy brown panels.",
+      "Give the Compact button a restrained blue secondary treatment around #24486B rather than the current tan fill. Keep red for close and the principal details action, establishing a clearer control hierarchy.",
+      "Reduce redundant rectangular outlining inside the detail card: use one outer scene border and one tidbit-panel border, with 12 px spacing between sections. The current nested boxes make the attractive inn artwork feel compartmentalized."
+    ],
+    "elvui_wc3_fit": [
+      "The near-black brown surfaces, restrained studs, cream text, blue Compact control, and red details button already fit the actual reference windows. Preserve that approach rather than adding larger Warcraft-themed ornament.",
+      "Tighten the main title region to a 30\u201334 px header and vertically center the title and controls within it. There is an oversized dark band above the hero compared with the reference Character window's compact title treatment.",
+      "Use the same close-button treatment consistently across the main and character-detail windows: approximately 22\u201324 px square, matching red enamel, matching inset, and a centered white cross. The rendered tiny crosses feel weaker than the user's real window controls.",
+      "Keep internal panels near #140F09 with subtle 1 px #483A25 separators. Avoid introducing additional opaque brown header bands that are more conspicuous than those in the user's real Options window."
+    ],
+    "alerts_ux": [
+      "Keep 'Cancel the logout first' as the leading instruction, but make the next line explicitly identify the endangered character: 'Jacques Hammer is outside a rest area.' This distinguishes logout location from having no rested XP.",
+      "Reduce the visual prominence of 'View Le Nette's details' in both warning strips: use a 24 px-high secondary button and a smaller adjacent status label. The large recommendation control currently competes with the safety instruction while the actual Cancel control lives elsewhere.",
+      "Add a short final instruction such as 'After cancelling, hearth to Crossroads or reach an inn.' Keep this nonmodal and retain the dismiss control; do not imply that the details button cancels logout."
+    ],
+    "readability": [
+      "In the compact roster, replace 'full in about 3d' and 'full in about 4d' with the same precision convention used in the main roster, such as 'full in 3d 14h'. The compact and expanded views should not appear to disagree.",
+      "Use at least 13 px text for the compact roster and alert supporting lines, with 18\u201320 px line spacing. Reserve smaller text for genuinely optional metadata, not location instructions.",
+      "Separate character level from name in Now Playing using 'Jacques Hammer \u00b7 Lv 24'. The current same-colour trailing '24' reads like part of the name."
+    ],
+    "layout_polish": [
+      "Vertically align the Now Playing state chip with its bar and supporting caption as a single row unit. It currently sits between their baselines, weakening the otherwise disciplined STATE column.",
+      "Give footer text and the visibility checkbox a consistent 12 px bottom inset and align their text baselines. The footer still feels appended rather than part of the roster grid.",
+      "Standardize detail-card tidbits to two fixed columns with 24 px icons, 10 px icon-to-text gaps, and consistent 44 px row pitches. Preserve a full-width professions row so longer profession names cannot collide with the right column."
+    ],
+    "delight": [
+      "Make character-specific speech the focal flourish: allow the line to appear with the live talk animation, then settle without looping continuously. The existing innkeeper-cat joke is much more engaging than another permanent decorative border.",
+      "Add a restrained, one-time 300\u2013450 ms highlight when a character newly reaches FULL, followed by a static state. Respect reduced-motion preferences and avoid persistent pulsing.",
+      "Make the empty-state speech immediately useful: replace 'I'll sit at the top once I'm full' with 'Park me at an inn, then log your next alt.' The current wording promises a ranking outcome that may not hold when several characters are full."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon presentation with an immediately identifiable first choice, excellent redundant state encoding, and genuinely personable character copy. The ElvUI version belongs substantially closer to the user's actual windows than an ornamental Warcraft III interpretation would. It is not yet a 9-level approval: oversized portrait imagery, heavy hero emphasis, inconsistent control finishing, and safety banners that still visually advertise another character hold it back. Simulator model and portrait limitations, surrounding default UI, and tiled-border rendering artifacts are not counted as defects. The remaining work is primarily hierarchy, restraint, and production consistency rather than a redesign.",
+  "model": "gpt-6.1-sol"
+}

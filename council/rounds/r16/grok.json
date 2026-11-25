@@ -1,0 +1,63 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Lock every state chip to a 118px column so FULL, NEARLY FULL, NOT RESTING and MAX LEVEL share one right edge; ragged chip widths are what make the roster look unfinished.",
+      "Now-playing meter: 10px tall, track #1c1612, fill #c4473a when not resting instead of the pale blue-white sliver.",
+      "Pull the hero vignette up 8px so the green rest bar does not crowd the instruction strip."
+    ],
+    "state_colours": [
+      "Now-playing fill must follow state: #d64545 not resting, #e0973a resting, #d4de4a nearly full, #3fa84a full. The pale bar contradicts the red NOT RESTING chip.",
+      "Nearly-full yellow is too close to title gold #e6d3a1. Use #d4e04a bars and #f0f4a8 text on #3d4210 chips so 90%+ is not read as chrome.",
+      "Left row ticks are about 3px; make them 4px and full row height so the colour key reads before the bar."
+    ],
+    "character_identity": [
+      "Row portraits are too small. Use 36px rings in the list and 46px for now-playing, with a 2px class-colour ring.",
+      "On fill #16120e, lift warrior/tan names to #e2b56a and grey max-level names to #cfcfcf so class colour still identifies them.",
+      "Jacques Hammer's red mask reads as a missing face next to Le Nette. If the live portrait fails, show a class icon on a #2a2118 disc, not an unlabeled red blob."
+    ],
+    "default_theme": [
+      "Outer frame should be 1px #7a6238 plus 7px bronze corner studs, not a thick double gold rule. The frame is louder than the content.",
+      "Default Compact is a dull brown with weak affordance. Match View details: height 26px, fill #6e1d1d, border #a33a3a, label #f4e4c4 at 13px.",
+      "Inset panels need a 1px top inner highlight #3a3228 and 8px padding so sections are not flat slabs."
+    ],
+    "elvui_wc3_fit": [
+      "His real titles (Options, Le Jette, Reputation) sit around 13-14px gold on near-black. Set this title to 14px #e8dcc0, not 16px.",
+      "Match his fill #100e0c and 1px border #2a241c with 5px bronze studs. Scene 02's corner brackets are heavier than the studs on his Character and Options windows.",
+      "Keep Compact as the blue enamel secondary (gradient about #163e6e to #2f6eae, same family as Defaults) and View details red like Expanded Stats. Desaturate FULL green about 15% so the window does not glow beside his quiet panels."
+    ],
+    "alerts_ux": [
+      "Cap the banner at 540px and keep the X within 16px of the copy. The full-bleed bar leaves a dead gap between the message and the close control.",
+      "Details looks disabled. 22px height, label #f3e6c4, 1px #a88848 border, fill #2a2218.",
+      "On the Esc menu, align the alert to the menu's left edge, 8px below it, at the menu's width, so it attaches to Log Out instead of floating as a second panel."
+    ],
+    "readability": [
+      "Meta lines ('seen 4d ago', 'none used this session', footer sync) are too dim. Minimum 12px #cbbd9a.",
+      "Put 'Acct #3' in an 11px pill 4px after the name, fill #3a2a14, text #e8b15a, so it stops colliding with Le Bankken.",
+      "Max-level line 'I keep the bench warm.' at 13px #b7aa96; the current grey disappears on the row."
+    ],
+    "layout_polish": [
+      "One bar geometry: roster bars and the now-playing meter share the same x and a 120px chip column. The now-playing meter currently floats at a different width.",
+      "Character card: two equal columns, 12px gutter; let PROFESSIONS span both columns so the right cell is not an empty hole.",
+      "Add 8px between the hero instruction strip and the now-playing block; they currently touch."
+    ],
+    "delight": [
+      "The roster only gives a voice to the hero and the max-level line. Add a 12px italic #d9c7a0 quip under the now-playing name when they are unrested.",
+      "2px outer glow #7dba3d at 35% opacity on the #1 portrait ring so the play-next target feels picked out.",
+      "The sleep 'z z Z' only appears on the card. One 10px zzz on a FULL row would carry that charm into the list without clutter."
+    ]
+  },
+  "overall_notes": "The alert rewrite landed: one imperative headline, who and where, then how, with the next character demoted to a single line and the same pattern on the Esc strip. Sort order and the green/yellow/orange/red key are clear enough to play from. It is not a 9 for a demanding user yet. ElvUI mode is close to his real Gatewood windows but the title is a step large and the corner pieces heavier than his thin studs; the now-playing meter ignores state colour; chips do not share a column; secondary type is dim. The speech lines are the part worth keeping.",
+  "model": "grok-4.7"
+}

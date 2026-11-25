@@ -1,0 +1,65 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "The hero block in scene 01/02 is about 160 px tall, and the right third (1.7 / levels banked / Then Le Beouf) floats with no container. Put the '1.7' numeral and its two caption lines in a right-aligned 150 px column with a 1 px #3a2c1c divider at its left edge, so the hero reads as portrait | identity | payoff.",
+      "The roster rows are uniformly flat. Give the #2 row (next after the hero) a faint 6% state-colour wash (#2fb34a at alpha 0.06) so the eye steps hero > #2 > rest.",
+      "In ElvUI mode the area between the stage and the hero panel is a flat #1a130d slab. Add a 1 px inner highlight (#5a4128 at alpha 0.5) on the top edge of each inner panel to match the bevel on his Character window stat rows."
+    ],
+    "state_colours": [
+      "The now-playing pill 'NOT RESTING' uses the same red as the roster rows, but its bar is blue. That is fine, but add a 1 px #c0392b underline under the now-playing pill only when logout risk is live, so the pill does not look like a roster entry.",
+      "The yellow 'nearly full' bar (#e8d22a-ish) and the green fill (#2fb34a) are close in luminance at 91-93% bar length. Shift nearly-full toward #e0b020 so the two read apart at a glance in the compact strip and the bars.",
+      "In the compact tip, names mix class colour (Le Nette cyan) with cream for the others, next to state-coloured right text. Use the class colour for every name, or cream for all. Leave state colour only on the right-hand text."
+    ],
+    "character_identity": [
+      "The ElvUI card stage (scene 04) is an empty brown box with the portrait pushed right, leaving about 200x120 px of dead space bottom-left. Use the same zone or inn backdrop art as the default card at alpha 0.35, or centre the portrait and move the bubble above it.",
+      "The level badge on the card is about 20 px and sits outside the portrait's lower-left. Make it 24 px, overlapping the ring by 6 px at the 7 o'clock position so it reads as attached.",
+      "Row portraits in the main list are 34 px. Bump them to 38 px and give each a thin state-coloured ring (1 px), like the hero and the card, for consistency."
+    ],
+    "default_theme": [
+      "The default title bar's close 'X' is a flat red square with a plain serif X (scene 01/03/07). Use a 20x20 bevelled button with a #8a1e14 to #5a0f0a gradient and a 1 px #c9a24a border to match the bronze 'Compact' button family.",
+      "The footer checkbox label 'Show max level and hidden' is crowded against the frame's bottom-right stud. Add 6 px of right padding."
+    ],
+    "elvui_wc3_fit": [
+      "Scene 02: the hero panel spans x\u224862-798 but the roster block spans x\u224862-787, and there is a visible step in the left frame strip at y\u2248400. Align every inner panel to one content rect: 16 px inset on all sides, with identical left and right edges.",
+      "Scene 04: the rest bar under the stage ends about 19 px short of the stage panel's right edge. Make it full content width.",
+      "Scene 04 shows two red X buttons in the top corners (main window's and card's) almost touching. Anchor the card 8 px further right, or hide the main window's X overlap, so the pair does not read as one window with two closes.",
+      "The title text 'Rested Leveling' in ElvUI mode is about 11 px. His Options and Reputation titles are about 13-14 px gold #ffd100. Match that size and colour.",
+      "Primary 'View details' in ElvUI is the right red, but it is 120x20 vs his 'Expanded Stats' at about 200x22. Widen it to 150 px for the same proportion."
+    ],
+    "alerts_ux": [
+      "Scene 05 copy: 'Then hearth to Crossroads...' follows 'outside a rest area', so 'Then' reads as hanging. Use 'Cancel the logout first' / 'Jacques Hammer is outside a rest area.' / 'Hearth to Crossroads or find an inn, then log out.'",
+      "The banner never says the payoff. Add a right-aligned cream line 'Next: Le Nette \u00b7 1.7 levels banked' above the buttons, so the alert explains why it matters.",
+      "Scene 08 (ESC menu) uses different headline copy ('isn't resting') from scene 05. Unify both alerts to one headline pattern so the user learns a single message.",
+      "Give the gear icon a tooltip 'Alert settings' and keep it 16 px. At present it is the same visual weight as the X."
+    ],
+    "readability": [
+      "Row meta text ('Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago') renders at about 10-11 px, while his real windows use 13-14 px. Raise it to 12 px and lighten it to #c8b896.",
+      "State pills use about 9 px small caps. Use 10 px with 1 px extra letter spacing and make pills 96x18.",
+      "Hero subline 'Fully rested for 2 days.' at about 11 px in #9fd39f is low-contrast on the dark fill. Use 12 px #b8e6b8."
+    ],
+    "layout_polish": [
+      "Scene 01: the 'STATE' column header sits about 4 px lower than 'NEXT BEST'. Baseline-align all header strip labels.",
+      "Max-level row text 'Max level. I keep the bench warm.' starts at the bar's x but has no bar. Indent it to the bar's x and grey the row's left stripe to #5a5a5a (as done in ElvUI) in the default theme too.",
+      "Scene 04 tidbit grid leaves the bottom-right cell empty when the rest bonus is missing. Reflow the grid so the 'Gear' cell takes the full row, or hide the empty slot.",
+      "Scene 07: the step list has about 60 px of empty space under 'Link account...'. Trim it to 16 px, or vertically centre the steps."
+    ],
+    "delight": [
+      "The 'zzz' on the default card is a nice touch but is missing from the ElvUI card. Keep it in both themes, in cream #e8dcc0 at alpha 0.7 under ElvUI.",
+      "Add a soft 0.4 s gold pulse (alpha 0.25 to 0) on the hero ring when the window opens and the #1 character is full, so the play-next moment lands."
+    ]
+  },
+  "overall_notes": "This is a solid, coherent addon. The play-next hierarchy is excellent: the hero, the banked-levels numeral, the 'Then Le Beouf' line, the coloured stripes and the pills make the decision instant. The copy fixes landed. The compact tip no longer stutters, and the banner now leads with the action. The default bronze theme is attractive and consistent.\n\nThe ElvUI mode is close to his real windows in palette: near-black brown fill, blue secondary, red primary and close, small studs. It still shows alignment seams that his real windows do not have: mismatched inner panel edges, a short bar on the card, a step in the left border, and an empty ElvUI stage. Typography also runs 2-3 px smaller than his game windows. Fix the content-rect alignment and font sizes and this becomes 9-tier. As shown it is about 7.9: excellent function, but some layout polish is still visible.",
+  "model": "claude-opus-5-5"
+}

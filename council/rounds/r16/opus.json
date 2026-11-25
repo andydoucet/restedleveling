@@ -1,0 +1,65 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Main hero card: the dark band to the right of the portrait (x 840-963 in scene 01, below 'Then Le Beouf, full for 8h') is dead space. Either extend the hero rest bar to the right column edge (about 470 px wide instead of about 350 px) or put a small 3-segment 'next up' mini-queue there (Le Beouf / Le Dette portraits at 20 px).",
+      "The ElvUI card stage (scene 04) has lost the inn backdrop and reads as an empty black box. Keep the scene art at about 35% alpha under a #0c0805 wash so the stage still has depth, matching his Character window, which keeps its model backdrop inside the skin.",
+      "Row bars have tick segments but a flat fill. Add a 1 px top highlight (#ffffff at 18% alpha) on the filled portion so the bars read as enamel, not as flat rects."
+    ],
+    "state_colours": [
+      "Class-coloured names collide with state hues. Le Beouf (druid #FF7D0A) reads as the ORANGE state in the compact tooltip, and hunter green reads close to FULL green. In the compact tooltip, render names in cream #F0E6C8 and keep class colour only on the hero name and the portrait ring tint.",
+      "Yellow #E6D200 and the cream-gold accents are close at 12 px. Push NEARLY FULL text to #FFE14A and make its chip border 1 px brighter than the RESTING chip.",
+      "In the banner and Esc strip, colour the word 'Full' in 'Next: Le Nette \u00b7 Full' with the FULL green #3FC35A. It is plain white now and loses the state cue."
+    ],
+    "character_identity": [
+      "ElvUI card: the portrait floats at the right with about 150 px of empty stage to its left and below the bubble. Centre the portrait at 120 px, or anchor the bubble tail to it with the bubble about 24 px closer.",
+      "The hero bubble 'Water's conjured.' is squeezed between the name and the level line, with about 4 px gaps. Give it 6 px of vertical air on both sides, or move it to the right of the name on the same baseline.",
+      "Le Jette (max level) uses a greyscale portrait. That is good, but desaturate to about 60%, not 100%, so the face still reads as a gnome."
+    ],
+    "default_theme": [
+      "Footer 'Synced 2d ago from Acct #3' sits at the same weight as the content. Drop it to #9C8F78 at 11 px so the eye ends on the last row.",
+      "The default 'Compact' button and the hero 'View details' have different heights (about 18 vs 20 px). Unify both at 22 px with a 1 px #6b5330 border."
+    ],
+    "elvui_wc3_fit": [
+      "Fill: his windows are near-black brown, about #120c08 to #1a120c. Your ElvUI frame body shows a lighter grey-brown stone texture at the top (scene 02, y 40-100) and around the card. Set the backdrop to a solid #140e09 at 95% alpha and drop the stone texture.",
+      "The roster block's right edge (about x 787) does not line up with the hero block (about x 800). In ElvUI mode, make both inner panels share the same 12 px inset from the skin border.",
+      "Inner panel borders inside ElvUI should be 1 px #2b2016, as in his stat rows. Your current inner frames read heavier and double-lined against the skin border.",
+      "Card in ElvUI (scene 04): the title 'Colonol Sunders' plus the in-stage name duplicate the name. His Character window shows the name once in the title and 'Level 25 Warrior' in gold below it. Follow that pattern: title = name, stage caption = 'Level 15 Troll Hunter' in #FFD100.",
+      "State chips under ElvUI should take his enamel treatment: a 1 px bronze #8a6a3a outer edge and a dark inner fill, so they match the blue Defaults and red Expanded Stats buttons rather than the flat outlined pills of the default theme."
+    ],
+    "alerts_ux": [
+      "The banner headline says 'Cancel the logout first' but offers no way to do it. Add a red 22 px 'Cancel logout' primary button on the right of line 1 that calls CancelLogout(), and keep 'Details' as the secondary.",
+      "The Esc strip and the banner should share the same body height. The Esc strip has about 8 px more bottom padding; trim it.",
+      "The gear icon next to X on the banner is ambiguous. Add a tooltip 'Alert settings' and make it 14 px, versus 16 px for X, so close stays dominant."
+    ],
+    "readability": [
+      "Secondary lines ('none used this session', 'Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago', tidbit values) render at about 11 px. Raise them to 12 px and set the colour to #CFC3A6 instead of grey-cream, so they hold up at his 1600-wide UI scale.",
+      "The tidbit labels (HEARTH, /PLAYED\u2026) in small caps at about 9 px are the smallest text on screen. Make them 10 px, #B89A5E, with letter-spacing via a one-space pad, or switch to title case at 11 px.",
+      "The legend line under NEXT BEST mixes four colours at 12 px over a dark band. Add 6 px between items and a 1 px #3a2c1c separator above the band."
+    ],
+    "layout_polish": [
+      "Scene 04 shows two red X buttons at the same height, at the left and right edges (the left belongs to the main window behind). Offset the card 8 px further right, or anchor it so its close button does not sit on the parent's close.",
+      "Hero: the '#1 \u00b7 PLAY NEXT' kicker, the name, the bubble and the level line stack with uneven gaps (about 8, 4, 4 px). Normalise to 6 px.",
+      "Row 8 (max level) has no bar, so its text floats at mid-height. Align 'Max level. I keep the bench warm.' to the bar baseline of the other rows, and dim the row to 70% alpha.",
+      "First run: the Link account button sits flush under step 3 text with uneven left alignment. Align its left edge with the step text (not the icon), and give it 8 px top margin."
+    ],
+    "delight": [
+      "The 'zzZ' on the fully rested card is charming. Animate it with a 2 s alpha/offset loop, and show it only for FULL and RESTING states.",
+      "When the top character changes, flash the hero name with a 300 ms gold glow (#FFD100 at 60%) so the re-sort is felt.",
+      "The compact minibar dots could pulse once when a dot turns green."
+    ]
+  },
+  "overall_notes": "Round 18 is a real step up on alerts. The banner and Esc strip now share one clear pattern, and the next character is properly demoted to a secondary line. Play-next clarity is excellent: the hero, the 1.7 banked, the 'then' line and the imperative tip leave no doubt. The default theme is warm and cohesive, and the default card with the inn art and speech bubble is the best screen in the set. The weak spot remains the ElvUI mode. The body fill is greyer and more textured than his near-black brown windows. The inner panel insets don't line up between the hero and the roster. The ElvUI card loses its stage art and becomes an empty black box with a floating portrait. The brown-grey wash, inset mismatch and duplicated naming are real, separate from the simulator's tiled-strip limits. Secondary text is a size too small for his UI scale. Class-coloured names in the compact tooltip muddy the state palette. Fix the ElvUI fill and card stage and this moves to a solid 8-9 across the board.",
+  "model": "claude-opus-5-5"
+}

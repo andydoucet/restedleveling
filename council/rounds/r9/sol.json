@@ -1,0 +1,61 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing ornament in the roster: remove the five-moon indicators from each row, or reveal them only on hover with an explanation. Bars, percentages, coloured rails and state badges already communicate readiness.",
+      "Give the default hero a stronger visual focal point by reducing the brightness of its full-width green bar approximately 20% while preserving the bright portrait rim and the large banked-level number."
+    ],
+    "character_identity": [
+      "Replace the enlarged faction crest used for Jacques Hammer with a character portrait when available; otherwise use a deliberately composed class-icon fallback. The same crest at hero and current-character sizes makes the character feel like an account placeholder.",
+      "Give speech bubbles a consistent relationship to the portrait or live model: anchor the tail toward the speaker and maintain at least 12 px clearance from its silhouette. The ElvUI card's tail currently points into empty space.",
+      "Keep a last-seen timestamp in the card's detail grid as well as the relative date under the name, so players can distinguish personality flavour from actionable character information."
+    ],
+    "default_theme": [
+      "Unify the default theme's control treatment: use the same 22\u201324 px button height, inset border and label baseline for Compact, View Le Nette and Link account. The latter currently looks like a flatter utility control from a different component set.",
+      "Reduce the default portrait's gold rim to approximately 3 px and separate the state ring with a 1 px dark gap. Gold plus green plus the overlapping level disc is visually crowded on the character card.",
+      "Use the same corner construction on tooltips, toasts and the main frame. The small panels' exposed square gold end marks look less finished than the main window's studded corners."
+    ],
+    "elvui_wc3_fit": [
+      "Retain the near-black brown panels, restrained studs, red primary button and blue Compact button; these are substantially closer to the supplied real windows than an elaborate Warcraft III interpretation would be.",
+      "Replace the remaining long gold underline beneath the card portrait with a 1 px #2A2118 divider, or remove it. It reads as inherited default-theme decoration rather than the host skin's restrained panel structure.",
+      "Match the host's typography more closely: use its configured font and outline settings for labels and headings instead of retaining the default theme's consistently heavy serif appearance.",
+      "Keep the header's client-area background uniformly near-black brown, matching the real Options window. Do not add more decorative hardware to compensate for the simulated tiled-border streaks."
+    ],
+    "alerts_ux": [
+      "Change the logout headline to 'Logging out outside a rest area' and the supporting action to 'Cancel logout, then hearth or reach an inn.' This is clearer than implying the player can simply reach an inn while the countdown runs.",
+      "Use 'rest area' rather than 'inn' wherever a city also qualifies, including the current-character badge and the Escape-menu warning.",
+      "Make alert close controls consistently 20\u201324 px with at least a 24 px hit target, inset 6\u20138 px from the top-right border. The bright yellow close glyph currently competes with the warning icon.",
+      "Show account-sync staleness beside recommendations when relevant, for example 'Other account synced 2d ago'. The footer contains this information, but the alert presents the recommendation as unqualified."
+    ],
+    "readability": [
+      "Keep the improved 12 px floor, but use a regular-weight face for secondary row metadata and card values. Nearly every line is bold, flattening the hierarchy even at the supplied 1:1 crop.",
+      "Standardise the duration copy: use 'Full in 14h 25m', 'Full for 8h' and 'Seen 4d ago' consistently. The current mixture of abbreviated metadata, sentence fragments and repeated 'full' requires unnecessary interpretation.",
+      "Rename 'levels banked' to 'levels of rested XP' and explain the cap in a tooltip. A prominent 1.7 beside a completely full bar is not self-explanatory to a new user.",
+      "Remove the unexplained moon scale or label it explicitly, such as 'Rest bonus tier 3/5', on hover. Its current small repeated silhouettes are readable as decoration, not information."
+    ],
+    "layout_polish": [
+      "Align the hero bar and roster bars to a shared right edge or clearly separate their grids. The ElvUI hero's almost full-width bar and the narrow roster bars currently feel like independently assembled modules.",
+      "Reserve a fixed 120 px state column, right-align its badges, and centre the State heading over that column. The heading currently sits noticeably left of the badges.",
+      "Standardise card detail rows to a 44 px vertical rhythm, with 24 px icons and 8 px icon-to-text spacing. Keep paired left and right fields on identical label and value baselines.",
+      "Remove the decorative horizontal rule beneath the ElvUI card portrait unless it anchors a real stage element. Its isolated position makes the otherwise clean composition look unfinished."
+    ],
+    "delight": [
+      "Keep the character-specific speech, but add a small rotation of lines per character and state, including a distinct line when someone becomes the next recommendation. Avoid repeating the same joke on every open.",
+      "On reaching full rest, use one restrained 400\u2013600 ms portrait-rim pulse and a brief 'Ready to play' label rather than adding another permanent status ornament.",
+      "Make the compact bar's coloured counters interactive or explain each on hover. The sequence of circles is lively, but without direct feedback it feels more like a legend than a useful miniature roster."
+    ]
+  },
+  "overall_notes": "A strong, coherent addon presentation with excellent recommendation hierarchy and redundant, legible state encoding. The cropped views demonstrate that the text is usable; tiny type is no longer the central criticism. The remaining gap to demanding-user approval is refinement: excessive simultaneous indicators, uniformly heavy typography, unexplained secondary symbols, and some inconsistent component finishing. ElvUI integration is substantially credible against the actual supplied windows, particularly its restrained brown panels and enamel buttons, but still retains traces of the default theme's typography and decoration. I have not penalised missing live models or tiled-border rendering artifacts. The framing and character flavour establish promise, but a still render cannot establish the quality of the talking animation.",
+  "model": "gpt-6.1-sol"
+}

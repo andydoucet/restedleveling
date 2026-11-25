@@ -1,0 +1,69 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 6,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Recolor the Now Playing bar to the row state color (#d64545 for not resting) at the same 8px height; the cyan fill is a second language in the middle of the panel.",
+      "Drop the default theme's inner roster bezel so the hero art can grow about 40px and the frame is one wood edge, not two.",
+      "Keep the inn plate, but lift the left text scrim to about 55% opacity over only the text column so barrels stay visible without washing the cream type."
+    ],
+    "play_next_clarity": [
+      "Collapse Now Playing to a 28px strip under the roster so the #1 hero is the first thing after the title, not one of three equal bands.",
+      "Rewrite the action line to 'Park Jacques at an inn, then play Le Nette.' at 15px; the current two-sentence version splits the job.",
+      "In compact, change 'Full \u00b7 full for 2d' to 'Full for 2d' so the status word is not repeated."
+    ],
+    "state_colours": [
+      "Use one set everywhere: full #3dba6a, nearly #e6c15a, resting #e0872f, not resting #e23d3d, each on a #1a100c track.",
+      "Not-resting fills need a 3px left rail in #e23d3d; a 5% bar (Le Bankken) currently reads as empty until the chip.",
+      "Now Playing must use that same fill, not #7eb6d6."
+    ],
+    "character_identity": [
+      "Class-color roster and hero names (mage #69ccf0, hunter #abd473, warrior #c79c6e) at the current size.",
+      "Roster subline should be 'Lv 19 Tauren Druid \u00b7 Thunder Bluff'; race and class are only on the card today.",
+      "Level disc: 22px, 2px #8a7040 ring, 12px #f3e6c4 numeral, sitting 4px outside the portrait ring so it does not cover the face."
+    ],
+    "default_theme": [
+      "Single 12px wood border; delete the second inset around the list (about 16px back).",
+      "Title at 16px #f0d78c, vertically centered in a 28px title bar, not lost in the top frame.",
+      "First-run: cut the empty 80px under the steps; 32px step icons, 16px padding, and align 'Link account...' with the step text."
+    ],
+    "elvui_wc3_fit": [
+      "Secondary actions ('View Le Nette's details', compact, link) should be blue enamel: fill #163e6e, 1px top #4a90c8, 22px tall, like his Options Close button. Tan #6b5340 does not match.",
+      "Border 1px #100e0c with 6px bronze studs only at the four corners; no gold stroke around alerts or cards.",
+      "Panel fill #12100e to match his character frame, and chips at 18px height, 2px radius, no glow."
+    ],
+    "alerts_ux": [
+      "Replace '15 | 4Second:Seconds; until logout' with '15 seconds until logout' in 14px #f2e6c8. That token is a broken format string on the logout path.",
+      "Put the countdown and Cancel inside the same banner, 8px under the button row, not a second floating frame.",
+      "Esc strip headline should be the imperative 'Log out at an inn' at 15px #f4e2a8, with 'Jacques Hammer isn't resting' as the 13px line under it."
+    ],
+    "readability": [
+      "Sub-lines and footer at 14px #d4c7a8 on #12100e; the current grey is too dim beside the gold names.",
+      "Right-of-bar figures ('0.6 rested levels left', '100% \u00b7 full for 8h') at 14px #f0e2c0, same baseline as the bar.",
+      "Chip label 11px bold #ffffff, min width 84px so 'NEARLY FULL' has 8px side padding."
+    ],
+    "layout_polish": [
+      "Now Playing bar must share x and width with the roster bars (one column, about 220px) and the chip must share x with the STATE chips.",
+      "8px gaps between hero, action strip, now-playing, and row 2; the middle band is tighter than the list.",
+      "Card speech bubble max 240px, 8px padding, 10px tail aimed at the mouth; level badge fully outside the ring.",
+      "Dock the esc alert 16px above the menu's bottom edge and center it to the menu, or match the main window width."
+    ],
+    "delight": [
+      "Speech bubble: parchment #2a2118, 2px #c4a574 edge, 10px tail, instead of a flat rectangle.",
+      "On a FULL hero, add a 16px moon and color '1.7 levels of double XP' in #7dffb3 so the banked XP feels like a reward.",
+      "1px inner shadow on the portrait ring so the face sits in the inn plate rather than stuck on top of it."
+    ]
+  },
+  "overall_notes": "The roster sort, state chips, and Le Nette hero are clear, and the ElvUI main window is close to his real near-black panels with a red primary and a blue Compact button. It is not shippable yet: the logout timer reads '4Second:Seconds', compact stutters 'Full full', the now-playing bar is cyan, and alert secondaries are tan instead of his blue enamel. Fix those and this is a strong default plus a skin that belongs next to his character frame.",
+  "model": "grok-4.7"
+}

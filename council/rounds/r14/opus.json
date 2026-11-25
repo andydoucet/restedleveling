@@ -1,0 +1,62 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Default hero (scene 01): the inn art is still barely legible right of the portrait. The 10% overlay plus the 42% fade leave the right half near-black around '1.7 levels banked'. Add a soft radial lift centred on x=70% of the hero (warm #3a2a18 at 25% alpha, about 260 px radius) so the barrels and hearth read without hurting text contrast.",
+      "The hero XP bar (about 14 px tall, 350 px wide) is the heaviest object after the name and competes with '1.7'. Drop it to 10 px with a 1 px #0b0805 inset border. Keep the row bars at their current height so the hero bar reads as a summary, not a duplicate row.",
+      "ElvUI hero (scene 02) is a flat dark panel with no art at all. Allow a 6-8% alpha inn texture desaturated to the skin's brown (#2a1e14) so the ElvUI build keeps a little of the default's warmth while staying subtle."
+    ],
+    "character_identity": [
+      "ElvUI card (scene 04): the level badge '15' is a near-black disc on a near-black stage and nearly disappears. Give it a 1 px bronze ring (#8a6a3a) and cream text (#e8d8b0) at 12 px bold. Keep it 24 px, not a medallion.",
+      "Default card (scene 03): the gold '22' badge touches the portrait ring's lower-left arc. Move it 3 px further out on the 225 degree diagonal so it reads as attached, not overlapping.",
+      "ElvUI card stage: there is about 110 px of dead space between the speech bubble's left edge, the name and the portrait. Either move the portrait 30 px left toward centre or widen the bubble to 260 px, so the character and the line read as one composition.",
+      "Roster portraits are 34 px with a 14 px class or spec pip. Bump the pip to 16 px with a 1 px #000 outline. At 13 px row text the pip is the only per-character colour besides the name."
+    ],
+    "default_theme": [
+      "The default theme frame title bar uses a dark strip with an orange-gold title, while the hero kicker is now cream. Align them by setting the title to #f0d89a and the kicker to #e8d8b0 at 11 px with 1 px letter spacing, so the hierarchy is name > title > kicker.",
+      "The first-run Getting Started panel (scene 07) leaves about 30 px of empty brown under 'Link account...'. Trim the panel height to content plus 14 px, or add a single muted line ('Your queue appears here once two characters are saved.') in #a89878 at 12 px.",
+      "The legend row has 'NEXT BEST' and 'STATE' headers but no header over the bar column. Add 'RESTED' in the same 10 px caps #b8a888 at the bar's left edge so the three columns are self-explaining."
+    ],
+    "elvui_wc3_fit": [
+      "Right edges do not line up in scene 02. The hero panel ends about 13 px further right than the roster box, and Now Playing sits in between. Make all three inner panels share one right inset (12 px from the frame's inner border), as his Character window's stat panels do.",
+      "The ElvUI card bar box (scene 04) floats 9 px below the stage frame, and the stage's left border visibly runs into it. Either merge them (bar inside the stage, 8 px from its bottom) or give a clean 10 px gap with no continuing vertical rule.",
+      "His real Character and Options windows put the title in cream with a thin underline on the title strip. The addon's ElvUI title is gold-yellow (#f0c040-ish). Use #e8d8b0 at 14 px to match 'Le Jette' and 'Options' in images 2 and 3.",
+      "Row chips under ElvUI use bright saturated fills (#2a8a3a green). His enamel buttons are darker with a top highlight. Darken the chip fills about 20% (green #1f6a2c, red #7a1a14, yellow-border-only) so they sit with the red 'Expanded Stats' and blue 'Defaults' enamel instead of glowing above them."
+    ],
+    "alerts_ux": [
+      "Banner headline 'Cancel the logout first' is cream, the same weight as the sub-lines. Make it #ffb040 (warning orange) at 15 px bold so the instruction reads before the explanation. Keep the sub-lines cream at 13 px.",
+      "The banner's portrait plus button group starts at x=24 while the text starts at x=88 under the icon. Indent the button row to the text column (x=88) so the banner has one left edge.",
+      "The compact toast (scene 06) uses 'Full \u00b7 double XP waiting' in green. Add the hearth hint when the current character is not resting ('Log out in an inn first'), as the main banner does, or the toast can still lead to an unrested logout.",
+      "Copy consistency: the compact tooltip says 'full in about 3d' and 'about 4d' while the main window says '3d 14h' and '4d 15h'. Pick one format. Precise is better: '3d 14h'."
+    ],
+    "readability": [
+      "State chip text is about 10 px caps. Raise it to 11 px with 0.5 px spacing and a 1 px #000 shadow. 'NEARLY FULL' in yellow on yellow-bordered dark is the weakest chip.",
+      "The 'Acct #3' tag beside 'Le Bankken' is about 10 px blue (#6a8ad0) on brown. Raise it to 11 px and lighten it to #8fb0ff, or render it as a 1 px bordered tag.",
+      "The hero meta line ('Level 22 Undead Mage \u00b7 Brill inn \u00b7 seen 4d ago') is 13 px #d8c8a8 directly under a 34 px name. Add 4 px more top margin so the speech bubble, meta line and bar stop stacking tight on the left.",
+      "'Max level. I keep the bench warm.' in the row 8 bar column is the same colour as the live data. Italicise it or use #9a8c74 so it reads as flavour, not status."
+    ],
+    "layout_polish": [
+      "Hero right column: '1.7' (about 36 px), 'levels banked' and 'Then Le Beouf, full for 8h' are right-aligned, but the second line sits 6 px lower in ElvUI than in default. Use the same vertical rhythm (number baseline, +18, +20) in both themes.",
+      "The ElvUI footer 'Synced 2d ago from Acct #3' sits 2 px above the frame's bottom border rail. Add 4 px more so it does not crowd the bronze studs.",
+      "Now Playing row: the crest portrait (simulator fallback) sits 4 px lower than the roster portraits' centre line. Align its centre with the two text lines' centre."
+    ],
+    "delight": [
+      "The zzZ on the default card is lovely. Add the same tiny touch to rows: a 10 px zzZ glyph fading at 0.4 alpha beside the FULL chip only. Keep it static if 'reduce motion' is on.",
+      "Speech lines are good. Give the ElvUI card the same idle line rotation as default (rotate on each open) and show the line's second sentence in #b8a888 so it reads as an aside.",
+      "When the top character changes (a row overtakes #1), slide the hero name in with a 150 ms fade, so playing the queue feels rewarding."
+    ]
+  },
+  "overall_notes": "A strong, coherent round. Play-next clarity is excellent: hero, action strip and safety-first banner copy now lead correctly, and the state colours are consistent across main window, chips, compact dots and toast. The ElvUI build sits believably next to his Character and Options windows: dark brown fill, bronze studs, blue Compact, red close and primary. It is held back by panel right edges that do not align, chips a touch brighter than his enamel, a gold rather than cream title, and an ElvUI card stage that feels empty next to the default's inn art. The default theme is rich but the hero art is still too dark to earn its place. These are polish items, not structural ones. Fix the alignment, the chip saturation and the badge contrast, and this is a 9.",
+  "model": "claude-opus-5-5"
+}

@@ -1,0 +1,74 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 7,
+    "default_theme": 7,
+    "elvui_wc3_fit": 4,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 6,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "The new 9-slice frame does not read as oak at 1x. At the rendered size it is a thin brown band with corner dots, and the grain, iron line and L-straps are invisible. Widen the edge to 14 px. Raise grain contrast so plank seams are #2A1A0E on a #5A3A22 base. Make the corner L-straps 22x22 px in #1C1C1E with a #8A8A90 lit edge. Make the rivets 5 px in #B07A3A with a #F0C080 1 px highlight, so they read like the door reference.",
+      "The body is flat near-black (#0E0E0E) and dead next to the hero's tavern art. Add a 3% plank texture at #1A130D under the rows. Add an 8 px inner shadow (#000000 at 60%) beneath the frame band to give depth.",
+      "The hero's big '1.7' is the only display-type moment. Give the title rail text the same serif at 16 px, #F2D9A0 with a 1 px #000 shadow, so the window has a typographic voice."
+    ],
+    "play_next_clarity": [
+      "'levels banked \u00b7 100%' is right-aligned, tiny (11 px) and sits on two different baselines with the 36 px figure. Put 'levels banked' directly under '1.7', centred on it, in 12 px #E6D7C3. Move '100%' into the FULL chip instead.",
+      "The action bar copy 'Next: log out, then play Le Nette' is the key instruction but renders at the same weight as body text. Set it to 15 px #F2D9A0. Make 'Le Nette' class-coloured. Remove the '\u00bb' glyph or replace it with a 12 px bronze arrow icon.",
+      "The NEXT BEST summary row (2 full / 2 nearly full / 1 resting / 2 not resting) is a legend, not a 'next best'. Rename it 'ROSTER'. Give it 10 px left padding; it is currently flush with the frame edge."
+    ],
+    "state_colours": [
+      "The YELLOW bars (#E8D020-ish) and the GREEN bar segments use the same striped texture. At a glance, 93% yellow next to 100% green is fine, but 91% vs 93% are indistinguishable from 100% except by hue. Add a 1 px #F2D9A0 tick at the 100% end of every bar track, so the gap to full is visible.",
+      "The compact-bar dots rely on hue alone. Give each dot its glyph at 8 px: check, star, moon, warning. The two red dots already show an x; apply this consistently.",
+      "In the banner 'Or play next: Le Nette \u00b7 Full', the word 'Full' is cream. Colour it #3FCF5A to match the state chip."
+    ],
+    "character_identity": [
+      "Row portraits are 34 px, and the class crest overlaps the ring at bottom-right, where it gets lost. Make the portraits 38 px. Move the crest to a 14 px disc with a #1C1C1E ring at the 4-o'clock position, fully outside the bronze ring.",
+      "On the card, the stage fallback is just a larger copy of the same portrait. When the model is unavailable, use a 3/4 crop of the race/class splash or a silhouette against the zone backdrop, so the stage differs from the 44 px nameplate portrait directly below it.",
+      "The name 'Le Nette' on the card stage uses class colour on a busy backdrop. Add a 2 px #000 outline and a 60%-black gradient strip (#000000 at 0%\u219260%, 40 px tall) under the name block."
+    ],
+    "default_theme": [
+      "The frame art is too subtle to carry the theme. See visual_appeal: a 14 px edge with visible straps and rivets.",
+      "The title rail is a dark flat bar, not visible planks. Render 3 plank boards with #3A2616/#4A3020 alternation and 1 px #1A100A seams. Put the iron strap (6 px, #222) beneath it, with rivets at 1/4 and 3/4.",
+      "The tiles panel and chart panel on the card are flat #1A1A1A boxes. Use the same oak-brown surface recipe (#20160F fill, iron/bronze 2 px edge) as the floating panels, for consistency."
+    ],
+    "elvui_wc3_fit": [
+      "Broken button art on the skin path: 'Compact' and 'Open card' show a stray arc/end-cap that slices through the label. The end caps are being laid over a button whose text region is not inset. Either give the skinned buttons the exact width and height WC3 expects (\u2265110x24 px, label inset 14 px each side), or keep our enamel art on the skin path. The user's own UI shows WC3 painting red enamel like 'Expanded Stats', so match that.",
+      "'Open card' did not get the red enamel at all; it renders dark with gold text. Verify that the primary-name rule matches `RestedLevelingOpencardContinueButton`. In the user's screenshot, red buttons appear on frames where the name ends in a recognised suffix. Otherwise, set the red explicitly.",
+      "The title plate glitches: the 'ling' of 'Rested Leveling' and the 'card' of 'Character card' sit on a highlighted gold box (a texture misregistered under part of the text). Size the title FontString to the plate, or set the plate width from the string width + 24 px.",
+      "The window body is a muddy flat #4A4038 slab, with no planks, straps or rivets visible anywhere. WC3 is not drawing its window art on our frame, only clearing our fill. Confirm the frame is registered before the first Show. If WC3 cannot paint it, fall back to our own oak frame. That beats a grey-brown slab, which looks worse than plain ElvUI.",
+      "Inner panels on the Transparent template wash to #4A4038 and kill contrast with the row text. Clamp the panel alpha so the fill stays \u2264 #2A2420 luminance."
+    ],
+    "alerts_ux": [
+      "The Esc-strip warning lacks the 'Or play next' line and the right-click hint the banner has. Add the 20 px portrait line, so every surface offers the alternative.",
+      "The banner portrait in 'Or play next' is ~18 px and unreadable. Make it 24 px with a 1 px state-colour ring.",
+      "'Right-click for options' at 11 px sits in the bottom-right corner like a footnote. Replace it with a small 16 px gear/cog button next to the close X, which opens the same menu. Keep right-click as well.",
+      "The close X is a 14 px red square at the top-right. The brief says 24 px with a 30 px hit area, but the renders show ~16 px. Verify the 24 px size; the toast X also looks 16 px."
+    ],
+    "readability": [
+      "The 'OUTSIDE AN INN' chip text overflows its box (the 'INN' runs past the right border), in both the main window and the first-run screen. Widen the chip to fit the text + 10 px padding, or shorten the label to 'NO INN'.",
+      "The moons are clipped by the right frame edge (the last moon is cut at x\u2248960) and overlap the chip border. Reserve a 70 px column for the moons with 6 px between them and the chip, and 8 px padding to the frame edge.",
+      "Secondary lines at 13 px (#E6D7C3) are fine, but the 11 px uppercase labels (HEARTH, /PLAYED, NOW PLAYING) are at the edge of legibility at 1080p. Use 11 px only with +0.5 tracking and #C8B48A. Otherwise go to 12 px.",
+      "The chart axis labels '48h ago' and 'now' at 11 px collide with the frame bottom. Add 6 px bottom padding."
+    ],
+    "layout_polish": [
+      "'NEXT BEST', 'GETTING STARTED' and the footer 'Synced 2d ago from Acct #3' are flush against the left inner edge. Give them a consistent 10 px inset, matching the row content start.",
+      "The card status text wraps to an orphan ('\u2026Park it in / an inn.'). Shorten the copy to 'Not resting: fills 4x slower. 0.5 levels banked. Park it in an inn.', or allow 2 balanced lines.",
+      "Chart: Colonol Sunders' series starts mid-chart with an empty left half and no dashed baseline visible, despite the brief. Render the dashed #5A4A3A baseline for no-data hours. For the 'Full the whole time' case, replace the solid green slab with a single 2 px green line at the top plus the label. The slab is 180 px of flat colour.",
+      "The first-run quote box is a cream fill with dark text, a different speech-bubble style from the card's dark-on-cream with a tail. Use the same bubble component (tail included) in both places.",
+      "The card stage, at ~220 px, is taller than needed when no model renders. Allow the chart to absorb the slack, which it already does, but cap the chart at 120 px and give the tiles 4 px more row spacing."
+    ],
+    "delight": [
+      "The gold sheen on #1 change is good. Add a 1-frame-per-second soft pulse (alpha 0.85\u21941.0) on the #1 disc only while that character is Full.",
+      "The speech hooks are a real improvement ('Water's conjured.', 'Cold out here.'). Give each hook a 6\u20138 word variety pool per state and class, so repeat opens don't feel canned.",
+      "The 'zzZ' on the stage is a nice touch, but it renders tiny and grey. Make it 14 px #C8B48A with a slow float-up animation (2 s loop), and only for resting/full states."
+    ]
+  },
+  "overall_notes": "A real step up in information design. The hero plus action bar answers 'who next' instantly, the tooltip roster is clean, alerts are non-modal with a play-next alternative, and the speech hooks add personality. The default theme still under-delivers on the WC3 oak/iron promise because the new frame art is too thin to see.\n\nThe big regression is the ElvUI path. Handing the window to ElvUI/WC3 produced a flat muddy slab with no planks or straps, a glitched title plate, and button end caps slicing through the 'Compact' and 'Open card' labels. 'Open card' is not even red. That path currently looks worse than both plain ElvUI and the addon's own frame. Until WC3 visibly paints it correctly, default to the own frame.\n\nPolish defects remain: chip overflow on 'OUTSIDE AN INN', moons clipped at the right edge, and headers flush to the frame edge. These keep it out of 9 territory.",
+  "model": "claude-opus-5-5"
+}

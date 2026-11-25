@@ -78,7 +78,8 @@ Main window (/rlvl, minimap button, datatext click):
   % and "full in 6h 20m / 18:40", location badge (inn / city / campfire / outside), account tag (#2/#3),
   Well Rested pips, last seen.
 - Current-character strip: rested left, ~kills at double XP, rested used this session.
-- Filters: hide character, target level, account, show max level.
+- Filters: hide character, target level, show max level. (Scope change for v1.0: the account filter is deferred;
+  rows from another account carry an account tag instead.)
 - Compact mode: one line of coloured dots, hover for the row.
 - Optional v1.1: 48h fill timeline (each alt as a lane, marker where it hits full).
 
@@ -93,12 +94,12 @@ Styling:
 ## 5. Cross-account roster
 
 - Andy decision: addon only. No desktop script, no companion. If the addon can't do it, that's the limit.
-- Live in-game sync: when clients from two accounts are online at once, they swap their whole rosters
-  with hidden addon messages (C_ChatInfo.SendAddonMessage, WHISPER). Gossip model: each client relays
-  everything it knows, newest snapshot per character wins, so one overlap syncs every character both ways
-  and the data then persists in each account's SavedVariables.
-- Discovery: automatic via GUILD / PARTY / RAID addon channels when shared; otherwise pair once with
-  /rlvl link <Name>, remembered after that.
+- Live in-game sync: when clients from two paired accounts are online at once, each sends its own account's
+  characters with hidden addon messages (C_ChatInfo.SendAddonMessage, WHISPER); the newest snapshot per character
+  wins, and the data then persists in each account's SavedVariables. A remote record never overwrites one of ours.
+- Pairing is explicit and mutual: /rlvl link <Name> on each account (up to 8 links). A hello seen on GUILD / PARTY /
+  RAID, or from an unlinked whisper, only prints how to pair; it never links and never sends data. Data from a name
+  that has not linked us back is dropped.
 - Hard limits (documented in README and shown in the UI): both characters must be on the same realm and
   same faction (Classic blocks cross-faction addon whispers); accounts must have been online together at
   least once; a remote account's rows are projections from the last sync and are tagged as such.
@@ -113,7 +114,7 @@ optional sound, chat line. No StaticPopup.
 - Game Menu guard: when Esc menu opens while not resting, a slim red strip under the menu:
   "Not resting: this character will fill 4x slower". Informational only.
 - Rested ran out on the current character: "Out of rested. Next up: Le Nette (full)."
-- Rested low (configurable, default 10% left): heads-up.
+- Rested low (fixed at 10% left in v1.0; making it configurable is deferred): heads-up in chat.
 - An alt filled up while you play: toast, digested if several.
 - Login digest in chat: who's full, who fills soon, last logout was outside.
 - Cozy Sleeping Bag ready (from RW).
@@ -144,7 +145,7 @@ Slash: /rlvl and /restedleveling (avoid /rested and /rl).
   before anything is installed.
 - In-game matrix on Andy's characters (inn, open world, capital /camp, max level, already full,
   level up + /reload, both accounts online, hidden realm duplicates).
-- CI on Boat. Release by tag through the BigWigs packager. Publishing waits for Andy's go.
+- CI on GitHub Actions (public repo). Release by tag through the BigWigs packager. Publishing waits for Andy's go.
 
 ## 9. Non-goals
 

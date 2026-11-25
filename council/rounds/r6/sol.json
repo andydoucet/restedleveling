@@ -1,0 +1,56 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 9,
+    "readability": 7,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing emphasis in the hero. Keep the portrait, character name and 1.7 figure dominant; reduce the rank disc from approximately 30 px to 24 px and render the comparison line at 12 px in #C4B89A rather than bold cream.",
+      "The repeated bronze portrait rings, segmented bars, boxed chips and moon tracks make the roster feel mechanically busy. Use a 1 px muted bronze portrait outline on ordinary rows and reserve the stronger gold ring for the recommended or selected character.",
+      "Reduce bar segmentation contrast by roughly 50%. The numerous bright vertical divisions currently add visual noise without making rested XP easier to interpret."
+    ],
+    "character_identity": [
+      "Put the character's name in the card title, such as 'Colonol Sunders', instead of the generic 'Character card'. Keep race and class below the stage and add the level there as text, so identity does not depend on the small level medallion.",
+      "Keep the attractive stage framing, but move the card speech bubble approximately 12 px away from the portrait silhouette. In the ElvUI card, the tail and portrait rim are crowded together.",
+      "Make the speech lines respond to character and state more specifically. Preserve the mage's conjuring line, but give other classes similarly distinctive hooks instead of relying primarily on a zone name and a generic request to hearth."
+    ],
+    "default_theme": [
+      "Flatten the title rail's wood contrast by approximately 25% and use #211B14 for its base. The thinner frame is successful, but the title rail, outer frame and internal bronze rectangles still stack several decorative treatments.",
+      "Unify the inset-panel borders at 1 px #51412B. Use a brighter #A98543 only for selection and the outer corner accents; the current accumulation of bronze rules makes the lower roster look more boxed-in than premium.",
+      "Use the same restrained dark-oak treatment on the compact tooltip and alert surfaces. Their comparatively plain brown rectangles currently feel like a separate component family from the main window."
+    ],
+    "elvui_wc3_fit": [
+      "Retain the actual host-provided frame and title treatment; do not compensate for the simulator's tiled-border streaking. Concentrate changes inside the frame, where the addon still reads more like its default theme than the user's Character and Options windows.",
+      "Set ordinary interior wells to approximately #120D08 and reduce the broad yellow and red row washes to about 8-12% opacity. Preserve the saturated state rails, bars and chips. The reference windows use quiet dark-brown surfaces rather than large coloured panels.",
+      "Reduce the hero background painting to approximately 35-40% opacity in ElvUI mode and replace interior bronze outlines with the host's thin border treatment. Keep the full illustration in default mode.",
+      "Use the configured ElvUI font with its normal host weight and outline treatment throughout the interior, not merely the same font face. The dense bold serif-like presentation visible here does not yet match the cleaner text hierarchy in the real skinned Options window."
+    ],
+    "readability": [
+      "At the supplied 1600x900 presentation, roster metadata, legend text, moon tracks and footer copy are visibly too small. Target rendered sizes of 14 px for names, 12 px for secondary information and 11 px minimum for tertiary labels; verify these after UI scaling rather than only in source coordinates.",
+      "Increase row height from approximately 48 px to 54 px and give the two text baselines at least 5 px of separation. Do not solve the increased height by shrinking fonts again; allow scrolling when necessary.",
+      "Replace the ambiguous 'REST BONUS' column heading with 'STATE / BONUS', or give the moons their own explicit subheading. The heading currently appears to describe the state chips even though the five moons represent a separate system.",
+      "Replace compact-duration strings such as 'seen 4d ago' with 'Seen 4 days ago' in the character card, where there is sufficient width. Keep abbreviated durations only in the roster."
+    ],
+    "layout_polish": [
+      "Align the roster's name, progress and state columns to fixed shared anchors, including their headers. Place 'NEXT BEST' directly over the character-name anchor and keep the state legend on a separate line rather than making it compete with column headings.",
+      "In the hero, constrain the comparison text to the progress-bar column and maintain at least 12 px clearance from the banked-level caption. The current right side packs several small labels around the largest number.",
+      "Give the card's historical chart an explicit 'Rested capacity' label and a visible 0% baseline label. Keep the fixed scale and collapsed full-state summary; those are good decisions.",
+      "Standardize header and footer control alignment across themes: 12 px content inset, vertically centred controls, and at least 8 px between checkbox text and the Compact button."
+    ],
+    "delight": [
+      "Make the hero's speech bubble a deliberate secondary moment: show it briefly on opening or a recommendation change, then fade it over 200 ms. Keep it persistent when reduced motion is enabled rather than introducing another animation.",
+      "Give the first-run speech tail the same portrait-facing logic as the character card. In the empty-state render it points downward toward empty space instead of back toward Jacques Hammer.",
+      "Add a restrained full-rest arrival treatment: a single 1 px gold-to-green ring highlight around the affected portrait for 400 ms, disabled by Reduce motion. Avoid adding continuous glow or more permanent ornament."
+    ]
+  },
+  "overall_notes": "A strong, usable addon presentation, but not yet a demanding-user art-direction sign-off. The recommendation is unmistakable, the four states are differentiated redundantly, and the dismissable warnings provide useful actions without becoming addon-owned modal dialogs. The default frame is substantially more restrained than an overbuilt Warcraft imitation. The remaining gap is primarily typographic scale and visual density: too many tiny bold labels and repeated decorative boundaries compete inside a relatively compact window. ElvUI integration is credible at the outer-frame and button level, but its interiors remain more illustrated, tinted and ornamented than the user's actual dark-brown skinned windows. No deduction is taken for missing live models or portraits, simulator border tiling, or the surrounding simulator UI. Animation behaviour and warning-disable persistence cannot be independently established from still images.",
+  "model": "gpt-6.1-sol"
+}

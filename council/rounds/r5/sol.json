@@ -1,0 +1,62 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 7,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce competing decoration: retain the portraits, state strips and rested bars, but remove the repeated five-moon graphics from roster rows. They occupy roughly 60 px per row without communicating an obvious additional decision.",
+      "Use one dominant gold perimeter rather than gold outlines around the outer frame, title rail, hero, roster and individual controls. Make internal separators 1 px #40362A and reserve #C5A15A for selection and major headings.",
+      "Give the hero more breathing room by separating the name, identity line and rested bar with consistent 6\u20138 px gaps; the current central block reads as tightly stacked labels rather than a premium featured-character treatment."
+    ],
+    "character_identity": [
+      "In the card stage, move the speech bubble toward the portrait/model and aim its tail at the character. In the shown fallback compositions, the tail points into empty scenery rather than clearly identifying the speaker.",
+      "Clarify the card's 'WELL RESTED rank 3 of 5' field. Le Nette is simultaneously the number-one recommendation, so rename this to 'Rest bonus: tier 3/5' if it is a bonus tier, or explain the different ranking explicitly.",
+      "Increase card detail values to at least 13 px at the intended UI scale and use 11\u201312 px labels. Character-specific hearth, professions and gold should be readable without leaning into the screen."
+    ],
+    "default_theme": [
+      "Reduce the outer frame's visible material band to approximately 8\u201310 px and use smaller 4\u20135 px bronze studs. The current doubled edges and numerous bright rivets make the window feel more like a decorated spreadsheet than a cohesive Warcraft panel.",
+      "Replace the three visibly segmented title boards with one quieter dark-oak rail. Keep the centered title at 15\u201316 px and leave 12 px clear on either side of its icon-and-label group.",
+      "Unify the small blue and red controls with a restrained 1 px bronze rim and consistent 24 px height; avoid mixing prominent wood framing with comparatively flat, tiny action buttons."
+    ],
+    "elvui_wc3_fit": [
+      "Keep the inherited outer frame and close button. Do not compensate for simulator border streaks with new decorative artwork; those streaks are not the issue.",
+      "Bring the interiors closer to the real Character and Options references: use near-black brown #140F09 for wells, 1 px #352C21 separators and much subtler state-tinted row fills at approximately 8\u201312% opacity. Preserve the strong state bars and labels.",
+      "Use ElvUI's configured font and available shared media for body text and controls. The addon currently retains a distinctly serif-heavy interior next to the user's cleaner, squarer in-game typography.",
+      "Reduce the empty band between the inherited title and the hero by approximately 12 px if the host frame's content inset permits it. The real skinned Character window gets into its content more directly."
+    ],
+    "alerts_ux": [
+      "Rewrite the logout banner's action sentence as 'Hearth or reach an inn before logging out. Rest builds 4\u00d7 slower here.' The current 'The Barrens fills 4x slower' makes the location sound like the thing accumulating rest.",
+      "Rename 'Disable these warnings' to 'Disable logout warnings\u2026' and route it to an inline setting or options page. Keep immediate dismissal separate from a persistent preference change.",
+      "Use a minimum 24\u00d724 px hit area for close and gear controls, with at least 6 px between them. Preserve the existing nonmodal behavior and movement-to-cancel instruction.",
+      "Offer a short inline recovery action after disabling alerts, such as 'Logout warnings disabled \u00b7 Undo', without opening a confirmation popup."
+    ],
+    "readability": [
+      "Increase roster secondary text and card values to at least 13 px at the intended scale; increase footer and tooltip instructions to 12 px. Several currently render at roughly 9\u201311 screen pixels in the supplied overview.",
+      "Use a clean body font with #E8DDC6 primary text and #BDB3A2 secondary text. Reserve the decorative serif treatment for titles and character names.",
+      "Replace 'Full longest \u00b7 Le Beouf only 8h' with 'Full for 2d \u00b7 Le Beouf full for 8h'. The current compressed comparison is harder to parse than the information warrants.",
+      "Add explicit percentage ticks to the history chart, or use a consistent 0\u2013100% scale. A red chart scaled to 0\u201320% can look almost full, despite the character having little rested XP."
+    ],
+    "layout_polish": [
+      "Increase the card's horizontal content inset to 12 px and apply it consistently to the stage, rested bar, information well and chart. The card's rested bar currently runs noticeably closer to the frame than the other sections.",
+      "For a flat full-history chart, collapse the empty plot to a 44\u201356 px summary panel containing the line and 'Full the whole time.' The default card devotes too much height to an essentially empty rectangle.",
+      "Align roster bars, status pills and secondary text to fixed columns, then reuse that grid in the hero and current-character strip where practical. Removing the moon column would allow wider bars or larger text without enlarging the window.",
+      "Give the first-run speech bubble and onboarding sentence at least 12 px of vertical separation; they currently crowd the bottom of the hero panel."
+    ],
+    "delight": [
+      "Keep the character speech, but make the displayed lines respond precisely to class and state: retain 'Water's conjured' for the mage, and give outside characters a concise location-aware request rather than repeating generic inn advice.",
+      "Add a restrained, one-time 400\u2013600 ms highlight when the recommended character changes, with a reduced-motion option. Do not introduce continuously pulsing roster elements.",
+      "Make the small compact status circles individually useful on hover: show character name, exact rested percentage and time to full. Without that interaction, the sequence reads more like decorative traffic lights than a miniature roster."
+    ]
+  },
+  "overall_notes": "The recommendation hierarchy is strong: the featured portrait, number-one badge, full green bar and explicit next-character name make the core decision immediate. State encoding is also successful and redundantly labelled. This is a capable addon presentation, but not yet a demanding-user art-direction approval: dense small typography, repeated framing, unexplained moon ranks and uneven card spacing keep it visibly below excellent. ElvUI mode belongs substantially closer to the supplied real windows than an exaggerated Warcraft III treatment would; its remaining mismatch is mostly interior typography and visual density, not a need for more themed ornament. No deduction was made for unavailable live models, fallback portraits or simulator-only tiled-border artifacts.",
+  "model": "gpt-6.1-sol"
+}

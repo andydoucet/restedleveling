@@ -1,0 +1,68 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 7,
+    "default_theme": 7,
+    "elvui_wc3_fit": 6,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 7,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "Corner rivets are invisible: draw 12px discs, fill #C4A15A, 2px highlight #F0D78C, 1px shadow #1A1008, inset 8px from each corner.",
+      "Title rail needs real material: 3 plank seams as 2px #1A1008 gaps, then an 8px iron band #2A2E32 under the rail instead of a 1px line.",
+      "Buttons are flat slabs. Make Compact, Open card and Link account 28px tall, fill #3A2414, top edge 2px #E8C98A, bottom edge 2px #5A3E16, label 13px #F6E7C1."
+    ],
+    "play_next_clarity": [
+      "The only real button is Open card, and it sits on the action line. Move it to the right end of a 32px full-width bar, fill #3A2A12, and set the bar's 15px #F3E6C4 text to 'Next: log out, then play Le Nette'.",
+      "Shrink the comparison to one 13px #D4C4A8 line under the 1.7: '2d ahead of Le Beouf (full 8h 55m)'. Drop the repeated name and '55 min' spelling.",
+      "Grow the #1 disc from 26px to 32px, numeral 16px #1A1208 on #E8C060, so the rank wins over the portrait crest."
+    ],
+    "state_colours": [
+      "Add a 4px full-height left rail per row: full #3DDC7A, nearly #E6C04A, resting #E08A2E, not resting #E23B3B, max #8A8478. The 7% row tint does not scan.",
+      "Recolor chips so text clears the fill: full #14301E/#7DFFB0, nearly #3A3010/#FFE08A, resting #3A2410/#FFBE70, not #3A1212/#FF8A80. 26px tall, 12px type. Orange and red are too close at 11px.",
+      "Unlit moons #5A4E38 vanish on the brown row. Use #8A7A58 at full alpha, lit #F5C542, 14px glyphs, 4px gaps."
+    ],
+    "character_identity": [
+      "The card stage is only a circle crop. Give it a 170px well, a 2px #C4A15A floor line 16px up, and an 80x12 elliptical shadow at 50% black so the figure stands.",
+      "Speech bubble needs a 12px tail aimed at the mouth, 12px padding, 14px #2A2118 on #F3E6C8, 2px border #C4A15A, max width 280px. The tail does not read now.",
+      "Let professions span the full card width at 13px, two lines, no 'Enchant...' or 'Leatherw...'. Put zZ at 18px #F5C542, 8px above the head, only when full."
+    ],
+    "default_theme": [
+      "Body is near black, so the oak frame disappears. Fill the panel #1A120C and paint a true 6px oak border #4A3018.",
+      "Run a 2px iron line #2C3136 plus a 1px bronze lip #A6843E around the whole window and between hero and now-playing.",
+      "Footer rule is too faint. Use 1px #A6843E, footer 40px, meta text 12px #D4C4A8. Put plank grain on the title rail only."
+    ],
+    "elvui_wc3_fit": [
+      "Scene 01 and scene 02 are the same window. With WC3 loaded, Compact, Open card and Link account must be red enamel #8E1E1E, 2px edge #E6C36A, label #F6E7C1, 28px, matching the door's QUIT. Use blue enamel #1E3A8E for secondary actions.",
+      "Add the door's iron: 10px bands #1C1C1C across the title and above the footer, with 8px rivets #B08A4A at both ends. A hairline gold stroke is stock ElvUI, not Gatewood.",
+      "Title 16px #F3E6C4 in the ElvUI font, outer plank margin 8px, and a soft drop shadow so the frame sits off the black UI."
+    ],
+    "alerts_ux": [
+      "Logout banner is a wall of small type. Fix it at 420px, 12px under the logout dialog and left-aligned to that dialog. Title 15px #F0D78C 'Not resting'. Action 14px #F5C542: 'Hearth first, or play Le Nette (full).'",
+      "The XP-used toast has a green success stroke for a loss. Change border and accent to #E23B3B, title 13px #F0D78C, body 13px #F3E6C4, width 360px, close hit 26px.",
+      "Esc strip is too quiet under the menu. 360px, 4px left bar #E23B3B, 10px padding, second line 13px #F5C542, close hit 26px."
+    ],
+    "readability": [
+      "Secondary row text #D4C4A8 is dim. Raise it to #E6D7C3 at 13px. Chip labels minimum 12px.",
+      "Stop truncating zones under 18 characters. 'Stonetalon Moun...' fails the identity line; drop the repeated 'ago' or wrap the place instead.",
+      "Chart tag 'peak 16% of full' is tiny and pink. Set it to 12px #F0D78C. Hero body copy minimum 13px; keep the 1.7 at 36px."
+    ],
+    "layout_polish": [
+      "Now-playing does not share the roster grid: its bar is shorter and the NOT RESTING chip sits left of the row chips. Match bar-left, bar-width and chip-left exactly.",
+      "Tighten 'Jacques Hammer' to the level: 8px gap, not a hole. Color 'Acct #3' #8A8478 so it is not mistaken for a rest state.",
+      "Empty state has a large dead black region. Shrink the window to content plus 24px, or turn the three steps into a row of 72px cards. Keep the card 400px with a 12px gap, tops aligned, right edge 16px clear of the minimap."
+    ],
+    "delight": [
+      "Set the speech first line at 16px and the rest at 13px so the joke lands before the stats.",
+      "Warm the stage with a #E8A060 vignette at 15% behind the figure. The inn backdrop is currently a flat dark plate.",
+      "Draw the 48h chart as a 2px line, not a red slab: full #3DDC7A with 'Full the whole time' 12px centered; not-resting #E23B3B with 25% area fill. Empty-state quote: #F3E6C8, 14px, 16px padding, tail toward the portrait."
+    ]
+  },
+  "overall_notes": "The sort, the four rest states, and the who-to-play-next copy do the job, and the character lines are the only real charm. It still reads as a dark panel with a hairline gold stroke: scene 01 and scene 02 are the same window, so Gatewood's oak, iron straps, rivets and enamel buttons never show up. I would not approve it for a demanding user until that frame is unmistakable, the play-next line is the only primary action, and the rested-XP-used toast stops wearing a success color.",
+  "model": "grok-4.7"
+}

@@ -1,0 +1,63 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Drop hero names from electric cyan to cream #F3E6C4; keep the 1.7 at about 48px in #E8C56B so one gold number is the focal point.",
+      "The hero backdrop is a tall dead void around a 64px portrait. Crop it to 72px tall or add a faint moon motif so the band is not empty brown.",
+      "Status pills need a 1px inner highlight at #FFFFFF 15% or they read as flat stickers on the dark fill."
+    ],
+    "state_colours": [
+      "RESTING orange is too close to the bronze frame. Use fill #E07A2F and track #3A2418. NEARLY FULL should be #F0C94A, not the title gold #D6B15A.",
+      "Widen the left state rail from about 4px to 6px so colour is readable before the pill.",
+      "The ElvUI 30% bar is a hairline. Use an 8px track #2A1A1A with fill #D64545 so red state survives on near-black."
+    ],
+    "character_identity": [
+      "Roster portraits are about 28px and rows are name-only. Add an 11px class line under the name, e.g. Undead Mage, in #C8BBA8.",
+      "Speech should be 13px cream, max two lines, anchored 8px off the portrait so it does not collide with the level disc.",
+      "Give the main hero the same inn/zone backdrop the cards use, framed to the portrait, so the 'stage' is not just a circle on black."
+    ],
+    "default_theme": [
+      "Link account is a flat gray-tan orphan. Match secondary bronze: 22px height, fill #6B4E2E, 1px border #C4A46A, cream label.",
+      "Use the card's thin studded frame on the main window too. The header is a heavier double rail than the cards.",
+      "Bronze secondary buttons and the red close should share one 22px height and 4px corner radius so Compact, View details and X feel like one kit."
+    ],
+    "elvui_wc3_fit": [
+      "Match his real windows: fill #12100E, 1px border #3A3128, only 4px bronze corner studs. Scene 02 still wears the ornate default header.",
+      "Names should be cream #F4E8D0 or true class colour, not #4FC3F7 cyan. Titles stay #E6C878, body #E8DCC8, labels #C9B27A like his Options yellow.",
+      "His secondary actions are blue enamel. Make Compact and View details #245C9A with a 1px #6FA8DC top edge. Reserve red for the close X and NOT RESTING only."
+    ],
+    "alerts_ux": [
+      "Cap the banner at 520px. Headline 16px #F0A04A, body 13px #E8DCC8, 10px padding. The current bronze button is long and the FULL pill floats.",
+      "Rename the button to Play Le Nette and put the FULL pill on that same row so the next character is the action, not a details link.",
+      "Anchor 24px above the bottom and 16px clear of the game menu. The scene 08 bar sits tight under Return to Game. X hit area 24px."
+    ],
+    "readability": [
+      "Lift secondary gray (0.6 rested levels left, seen 4d ago, sync line) from about #6A6560 to #A89B88 at 12px minimum.",
+      "Max level. I keep the bench warm. is too dim. Use #C8BBA0 at 12px.",
+      "Every rest track should be 8px with a 1px #00000055 inner shadow so a short red or blue fill stays visible."
+    ],
+    "layout_polish": [
+      "Compact mode is three loose strips of different widths. One shared frame: list, 28px icon footer, toast docked 8px below at the same width.",
+      "Lock status pills at 92px wide so FULL, NEARLY FULL and NOT RESTING share a right edge. Row height 36px.",
+      "First-run Link account should be 160x26, centered 12px under step 3, with the empty-account line 16px below it, not left-orphaned."
+    ],
+    "delight": [
+      "Promote the hero quip (Water's conjured.) to a 14px tail bubble aimed at the portrait. It is currently a tiny caption.",
+      "Show the card's zZZ / moon mark on the main portrait only when FULL, 16px, top-right of the disc.",
+      "Toast body should add one 12px italic speech fragment in #D9C9A8 so the nudge sounds like the alt, not a second status line."
+    ]
+  },
+  "overall_notes": "Play-next is the part that already works: numbered roster, huge banked-XP figure, and a plain sentence that says hearth then play Le Nette. Default theme is a credible WoW frame, and the character lines are the delight. It is not shippable for this user yet. ElvUI mode still looks like the ornate default window with a blue Compact button, not his thin near-black Gatewood panels, cream/gold type and blue enamel actions. Orange rest state muddies into bronze chrome, compact UI is three disconnected strips, and secondary gray text fails on the dark fill.",
+  "model": "grok-4.7"
+}

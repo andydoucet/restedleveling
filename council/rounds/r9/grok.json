@@ -1,0 +1,58 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 7,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Warm every panel fill from near-pure black to #16120E with a 1px inner edge #3A2E22 so the dashboard matches the Character window instead of a flat void.",
+      "Enlarge the hero portrait from ~64px to 84px and add a 10px speech tail from the bubble to the portrait; the current bubble floats with no connection.",
+      "Add 10px of space under the NOW PLAYING strip before row 2 so the hero, the current character, and the queue read as three beats."
+    ],
+    "character_identity": [
+      "On every roster row, class-colour the 14px name and append race/class on the 12px line, e.g. 'Lv 19 Tauren Hunter \u00b7 Thunder Bluff \u00b7 3d ago'. Location alone does not identify the alt.",
+      "Bump row portraits from ~28px to 36px inside a 2px #2A2118 ring so faces are recognizable at roster scale.",
+      "On the card, put class and faction as a 12px cream line under the level line; the portrait and one quote are doing all the identity work."
+    ],
+    "default_theme": [
+      "The default main window is almost the same slab as ElvUI. Give default-only chrome: 6px bronze corner studs #8A6A3B, a 2px header band #2A2118, and a gold hairline #C4A35A at 50% under the title.",
+      "Keep the gold level disc from the default card (22px, #C4A35A ring, #1A140F centre) and repeat a 20px disc on the hero next to the name.",
+      "Default Compact / Link account should be warm bronze #6B542E with cream label, not the same blue enamel as ElvUI, so the two themes separate at a glance."
+    ],
+    "elvui_wc3_fit": [
+      "Match his real frames: fill #12100E, outer hairline #2A2118, and 4px bronze studs at the four corners. The current border is a plain dark stroke with no studs.",
+      "Status chips (FULL, NOT RESTING, OUTSIDE AN INN) are filled enamel brighter than his red primary buttons. Make them flat: 12px text plus a 3px state bar, no filled rectangle, so only View Le Nette stays red enamel #8E2B2B.",
+      "Title 'Rested Leveling' should be 15px gold #E6D3A3, the same weight as his Options / Character titles, not a small cream label."
+    ],
+    "alerts_ux": [
+      "The logout banner explains the problem but has no action. Add a 26px red enamel Hearth button (#8E2B2B, cream label) at the right of the banner, 8px left of the close button.",
+      "Anchor the banner 12px below the screen top, full content width capped at 560px, with a 3px left bar in the character state colour so it is seen during the logout count.",
+      "On the ESC case, dock the banner 8px under the menu's bottom edge. The current gap makes it look like a second unrelated window."
+    ],
+    "readability": [
+      "Muted lines ('none used this session', 'Synced 2d ago from Acct #3', step body copy) sit too close to the fill. Raise them from dim gray to #C7BBA8 (still secondary to #F3E6C8 names).",
+      "Row height is too tight for a 14px name plus 12px meta. Set each row to 52px with a 4px gap between the two text lines and 12px horizontal padding.",
+      "Bar captions such as '100% \u00b7 full for 8h' should be 12px #F3E6C8 on the bar's dark track, not a low-contrast gray beside the pill."
+    ],
+    "layout_polish": [
+      "Lock the right column: state pills in a 118px slot, right-aligned, so FULL, NEARLY FULL, NOT RESTING and MAX LEVEL share one edge. MAX LEVEL currently leaves a hole where the bar was.",
+      "In the compact stack, put 8px between the roster tooltip, the pip row, and the toast. The three frames currently kiss and read as one broken panel.",
+      "Card stat grid: two equal columns, 16px gutter, icons in a 20px column at 16px. Hearth / played / professions should baseline-align with the right column."
+    ],
+    "delight": [
+      "Keep a unique 14px quote on the hero at all times, with a 2px tail and a 16px emote icon. The list itself is still a spreadsheet once you leave the card.",
+      "When a character is FULL, run a single 600ms opacity pulse on the green bar (1.0 to 0.72 and back) so 'play this one' has motion without a modal.",
+      "Replace the empty-state generic icons with 32px rested-moon, inn, and envelope marks tinted #E8D5A3, and give step titles 16px cream so the first-run panel feels like the card, not a help doc."
+    ]
+  },
+  "overall_notes": "The roster logic is the strong part: play-next, the 1.7 banked figure, and the green/yellow/orange/red states are clear and would ship. It is not a 9 yet. Default chrome is barely distinct from the ElvUI skin, that skin is missing the warm fill and bronze corner studs of his real windows, muted 12px text is still dim, and the logout alert tells you to hearth without a button. Fix those and the quotes already give it personality.",
+  "model": "grok-4.7"
+}

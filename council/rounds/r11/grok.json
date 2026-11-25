@@ -1,0 +1,64 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 9,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 7,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 7,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Give the main window a 28px header band with a 1px #6B5428 rule under the title so it stops reading as a flat admin list.",
+      "Stop the fixed 116px chips: 20px tall, 12px horizontal padding, min width 84px, label centered. Short words like FULL should not sit in a wide empty slab.",
+      "Inset the hero backdrop 8px with a 1px #3A2A18 frame, and open row gap from about 2px to 6px at a 56px row height."
+    ],
+    "state_colours": [
+      "NEARLY FULL is too close to title gold. Use chip fill #D6C431 and label #1A1408, and keep titles at #F0BF4C so yellow means state, not chrome.",
+      "RESTING must be a clean amber #E8902E on both the bar and the chip; Le Bankke's chip reads as muddy brown. NOT RESTING stays #D23A2A with label #FFF6EE, FULL #2F9E55.",
+      "Keep the 5px rail but add a 4px gap before the portrait so the rail does not touch the circle."
+    ],
+    "character_identity": [
+      "Bump row portraits from about 32px to 40px and add a 14px class icon 4px to the right of the name.",
+      "On the card, make the talking stage a real 220x160 frame with a 16px bronze (default) or 1px #3A2E22 (ElvUI) edge, not only a circle floating on the backdrop.",
+      "Add a 10px speech-bubble tail aimed at the portrait mouth so the line reads as that character talking."
+    ],
+    "default_theme": [
+      "Separate it from ElvUI: panel fill #2A2118, 2px border #8C6E3A, 8px bronze corner studs. Near-black #12100E makes default and ElvUI the same window.",
+      "One secondary button everywhere: 24px, fill #6E542C, top highlight #A68448, 1px #3A2A14, label #F3ECE2 13px. Use it for Compact, alert View, Link account, and the dismiss X.",
+      "Red enamel only for the main-window View Le Nette and the window close: fill #8E2A22, highlight #C44A3A, label #F8E8E0. No blue anywhere in this theme."
+    ],
+    "elvui_wc3_fit": [
+      "Match his Options panel, not a louder dashboard: fill #1A120C, 1px #3A2E22 border, 6px #8A7040 studs inset 4px, 12px padding, and drop the extra inner gold rules.",
+      "Secondary buttons should copy Defaults: 22px, fill #1E4E8C, top edge #3A7CC0, label #E8F0FA. Keep close X and the primary View red #8C1E1E like Expanded Stats.",
+      "Solid neon pills shout next to his gold text. Use a quiet chip: 1px state-color border at 80% opacity, fill at 22% opacity, label in the state color. Title stays #F0BF4C at 16px."
+    ],
+    "alerts_ux": [
+      "Banner 64px, fill #1C140E, 4px left rail #D23A2A, 1px border #5A4030. Headline 15px #F3E6C8. Subcopy 13px #C4B8A4 and name the hearth: Hearth to Brill, or reach an inn.",
+      "The View control is a flat dark label. Make it a real 24px button, min width 120px, bronze in default and blue enamel in ElvUI, 8px right of a 20px green FULL chip.",
+      "Dismiss is a 24px bronze X, 8px from the right edge. Remove the gear from the banner. Anchor the banner 12px above the logout countdown so it never covers it."
+    ],
+    "readability": [
+      "Zone and time subtitles are the dimmest line. Set them to 13px #E4D8C8. Legend and compact state lines to 13px #F3ECE2, nothing under 12px.",
+      "Acct #3 is a tiny red tag that looks like a NOT RESTING chip. Make it 11px #F3ECE2 on #3A2A2A with 4px padding, and never use #D23A2A for account tags.",
+      "Card values 14px #F3ECE2, labels 11px #C4B8A4 with slight tracking. Gold amounts stay #F0D090."
+    ],
+    "layout_polish": [
+      "Right-align every chip to one column 8px inside the frame. Bars share one left edge. Portrait, 8px, name block, bar, 8px, chip.",
+      "Now-playing row is 36px: the bar flexes, the OUTSIDE A REST AREA badge is a fixed 168px, 8px gap, both vertically centered. The badge currently eats the bar.",
+      "Hero: one right edge 12px in. 36px number, 6px to levels banked, 8px to the next-alt line. Footer is one 20px line, 10px under the list, 12px side inset.",
+      "Card grid: 16px column gap, 8px row gap, 16px icons aligned to the value cap-height."
+    ],
+    "delight": [
+      "Style the speech box: 12px padding, 2px #C4A36A border, max width 280px, 10px tail. Keep the lines; they are the best writing in the UI.",
+      "Show the small z z only when that character is fully rested, 14px #F3ECE2 at 40% opacity, so it reads as asleep rather than decoration.",
+      "Toast: 32px portrait, 1.7 levels banked at 16px #F0D090, 24px bronze dismiss, 8s auto-dismiss. First-run step numbers belong in 20px bronze circles so that screen matches the card."
+    ]
+  },
+  "overall_notes": "The job is clear: Le Nette is obviously who to play, the four rest states separate, and the card copy has real character. I would not ship it to a demanding ElvUI user yet. Default and ElvUI are nearly the same near-black list, the fixed chips and the red now-playing badge feel like a web dashboard, and the logout banner's action is too weak to catch a misclick. Warm the default frame, quiet the ElvUI chips to his Options panel, and make the alert button unmistakable.",
+  "model": "grok-4.7"
+}

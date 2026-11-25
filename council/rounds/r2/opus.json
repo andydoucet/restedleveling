@@ -1,0 +1,75 @@
+{
+  "scores": {
+    "visual_appeal": 7,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 7,
+    "default_theme": 7,
+    "elvui_wc3_fit": 5,
+    "alerts_ux": 7,
+    "readability": 7,
+    "layout_polish": 6,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "Remove the soft radial glow blob at each bar's fill tip. On the 5% and 30% red bars (rows 6 and 7) it reads as a pink smear or render bug. Replace it with a crisp 2 px bright cap in the state colour lightened 25% (#FF7A7A for red, #FFF08A for yellow).",
+      "The nearly-full row tint renders as muddy olive (~#3A3418) and reads as dirty. Drop all row tints to about 6% state colour over #121009. Carry state through the 3 px left stripe and the chip instead.",
+      "The hero's right half (x 560 to 950) is empty lantern art above the bar. Anchor the '100%' and a '1.7 lvls' stat block at the top right of the hero, or move the 'z z' sprite off the title line, so the space feels designed rather than leftover."
+    ],
+    "play_next_clarity": [
+      "The gold '1' badge on the hero portrait renders as a brown 'I' on a gold disc. Make it a 24 px disc with a #F5C542 fill and a 1 px #5A3A10 edge. Draw the numeral in #1A1206 at 15 px bold.",
+      "The CTA line 'Log out and pick Le Nette at the character screen' renders cream at 11 px, not gold. Make it #FFD36A at 13 px, put it on its own line, and move 'Seen 4d ago' to the meta line.",
+      "'Open card >' is 10 px grey and easy to miss. Make it a 22 px bronze-edged button (#8A6A2E edge, #1A140C fill, #F0D9A0 text, 12 px)."
+    ],
+    "state_colours": [
+      "The FULL chip in the hero is a 98 px green slab holding 9 px text, so it reads as an empty bar. Use 11 px caps text, and 72 px in the hero.",
+      "In ElvUI the unfilled bar segments render as grey outlined cells (#6B6B6B-ish), which compete with the fill. Make the empty track #0B0A08 with no per-segment outline.",
+      "Make the yellow left stripe and chip edge #F2DB3B at 100% and the chip fill #2A2408. Right now the yellow chip fill is close to the row tint and the chip melts into the row."
+    ],
+    "character_identity": [
+      "Class-coloured names are good, but name 14 px against portrait 40 px still feels small. Use 15 px names and 44 px portraits with a 2 px class-colour ring instead of the uniform gold ring.",
+      "On the card, the portrait standing in for the stage needs a visible 'model stage' frame: a floor ellipse shadow (#000 at 60%, 120\u00d718 px) and a pedestal line. Without them the identity reads as a big icon, not a character.",
+      "The 'SAT FULL 6h in all' tile copy is cryptic. Rename it 'TIME AT FULL \u00b7 6h total'."
+    ],
+    "default_theme": [
+      "The oak title rail is good, but the window body is near-black with only a 1 px bronze edge. Add a 6 px oak plank border (texture), 10 px bronze corner caps instead of 4 px dots, and a 1 px #000 inner shadow line.",
+      "The 'Compact' button is a red pill with gold text that clashes with the oak rail. Use the same bronze-edged dark button as 'Open card', or the WC3 red enamel with cream text (#F4E6C0).",
+      "The footer sits too tight at 18 px. Give it 26 px with a 1 px #6B5226 rule above."
+    ],
+    "elvui_wc3_fit": [
+      "The rendered ElvUI frame shows almost none of Gatewood: no planks, no iron straps, rivets only at the corners, and a flat grey border. Whatever the sim does, ship a fallback that makes the window recognisably WC3 when ElvUI_WC3 is loaded.",
+      "The title plate has a stray square artifact after the text ('Rested Leveling\u25ae', 'Colonol Sunders\u25ae'). Something (a moon icon or a pip) is anchored onto the title text. Fix the anchor or hide it under ElvUI.",
+      "A grey 30 px bar fragment sits under the footer at the bottom centre of the ElvUI main window. It is a leftover template piece (bottom tab or resize grip). Hide it.",
+      "Inner wells under ElvUI drop the bronze separators and become grey. Keep 1 px #000 plus a 1 px #3A2A14 inner line so rows don't float.",
+      "The card reason text under ElvUI starts at x = 0 of the panel with no padding ('Not resting, so it fills\u2026') and orphans 'inn.' on the second line. Add 10 px horizontal padding and balance the wrap."
+    ],
+    "alerts_ux": [
+      "The banner (466 px) is wider than the logout dialog (260 px) and stacked 6 px under it, so they look unrelated. Match it to 360 px, centre it, and give it a 10 px gap, or attach it as a red-edged tab under the dialog.",
+      "The banner body ends 'Hearth first' with no period, in body colour, running into the close button. Make it a gold (#FFD36A) clickable phrase on its own line. Add 'Le Nette is full - play her next' so the alert offers an alternative.",
+      "The toast title 'RESTED XP USED UP' renders white at 9 px. Make it #FFD36A at 11 px. The close X overlaps the toast border: inset it 4 px.",
+      "The toast (332 px) and the Esc strip (258 px) differ in width and alignment. Give both 332 px, centred, with a shared 8 px gap."
+    ],
+    "readability": [
+      "Rank numerals render grey (#B0A890), not gold. Use #E8C060 at 18 px.",
+      "Chip text is ~9 px caps. Raise it to 11 px.",
+      "Moon pips are ~8 px and the unlit ones (#3A3428) are invisible on dark rows. Make them 11 px, lit #F5C542 and unlit #5A4E38 at full alpha.",
+      "The ElvUI scene drops text a size: name 12 and sub 10. Keep 14/12 regardless of skin.",
+      "The footer 'Show max level and hidden' checkbox in ElvUI is a grey square with no check visible."
+    ],
+    "layout_polish": [
+      "Row 4's sub line 'Stonetalon Mountains \u00b7 2d agc' is clipped into the bar column. Truncate the zone with an ellipsis at the column width (\u2248170 px) and keep '\u00b7 2d ago' unclipped, or drop the zone to 'Stonetalon Mts'.",
+      "'Acct #3' sits above the moons in row 7 and pushes the moons down 6 px versus the other rows. Give it a fixed slot left of the moons or a 9 px tag on the portrait corner.",
+      "Card tile grid: 7 tiles (or 5 under ElvUI) leave a dangling half row. Make the count even, or let the last tile span both columns.",
+      "The card's 48h chart under ElvUI draws a thin strip of bars in the bottom 20% of a 60 px box, with no 'Full the whole time' caption. Scale the y-axis to the max rested value, or show the caption when the series is flat.",
+      "The compact bar's 'Next: Le Nette FULL' runs together. Make 'FULL' a 9 px green chip, or use '\u00b7 Full' in #3DDC6A."
+    ],
+    "delight": [
+      "Speech bubble copy is good. Add a 4 px drop shadow (#000 at 50%) and a 1 px #8A6A3A edge so it reads as parchment, not a beige rectangle.",
+      "Give the #1 hero a subtle one-shot shine sweep (600 ms) when the roster order changes, so promotion to the top feels earned.",
+      "Give the first-run hero a ghost row preview ('your alts will appear here') on its empty right side, so the window teases its final look."
+    ]
+  },
+  "overall_notes": "A real step up from r1. The bake-to-texture fix shows: state colours are now saturated and distinct, the default window has a proper oak title rail, and the roster reads at a glance with a clear #1 hero. The empty, first-run and card states are thoughtful, and the copy is plain and good. What keeps it from 9: polish bugs a demanding user will notice immediately. These are the clipped 'agc' text, title-plate square artifacts in ElvUI, a stray footer fragment, smeary glow blobs on low bars, an unreadable gold '1' badge, tiny chip text and moons, and mismatched alert widths. The ElvUI/WC3 scene does not yet look like Gatewood in any meaningful way; it looks like a flat dark ElvUI window, which fails the user's main skin request even granting the sim caveat. Fix the clipping and artifacts, raise the small type, and make the WC3 inheritance visibly land; it would then be in 8\u20139 territory.",
+  "model": "claude-opus-5-5"
+}

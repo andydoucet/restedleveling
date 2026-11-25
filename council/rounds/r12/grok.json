@@ -1,0 +1,58 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 7,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Paint the hero '1.7' in warm gold #F0D090 at the same size, not cyan, so it shares the bronze/cream material of the title and bars.",
+      "Soften the row state chips: 20px tall, 1px #000000 inset, label 11px; they currently shout louder than the portrait and name.",
+      "Add a 1px inner highlight #6A5030 along the top of the hero only, so the panel has the slight depth of the character frame rather than a flat fill."
+    ],
+    "character_identity": [
+      "List-row portraits are muddy at ~28px. Crop them 1:1 at 36px with a 1px ring #8A7040 and 8px gap before the name.",
+      "The welcome Jacques portrait is a class emblem, not a face. Use the same 72px circular crop and gold ring as Le Nette, or if no portrait exists show a 64px ring labelled with the race, not a red crest that does not match the other heads.",
+      "On the card, drop the speech bubble 4px so its tail points at the portrait, and keep the bubble max width 280px so two-line jokes do not crowd the level line."
+    ],
+    "default_theme": [
+      "Hero #2A2118 still reads near-black beside ElvUI. Lift the hero to #3A2C1E, the list well to #2A2018, and row alternates to #32261C / #3A2E22 so the inn brown is obvious at a glance.",
+      "Header bronze rule is easy to miss. Make it 2px #8A6840, inset 12px, with 8px space under it before the hero.",
+      "The Link account button on first-run is a flat grey slab. Use the bronze bevel (fill #6E5428, top #C4A36A, bottom #3A2A14) at 140x26 with 13px cream label."
+    ],
+    "elvui_wc3_fit": [
+      "Match the character window corners: 8px bronze studs #8C7350 at each corner of the main frame and the card, on a 1px #2A241C outer border, not a plain gold stroke.",
+      "Compact is the right blue enamel, but View Le Nette is a flat red rectangle. Give it the same bevel as Expanded Stats: top #C45048, fill #8E2E2A, bottom #4A1614, 14px cream, height 26px.",
+      "ElvUI wells should stay #12100E. Do not reuse the warm default row tint; alternate #161310 and #1C1914 only, or the two themes still feel like one list."
+    ],
+    "alerts_ux": [
+      "The logout View Le Nette button reads green and collides with the FULL chip. Use the Esc-strip bronze bevel, 150x28, fill #6E5428, top edge #C4A36A, label 14px #F3E6C8, and put 10px between it and the 20px FULL chip.",
+      "Keep one type ramp on both alerts: headline 14px semibold #F3E6C8, body 12px #C8B89A. Logout body stays 'Cancel the logout, then hearth to Crossroads or reach an inn.' Esc body stays the shorter line, same sizes.",
+      "Gear is a 12px speck. Draw it 16px, hit target 24px, 8px left of the X, so Alert settings is actually findable."
+    ],
+    "readability": [
+      "Meta under the hero name ('Brill inn \u00b7 seen 4d ago') is below 12px. Set it to 12px #D9CBB2 with 4px line gap.",
+      "Compact tooltip state column: yellow 'Nearly full' at #E6C15A fails on #1A140E. Use #F0D48A, 12px, and keep names at 13px.",
+      "Now-playing 'none used this session' and '0.6 rested levels left' should be 12px #E4D5B8, not a dim 10px under the bar."
+    ],
+    "layout_polish": [
+      "'Le Bankken' plus 'Acct #3' collide. Put the account tag 6px after the name at 11px #A89880, or drop it under the level line.",
+      "Right column is busy (percent, time, chip). Fix the chip column at 108px, the time column at 120px right-aligned, and keep 12px between the bar end and the percent.",
+      "First-run step rows need 10px between icon and text and 14px between steps; the parchment icons currently sit tight against the numbers."
+    ],
+    "delight": [
+      "The moon in the title is static. Fill it in 4 steps with the top character's rested fraction (empty, quarter, half, full) in #F0D090 so the header itself says who is ready.",
+      "Give the card portrait a 2px #C4A36A ring and keep the small '22' badge, but move 'zzz' to 12px above the ring in #E8D7A8 so it does not sit in the bubble's corner.",
+      "The ran-out toast is one flat line. Set 'Play Le Nette' in 14px #F3E6C8 and '1.7 levels banked' in 13px #8FCB6A on the green rail so the reward reads before the dismiss X."
+    ]
+  },
+  "overall_notes": "The roster logic is clear and the speech lines do real character work. I would not ship it to a picky ElvUI user yet: the Gatewood frame is still a plain dark box, the logout action button reads as a green status chip, and the default inn brown is only a shade warmer than ElvUI black.",
+  "model": "grok-4.7"
+}

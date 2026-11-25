@@ -1,0 +1,57 @@
+{
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 9,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Reduce the repeated outlined-box treatment: retain borders on the outer frame and major panels, but replace the roster-summary box and individual row outlines with 1 px separators in #55432D.",
+      "The default hero still reads predominantly as black behind the character information. Brighten the right-hand inn artwork another 15%, keeping a local dark gradient behind text rather than darkening the entire painting."
+    ],
+    "play_next_clarity": [],
+    "state_colours": [],
+    "character_identity": [
+      "The current-character Horde emblem is faction identity rather than character identity. Prefer the live portrait when available, using the faction emblem only as a fallback and a 16 px class badge as secondary identification.",
+      "The detail-card fallback portrait is disproportionately large and visibly magnifies low-resolution art. Reduce its diameter from approximately 144 px to 112 px and preserve the remaining stage area for the live model; retain the character-specific speech.",
+      "Keep the character's level visible in both themes: the default card has a level coin, while the ElvUI card relies entirely on its subtitle. Use the same restrained 20 px lower-left level badge in both."
+    ],
+    "default_theme": [
+      "Make secondary actions such as 'Compact' and 'Link account...' share one bronze button treatment: #493923 fill, #957444 border, #F0DFB0 text, and 24 px height. They currently feel like separately assembled controls.",
+      "Separate the warm roster rows from their well with clearer value contrast: use #241C15 for the well and retain the existing warmer row fills. Avoid adding more saturation to the state tints."
+    ],
+    "elvui_wc3_fit": [
+      "Use the installed skin's blue enamel secondary-button treatment for 'Compact' and 'View Le Nette'. The real Options window establishes that convention; a red details button unnecessarily competes with the red close control.",
+      "The detail-card stage reads warmer and browner than the reference client's near-black panels. Match its base to approximately #160F08 and reserve warmer colour for actual scenery or the default theme.",
+      "Standardize close controls through the skin's own template and sizing. The tiny main-window X and larger detail-card X should present the same visible size and inset, with at least a 24 x 24 px clickable target."
+    ],
+    "alerts_ux": [
+      "In the active logout warning, make the immediate instruction the strongest element: render 'Cancel logout first' at 15\u201316 px and move the character headline to a 13 px supporting line. The details button currently receives more visual emphasis than the safety step.",
+      "Change the recommendation button to a secondary treatment and label it 'Details: Le Nette'. Preserve the separate FULL chip, but let the cancel instruction dominate while the countdown is active.",
+      "Give the warning gear and dismiss control matching 24 x 24 px hit targets, with an 8 px gap and consistent 6 px top inset."
+    ],
+    "readability": [
+      "Increase roster metadata and progress captions to at least 12 px at native UI scale. The default overview's location, last-seen information and time-to-full captions are noticeably harder to scan than character names.",
+      "Replace 'none used this session' with 'Rested XP used: 0' and '1.7 levels banked' with '1.7 rested levels' where space permits. These make the metric understandable without relying on adjacent context.",
+      "Raise muted secondary text to approximately #C8BCA7 against the dark panels, especially footer information and max-level explanatory text."
+    ],
+    "layout_polish": [
+      "Align the roster's STATE heading over the centre of its chips rather than near their right edge, and use one consistent chip width of approximately 116 px in the full-size layout.",
+      "On detail cards, anchor the speech bubble, portrait or model framing, name and status chip to a shared 12 px inset grid. The current upper-left bubble and right-heavy portrait leave the middle feeling composed from separate pieces.",
+      "Use a consistent 12 px vertical gap between the rested-progress caption and the tidbit panel; the default card currently leaves a conspicuous unused band there."
+    ],
+    "delight": [
+      "Replace the literal 'z z Z' above the resting portrait with three small, softly staggered sleep glyphs contained within the stage. Keep animation slow and disable it when reduced motion is enabled.",
+      "On a recommendation change, use a single 250 ms portrait-ring highlight rather than persistent glow. Tie the speech line to the newly recommended character so the personality reinforces the roster's purpose."
+    ]
+  },
+  "overall_notes": "Strong, coherent work with excellent recommendation hierarchy and redundant state encoding. The default theme now feels warm rather than generically black, and the ElvUI version is recognizably compatible with the user's actual dark panels, cream/gold typography and restrained framing. It is not yet a demanding-user approval at 9: small metadata, inconsistent control treatment, oversized fallback portrait art and the logout warning's competing emphasis remain visible. Simulator model limitations and stretched tiled skin strips are not counted as defects. The live talking animation cannot be evaluated from these stills.",
+  "model": "gpt-6.1-sol"
+}
