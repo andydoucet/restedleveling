@@ -144,7 +144,9 @@ function Frame:GetBottom() return self.__bottom end
 function Frame:GetLeft() return self.__left end
 function Frame:GetRight() return self.__right end
 function Frame:GetFrameStrata() return "MEDIUM" end
-function Frame:GetFrameLevel() return 1 end
+-- Frame levels as in the game: a new frame sits one above its parent; SetFrameLevel moves it.
+function Frame:GetFrameLevel() return self.__level or 1 end
+function Frame:SetFrameLevel(n) self.__level = n end
 function Frame:SetChecked(on) self.__checked = on and true or false end
 function Frame:GetChecked() return self.__checked == true end
 -- Anchors are recorded, newest last, so tests can check where something was put.
@@ -192,6 +194,7 @@ function FakeWoW.New()
 	game.CreateFrame = function(kind, name, parent, template)
 		local f = NewFrame(kind, name)
 		f.__parent = parent
+		f.__level = (type(parent) == "table" and parent.GetFrameLevel) and (parent:GetFrameLevel() + 1) or 1
 		if type(template) == "string" and template:find("BackdropTemplate", 1, true) then
 			-- BackdropTemplateMixin (Blizzard_SharedXML/Backdrop.lua): Lua methods, not widget methods.
 			f.SetBackdrop = function(self, b) self.__backdrop = b end

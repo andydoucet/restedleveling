@@ -15,11 +15,33 @@ function Wd.Levels(levels)
 	return ("%.1f levels"):format(levels)
 end
 
--- The time column: "full for 2d", "full in 6h 20m", plus the clock when it fills ("18:40").
-function Wd.FullIn(p, now)
-	if not p then return "", "" end
-	if p.left == 0 then return "full for " .. U.Short(now - (p.fullSince or now)), "" end
-	return "full in " .. U.Duration(p.left), U.Clock(now + p.left, now)
+-- Rest under this many levels counts as nothing banked yet (the hero does not send you to a 0.0).
+Wd.BANKED_MIN = 0.05
+
+-- A future moment in real-life clock time: "today 18:40", "tomorrow 02:10", "Thu 4 Dec, 22:40".
+-- Day and month names are ours, not the locale's, so every client reads the same. `dateFn` is injectable for tests.
+local DAYS = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
+local MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
+function Wd.When(ts, now, dateFn)
+	dateFn = dateFn or date
+	ts = math.floor(ts)
+	local t, today, tmrw = dateFn("*t", ts), dateFn("*t", now), dateFn("*t", now + 86400)
+	local hm = ("%02d:%02d"):format(t.hour, t.min)
+	if t.year == today.year and t.yday == today.yday then return "today " .. hm end
+	if t.year == tmrw.year and t.yday == tmrw.yday then return "tomorrow " .. hm end
+	return ("%s %d %s, %s"):format(DAYS[t.wday], t.day, MONTHS[t.month], hm)
+end
+
+-- How much longer until fully rested, in real time, everywhere a character's rest shows (one formatter):
+-- "Full in 9d 23h (Thu 4 Dec, 22:40)", "Full in 6h 20m (today 18:40)", and once full "Full for 2d 4h".
+function Wd.FullLine(p, now, dateFn)
+	if not p then return "" end
+	if p.left == 0 then
+		local since = now - (p.fullSince or now)
+		return since < 60 and "Full now" or ("Full for " .. U.Duration(since))
+	end
+	local left = math.max(60, p.left)
+	return ("Full in %s (%s)"):format(U.Duration(left), Wd.When(now + left, now, dateFn))
 end
 
 -- Where a character was saved: "Goldshire inn", "Stormwind City", "sleeping bag in Duskwood", "outside in Westfall".
@@ -47,30 +69,69 @@ function Wd.ShortPlace(c)
 	return Wd.ShortZone(c.zone)
 end
 
--- The hero card's reason, in plain words.
-function Wd.Why(r, now)
-	local p, c = r.p, r.c
-	if not p then return "Max level. Nothing left to rest for." end
-	local lv = Wd.Levels(p.levels)
-	if r.state == "full" then
-		return ("Fully rested for %s. %s of double XP waiting."):format(U.Long(now - (p.fullSince or now)), lv)
-	elseif r.state == "near" then
-		return ("%d%% full, tops off in %s. %s of double XP ready."):format(math.floor(p.pct * 100), U.Long(p.left), lv)
-	elseif r.state == "resting" then
-		return ("Resting at %s. %s banked, full %s."):format(Wd.Place(c), lv, U.Clock(now + p.left, now))
-	end
-	return ("Not resting: fills 4x slower. %s banked. Park it in an inn."):format(lv)
+-- "0.8 of a level banked", or "Nothing banked yet" under a twentieth of a level.
+local function banked(levels)
+	if levels < Wd.BANKED_MIN then return "Nothing banked yet" end
+	return Wd.Levels(levels) .. " banked"
 end
 
--- The roster's time line for a row: "93% · full in 14h 25m · 18:25"; outside rows say what to do instead of a far date.
-function Wd.RowTime(r, now, calibrated)
+-- The card's reason, in plain words, with the real-life time to full.
+function Wd.Why(r, now, dateFn)
+	local p, c = r.p, r.c
+	if not p then return "Max level. Nothing left to rest for." end
+	local full = Wd.FullLine(p, now, dateFn)
+	if r.state == "full" then
+		return ("%s. %s of double XP waiting."):format(full, Wd.Levels(p.levels))
+	elseif r.state == "near" then
+		return ("%d%% full. %s. %s of double XP ready."):format(math.floor(p.pct * 100), full, Wd.Levels(p.levels))
+	elseif r.state == "resting" then
+		return ("Resting at %s. %s. %s."):format(Wd.Place(c), banked(p.levels), full)
+	end
+	return ("Not resting: fills 4x slower. %s. %s. Park it in an inn."):format(banked(p.levels), full)
+end
+
+-- The hero's one line under its bar: the state in a word or two, then the real-life time to full.
+function Wd.HeroWhy(r, now, dateFn)
+	local p = r.p
+	if not p then return "Max level. Nothing left to rest for." end
+	local full = Wd.FullLine(p, now, dateFn)
+	if r.state == "full" then return ("Fully rested. %s."):format(full) end
+	if r.state == "near" then return ("%d%% full. %s."):format(math.floor(p.pct * 100), full) end
+	if r.state == "resting" then return ("Resting. %s."):format(full) end
+	return ("Not resting, fills 4x slower. %s."):format(full)
+end
+
+-- Nobody has rest worth switching to: the best alt is not (nearly) full and has under BANKED_MIN levels.
+function Wd.NothingBanked(r)
+	return r ~= nil and r.p ~= nil and r.group ~= nil and r.group >= 3 and r.group <= 4 and r.p.levels < Wd.BANKED_MIN
+end
+
+-- The one that fills first (least time to full) among rows with rest to project, or nil.
+function Wd.FillsFirst(rows)
+	local best
+	for _, r in ipairs(rows or {}) do
+		if r.p and r.group and r.group < 5 and (not best or r.p.left < best.p.left) then best = r end
+	end
+	return best
+end
+
+-- The hero's action bar. The "first, ..." part is always about the character you are on (`meName`), never the
+-- one to play next. empty: nobody is rested yet, so there is nobody to switch to.
+function Wd.Action(name, meName, restingNow, empty)
+	meName = meName or "this character"
+	if empty then
+		if restingNow then return ("Nobody to switch to yet. Keep playing %s; it rests here too."):format(meName) end
+		return ("Nobody to switch to yet. When you stop, log %s out in an inn."):format(meName)
+	end
+	if restingNow then return ("Next, log %s out here. Then play %s."):format(meName, name) end
+	return ("First, take %s to an inn (hearth). Then play %s."):format(meName, name)
+end
+
+-- The roster's time line for a row: "93%  ·  Full in 14h 25m (today 18:25)".
+function Wd.RowTime(r, now, calibrated, dateFn)
 	local p = r.p
 	if not p then return r.state == "max" and "Max level. I keep the bench warm." or "" end
-	local pct = (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%"
-	if r.state == "outside" and p.left > 0 then
-		return pct .. "  ·  park in an inn"   -- the slow fill estimate is in the tooltip
-	end
-	return pct .. "  ·  " .. (Wd.FullIn(p, now))   -- the exact day and time are in the tooltip
+	return (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%  ·  " .. Wd.FullLine(p, now, dateFn)
 end
 
 -- Why #1 beats #2, in one short line with the same rounding as the rows: "2d ahead of Le Beouf (full for 8h)".
@@ -84,14 +145,6 @@ function Wd.Ahead(rows, now)
 		return ("Then %s at %d%%"):format(name, math.floor(b.p.pct * 100))
 	end
 	return ("Then %s with %s"):format(name, Wd.Levels(b.p.levels))
-end
-
--- A fill estimate for tooltips: "full for 2d", "full in 14h 25m", "full in ~27d" (rough when far away).
-function Wd.FillTime(p, now)
-	if not p then return "" end
-	if p.left == 0 then return "full for " .. U.Short(now - (p.fullSince or now)) end
-	if p.left >= 2 * 86400 then return "full in about " .. U.Short(p.left) end
-	return "full in " .. U.Duration(p.left)
 end
 
 -- Short label for the state chip.

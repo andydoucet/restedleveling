@@ -24,25 +24,90 @@ function cases.levels_read_naturally()
 	T.eq(ns.Words.Levels(0.42), "0.4 of a level", "under one")
 end
 
-function cases.hero_reason_for_each_state()
+-- The game's date() is local time; tests read UTC so the clock times are the same on every machine.
+-- W.NOW is Fri 13 Nov 2026, 20:00 UTC.
+local function utc(fmt, t) return os.date("!" .. fmt, t) end
+
+function cases.card_reason_for_each_state_ends_with_the_real_time_to_full()
 	local ns = load()
 	local Wd = ns.Words
-	T.eq(Wd.Why(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 9 * H }), NOW),
-		"Fully rested for 9 hours. 1.5 levels of double XP waiting.", "full")
-	T.has(Wd.Why(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW), "93% full, tops off in 2 hours.", "near")
-	T.has(Wd.Why(row("resting", { pct = 0.5, levels = 0.75, left = 5 * H }, { resting = true, restKind = "inn", subzone = "Goldshire" }), NOW),
-		"Resting at Goldshire inn", "resting")
-	T.has(Wd.Why(row("outside", { pct = 0.2, levels = 0.3, left = 90 * H }, { zone = "Durotar" }), NOW), "4x slower", "outside")
+	T.eq(Wd.Why(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 9 * H }), NOW, utc),
+		"Full for 9h. 1.5 levels of double XP waiting.", "full")
+	T.eq(Wd.Why(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, utc),
+		"93% full. Full in 2h (today 22:00). 1.4 levels of double XP ready.", "near")
+	T.eq(Wd.Why(row("resting", { pct = 0.5, levels = 0.75, left = 5 * H }, { resting = true, restKind = "inn", subzone = "Goldshire" }), NOW, utc),
+		"Resting at Goldshire inn. 0.8 of a level banked. Full in 5h (tomorrow 01:00).", "resting")
+	T.eq(Wd.Why(row("resting", { pct = 0, levels = 0, left = 240 * H }, { resting = true, restKind = "inn", subzone = "Feathermoon Stronghold" }), NOW, utc),
+		"Resting at Feathermoon Stronghold inn. Nothing banked yet. Full in 10d (Mon 23 Nov, 20:00).", "empty in an inn")
+	T.has(Wd.Why(row("outside", { pct = 0.2, levels = 0.3, left = 90 * H }, { zone = "Durotar" }), NOW, utc), "4x slower", "outside")
+	T.has(Wd.Why(row("outside", { pct = 0.2, levels = 0.3, left = 90 * H }, { zone = "Durotar" }), NOW, utc),
+		"Full in 3d 18h (Tue 17 Nov, 14:00)", "outside, real time")
 end
 
-function cases.time_column_shows_full_for_or_full_in_with_a_clock()
+function cases.hero_line_is_the_state_then_the_real_time_to_full()
+	local Wd = load().Words
+	T.eq(Wd.HeroWhy(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 2 * D - 4 * H }), NOW, utc),
+		"Fully rested. Full for 2d 4h.", "full")
+	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 2 * H, utc),
+		"Resting. Full in 6h 20m (tomorrow 00:20).", "resting")   -- 18:00 + 6h 20m crosses midnight: says which day
+	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 8 * H, utc),
+		"Resting. Full in 6h 20m (today 18:20).", "resting, same day")
+	T.eq(Wd.HeroWhy(row("outside", { pct = 0.2, levels = 0.3, left = 36 * D }), NOW, utc),
+		"Not resting, fills 4x slower. Full in 36d (Sat 19 Dec, 20:00).", "outside")
+end
+
+-- One formatter for "how much longer until fully rested", at its boundaries.
+function cases.full_line_at_its_boundaries()
+	local Wd = load().Words
+	local function at(left) return Wd.FullLine({ left = left }, NOW, utc) end
+	T.eq(at(59 * 60), "Full in 59m (today 20:59)", "59m")
+	T.eq(at(H), "Full in 1h (today 21:00)", "1h")
+	T.eq(at(23 * H + 59 * 60), "Full in 23h 59m (tomorrow 19:59)", "23h59m")
+	T.eq(at(D), "Full in 1d (tomorrow 20:00)", "1d")
+	T.eq(at(9 * D + 23 * H), "Full in 9d 23h (Mon 23 Nov, 19:00)", "9d23h")
+	T.eq(at(10), "Full in 1m (today 20:01)", "under a minute rounds up to 1m")
+	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 2 * D - 4 * H }, NOW, utc), "Full for 2d 4h", "full")
+	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 30 }, NOW, utc), "Full now", "just filled")
+	T.eq(Wd.FullLine(nil, NOW, utc), "", "max level: nothing to fill")
+end
+
+-- Andy asked whether ~10 days from empty is right: 5% of a level per 8h, cap 1.5 levels = 240h in an inn; 4x that
+-- outside; Well Rested ranks scale rate and cap together, so the time is the same.
+function cases.empty_to_full_is_ten_days_in_an_inn_forty_outside()
 	local ns = load()
-	local a, b = ns.Words.FullIn({ left = 0, fullSince = NOW - 2 * D }, NOW)
-	T.eq(a, "full for 2d", "full for")
-	T.eq(b, "", "no clock when full")
-	a, b = ns.Words.FullIn({ left = 6 * H + 20 * 60 }, NOW)
-	T.eq(a, "full in 6h 20m", "full in")
-	T.ok(b:match("%d%d:%d%d"), "clock " .. b)
+	local M = ns.Model
+	local inn = M.Project({ t = NOW, xpMax = 1000, rested = 0, resting = true }, NOW, {})
+	T.eq(math.floor(inn.left / H + 0.5), 240, "inn: 240h")
+	local out = M.Project({ t = NOW, xpMax = 1000, rested = 0, resting = false }, NOW, {})
+	T.eq(math.floor(out.left / D + 0.5), 40, "outside: 40 days")
+	local ranked = M.Project({ t = NOW, xpMax = 1000, rested = 0, resting = true, ranks = 5 }, NOW, {})
+	T.eq(math.floor(ranked.left / H + 0.5), 240, "Well Rested 5: still 240h (rate and cap both +20%)")
+end
+
+function cases.nothing_banked_means_nobody_to_play_next()
+	local Wd = load().Words
+	local jette = row("resting", { pct = 0, levels = 0.01, left = 239 * H }, { full = "Le Jette", resting = true })
+	jette.group = 4
+	T.ok(Wd.NothingBanked(jette), "0.01 levels in an inn is nothing to switch to")
+	local some = row("resting", { pct = 0.1, levels = 0.15, left = 200 * H })
+	some.group = 3
+	T.ok(not Wd.NothingBanked(some), "0.15 levels is worth playing")
+	local full = row("full", { pct = 1, levels = 1.5, left = 0 })
+	full.group = 1
+	T.ok(not Wd.NothingBanked(full), "full")
+	T.ok(not Wd.NothingBanked(nil), "no hero")
+	local far = row("outside", { pct = 0, levels = 0.02, left = 900 * H }, { full = "Far" })
+	far.group = 4
+	T.eq(Wd.FillsFirst({ far, jette }), jette, "fills first: least time to full, not the list order")
+end
+
+function cases.action_line_only_says_hearth_about_the_character_you_are_on()
+	local Wd = load().Words
+	T.eq(Wd.Action("Le Jette", "Le Nette", false, false), "First, take Le Nette to an inn (hearth). Then play Le Jette.", "outside")
+	T.eq(Wd.Action("Le Jette", "Le Nette", true, false), "Next, log Le Nette out here. Then play Le Jette.", "resting")
+	T.eq(Wd.Action("Le Jette", "Le Nette", false, true), "Nobody to switch to yet. When you stop, log Le Nette out in an inn.", "empty, outside")
+	T.eq(Wd.Action("Le Jette", "Le Nette", true, true), "Nobody to switch to yet. Keep playing Le Nette; it rests here too.", "empty, resting")
+	T.lacks(Wd.Action("Le Jette", "Le Nette", false, true), "play Le Jette", "nobody to send you to")
 end
 
 function cases.places()
@@ -59,12 +124,12 @@ function cases.sync_footer_says_when_no_other_account_was_seen()
 	T.eq(Wd.SyncLine({ { label = "#3", lastSync = NOW - 2 * D } }, NOW), "Synced 2d ago from Acct #3", "synced")
 end
 
-function cases.outside_rows_say_what_to_do_instead_of_a_far_date()
+function cases.rows_show_the_real_time_to_full_even_outside()
 	local Wd = load().Words
-	local t = Wd.RowTime(row("outside", { pct = 0.3, levels = 0.45, left = 27 * D }), NOW, true)
-	T.eq(t, "30%  ·  park in an inn", "outside")
-	t = Wd.RowTime(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, false)
-	T.has(t, "~93%  ·  full in 2h", "projected rows carry a ~")
+	local t = Wd.RowTime(row("outside", { pct = 0.3, levels = 0.45, left = 27 * D }), NOW, true, utc)
+	T.eq(t, "30%  ·  Full in 27d (Thu 10 Dec, 20:00)", "outside")
+	t = Wd.RowTime(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, false, utc)
+	T.eq(t, "~93%  ·  Full in 2h (today 22:00)", "projected rows carry a ~")
 end
 
 function cases.long_durations_read_as_words()
@@ -91,13 +156,6 @@ function cases.hero_says_why_number_one_beats_number_two()
 	local c = row("resting", { pct = 0.5, levels = 0.8, left = H }, { full = "Le Bankke" })
 	c.group = 3
 	T.eq(Wd.Ahead({ a, c }, NOW), nil, "different groups need no explanation")
-end
-
-function cases.far_fill_times_are_marked_rough()
-	local Wd = load().Words
-	T.eq(Wd.FillTime({ left = 27 * D + 3 * H }, NOW), "full in about 27d", "far")
-	T.eq(Wd.FillTime({ left = 14 * H + 25 * 60 }, NOW), "full in 14h 25m", "near")
-	T.eq(Wd.FillTime({ left = 0, fullSince = NOW - 2 * D }, NOW), "full for 2d", "full")
 end
 
 return cases

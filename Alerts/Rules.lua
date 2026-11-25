@@ -69,8 +69,7 @@ function Ru.Digest(rows, now, me)
 		out[#out + 1] = ("%d full: %s."):format(#full, table.concat(full, ", ", 1, math.min(#full, 5)) .. (#full > 5 and ", ..." or ""))
 	end
 	if soon then
-		local fullIn = Wd.FullIn(soon.p, now)
-		out[#out + 1] = ("Next to fill: %s (%s)."):format(soon.c.full or "?", fullIn)
+		out[#out + 1] = ("Next to fill: %s. %s."):format(soon.c.full or "?", Wd.FullLine(soon.p, now))
 	end
 	if me and me.lastLogoutOutside then
 		out[#out + 1] = "Last time you logged out here it was outside: this one filled 4x slower."

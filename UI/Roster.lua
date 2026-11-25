@@ -16,9 +16,8 @@ local function rowTooltip(row)
 	local s = St.STATE[r.state] or St.STATE.max
 	GameTooltip:AddDoubleLine("|T" .. s.icon .. ":14|t " .. s.word, Wd.Chip(r), s.r, s.g, s.b, 1, 1, 1)
 	if p then
-		local fullIn, clock = Wd.FullIn(p, now)
 		GameTooltip:AddDoubleLine("Rested", Wd.Levels(p.levels) .. " of double XP", 0.8, 0.8, 0.8, 1, 1, 1)
-		GameTooltip:AddDoubleLine("Fills", fullIn .. (clock ~= "" and (" (" .. clock .. ")") or ""), 0.8, 0.8, 0.8, 1, 1, 1)
+		GameTooltip:AddDoubleLine("Real time", Wd.FullLine(p, now), 0.8, 0.8, 0.8, 1, 1, 1)
 	end
 	GameTooltip:AddDoubleLine("Saved at", Wd.Place(c), 0.8, 0.8, 0.8, 1, 1, 1)
 	GameTooltip:AddDoubleLine("Last seen", U.Ago(now - (c.t or now)), 0.8, 0.8, 0.8, 1, 1, 1)

@@ -26,9 +26,9 @@ function ns.PrintRoster()
 	U.Print("play next, top first:")
 	for i, r in ipairs(rows) do
 		local p = r.p
-		local status = r.state == M.FULL and ("full for " .. U.Duration(now - p.fullSince))
-			or ("%d%%, full in %s"):format(math.floor(p.pct * 100), U.Duration(p.left))
-		print(("  %d. %s %d: %s (%.1f lvl)%s"):format(i, r.c.full or "?", r.c.level or 0, status, p.levels,
+		local status = p and ((r.state == M.FULL and "" or ("%d%%, "):format(math.floor(p.pct * 100))) .. ns.Words.FullLine(p, now))
+			or "max level"
+		print(("  %d. %s %d: %s (%.1f lvl)%s"):format(i, r.c.full or "?", r.c.level or 0, status, p and p.levels or 0,
 			r.c.resting and "" or " |cffff6040outside|r"))
 	end
 end

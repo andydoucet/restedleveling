@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+Fixes from the first in-game run (ILL-1274):
+
+- Button labels stay readable on hover (every button and the close cross): the label draws above the hover face.
+- Real-life time to full everywhere a character's rest shows (hero, rows, card, mini-roster, tooltips):
+  "Full in 9d 23h (Thu 4 Dec, 22:40)", "Full in 6h 20m (today 18:40)", "Full for 2d 4h". The card's rest line
+  explains the maths on hover (5% of a level per 8h in an inn or city, full at 1.5 levels: 10 days from empty).
+- When nobody has rest banked, the hero no longer says "play next" a 0.0: it says who fills first and when. "First,
+  take ... to an inn" is always about the character you are on.
+- Professions are listed once each (Forever reported some twice); saved duplicates are cleaned on login.
+
 ## 1.0.0 (unreleased)
 
 First release.

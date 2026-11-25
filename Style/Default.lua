@@ -141,7 +141,11 @@ function D.MakeButton(parent, w, label, primary, h, enamel)
 		St.Paint(b.low, "sw_bevel_lo")
 		b.low:SetPoint("BOTTOMLEFT", 1, 1); b.low:SetPoint("BOTTOMRIGHT", -1, 1); b.low:SetHeight(1)
 	end
-	b.label = b:CreateFontString(nil, "OVERLAY")
+	-- The label lives on a child frame: a child draws above every layer of its parent, including the HIGHLIGHT
+	-- layer (which draws above OVERLAY), so the hover face never covers the text.
+	b.face = CreateFrame("Frame", nil, b)
+	b.face:SetAllPoints()
+	b.label = b.face:CreateFontString(nil, "OVERLAY")
 	D.Font(b.label, "name", 13)
 	b.label:SetPoint("CENTER", 0, 1)
 	b.label:SetTextColor(0.96, 0.91, 0.76)
@@ -164,7 +168,9 @@ function D.MakeClose(parent)
 	b.hl:SetPoint("TOPLEFT", 1, -1)
 	b.hl:SetPoint("BOTTOMRIGHT", -1, 1)
 	St.Paint(b.hl, "btn_red_hi")
-	b.x = b:CreateFontString(nil, "OVERLAY")
+	b.face = CreateFrame("Frame", nil, b)   -- the cross above the hover face, as on every button
+	b.face:SetAllPoints()
+	b.x = b.face:CreateFontString(nil, "OVERLAY")
 	D.Font(b.x, "number", 15)
 	b.x:SetPoint("CENTER", 0, 1)
 	b.x:SetText("X")

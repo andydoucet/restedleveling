@@ -17,18 +17,48 @@ local PROF_CATEGORIES = { [9] = true, [11] = true }   -- secondary skills, profe
 local PROF_NAMES = { Alchemy = 1, Blacksmithing = 1, Enchanting = 1, Engineering = 1, Herbalism = 1, Leatherworking = 1,
 	Mining = 1, Skinning = 1, Tailoring = 1, Cooking = 1, ["First Aid"] = 1, Fishing = 1 }
 
--- "Mining 175, Herbalism 150" (primary first, then secondary).
+-- One entry per profession name, in first-seen order, keeping the highest rank. Forever lists some skills more than
+-- once (Andy's card read "Blacksmithing 185, Blacksmithing 185, ..."). items: { { name, rank }, ... }.
+local function dedupe(items)
+	local out, at = {}, {}
+	for _, it in ipairs(items) do
+		local name, rank = it[1], it[2] or 0
+		if at[name] then
+			if rank > out[at[name]][2] then out[at[name]][2] = rank end
+		else
+			out[#out + 1] = { name, rank }
+			at[name] = #out
+		end
+	end
+	local parts = {}
+	for i, it in ipairs(out) do parts[i] = ("%s %d"):format(it[1], it[2]) end
+	return #parts > 0 and table.concat(parts, ", ") or nil
+end
+
+-- "Mining 175, Herbalism 150" (primary first, then secondary), each profession once.
 function Tb.Professions()
-	local out = {}
+	local items = {}
 	if C_SkillInfo and C_SkillInfo.GetNumSkillLines then
 		for i = 1, U.Call(C_SkillInfo.GetNumSkillLines) or 0 do
 			local s = U.Call(C_SkillInfo.GetSkillLineInfo, i)
-			if s and not s.isHeader and (PROF_CATEGORIES[s.skillLineCategoryID] or PROF_NAMES[s.name]) then
-				out[#out + 1] = ("%s %d"):format(s.name, s.rank or 0)
+			local name = s and U.Str(s.name)
+			if name and not s.isHeader and (PROF_CATEGORIES[s.skillLineCategoryID] or PROF_NAMES[name]) then
+				items[#items + 1] = { name, U.Num(s.rank) or 0 }
 			end
 		end
 	end
-	return #out > 0 and table.concat(out, ", ") or nil
+	return dedupe(items)
+end
+
+-- A saved "Blacksmithing 185, Blacksmithing 185, Mining 201" read back once per profession.
+function Tb.CleanProfs(text)
+	if type(text) ~= "string" then return nil end
+	local items = {}
+	for part in text:gmatch("[^,]+") do
+		local name, rank = part:match("^%s*(.-)%s+(%d+)%s*$")
+		if name and name ~= "" then items[#items + 1] = { name, tonumber(rank) } end
+	end
+	return dedupe(items) or text
 end
 
 -- Equipped item quality counts ("2 epic, 3 rare, 8 uncommon") and links (for dressing a model).
@@ -98,6 +128,7 @@ frame:SetScript("OnEvent", function(_, event, total)
 end)
 
 ns.RegisterCallback(Tb, "LOGIN_DONE", function()
+	for _, c in pairs(ns.DB().chars) do c.profs = c.profs and Tb.CleanProfs(c.profs) end   -- saved before the dedupe
 	Tb.Capture()
 	C_Timer.After(10, Tb.RequestPlayed)
 end)
@@ -110,7 +141,7 @@ function Tb.List(c, now)
 	add("Logged out in", c.subzone and c.zone and (c.subzone .. ", " .. c.zone) or c.zone)
 	add("/played", c.played and U.Duration(c.played))
 	add("Gold", c.money and U.Gold(c.money))
-	add("Professions", c.profs)
+	add("Professions", Tb.CleanProfs(c.profs))   -- synced records may still carry duplicates
 	add("Guild", c.guild)
 	add("Gear", c.gearQ)
 	add("Title", c.title)
