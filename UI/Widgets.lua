@@ -24,13 +24,25 @@ end
 -- rank | portrait | name + sub | bar + caption | state chip | Well Rested moons
 Wg.COL = { rank = 4, portrait = 32, text = 94, bar = 330, chip = 596 }   -- the Well Rested moons sit on the bar's caption line
 
--- Shorten `text` with an ellipsis until it fits `width` (font strings can't be trusted to clip cleanly).
+-- Drop a trailing partial UTF-8 character (a lead byte without all its continuation bytes) left by a byte cut.
+local function dropPartial(t)
+	local i = #t
+	while i > 0 and t:byte(i) >= 0x80 and t:byte(i) < 0xC0 do i = i - 1 end   -- continuation bytes
+	local b = t:byte(i)
+	if not b or b < 0xC0 then return t end
+	local need = b >= 0xF0 and 4 or (b >= 0xE0 and 3 or 2)
+	return (#t - i + 1 < need) and t:sub(1, i - 1) or t
+end
+Wg.DropPartial = dropPartial
+
+-- Shorten `text` with an ellipsis until it fits `width` (font strings can't be trusted to clip cleanly), cutting
+-- whole UTF-8 characters only ("·", accented names).
 function Wg.Fit(fs, text, width)
 	fs:SetText(text)
 	if fs:GetStringWidth() <= width then return text end
 	local t = text
 	while #t > 1 and fs:GetStringWidth() > width do
-		t = t:sub(1, #t - 1):gsub("%s+$", "")
+		t = dropPartial(t:sub(1, #t - 1)):gsub("%s+$", "")
 		fs:SetText(t .. "...")
 	end
 	return fs:GetText()
@@ -78,6 +90,12 @@ function Wg.Portrait(parent, size)
 	f.crestMask:SetTexture(MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 	f.crestMask:SetAllPoints(f.crest)
 	f.crest:AddMaskTexture(f.crestMask)
+	-- An additive copy of the race emblem over it: lifts the dark parts so the race reads on the dark disc.
+	f.crestLift = f:CreateTexture(nil, "OVERLAY", nil, 4)
+	f.crestLift:SetAllPoints(f.crest)
+	f.crestLift:SetBlendMode("ADD")
+	f.crestLift:SetAlpha(0.8)
+	f.crestLift:AddMaskTexture(f.crestMask)
 	return f
 end
 
@@ -98,7 +116,12 @@ function Wg.SetPortrait(f, c, isMe, state)
 		badge = Wg.RaceAtlas(c)
 	end
 	if badge then f.crest:SetAtlas(badge) end
-	f.crest:SetDesaturated(not isMe)   -- grey: the race icon names the race, it must not claim a hair colour
+	-- The race emblem partly washed out, so it names the race without claiming a skin or hair colour, and lifted by
+	-- its additive copy so it reads as a face on the dark disc, not a grey blob. The class crest (isMe) as drawn.
+	local lift = badge ~= nil and not isMe
+	f.crest:SetDesaturation(isMe and 0 or 0.5)
+	if lift then f.crestLift:SetAtlas(badge) f.crestLift:SetDesaturation(0.5) end
+	f.crestLift:SetShown(lift)
 	f.crest:SetShown(badge ~= nil)
 	f.crestRing:SetShown(badge ~= nil)
 	f.tex:SetDesaturated(state == "max" or state == "done")

@@ -288,4 +288,48 @@ function cases.banner_row_shares_the_layout_and_never_offers_an_empty_alt()
 	T.clean(h)
 end
 
+-- Nobody has rest banked: the Esc card and the logout banner name the one that fills first (least time to full), the
+-- same as the hero, not rows[1] (sorted by banked levels, then name). Review of ILL-1274.
+local function fillsFirstLine(saved, state)
+	state = state or {}
+	state.saved, state.resting, state.rested = saved, false, 0
+	local _, h = world(state)
+	h.Fire("PLAYER_CAMPING")
+	local bannerLine = h.Env().RestedLevelingBanner.altText:GetText()
+	h.Fire("LOGOUT_CANCEL")
+	local menu = h.Env().GameMenuFrame
+	menu:SetWidth(400)
+	menu:Show()
+	FakeWoW.RunScript(menu, "OnShow")
+	local strip = h.Env().RestedLevelingMenuStrip
+	T.ok(strip:IsShown(), "Esc card shown")
+	return bannerLine, strip.altText:GetText(), h, state
+end
+
+function cases.nothing_banked_alerts_name_who_fills_first_like_the_hero()
+	local saved = { chars = {
+		["N:Aa Outside@?"] = alt("Aa Outside", 0.0375, 0, false),   -- more banked, but outside: 4x slower
+		["N:Zz Resting@?"] = alt("Zz Resting", 0.0126, 0, true),
+	} }
+	local bannerLine, stripLine, h, state = fillsFirstLine(saved)
+	local Wd = state.ns.Words
+	local rows = state.ns.Rows({ hideGrey = true })
+	T.eq(rows[1].c.full, "Aa Outside", "rows[1] is the one with more banked")
+	T.eq(Wd.FillsFirst(rows).c.full, "Zz Resting", "the hero's fills-first is the resting one")
+	T.eq(bannerLine, "Zz Resting fills first: full in 9d 21h", "banner: the same alt as the hero")
+	T.eq(stripLine, "Zz Resting fills first: full in 9d 21h", "Esc card: the same alt as the hero")
+	T.clean(h)
+end
+
+function cases.nothing_banked_ties_at_zero_still_pick_the_resting_one()
+	local saved = { chars = {
+		["N:Aa Outside@?"] = alt("Aa Outside", 0, 0, false),
+		["N:Zz Resting@?"] = alt("Zz Resting", 0, 0, true),
+	} }
+	local bannerLine, stripLine, h = fillsFirstLine(saved)
+	T.eq(bannerLine, "Zz Resting fills first: full in 10d", "banner: 0.0 each, the inn fills first")
+	T.eq(stripLine, "Zz Resting fills first: full in 10d", "Esc card: the same")
+	T.clean(h)
+end
+
 return cases

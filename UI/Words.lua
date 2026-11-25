@@ -127,11 +127,14 @@ function Wd.Action(name, meName, restingNow, empty)
 	return ("First, take %s to an inn (hearth). Then play %s."):format(meName, name)
 end
 
--- The roster's time line for a row: "93%  ·  Full in 14h 25m (today 18:25)".
+-- The roster's time line for a row: "93%  ·  Full in 14h 25m (today 18:25)". Over two days away the clock time is
+-- dropped ("~30%  ·  Full in 27d 22h") so the line never clips; the tooltip and the card keep it.
+Wd.ROW_CLOCK_MAX = 2 * 86400
 function Wd.RowTime(r, now, calibrated, dateFn)
 	local p = r.p
 	if not p then return r.state == "max" and "Max level. I keep the bench warm." or "" end
-	return (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%  ·  " .. Wd.FullLine(p, now, dateFn)
+	local full = p.left > Wd.ROW_CLOCK_MAX and ("Full in " .. U.Duration(p.left)) or Wd.FullLine(p, now, dateFn)
+	return (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%  ·  " .. full
 end
 
 -- Why #1 beats #2, in one short line with the same rounding as the rows: "2d ahead of Le Beouf (full for 8h)".

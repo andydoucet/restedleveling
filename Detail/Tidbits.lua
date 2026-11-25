@@ -16,6 +16,7 @@ end
 local PROF_CATEGORIES = { [9] = true, [11] = true }   -- secondary skills, professions
 local PROF_NAMES = { Alchemy = 1, Blacksmithing = 1, Enchanting = 1, Engineering = 1, Herbalism = 1, Leatherworking = 1,
 	Mining = 1, Skinning = 1, Tailoring = 1, Cooking = 1, ["First Aid"] = 1, Fishing = 1 }
+local NOT_PROFS = { Riding = true }   -- listed among secondary skills, but not a profession (saved lists carry it too)
 
 -- One entry per profession name, in first-seen order, keeping the highest rank. Forever lists some skills more than
 -- once (Andy's card read "Blacksmithing 185, Blacksmithing 185, ..."). items: { { name, rank }, ... }.
@@ -25,7 +26,7 @@ local function dedupe(items)
 		local name, rank = it[1], it[2] or 0
 		if at[name] then
 			if rank > out[at[name]][2] then out[at[name]][2] = rank end
-		else
+		elseif not NOT_PROFS[name] then
 			out[#out + 1] = { name, rank }
 			at[name] = #out
 		end

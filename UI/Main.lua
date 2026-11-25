@@ -168,7 +168,8 @@ function Main.Refresh()
 	ns.Current.Update(f.current)
 	local list = {}
 	for _, r in ipairs(rows) do if r ~= hero then list[#list + 1] = r end end
-	ns.Roster.Update(f.roster, list, now, hero and 2 or 1)
+	-- Numbered in sort order: from 2 under a #1 hero, from 1 when the hero is the one that fills first (not rows[1]).
+	ns.Roster.Update(f.roster, list, now, (hero and hero == rows[1]) and 2 or 1)
 	-- Fit the window to the roster: between 3 and 9 rows tall (the first-run guide needs about 4).
 	local shown = math.max(3, math.min(Main.VISIBLE, #list))
 	local listH = #list == 0 and (f.roster.guide:GetHeight() + 16) or shown * ns.Roster.ROW_H

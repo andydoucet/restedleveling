@@ -48,6 +48,9 @@ function Lk.Create(parent, w)
 	f.ok:SetPoint("LEFT", f.edit, "RIGHT", 8, 0)
 	f.cancel = St.MakeButton(f, 74, "Cancel")
 	f.cancel:SetPoint("LEFT", f.ok, "RIGHT", 6, 0)
+	f.err = text(f, "small", 12, St.SECOND)   -- why a link did not take, under the field; the typed name stays
+	f.err:SetPoint("TOPLEFT", f.edit, "BOTTOMLEFT", 2, -2)
+	f.err:SetTextColor(1, 0.45, 0.35)
 
 	f.open:SetScript("OnClick", function() Lk.Edit(f) end)
 	f.ok:SetScript("OnClick", function() Lk.Submit(f) end)
@@ -59,6 +62,8 @@ function Lk.Create(parent, w)
 	f.edit:SetScript("OnEnterPressed", function() Lk.Submit(f) end)
 	f.edit:SetScript("OnEscapePressed", function() Lk.Close(f) end)
 	f.edit:SetScript("OnTextChanged", function(self) f.hint:SetShown((self:GetText() or "") == "") end)
+	-- The window or guide closing mid-edit: drop the field and its focus, so it never reopens half-typed.
+	f:SetScript("OnHide", function() if f.editing then Lk.Close(f) end end)
 	all[#all + 1] = f
 	Lk.Close(f)
 	return f
@@ -70,6 +75,7 @@ local function editing(f, on)
 	f.ok:SetShown(on)
 	f.cancel:SetShown(on)
 	f.status:SetShown(not on)
+	f.err:Hide()
 end
 
 -- Open the name field in place.
@@ -88,11 +94,24 @@ function Lk.Close(f)
 	Lk.Refresh(f)
 end
 
--- Enter or Link: the same path as "/rlvl link <name>" (names with spaces). An empty field stays open.
+local function isLinked(name)
+	local key = ns.Sync.NameKey(name)
+	for _, l in ipairs(ns.Sync.Links()) do if ns.Sync.NameKey(l.name) == key then return true end end
+	return false
+end
+
+-- Enter or Link: the same path as "/rlvl link <name>" (names with spaces). An empty field stays open, and so does one
+-- whose link did not take (at most 8 links): the name stays and the reason shows under it.
 function Lk.Submit(f)
 	local name = ns.Sync and ns.Sync.CleanName(f.edit:GetText())
 	if not name then f.edit:SetFocus() return end
 	ns.slash.link(name)
+	if not isLinked(name) then
+		f.err:SetText(("Not linked: at most %d links. Unlink one first (/rlvl unlink <name>)."):format(ns.Sync.MAX_LINKS))
+		f.err:Show()
+		f.edit:SetFocus()
+		return
+	end
 	Lk.Close(f)
 	Lk.RefreshAll()
 end
