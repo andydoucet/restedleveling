@@ -106,9 +106,29 @@ function Frame:CreateFontString()
 	function fs:SetFont(file, size, flags) self.__font, self.__size, self.__flags = file, size, flags end
 	function fs:GetFont() return self.__font, self.__size, self.__flags end
 	function fs:SetText(t) self.__text = t end
-	function fs:GetStringWidth() return #(self.__text or "") * 6 end
-	function fs:GetStringHeight() return 14 end
-	function fs:GetUnboundedStringWidth() return #(self.__text or "") * 6 end
+	-- 6 px a byte, 14 px a line. FakeWoW.fontScale models a wider font (ElvUI's); with FakeWoW.sizeAware the width
+	-- also follows the font size (13 = 1x). A word-wrapping string with a width wraps greedily on spaces, so
+	-- GetStringHeight counts its lines.
+	local function charW(self)
+		return 6 * (FakeWoW.fontScale or 1) * ((FakeWoW.sizeAware and self.__size) and self.__size / 13 or 1)
+	end
+	function fs:SetWordWrap(on) self.__wrap = on end
+	function fs:GetStringWidth() return #(self.__text or "") * charW(self) end
+	function fs:GetUnboundedStringWidth() return #(self.__text or "") * charW(self) end
+	function fs:Lines()
+		local text, w = self.__text or "", self.__w
+		if text == "" then return 1 end
+		if self.__wrap == false or not w then return 1 end
+		local lines, used, cw = 1, 0, charW(self)
+		for word in text:gmatch("%S+") do
+			local ww = #word * cw
+			if used == 0 then used = ww
+			elseif used + cw + ww <= w then used = used + cw + ww
+			else lines, used = lines + 1, ww end
+		end
+		return lines
+	end
+	function fs:GetStringHeight() return 14 * fs.Lines(self) end
 	function fs:GetText() return self.__text end
 	function fs:SetFormattedText(fmt, ...) self.__text = fmt:format(...) end
 	return fs

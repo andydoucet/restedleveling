@@ -35,6 +35,14 @@ Review follow-ups (ILL-1274):
 - Riding is no longer listed as a profession.
 - Not changed: Unlink still acts at once, without a confirmation step (it is one click to link again).
 
+Speech bubble (ILL-1276):
+
+- The card's speech bubble never cuts a line short ("Give me 9 days 2..."): it wraps to as many lines as the line
+  needs, in balanced lines without an orphan word, and grows down the stage. Only if it would reach the note under it
+  does it drop one font step. It measures again a frame after the card opens, when ElvUI's wider font has settled.
+- Hidden: `/rlvl shotprobe take` / `show`, a one-off in-game test of whether a screenshot can be drawn back as a
+  texture. Nothing runs unless typed.
+
 ## 1.0.0 (unreleased)
 
 First release.
