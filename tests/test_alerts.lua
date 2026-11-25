@@ -283,8 +283,8 @@ function cases.banner_row_shares_the_layout_and_never_offers_an_empty_alt()
 	local bp = pointOf(b.altBtn, "TOPRIGHT")
 	T.ok(bp and bp[2] == b and bp[4] == -state.ns.Alerts.INSET, "Details on the banner's right edge, the close X's inset")
 	T.eq(pointOf(b.close, "TOPRIGHT")[4], bp[4], "lined up with the close X")
-	T.has(b.altText:GetText(), "Nobody rested yet", "no Next: Le Dette, 0.0 banked")
-	T.has(b.altText:GetText(), "Le Dette full in 9d 22h", "says how long instead (0.01 banked, 5 min resting)")
+	T.lacks(b.altText:GetText(), "Next:", "no Next: Le Dette, 0.0 banked")
+	T.eq(b.altText:GetText(), "Le Dette fills first: full in 9d 22h", "says who fills first and how long (0.01 banked, 5 min resting)")
 	T.clean(h)
 end
 

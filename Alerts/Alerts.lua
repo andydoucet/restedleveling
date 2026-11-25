@@ -39,9 +39,9 @@ local function setAlt(f, alt)
 	Wg.SetPortrait(f.alt, alt.c, false, alt.state)
 	f.altBtn.key, f.altBtn.name = alt.key, alt.c.full
 	local st = St.STATE[alt.state] or St.STATE.max
-	if ns.Words.NothingBanked(alt) then   -- no "Next: X · 0.0 banked": nobody is worth switching to yet
+	if ns.Words.NothingBanked(alt) then   -- no "Next: X · 0.0 banked": nobody is worth switching to yet, so say who fills
 		-- the wait only (the clock time is one click away, on the card): the row is narrow
-		f.altLine = ("Nobody rested yet · %s full in %s"):format(alt.c.full or "?", U.Duration(alt.p.left))
+		f.altLine = ("%s fills first: full in %s"):format(alt.c.full or "?", U.Duration(alt.p.left))
 	else
 		f.altLine = ("Next: %s · %s%s"):format(alt.c.full or "?", st.word,
 			alt.p and (" · " .. ns.Words.Levels(alt.p.levels) .. " banked") or "")
