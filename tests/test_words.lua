@@ -118,10 +118,14 @@ function cases.places()
 	T.eq(Wd.Place({ restKind = "outside", zone = "Durotar" }), "outside in Durotar", "outside")
 end
 
-function cases.sync_footer_says_when_no_other_account_was_seen()
+function cases.link_line_for_each_pairing_state()
 	local Wd = load().Words
-	T.eq(Wd.SyncLine({}, NOW), "No other account linked yet.", "none")
-	T.eq(Wd.SyncLine({ { label = "#3", lastSync = NOW - 2 * D } }, NOW), "Synced 2d ago from Acct #3", "synced")
+	T.eq(Wd.LinkLine(nil, "Le Nette", NOW), "No other account linked yet.", "none")
+	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = false }, "Le Nette", NOW),
+		"Linked to Le Bankken. Waiting for them to link you back (/rlvl link Le Nette on that account).", "waiting")
+	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true, lastSync = NOW - 5 * 60 }, "Le Nette", NOW),
+		"Paired with Le Bankken, synced 5m ago", "paired")
+	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true }, "Le Nette", NOW), "Paired with Le Bankken, not synced yet", "paired, no data yet")
 end
 
 function cases.rows_show_the_real_time_to_full_even_outside()

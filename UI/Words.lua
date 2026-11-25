@@ -151,14 +151,15 @@ end
 local CHIPS = { full = "FULL", near = "NEARLY FULL", resting = "RESTING", outside = "NOT RESTING", max = "MAX LEVEL", done = "AT TARGET" }
 function Wd.Chip(r) return CHIPS[r.state] or "" end
 
--- The roster footer line about cross-account sync.
-function Wd.SyncLine(status, now)
-	if not status or #status == 0 then return "No other account linked yet." end
-	local p = status[1]
-	if p.lastSync then
-		return ("Synced %s from Acct %s"):format(U.Ago(now - p.lastSync), p.label or "?")
+-- The link state in words, for the inline link field (guide and footer). link: one entry of ns.Sync.Links().
+-- meName: the character you are on, which the other account has to link back.
+function Wd.LinkLine(link, meName, now)
+	if not link then return "No other account linked yet." end
+	if not link.confirmed then
+		return ("Linked to %s. Waiting for them to link you back (/rlvl link %s on that account)."):format(link.name,
+			meName or "<your name>")
 	end
-	return ("Seen Acct %s %s, not synced yet"):format(p.label or "?", U.Ago(now - (p.seen or now)))
+	return ("Paired with %s, %s"):format(link.name, link.lastSync and ("synced " .. U.Ago(now - link.lastSync)) or "not synced yet")
 end
 
 return Wd

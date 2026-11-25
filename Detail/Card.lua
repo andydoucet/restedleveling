@@ -3,8 +3,9 @@
 -- says a line made from its own data in a speech bubble, and shows its tidbits.
 --
 -- Only the logged-in character can be drawn as a live 3D model (PlayerModel:SetUnit("player")), playing the talk
--- animation when the client has it. Others are drawn from the client's race/sex portrait art with a class crest;
--- if the client offers SetCustomRace on the model, a lookalike is dressed from that character's saved gear instead.
+-- animation when the client has it. The game has no way to draw another character's real look (hair, face, skin)
+-- while it is offline (see docs/API.md, "Offline appearance"), so everyone else shows their class crest with a race
+-- emblem and says so, rather than a stock face that is not theirs.
 
 local _, ns = ...
 local St, Wg, Wd, U, M = ns.Style, ns.Widgets, ns.Words, ns.Util, ns.Model
@@ -15,7 +16,6 @@ local W, STAGE_H, PAD = 460, 300, 22   -- PAD: the band plus a 12 px inset, the 
 local IW = W - PAD * 2
 local FIG_X = 96   -- the figure stands right of centre; the bubble speaks from the upper left
 local TALK, TALK_EXCLAIM = 60, 64   -- AnimationData ids (EmoteTalk, EmoteExclamation): checked with HasAnimation
-local RACE_ID = { Human = 1, Orc = 2, Dwarf = 3, NightElf = 4, Scourge = 5, Tauren = 6, Gnome = 7, Troll = 8 }
 local ICONS = {
 	["/played"] = "Interface\\Icons\\INV_Misc_PocketWatch_01", Hearth = "Interface\\Icons\\INV_Misc_Rune_01",
 	Gold = "Interface\\Icons\\INV_Misc_Coin_01", Professions = "Interface\\Icons\\Trade_Engineering",
@@ -77,7 +77,7 @@ local function makeStage(f)
 	s.shade:SetPoint("BOTTOMRIGHT", -3, 3)
 	s.shade:SetHeight(110)
 	s.zs = { drift(s, "z", 150, 0), drift(s, "z", 162, 1.1), drift(s, "Z", 174, 2.2) }   -- just above the head
-	-- The live model (logged-in character only, or a lookalike where SetCustomRace exists).
+	-- The live model: the logged-in character only.
 	s.model = CreateFrame("PlayerModel", nil, s)
 	s.model:SetPoint("TOPLEFT", 3, -3)
 	s.model:SetPoint("BOTTOMRIGHT", -3, 3)
@@ -93,6 +93,12 @@ local function makeStage(f)
 	s.pedestal:SetPoint("BOTTOM", FIG_X, 76)
 	s.figure = Wg.Portrait(s, 150)
 	s.figure:SetPoint("BOTTOM", FIG_X, 78)
+	s.note = Wg.Text(s, "small", "OVERLAY", 12)   -- beside the crest, under the bubble: why there is no face
+	s.note:SetPoint("BOTTOMRIGHT", s.figure, "BOTTOMLEFT", -18, 8)
+	s.note:SetWidth(160)
+	s.note:SetJustifyH("RIGHT")
+	s.note:SetWordWrap(true)
+	St.Color(s.note, St.CREAM)   -- on the stage art: the full-contrast cream
 	s.settle = s.figure:CreateAnimationGroup()   -- one small settling motion as the card opens
 	local st = s.settle:CreateAnimation("Scale")
 	st:SetScaleFrom(0.96, 0.96)
@@ -270,18 +276,13 @@ Card.REST_HELP = {
 	"Each Well Rested rank raises the rate and the cap by 4%, so the time stays the same.",
 }
 
-local function dressModel(model, c, isMe)
-	if isMe then
-		model:SetUnit("player")
-	elseif model.SetCustomRace and RACE_ID[c.race or ""] then
-		model:SetUnit("player")
-		model:SetCustomRace(RACE_ID[c.race], (c.sex == 3) and 1 or 0)
-		if model.Undress then model:Undress() end
-		for _, link in pairs(c.gear or {}) do if model.TryOn then pcall(model.TryOn, model, link) end end
-	else
+-- The 3D figure is the logged-in character only: no other character's look can be drawn offline.
+local function dressModel(model, isMe)
+	if not isMe then
 		model:ClearModel()
 		return false
 	end
+	model:SetUnit("player")
 	model:SetCamDistanceScale(1.25)
 	model:SetRotation(-0.35)
 	local anim = (model:HasAnimation(TALK) and TALK) or (model:HasAnimation(TALK_EXCLAIM) and TALK_EXCLAIM) or 0
@@ -362,14 +363,15 @@ function Card.Show(key)
 		z:SetShown(not outside and state ~= "max")
 		if z:IsShown() then z.anim:Play() else z.anim:Stop() end
 	end
-	local modelShown = dressModel(s.model, c, isMe)
+	local modelShown = dressModel(s.model, isMe)
 	s.model:SetShown(modelShown)
 	s.figure:SetShown(not modelShown)
 	s.floor:SetShown(not modelShown and not host)   -- under a host skin: no floor shadow or bronze rule
+	s.note:SetShown(not modelShown)
 	s.pedestal:SetShown(false)   -- no rule under the portrait
 	if not modelShown then
-		Wg.SetPortrait(s.figure, c, false, state)
-		s.figure.crest:Hide(); s.figure.crestRing:Hide()   -- the class icon is in the sub line here
+		Wg.SetPortrait(s.figure, c, false, state)   -- class crest with the race emblem: honest, not a face
+		s.note:SetText(Card.OfflineNote(c))
 		St.Paint(s.lvl, host and "disc_dark" or "disc_gold")   -- under ElvUI a restrained dark disc, not a gold medallion
 		s.lvlRing = s.lvlRing or s.figure:CreateTexture(nil, "OVERLAY", nil, 7)
 		St.Paint(s.lvlRing, "ring_bronze")
@@ -405,6 +407,14 @@ function Card.Show(key)
 	Card.opens = Card.opens or {}
 	Card.opens[key] = (Card.opens[key] or 0) + 1
 	talk(f, ns.Lines.Parts(row, now, isMe, Card.opens[key] % 2 == 1 and 0 or 2))
+end
+
+-- Under the crest of a character that is not logged in: "Last seen as a level 46 Gnome Warrior. Log in to see them."
+function Card.OfflineNote(c)
+	local race = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
+	local class = c.class and (c.class:sub(1, 1) .. c.class:sub(2):lower()) or ""
+	local who = (race .. " " .. class):gsub("^%s+", ""):gsub("%s+$", "")
+	return ("Last seen as a level %s %s. Log in to see them."):format(c.level or "?", who ~= "" and who or "character")
 end
 
 ns.ShowDetail = Card.Show

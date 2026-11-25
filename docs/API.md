@@ -14,6 +14,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `C_Item` | doc | doc |  |
 | global | `C_SkillInfo` | doc | doc |  |
 | global | `C_Spell` | doc | doc | yes |
+| global | `C_Texture` | doc | doc | yes |
 | global | `C_Timer` | doc | doc |  |
 | global | `C_Traits` | doc | doc | yes |
 | global | `C_UnitAuras` | doc | doc | yes |
@@ -93,6 +94,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_SkillInfo.GetNumSkillLines` | doc | - |  |
 | field | `C_SkillInfo.GetSkillLineInfo` | doc | - |  |
 | field | `C_Spell.GetSpellName` | doc | doc | yes |
+| field | `C_Texture.GetAtlasInfo` | doc | doc | yes |
 | field | `C_Timer.After` | doc | doc |  |
 | field | `C_Timer.NewTicker` | doc | doc |  |
 | field | `C_Traits.GetConfigIDBySystemID` | doc | doc | yes |
@@ -107,6 +109,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `Settings.RegisterCanvasLayoutCategory` | used | used | yes |
 | method | `AddMaskTexture` | doc | doc |  |
 | method | `ClearAllPoints` | doc | doc |  |
+| method | `ClearFocus` | doc | doc |  |
 | method | `ClearModel` | doc | doc |  |
 | method | `CreateAnimation` | doc | doc |  |
 | method | `CreateAnimationGroup` | doc | doc |  |
@@ -149,16 +152,17 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetAlpha` | doc | doc |  |
 | method | `SetAnimation` | doc | doc |  |
 | method | `SetAtlas` | doc | doc |  |
+| method | `SetAutoFocus` | doc | doc |  |
 | method | `SetBlendMode` | doc | doc |  |
 | method | `SetCamDistanceScale` | doc | doc |  |
 | method | `SetChecked` | doc | doc |  |
 | method | `SetClampedToScreen` | doc | doc |  |
-| method | `SetCustomRace` | - | - | yes |
 | method | `SetDesaturated` | doc | doc |  |
 | method | `SetDrawLayer` | doc | doc |  |
 | method | `SetDuration` | doc | doc |  |
 | method | `SetFixedFrameLevel` | doc | doc |  |
 | method | `SetFixedFrameStrata` | doc | doc |  |
+| method | `SetFocus` | doc | doc |  |
 | method | `SetFont` | doc | doc |  |
 | method | `SetFrameLevel` | doc | doc |  |
 | method | `SetFrameStrata` | doc | doc |  |
@@ -170,6 +174,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetJustifyH` | doc | doc |  |
 | method | `SetJustifyV` | doc | doc |  |
 | method | `SetLooping` | doc | doc |  |
+| method | `SetMaxLetters` | doc | doc |  |
 | method | `SetMinMaxValues` | doc | doc |  |
 | method | `SetMovable` | doc | doc |  |
 | method | `SetOffset` | doc | doc |  |
@@ -191,6 +196,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetTexCoord` | doc | doc |  |
 | method | `SetText` | doc | doc |  |
 | method | `SetTextColor` | doc | doc |  |
+| method | `SetTextInsets` | doc | doc |  |
 | method | `SetTexture` | doc | doc |  |
 | method | `SetToAlpha` | doc | doc |  |
 | method | `SetToFinalAlpha` | doc | doc |  |
@@ -203,8 +209,6 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetWordWrap` | doc | doc |  |
 | method | `Show` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
-| method | `TryOn` | doc | doc |  |
-| method | `Undress` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
 | method | `UnregisterEvent` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
@@ -251,3 +255,29 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `WELCOME` | used | used |  |
 | event | `WHISPER` | used | used |  |
 | event | `ZONE_CHANGED_NEW_AREA` | doc | doc |  |
+
+## Offline appearance
+
+Andy saw Le Jette (red pigtails) drawn as a stock blue-haired gnome: v1 used `TemporaryPortrait-<sex>-<race>` art for
+characters that are not logged in. ILL-1274 looked for any way to draw an offline character's real look on Forever.
+Checked against the Forever UI source (Blizzard_APIDocumentationGenerated and Blizzard's own FrameXML callers):
+
+| API | Forever | Can it show an offline character's real look? |
+|---|---|---|
+| `C_PlayerInfo.GetDisplayID`, `GetNativeDisplayID` | doc | No. The logged-in player's creature display ID (race/sex model). FrameXML uses it only for shapeshift forms, together with the active player's customizations. Hair, face and skin are not in it. |
+| `ModelSceneActor:SetModelByCreatureDisplayID(id, useActivePlayerCustomizations)` | doc | No. Customizations can only come from the active player: it would put Le Nette's hair on Le Jette. |
+| `PlayerModel:SetDisplayInfo(displayID)` | doc | No. Draws the display with default choices: another stock face. |
+| `ModelSceneActor:SetPlayerModelFromGlues(characterIndex, ...)` | doc | No. FrameXML calls it only when `C_Glue.IsOnGlueScreen()` (character select, shop); addons never run there. |
+| `ModelSceneActor:SetFrontEndLobbyModelFromDefaultCharacterDisplay` | doc | No. Glue lobby only (GluePartyPoseUI, AccountStore). |
+| `C_BarberShop.GetAvailableCustomizations`, `GetCurrentCharacterData`, `SetCustomizationChoice` | doc | No. The logged-in character's barber-shop preview only; nothing applies saved choices to another model. |
+| `C_PlayerInfo.GetPlayerCharacterData` | doc | No. Name, file name, sex, alternate form and an icon atlas; no customization choices. |
+| `UnitCreatureDisplayID` | - | Not in the Forever client. |
+| `PlayerModel:SetCustomRace` | - | Not in the Forever client (v1 guarded it; it would also keep the active player's look). Removed. |
+
+Result: nothing on Forever reproduces another character's appearance while it is offline. So the logged-in character
+keeps its real portrait (`SetPortraitTexture(tex, "player")`) and the 3D stage (`PlayerModel:SetUnit("player")`);
+every other character shows its class crest (`classicon-<class>`) with its race emblem as a small badge
+(`raceicon128-<race>-<sex>`, named as Blizzard's `GetRaceAtlas` in SharedUtils.lua names it, used only when
+`C_Texture.GetAtlasInfo` finds it), and the card says "Last seen as a level 46 Gnome Warrior. Log in to see them."
+Verified in game: not yet. The race atlas is verified only through the simulator, which reads the installed client's
+atlas data.

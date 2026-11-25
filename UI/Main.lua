@@ -129,9 +129,10 @@ function Main.Create()
 	f.roster = ns.Roster.Create(f.list, inner - 8, Main.VISIBLE)
 	f.roster:SetPoint("TOPLEFT", 4, -4)
 
-	f.sync = Wg.Text(f, "small", nil, 13)
-	f.sync:SetPoint("BOTTOMLEFT", PAD + 8, 28)
-	St.Color(f.sync, St.SECOND)
+	-- The footer's link field (the guide has its own while it shows): status, Link account... / Unlink, and the
+	-- inline name field in place.
+	f.link = ns.Link.Create(f, Main.W - PAD * 2 - 236)
+	f.link:SetPoint("BOTTOMLEFT", PAD + 8, 19)
 	f.greyCheck = CreateFrame("CheckButton", nil, f, "UICheckButtonTemplate")
 	f.greyCheck:SetSize(24, 24)
 	f.greyCheck:SetPoint("BOTTOMRIGHT", -210, 20)
@@ -179,7 +180,8 @@ function Main.Refresh()
 	f.legend:SetShown(#rows > 0)
 	f.moonHead:SetShown(#rows > 0)
 	f.header:SetText(#rows > 0 and "NEXT BEST" or "GETTING STARTED")
-	f.sync:SetText(Wd.SyncLine(ns.Sync and ns.Sync.Status(), now))
+	f.link:SetShown(not f.roster.guide:IsShown())
+	ns.Link.Refresh(f.link, now)
 	f.greyCheck:SetChecked(ns.DB().opts.showGrey ~= false)
 	f.greyCheck:SetShown(#rows > 0)   -- first run: nothing to filter yet
 	f.greyLabel:SetShown(#rows > 0)

@@ -90,7 +90,8 @@ function Frame:CreateTexture(_, layer, _, sub)
 	table.insert(self.__regions, t)
 	return t
 end
-function Frame:SetTexture(file) self.__tex = file end
+function Frame:SetTexture(file) self.__tex = file; self.__atlas = nil end
+function Frame:SetAtlas(atlas) self.__atlas = atlas; self.__tex = nil end
 function Frame:GetTexture() return self.__tex end
 function Frame:SetDrawLayer(layer, sub) self.__layer, self.__sub = layer, sub or 0 end
 function Frame:GetDrawLayer() return self.__layer, self.__sub end
@@ -200,6 +201,14 @@ function FakeWoW.New()
 			f.SetBackdrop = function(self, b) self.__backdrop = b end
 			f.SetBackdropColor = function(self, ...) self.__bg = { ... } end
 			f.SetBackdropBorderColor = function(self, ...) self.__border = { ... } end
+		end
+		if kind == "EditBox" then
+			-- EditBox (FrameAPIEditBox): the typed text and focus, and OnTextChanged on every change, as in the game.
+			f.SetText = function(self, t) self.__text = t; FakeWoW.RunScript(self, "OnTextChanged", false) end
+			f.GetText = function(self) return self.__text or "" end
+			f.SetFocus = function(self) self.__focus = true end
+			f.ClearFocus = function(self) self.__focus = false end
+			f.HasFocus = function(self) return self.__focus == true end
 		end
 		table.insert(frames, f)
 		if name then rawset(env, name, f) end
