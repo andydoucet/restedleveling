@@ -20,8 +20,10 @@ C.FIELDS = {
 	level = { "l", "n" }, xp = { "x", "n" }, xpMax = { "xm", "n" }, rested = { "r", "n" }, resting = { "rs", "b" },
 	restKind = { "rk", "s" }, atMax = { "am", "b" }, t = { "t", "n" }, ranks = { "wr", "n" }, account = { "a", "s" },
 	zone = { "z", "s" }, subzone = { "zz", "s" }, wasted = { "w", "n" }, online = { "o", "b" },
-	-- the saved look (Core/Look.lua packs c.look into these four; an older version skips them as unknown)
+	-- the saved look (Core/Look.lua packs c.look into these four; an older version skips them as unknown), and
+	-- lookCleared: the owner pressed Clear look (a record without the four fields keeps the look it had)
 	lookFile = { "lf", "s" }, lookBox = { "lc", "s" }, lookAt = { "la", "n" }, lookAsked = { "lq", "n" },
+	lookCleared = { "ln", "b" },
 }
 
 local function wireIndex()
@@ -162,7 +164,15 @@ function C.Merge(chars, recs, via, now, hidden, myAccount)
 		if not ours and (not mine or (r.t or 0) > (mine.t or 0)) then   -- a remote record never overwrites ours
 			local merged = mine and I.Merge(mine, r) or r
 			merged.key = key
-			merged.look = r.look   -- the owner's latest: a cleared look clears here too
+			-- The owner's look: a new one replaces it, Clear look clears it, and a record without one (an older
+			-- version, or a sender that never had it) keeps the one we have.
+			if r.look then
+				merged.look, merged.lookCleared = r.look, nil
+			elseif r.lookCleared then
+				merged.look, merged.lookCleared = nil, true
+			else
+				merged.look, merged.lookCleared = mine and mine.look, mine and mine.lookCleared
+			end
 			if r.account and r.account == myAccount then
 				merged.src, merged.via, merged.syncedAt = "local", nil, nil
 			else

@@ -17,16 +17,20 @@ FOREVER = os.environ.get("RL_FOREVER_UI", os.path.expanduser("~/.cache/wow-ui-si
 CLASSIC = os.environ.get("RL_CLASSIC_UI", os.path.expanduser("~/.cache/rested-leveling/wow-ui-source-classic_era/Interface"))
 LUACHECK = os.environ.get("LUACHECK", os.path.expanduser("~/.luarocks/bin/luacheck"))
 
+# Blizzard windows "Save my look" refuses to close (UI/SaveLook.lua): frames, each checked before use.
+SAVE_BLOCKERS = ["MerchantFrame", "BankFrame", "MailFrame", "GossipFrame", "QuestFrame", "LootFrame", "TradeFrame",
+                 "ItemTextFrame", "TaxiFrame", "ClassTrainerFrame", "AuctionHouseFrame", "PetitionFrame",
+                 "GuildRegistrarFrame", "StaticPopup1", "StaticPopup2", "StaticPopup3", "StaticPopup4"]
 # Names used only after an existence check (`if X then`, `X and X.Fn`), so absence in a client is safe.
 FALLBACKS = {
     "UnitNameUnmodified", "GetMaxLevelForPlayerExpansion", "C_Traits", "C_UnitAuras", "C_Spell",
     "ElvUI", "LibStub", "issecretvalue", "Settings", "BackdropTemplateMixin", "C_Texture",
     "C_ChatInfo.AreOutgoingAddonChatMessagesRestricted", "MenuUtil", "GetPhysicalScreenSize",
-}
+} | set(SAVE_BLOCKERS)
 # Globals that are tables (frames, constants) rather than functions.
 TABLES = {"SlashCmdList", "UIParent", "Minimap", "GameMenuFrame", "GameTooltip", "Settings", "SOUNDKIT",
           "RAID_CLASS_COLORS", "CLASS_ICON_TCOORDS", "ElvUI", "BackdropTemplateMixin", "ChatFrame1", "Enum",
-          "DEFAULT_CHAT_FRAME", "UISpecialFrames", "MenuUtil"}
+          "DEFAULT_CHAT_FRAME", "UISpecialFrames", "MenuUtil"} | set(SAVE_BLOCKERS)
 # Real client globals the fake client (tests/fakewow.lua) always defines.
 HARNESS = {"CreateFrame", "UIParent", "WorldFrame", "Minimap", "SlashCmdList", "hooksecurefunc", "issecretvalue", "GetTime",
            "time", "date", "strsplit", "wipe", "tinsert", "tremove", "format", "strmatch", "strfind", "debugstack",
@@ -73,7 +77,8 @@ a texture? Andy ran it on Forever (`refs/ingame/andy_probe_take.png`, `andy_prob
 restart, `Screenshots\\WoWScrnShot_112526_051821.tga` loaded as a texture at full resolution, named from the second of
 `SCREENSHOT_SUCCEEDED`. The forms `..\\Screenshots\\<file>` and `Interface\\..\\Screenshots\\<file>` drew nothing.
 So "Save my look" (ILL-1279) shoots the logged-in character as `.tga` and other characters' portraits draw that
-file through `Screenshots\\<file>`. Checked against the Forever UI source:
+file through `Screenshots\\<file>` (about 8 MB per save; old screenshots in `_forever_\\Screenshots` can be
+deleted). Checked against the Forever UI source:
 
 | API | Forever | Use and guard |
 |---|---|---|
@@ -81,17 +86,19 @@ file through `Screenshots\\<file>`. Checked against the Forever UI source:
 | `SCREENSHOT_SUCCEEDED`, `SCREENSHOT_FAILED` | doc | VideoDocumentation.lua; no payload. Only counted after our own `Screenshot()` call. |
 | `C_CVar.GetCVar("screenshotFormat")`, `C_CVar.SetCVar` | doc | Set to `tga` for the one shot, the player's format put back on every way out. |
 | `UIParent:Hide()`, `UIParent:Show()` | used | MovieFrame.lua does the same. UIParent holds secure frames, so it is only hidden out of combat (`InCombatLockdown`, doc), and `PLAYER_REGEN_DISABLED` (fires before the lockdown starts) ends the capture and shows it again. If combat came first anyway, it is shown on `PLAYER_REGEN_ENABLED`. Alt-Z itself calls `SetUIVisibility`, which also hides nameplates; our opaque stage covers those. |
-| `CreateFrame("Frame", name, nil)` | used | The stage has no parent, so it stays up while UIParent is hidden; `SetAllPoints(WorldFrame)`, strata FULLSCREEN_DIALOG, `EnableKeyboard` for Esc. |
+| `CreateFrame("Frame", name, WorldFrame)` | used | The stage is parented to WorldFrame, not UIParent, so it stays up while UIParent is hidden; `SetAllPoints(WorldFrame)`, strata FULLSCREEN_DIALOG, `EnableKeyboard` for Esc, `SetPropagateKeyboardInput` (doc, out of combat) so every other key still reaches the game. |
+| `MerchantFrame`, `BankFrame`, `MailFrame`, `GossipFrame`, `QuestFrame`, `LootFrame`, `TradeFrame`, `ItemTextFrame`, `TaxiFrame`, `ClassTrainerFrame`, `AuctionHouseFrame`, `PetitionFrame`, `GuildRegistrarFrame`, `StaticPopup1`-`4` | used | Hiding UIParent runs their OnHide, which ends the NPC interaction (`CloseMerchant`, `C_Bank.CloseBankFrame`, `CloseMail`, `C_GossipInfo.CloseGossip`, `CloseQuest`, `CloseLoot`, `CloseTrade`, ...) or answers a popup (PARTY_INVITE's OnHide calls `DeclineGroup`). Save is refused while one is shown ("Close the merchant window first."). Each guarded: the trainer and auction house load on demand. |
 | `GetPhysicalScreenSize()` | doc | ScreenDocumentation.lua; guarded. The model square is 512 physical px (at most 80% of the screen height). |
 | `DressUpModel:SetUnit("player")`, `UndressSlot(16/17/18)` | doc | FrameAPICharacterModelBase / FrameAPIDressUpModel. INVSLOT_MAINHAND/OFFHAND/RANGED are 16/17/18 (Constants.lua). Each call guarded. |
 | `SetPortraitZoom`, `SetRotation`, `SetAnimation`, `ClearModel` | doc | Portrait framing (QuestNPCModel uses zoom 0.6). Guarded. Framing verified in game: not yet. |
 | `OnModelLoaded` script | used | Blizzard_Wardrobe.xml. Shoots 0.25 s after it, or after 1 s if it never fires; gives up after 6 s. |
-| `Texture:SetTexture(path)`, `SetTexCoord` | doc | Returns `success`. Each candidate name is tried until one is not refused; the crop goes over the class crest, so a file that does not load leaves the crest. |
+| `Texture:SetTexture(path)`, `SetTexCoord` | doc | Returns `success`. Each candidate name is tried until one returns true (nil, false or an error moves on); the crop goes over the class crest, so a file that does not load leaves the crest. |
 | `MenuUtil.CreateContextMenu` | used | Blizzard_Menu (AddonList uses it); guarded. Without it a right-click opens the card. |
 
 Verified in game: the file name and the `Screenshots\\` path form (probe). Not yet: the capture itself, the model
 framing, whether a new file loads in the same session (the card says it shows after a restart), and whether
-`SetTexture` returns false for a missing loose file (if it does not, only the first name is tried; the crest shows).
+`SetTexture` returns true for a loose screenshot that loads (only an explicit true draws the look; otherwise the crest
+shows).
 """
 
 

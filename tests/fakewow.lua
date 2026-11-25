@@ -90,7 +90,7 @@ function Frame:CreateTexture(_, layer, _, sub)
 	table.insert(self.__regions, t)
 	return t
 end
-function Frame:SetTexture(file) self.__tex = file; self.__atlas = nil end
+function Frame:SetTexture(file) self.__tex = file; self.__atlas = nil; return true end   -- success, as in the game
 function Frame:SetAtlas(atlas) self.__atlas = atlas; self.__tex = nil end
 function Frame:GetTexture() return self.__tex end
 function Frame:SetDrawLayer(layer, sub) self.__layer, self.__sub = layer, sub or 0 end
