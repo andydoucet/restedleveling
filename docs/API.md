@@ -37,6 +37,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `SlashCmdList` | used | used |  |
 | global | `UIParent` | used | used |  |
+| global | `UISpecialFrames` | used | used |  |
 | global | `UnitClass` | doc | doc |  |
 | global | `UnitFactionGroup` | doc | doc |  |
 | global | `UnitGUID` | doc | doc |  |
@@ -60,7 +61,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | harness | `strmatch` | used | used |  |
 | harness | `strsplit` | used | used |  |
 | global | `time` | used | used |  |
-| harness | `tinsert` | used | used |  |
+| global | `tinsert` | used | used |  |
 | harness | `tremove` | used | used |  |
 | harness | `wipe` | used | used |  |
 | field | `C_ChatInfo.AreOutgoingAddonChatMessagesRestricted` | doc | doc | yes |
@@ -84,6 +85,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `CreateMaskTexture` | doc | doc |  |
 | method | `CreateTexture` | doc | doc |  |
 | method | `EnableMouse` | doc | doc |  |
+| method | `EnableMouseWheel` | doc | doc |  |
 | method | `GetBottom` | doc | doc |  |
 | method | `GetCenter` | doc | doc |  |
 | method | `GetChecked` | doc | doc |  |
@@ -113,6 +115,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetAlpha` | doc | doc |  |
 | method | `SetAtlas` | doc | doc |  |
 | method | `SetBlendMode` | doc | doc |  |
+| method | `SetChecked` | doc | doc |  |
 | method | `SetClampedToScreen` | doc | doc |  |
 | method | `SetDesaturated` | doc | doc |  |
 | method | `SetDrawLayer` | doc | doc |  |
@@ -148,6 +151,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetTexture` | doc | doc |  |
 | method | `SetToAlpha` | doc | doc |  |
 | method | `SetToFinalAlpha` | doc | doc |  |
+| method | `SetToplevel` | doc | doc |  |
 | method | `SetValue` | doc | doc |  |
 | method | `SetVertTile` | doc | doc |  |
 | method | `SetVertexColor` | doc | doc |  |
@@ -158,6 +162,8 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `UnlockHighlight` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
 | event | `ANCHOR_BOTTOM` | used | used |  |
+| event | `ANCHOR_RIGHT` | used | used |  |
+| event | `ANCHOR_TOP` | used | used |  |
 | event | `ARTWORK` | used | used |  |
 | event | `BACKGROUND` | used | used |  |
 | event | `BORDER` | used | used |  |

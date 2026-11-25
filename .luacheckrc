@@ -38,6 +38,7 @@ read_globals = {
 	"RAID_CLASS_COLORS",
 	"SetPortraitTexture",
 	"UIParent",
+	"UISpecialFrames",
 	"UnitClass",
 	"UnitFactionGroup",
 	"UnitGUID",
