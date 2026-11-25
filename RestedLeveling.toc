@@ -26,3 +26,7 @@ Core\Slash.lua
 
 Sync\Codec.lua
 Sync\Sync.lua
+
+Style\Style.lua
+Style\Default.lua
+Style\ElvUI.lua
