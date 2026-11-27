@@ -74,7 +74,7 @@ local function relayout(f, fn) C_Timer.After(0, function() if f:IsShown() then f
 -- The next character and whether nobody has rest banked. Then it is the one that fills first (least time to full,
 -- the same as the hero's Words.FillsFirst), not rows[1], which is sorted by banked levels and then name.
 local function nextUp()
-	local rows = ns.Rows({ hideGrey = true })
+	local rows = ns.Rows({ hideGrey = true, allAccounts = true })
 	local top = rows[1] and rows[1].group ~= 5 and rows[1] or nil
 	if ns.Words.NothingBanked(top) then return ns.Words.FillsFirst(rows) or top, true end
 	return top, false
@@ -354,19 +354,20 @@ function A.OnSessionChanged(rested)
 	if not before then return end
 	local cap = M.Cap(ns.Me() or {}, ns.DB().calib)
 	if Ru.RanOut(before, rested) then
-		local rows = ns.Rows({ hideGrey = true })
+		local rows = ns.Rows({ hideGrey = true, allAccounts = true })
 		local top = rows[1] and rows[1].group ~= 5 and rows[1] or nil
 		local text, sub = Ru.NextUp(rows, St.ClassText)
 		local me = ns.Me()
 		A.Toast({ kind = "outrest", kicker = (me and me.full or "This character") .. ": rested XP used up", text = text,
 			sub = sub, state = top and top.state or "outside", accent = top and top.state or "outside", row = top })   -- a recommendation: its rail in the target's state
-	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap) then
-		chat("lowrest", ("rested XP is running low here: %s left."):format(ns.Words.Levels(rested / xpMax)))
+	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap, Ru.LowFraction(ns.DB())) then
+		chat("lowrest", ("rested XP is running low here: %s left, under %d%% of full."):format(
+			ns.Words.Levels(rested / xpMax), math.floor(Ru.LowFraction(ns.DB()) * 100 + 0.5)))
 	end
 end
 
 function A.CheckFills(quiet)
-	local newly = Ru.NewlyFull(ns.Rows({ hideGrey = true }))
+	local newly = Ru.NewlyFull(ns.Rows({ hideGrey = true, allAccounts = true }))
 	if quiet or #newly == 0 then return end
 	local names = {}
 	for i = 1, math.min(#newly, 3) do names[i] = St.ClassText(newly[i].c.class, newly[i].c.full) end
@@ -379,7 +380,7 @@ end
 
 function A.Digest()
 	if not enabled("digest") then return end
-	for _, line in ipairs(Ru.Digest(ns.Rows({ hideGrey = true }), time(), ns.Me())) do U.Print(line) end
+	for _, line in ipairs(Ru.Digest(ns.Rows({ hideGrey = true, allAccounts = true }), time(), ns.Me())) do U.Print(line) end
 end
 
 local frame = CreateFrame("Frame")

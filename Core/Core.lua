@@ -8,10 +8,12 @@ local CBH = LibStub("CallbackHandler-1.0")
 ns.callbacks = CBH:New(ns)
 function ns.Fire(event, ...) ns.callbacks:Fire(event, ...) end
 
-local DB_VERSION = 1
+local DB_VERSION = 2
 local DEFAULTS = {
 	style = "auto", compact = false, showGrey = true, minimap = { hide = false }, showMinimapWithElvUI = false,
+	lowPct = 10,
 }
+ns.LOW_MIN, ns.LOW_MAX = 5, 50   -- the low-rest warning threshold, % of a full bar left
 
 local function tbl(v) return type(v) == "table" and v or {} end
 local NUMS = { "xpMax", "xp", "rested", "level", "t", "ranks", "wasted", "sex" }
@@ -44,6 +46,11 @@ function ns.DB()
 			d.opts[k] = (type(v) == "table") and U.Copy(v) or v
 		end
 	end
+	-- v2 (ILL-1272): the low-rest threshold (whole %, 5..50) and the account filter (nil = all, "mine", or an id).
+	local low = tonumber(d.opts.lowPct)
+	d.opts.lowPct = low and U.Clamp(math.floor(low + 0.5), ns.LOW_MIN, ns.LOW_MAX) or DEFAULTS.lowPct
+	local acc = d.opts.accounts
+	if acc ~= "mine" and not (type(acc) == "string" and acc:match("^%x%x%x%x%x%x$")) then d.opts.accounts = nil end
 	-- One SavedVariables file per WoW account, so this 6-hex id names the account the roster lives on.
 	if type(d.account) ~= "string" or not d.account:match("^%x%x%x%x%x%x$") then
 		d.account = ("%06x"):format((math.random(0, 0xffffff) + (time() or 0)) % 0x1000000)
@@ -59,6 +66,42 @@ function ns.AccountLabel(id)
 	local labels = d.accountLabels or {}
 	if labels[id] then return labels[id] end
 	return "Acct " .. tostring(id or "?"):sub(1, 3):upper()
+end
+
+-- Every account that has characters in the roster, this one first, then by label: { id, label, mine, n }.
+function ns.Accounts()
+	local d, n = ns.DB(), {}
+	n[d.account] = 0
+	for _, c in pairs(d.chars) do
+		local a = c.account or d.account
+		n[a] = (n[a] or 0) + 1
+	end
+	local out = {}
+	for id, count in pairs(n) do out[#out + 1] = { id = id, label = ns.AccountLabel(id), mine = id == d.account, n = count } end
+	table.sort(out, function(a, b)
+		if a.mine ~= b.mine then return a.mine end
+		return a.label < b.label
+	end)
+	return out
+end
+
+-- The account the roster is filtered to, or nil for all. A filter naming an account that has no characters any more
+-- (unlinked and pruned) shows all rather than an empty roster.
+function ns.AccountFilter()
+	local d = ns.DB()
+	local f = d.opts.accounts
+	if f == "mine" or f == d.account then return d.account end
+	if not f then return nil end
+	for _, c in pairs(d.chars) do if c.account == f then return f end end
+	return nil
+end
+
+-- "All accounts", "This account" or the peer's label, for the footer control and the options.
+function ns.AccountFilterLabel()
+	local f = ns.AccountFilter()
+	if not f then return "All accounts" end
+	if f == ns.DB().account then return "This account" end
+	return ns.AccountLabel(f)
 end
 
 local myKey   -- canonical key of the logged-in character, once resolved
@@ -216,12 +259,15 @@ C_Timer.NewTicker(60, function()
 	ns.Fire("TICK")
 end)
 
--- Rows for display: everyone but the logged-in character, sorted play-next first.
+-- Rows for display: everyone but the logged-in character, sorted play-next first, on the shown account(s) only
+-- (hero, roster, compact, datatext, timeline). The account filter is a view filter: alerts pass allAccounts, so a fill
+-- or "play next" is never held back (or replayed later) because of what the window was showing.
 function ns.Rows(opts)
 	local d = ns.DB()
 	opts = opts or {}
 	return M.BuildRows(d.chars, opts.now or time(), d.calib, {
 		me = myKey, hidden = d.hidden, target = d.opts.target, maxLevel = S.MaxLevel(),
+		account = not opts.allAccounts and ns.AccountFilter() or nil, myAccount = d.account,
 		hideGrey = opts.hideGrey ~= nil and opts.hideGrey or not d.opts.showGrey,
 	})
 end

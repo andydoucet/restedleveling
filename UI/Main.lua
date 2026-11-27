@@ -146,10 +146,36 @@ function Main.Create()
 		Main.Refresh()
 	end)
 
+	-- Whose characters to show, when more than one account is in the roster: click for the next choice.
+	f.acctBtn = St.MakeButton(f, 140, "All accounts", false, St.HostFrame() and 22 or 24)
+	f.acctBtn:SetPoint("RIGHT", f.greyCheck, "LEFT", -18, 0)
+	f.acctBtn:SetScript("OnClick", function(self)
+		local choices, at = ns.Options.AccountChoices(), 1
+		local cur = ns.AccountFilter() and ns.DB().opts.accounts or nil
+		for i, c in ipairs(choices) do if c[1] == cur then at = i end end
+		ns.Options.SetAccounts(choices[at % #choices + 1][1])
+		Main.AccountTip(self)
+	end)
+	f.acctBtn:SetScript("OnEnter", function(self) Main.AccountTip(self) end)
+	f.acctBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
 	f:SetScript("OnShow", function() Main.Refresh() end)
 	Main.frame = f
 	f:Hide()
 	return f
+end
+
+function Main.AccountTip(owner)
+	GameTooltip:SetOwner(owner, "ANCHOR_TOP")
+	GameTooltip:AddLine("Show accounts")
+	local cur = ns.AccountFilterLabel()
+	for _, c in ipairs(ns.Options.AccountChoices()) do
+		local on = c[2] == cur
+		GameTooltip:AddLine((on and "> " or "   ") .. c[2], on and 1 or 0.8, on and 0.82 or 0.8, on and 0 or 0.8)
+	end
+	GameTooltip:AddLine("Click for the next one. Hidden accounts leave the hero, the roster, compact mode and the datatext.",
+		0.8, 0.8, 0.8, true)
+	GameTooltip:Show()
 end
 
 function Main.Refresh()
@@ -172,7 +198,8 @@ function Main.Refresh()
 	ns.Roster.Update(f.roster, list, now, (hero and hero == rows[1]) and 2 or 1)
 	-- Fit the window to the roster: between 3 and 9 rows tall (the first-run guide needs about 4).
 	local shown = math.max(3, math.min(Main.VISIBLE, #list))
-	local listH = #list == 0 and (f.roster.guide:GetHeight() + 16) or shown * ns.Roster.ROW_H
+	local listH = #list == 0 and (f.roster.guide:IsShown() and (f.roster.guide:GetHeight() + 16) or ns.Roster.ROW_H)
+		or shown * ns.Roster.ROW_H
 	f.list:SetHeight(listH + 8)
 	f:SetHeight(chromeH(f, listH))
 	local n = { full = 0, near = 0, resting = 0, outside = 0 }
@@ -183,6 +210,10 @@ function Main.Refresh()
 	f.header:SetText(#rows > 0 and "NEXT BEST" or "GETTING STARTED")
 	f.link:SetShown(not f.roster.guide:IsShown())
 	ns.Link.Refresh(f.link, now)
+	local multi = #ns.Accounts() > 1
+	f.acctBtn:SetShown(multi)
+	if multi then f.acctBtn:SetLabel(ns.AccountFilterLabel()) end   -- our buttons draw their text in b.label
+	ns.Link.SetWidth(f.link, Main.W - PAD * 2 - 236 - (multi and 160 or 0))
 	f.greyCheck:SetChecked(ns.DB().opts.showGrey ~= false)
 	f.greyCheck:SetShown(#rows > 0)   -- first run: nothing to filter yet
 	f.greyLabel:SetShown(#rows > 0)

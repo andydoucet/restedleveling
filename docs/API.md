@@ -208,8 +208,10 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetMaxLetters` | doc | doc |  |
 | method | `SetMinMaxValues` | doc | doc |  |
 | method | `SetMovable` | doc | doc |  |
+| method | `SetObeyStepOnDrag` | doc | doc |  |
 | method | `SetOffset` | doc | doc |  |
 | method | `SetOrder` | doc | doc |  |
+| method | `SetOrientation` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
 | method | `SetPortraitZoom` | doc | doc |  |
 | method | `SetPropagateKeyboardInput` | doc | doc |  |
@@ -232,11 +234,13 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetTextColor` | doc | doc |  |
 | method | `SetTextInsets` | doc | doc |  |
 | method | `SetTexture` | doc | doc |  |
+| method | `SetThumbTexture` | doc | doc |  |
 | method | `SetToAlpha` | doc | doc |  |
 | method | `SetToFinalAlpha` | doc | doc |  |
 | method | `SetToplevel` | doc | doc |  |
 | method | `SetUnit` | doc | doc |  |
 | method | `SetValue` | doc | doc |  |
+| method | `SetValueStep` | doc | doc |  |
 | method | `SetVertTile` | doc | doc |  |
 | method | `SetVertexColor` | doc | doc |  |
 | method | `SetWidth` | doc | doc |  |
@@ -267,6 +271,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `FULLSCREEN_DIALOG` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
 | event | `HIGHLIGHT` | used | used |  |
+| event | `HORIZONTAL` | used | used |  |
 | event | `IN_OUT` | used | used |  |
 | event | `LOGOUT_CANCEL` | doc | doc |  |
 | event | `MEDIUM` | used | used |  |

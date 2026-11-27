@@ -162,6 +162,10 @@ function R.Create(parent, w, visible)
 	St.Paint(f.thumb, "sw_bronze")
 	f.thumb:SetWidth(3)
 	f.guide = R.Guide(f, w)
+	f.none = Wg.Text(f, "body", nil, 13)   -- a filter that leaves nobody: one line, not the first-run guide
+	f.none:SetPoint("TOPLEFT", 12, -16)
+	St.Color(f.none, St.SECOND)
+	f.none:Hide()
 	f:EnableMouseWheel(true)
 	f:SetScript("OnMouseWheel", function(self, delta)
 		self.offset = math.max(0, math.min(#(self.list or {}) - self.visible, self.offset - delta))
@@ -220,7 +224,12 @@ function R.Update(f, list, now, first)
 		local r = f.list[i + f.offset]
 		if r then fillRow(f.rows[i], r, i + f.offset + f.first - 1, now, calibrated, (i + f.offset) % 2 == 0) else f.rows[i]:Hide() end
 	end
-	f.guide:SetShown(#f.list == 0)
+	local filtered = ns.AccountFilter and ns.AccountFilter() ~= nil
+	f.guide:SetShown(#f.list == 0 and not filtered)
+	f.none:SetShown(#f.list == 0 and filtered)
+	if #f.list == 0 and filtered then
+		f.none:SetText(("No other characters on %s."):format((ns.AccountFilterLabel():gsub("^This", "this"))))
+	end
 	local over = #f.list - f.visible
 	f.thumb:SetShown(over > 0)
 	if over > 0 then

@@ -93,12 +93,13 @@ function M.Less(a, b, now)
 end
 
 -- Rows for every saved character except `opts.me` (the logged-in one gets its own strip).
--- opts: me, hidden (set of keys), target, maxLevel, hideGrey (drop group 5 entirely).
+-- opts: me, hidden (set of keys), target, maxLevel, hideGrey (drop group 5 entirely), account (show only that
+-- account's characters; a record without one belongs to opts.myAccount).
 function M.BuildRows(chars, now, calib, opts)
 	opts = opts or {}
 	local rows = {}
 	for key, c in pairs(chars or {}) do
-		if key ~= opts.me then
+		if key ~= opts.me and (not opts.account or (c.account or opts.myAccount) == opts.account) then
 			local p = M.Project(c, now, calib)
 			local hidden = opts.hidden and opts.hidden[key] or false
 			local state = M.State(c, p, opts)
