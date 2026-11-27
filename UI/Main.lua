@@ -194,7 +194,7 @@ function Main.TitleButtons(f, chevron)
 	f.cogBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	f.cogBtn:SetScript("OnClick", function(_, button)
 		GameTooltip:Hide()   -- its right-click line is stale now; the next hover shows the new state
-		if button == "RightButton" then ns.Move.Toggle() else ns.OpenOptions() end
+		if button == "RightButton" then ns.Move.Toggle() else ns.Settings.Toggle() end
 	end)
 	local up = chevron == "chevron_up"
 	f.compactBtn = St.AddTitleButton(f, chevron, up and "Compact mode" or "Expand",

@@ -13,6 +13,7 @@ globals = {
 read_globals = {
 	"AuctionHouseFrame",
 	"BankFrame",
+	C_AddOns = { fields = { "GetAddOnMetadata" } },
 	C_CVar = { fields = { "GetCVar", "SetCVar" } },
 	C_ChatInfo = { fields = { "AreOutgoingAddonChatMessagesRestricted", "RegisterAddonMessagePrefix", "SendAddonMessage" } },
 	C_Container = { fields = { "GetContainerItemID", "GetContainerNumSlots", "GetItemCooldown" } },
@@ -73,7 +74,7 @@ read_globals = {
 	"SOUNDKIT",
 	"Screenshot",
 	"SetPortraitTexture",
-	Settings = { fields = { "OpenToCategory", "RegisterAddOnCategory", "RegisterCanvasLayoutCategory" } },
+	Settings = { fields = { "RegisterAddOnCategory", "RegisterCanvasLayoutCategory" } },
 	"SettingsPanel",
 	"StaticPopup1",
 	"StaticPopup2",
