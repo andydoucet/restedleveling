@@ -55,10 +55,11 @@ St.BRONZE = { r = 0.40, g = 0.32, b = 0.22 }
 
 function St.Color(fs, c) fs:SetTextColor(c.r, c.g, c.b) end
 
--- "Acct #3" for another account's character; nil for this account's (no point labelling your own).
+-- "Account 3" for another account's character (the options' wording); nil for this account's own.
 function St.AccountTag(c)
 	if not c.account or c.account == ns.DB().account then return nil end
-	return "Acct " .. ns.AccountLabel(c.account)
+	local label = ns.AccountLabel(c.account)
+	return label:match("^#(%d+)$") and ("Account " .. label:sub(2)) or label
 end
 
 function St.StateColor(state)
@@ -76,10 +77,10 @@ function St.ClassColor(class)
 	return 0.9, 0.9, 0.9
 end
 
--- soft: mix the class colour 40% toward cream (roster rows and the tip), so a name never outshouts the state colours.
+-- soft: mix the class colour 15% toward cream (roster rows and the tip). More washed a warrior's tan to near-white.
 function St.ClassText(class, text, soft)
 	local r, g, b = St.ClassColor(class)
-	if soft then r, g, b = r * 0.6 + 0.94 * 0.4, g * 0.6 + 0.90 * 0.4, b * 0.6 + 0.82 * 0.4 end
+	if soft then r, g, b = r * 0.85 + 0.94 * 0.15, g * 0.85 + 0.90 * 0.15, b * 0.85 + 0.82 * 0.15 end
 	return "|c" .. St.Hex(r, g, b) .. tostring(text) .. "|r"
 end
 

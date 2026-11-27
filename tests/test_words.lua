@@ -158,13 +158,13 @@ function cases.hero_says_why_number_one_beats_number_two()
 	local a = row("full", { pct = 1, levels = 1.7, left = 0, fullSince = NOW - 2 * D }, { full = "Le Nette" })
 	local b = row("full", { pct = 1, levels = 1.6, left = 0, fullSince = NOW - 8 * H }, { full = "Le Beouf" })
 	a.group, b.group = 1, 1
-	T.eq(Wd.Ahead({ a, b }, NOW), "Then Le Beouf, full since 8h ago", "both full")
+	T.eq(Wd.Ahead({ a, b }, NOW), "Then play Le Beouf, full since 8h ago", "both full")
 	local c = row("resting", { pct = 0.5, levels = 0.8, left = H }, { full = "Le Bankke" })
 	c.group = 3
-	T.eq(Wd.Ahead({ a, c }, NOW), "Then Le Bankke with 0.8 of a level", "the runner-up, whatever its group")
+	T.eq(Wd.Ahead({ a, c }, NOW), "Then play Le Bankke with 0.8 of a level", "the runner-up, whatever its group")
 	local n = row("near", { pct = 0.92, levels = 1.38, left = 19 * H }, { full = "Le Bankken" })
 	n.group = 2
-	T.eq(Wd.Ahead({ a, n }, NOW), "Then Le Bankken, full in 19h", "nearly full: how soon (exact)")
+	T.eq(Wd.Ahead({ a, n }, NOW), "Then play Le Bankken, full in 19h", "nearly full: how soon (exact)")
 	local m = row("max", nil, { full = "Le Max" })
 	m.group = 5
 	T.eq(Wd.Ahead({ a, m }, NOW), nil, "nobody worth naming")

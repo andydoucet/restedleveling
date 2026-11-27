@@ -1,57 +1,63 @@
-# Round 6 of v1.1 (ILL-1272): answers council r5 (opus 7.6, sol 7.9, grok 7.7)
+# Round 7 of v1.1 (ILL-1272): answers council r6 (opus 7.9, sol 7.9, grok 7.8)
 
-**Desk note: r5 scored below r3.** I compared r3 (8924e8e) with r5 (2d7d4bb). Per judge, r5 matches r3 everywhere
-except `elvui_wc3_fit` (opus and grok 8 → 7) and grok's `alerts_ux` / `layout_polish` (8 → 7). All three name the same
-cause: the window turned into flat black slabs next to the WC3 wood (opus "three identical pure-black slabs", grok
-"a flat black dashboard while alerts wear WC3 wood"). In r5 our inner panels took ElvUI's stock grey backdrop (0.1),
-and the corrected render showed it as near-black. r3 drew them as a warm, recessed near-brown. This round reverts
-that, without dropping the desk's "inherit" rule:
+r6 recovered to r3's level. This round keeps r6's structure and fixes what all three judges named: copy drift, the
+timeline tooltip covering lanes, two chip styles, a plan step that looked disabled, and options as a cold slab beside
+the warm window. Each change below was asked for by at least two judges unless one is named.
 
-- **Inherit, by layer.** Under plain ElvUI, our panels still take ElvUI's own E.media colours (near-black, like stock
-  ElvUI). When a skin on top of ElvUI paints its own art on our window (WC3 here, detected from the window's textures),
-  that skin sets the look. Our panels then take a warm recessed well inside it (the r3 tone the council matched to the
-  in-game references), so window, panels and alerts read as one family. Code: `X.SkinnedWindow`, `St.SkinnedWindow`.
-  Test: the roster well takes the warm well inside a skinned window and keeps E.media colours under plain ElvUI.
-- **NOW PLAYING with nothing banked shows no empty track** (as in r3). All three judges said the track read as an empty
-  input field.
+## Changed
 
-Kept from r4 and r5 (credited by judges): the numbered plan, the name/verb split, the amber waste line, the class word
-in rows, filled chips, "Not filling: rest at an inn", the two-line date column, and the narrower Esc card.
-
-## Changed (each asked for by at least two judges unless one is named)
-
-- **Plan strip** (opus, grok). Step 2 is the only lit step: a warm pill behind "Le Dette: play now". Step 1 is quieter
-  (13 px, muted verb). "Then Le Bankken, full in 19h 11m" is 13 px, aligned to the steps' text and exact to the minute
-  (sol). The waste line has its own clearance above the strip (opus, sol).
-- **One chip recipe** (opus, sol, grok). Every state fill is now a dark 25% tint on near-black. NEARLY FULL no longer
-  shouts louder than FULL, and RESTING no longer reads as a bronze button.
-- **Not-filling timeline lane** (sol). No bar or arrow promising progress: a thin red line with a stop marker at NOW,
-  and "Not filling: find an inn" in the date column. A full lane draws no empty track behind "Full now" (opus). The
-  hover tooltip sits on its own lane, right of the marker, clear of the dates (opus, sol, grok).
-- **Esc card** (opus, grok). The ESC MENU tag is gone; the gold moon and the title say what it is. It uses the banner's
-  exact hearth sentence (opus: the copies differed). Its next row shows who and their state only; the banked amount is
-  the banner's (grok).
-- **Character card** (opus, sol). The meta lines are flush with the name (the inline class icon indented them). The
-  bubble sits lower, level with the face its tail points at.
-- **Options** (opus, sol). "Account 3" instead of "#3". More space before WINDOW AND DISPLAY; About is one line.
+- **One wording everywhere** (opus, grok). The other account reads "Account 3" in rows, the hero and options, not
+  "Acct #3" in one place and "Account 3" in another. A not-filling character reads "Not filling: rest at an inn" in
+  rows, tips, the card and the timeline; the timeline said "find an inn".
+- **Class colours read as class colours** (opus). Roster and tip names were mixed 40% toward cream, which turned a
+  warrior's tan (Le Bankken) near-white. The mix is now 15%. Class-coloured names are unchanged as a rule.
+- **Warm panels everywhere under the skin** (grok, opus). The warm recessed well is one step warmer (#1E1812). The
+  options page takes it too whenever a skin dresses our windows: it was a cold near-black slab beside the warm window
+  (grok). Under plain ElvUI, panels and options still take ElvUI's own E.media colours.
+- **The plan's lit step reads lit** (opus, grok, sol):
+  - Step 2 ("Le Dette: play now") is a gold-rimmed pill on a dark warm fill; the flat khaki read as disabled (opus).
+  - Step 1's disc recedes: grey, 70%.
+  - The next line is a step of its own, "Then play Le Bankken, full in 19h 11m", set under step 2, not under step 1
+    (sol, grok).
+- **One chip recipe, every state marked** (grok, sol, opus). All four fills are 25% of the state colour on #1a140e.
+  RESTING has its own mark now, a small moon in its orange, next to the tick, the arrow and the warning (sol). None of
+  them reads as a button.
+- **Timeline** (opus, sol, grok):
+  - The hover tooltip opens level with its lane, outside the chart, so it covers no lane, marker or date (all three).
+  - Noon names its day ("Tue 12:00", "Wed 12:00"), so the two noons no longer read alike (grok); midnight keeps "Wed 25
+    Nov".
+  - The right column is 14 px wider, so "Not filling: rest at an inn" wraps there whole.
+- **Roster** (opus). A not-filling character's bar is drawn at half strength: banked, but not moving.
+- **Hero bar** (opus, sol). 14 px (was 18) with quieter seams, so it no longer outweighs the name. The same quieter
+  seams on every bar.
+- **Logout banner** (sol, opus). The headline is the goal, "Rest at an inn before logging out". Under it come the
+  manual steps, "Cancel the logout, then hearth to Feathermoon Stronghold.", then the reason at 13 px (was 12).
+- **Move mode** (opus, grok, sol). The drag hint sits right under each placeholder's note, in readable cream, with no
+  dead gap: "Drag anywhere on this panel."
+- **ROSTER / TIMELINE** (sol) are real 64 x 24 targets.
 
 ## DECLINED
 
-- **A "Cancel logout" or "Hearth" button on the banner** (grok, sol): CancelLogout and the hearthstone are protected
-  actions an addon cannot take. The banner states what to do.
-- **A class-colour ring on every portrait, and cropping the class icon** (grok): the ring is the state colour under the
-  settled portrait rule.
-- **Gold checkbox labels and host-style nav highlights** (opus, grok): those belong to the host's Settings frame, which
-  we do not touch. Our labels follow ElvUI's own font.
-- **Repainting our ElvUI window with the WC3 wood header** (grok): WC3-specific code is ruled out. Instead, our panels now
-  take the skin's tone whenever a skin paints the window.
+- **The waste line back on the state line** (opus): r4's judges asked for it on its own line, and grok asks for more
+  weight on it.
+- **"Full for 1d 16h"** (sol): two judges chose "Full since" in r2.
+- **Lighting step 1 instead of step 2** (grok): opus and sol read step 2 (who to play) as the point of the plan.
+- **The Blizzard dialog backdrop and beveled buttons for the default theme** (grok): the settled default chrome is oak
+  and bronze.
+- **The WC3 wood stopping short on the banner, the Esc card and the placeholders; WC3's red button bevel; the compact
+  tip's header block** (opus, grok): that is the WC3 skin's own art and button treatment. WC3-specific code is ruled
+  out.
+- **"Le jette" vs "Le Jette"** (grok): one string (the saved name) feeds every surface. The difference is the font's
+  J at small sizes in the simulator.
+- **NOW PLAYING's live face** (opus): it is `SetPortraitTexture("player")` in game; the simulator cannot draw it.
 - **Not done this round** (one judge each):
-  - sol: calendar dates on every roster row (taller rows), a smaller hero portrait, and 13 px metadata everywhere.
-  - grok: midnight as "Wed 25 / 00:00", and slider end labels.
-  - opus: a hero-bar shimmer, and red-state speech in timeline tooltips.
+  - sol: calendar dates on every row, a smaller hero portrait, and an explicit two-line toast.
+  - opus: coin icons in the card, and a FULL-chip pulse.
+  - grok: dropping the Settings sidebar (Blizzard's).
 
 ## Checks
 
 - `lua5.1 tests/run.lua`: 180 pass. luacheck is clean. tools/apicheck.py: 0 unverified, at every layer.
-- All 8 renders come from the real addon in wow-ui-sim (colours as the game shows them; tools/sim/fixture/Gamma.lua).
-  04 is the full-screen context shot; the others are 1:1 crops.
+- Changed tests: the RESTING chip's moon (and none on MAX LEVEL), the banner headline, the runner-up wording.
+- All 8 renders come from the real addon in wow-ui-sim. 04 is the full-screen context shot; the others are 1:1 crops.
+  Scene 03 is wider because its tooltip now opens outside the window.

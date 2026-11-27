@@ -102,7 +102,9 @@ function cases.chips_are_filled_and_quiet_about_icons()
 	local Wg = state.ns.Widgets
 	local chip = Wg.Chip(h.Env().UIParent, 20)
 	Wg.SetChip(chip, "resting", "RESTING")
-	T.ok(not chip.icon:IsShown(), "no icon on RESTING")
+	T.ok(chip.icon:IsShown() and chip.icon:GetTexture():find("moon_gold", 1, true), "a moon on RESTING, not a smudgy icon")
+	Wg.SetChip(chip, "max", "MAX LEVEL")
+	T.ok(not chip.icon:IsShown(), "no icon on MAX LEVEL")
 	Wg.SetChip(chip, "outside", "NOT RESTING")
 	T.ok(chip.icon:IsShown(), "the warning on NOT RESTING")
 end

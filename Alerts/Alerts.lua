@@ -119,7 +119,7 @@ function A.Banner()
 	f.action:SetWidth(420)   -- the inn guidance on one line where it can be
 	f.action:SetWordWrap(true)
 	St.Color(f.action, St.CREAM)   -- only "4x slower" is coloured
-	f.text = Wg.Text(f, "body", nil, 12)   -- the situation, secondary, after the instruction
+	f.text = Wg.Text(f, "body", nil, 13)   -- the situation, secondary, after the instruction
 	f.text:SetPoint("TOPLEFT", f.action, "BOTTOMLEFT", 0, -3)
 	f.text:SetWidth(400)
 	St.Color(f.text, St.SECOND)
@@ -323,8 +323,10 @@ function A.OnCamping()
 	if not enabled("logout") or not Ru.LogoutWarning(context()) then return end
 	local top, empty = nextUp()
 	local me = ns.Me()
-	A.ShowBanner("Cancel logout, then rest in an inn", ((me and me.full) or "This character") .. " is outside a rest area.", "outside",
-		A.HearthLine(me), top, empty)
+	-- The goal as the headline; the manual steps under it (the addon cannot cancel a logout: protected), then why.
+	A.ShowBanner("Rest at an inn before logging out", ((me and me.full) or "This character") .. " is outside a rest area.",
+		"outside", me and me.bind and ("Cancel the logout, then hearth to %s."):format(me.bind)
+			or "Cancel the logout, then hearth or find an inn.", top, empty)
 	pcall(PlaySound, SOUNDKIT.RAID_WARNING)
 	chat("logout", "|cffff5a45logging out outside a rested area.|r Move to cancel, then find an inn or a city.")
 end

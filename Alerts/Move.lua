@@ -237,9 +237,9 @@ local function placeholder(key)
 	f.note:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -4)
 	f.note:SetText(it.note)
 	St.Color(f.note, St.CREAM)
-	f.where = Wg.Text(f, "small", nil, 12)
-	f.where:SetPoint("BOTTOMLEFT", 18, 12)
-	St.Color(f.where, St.MUTED)
+	f.where = Wg.Text(f, "body", nil, 12)   -- the drag hint, right under the note: readable, no dead gap
+	f.where:SetPoint("TOPLEFT", f.note, "BOTTOMLEFT", 0, -6)
+	St.Color(f.where, St.CREAM)
 	f.reset = St.MakeButton(f, 64, "Reset", false, 22)   -- the same place on every placeholder
 	f.reset:SetPoint("TOPRIGHT", -10, -12)
 	if it.h < 100 then f.icon:SetPoint("TOPLEFT", 18, -12) end
@@ -263,7 +263,7 @@ function Mv.PlacePlaceholder(key)
 	if key == "menu" then
 		f.where:SetText(saved and "Custom position. Reset attaches it to the Esc menu again." or "Attached to the Esc menu. Drag to detach it.")
 	else
-		f.where:SetText(saved and "Custom position. Drag to move." or "Default position. Drag to move.")
+		f.where:SetText(saved and "Custom position. Drag anywhere on this panel." or "Default position. Drag anywhere on this panel.")
 	end
 end
 

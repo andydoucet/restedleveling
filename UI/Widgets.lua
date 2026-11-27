@@ -181,7 +181,7 @@ function Wg.BubbleBar(parent, w, h, segs)
 	for i = 1, segs - 1 do
 		local d = bar:CreateTexture(nil, "OVERLAY", nil, 2)
 		St.Paint(d, "sw_well")
-		d:SetAlpha(0.3)   -- bubble seams: 8 hours in an inn each, readable on the fill
+		d:SetAlpha(0.2)   -- bubble seams (8 hours in an inn each): there, but the bar reads as a fill, not a ruler
 		d:SetWidth(1)
 		d:SetPoint("TOP", bar, "TOPLEFT", w * i / segs, 0)
 		d:SetPoint("BOTTOM", bar, "BOTTOMLEFT", w * i / segs, 0)
@@ -226,16 +226,22 @@ end
 
 function Wg.SetChip(f, state, text)
 	local s = St.STATE[state] or St.STATE.max
-	f.icon:SetTexture(s.icon)
-	f.text:SetText(text or s.word:upper())
 	local key = St.STATE[state] and state or "max"
+	-- Every state has its mark: tick, arrow, warning, and for resting a small moon in its own orange.
+	if key == "resting" then
+		f.icon:SetTexture(St.MEDIA .. "moon_gold")
+		f.icon:SetVertexColor(St.StateColor("resting"))
+	else
+		f.icon:SetTexture(s.icon)
+		f.icon:SetVertexColor(1, 1, 1)
+	end
+	f.text:SetText(text or s.word:upper())
 	local r, g, b = St.StateColor(key)
 	f.text:SetTextColor(r * 0.55 + 0.45, g * 0.55 + 0.45, b * 0.55 + 0.45)   -- a light tint of the state, clear of its fill
 	-- A filled tag, not a hollow box: the state's own dark fill and its edge (council r4: outlines read as form fields).
 	St.Backdrop(f, "chipfill_" .. key, "st_" .. key, 1)
 	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.85) end
-	-- Icons only where they say something the word does not: the warning, the nearly-full arrow, the tick.
-	local icon = key == "outside" or key == "near" or key == "full"
+	local icon = key == "outside" or key == "near" or key == "full" or key == "resting"
 	f.icon:SetShown(icon)
 	local group = f.text:GetStringWidth() + (icon and (f.icon:GetWidth() + 5) or 0)
 	if not f.fixed then f:SetWidth(group + 14) end

@@ -96,7 +96,7 @@ local function createRow(parent, w)
 	f.name:SetPoint("TOPLEFT", COL.text, -10)
 	f.name:SetShadowColor(0, 0, 0, 0.9)   -- class colours (shaman blue) stay clear of the state tint
 	f.name:SetShadowOffset(1, -1)
-	f.acct = Wg.Text(f, "label", nil, 11)   -- "Acct #3", only for the other account's characters
+	f.acct = Wg.Text(f, "label", nil, 11)   -- "Account 3", only for the other account's characters
 	f.acct:SetPoint("LEFT", f.name, "RIGHT", 8, 0)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 	f.sub = Wg.Text(f, "small", nil, 13)
@@ -213,6 +213,7 @@ local function fillRow(row, r, n, now, calibrated, alt)
 	end
 	row.bar:SetShown(p ~= nil and not grey)
 	if p and not grey then Wg.SetBubbleBar(row.bar, p.pct, r.state, not calibrated) end
+	row.bar.fill:SetAlpha(r.state == "outside" and 0.45 or 1)   -- banked, but not moving: no live-looking fill
 	row.time:SetWidth(COL.chip - COL.bar - 6)
 	row.time:SetText(r.hidden and "hidden" or Wd.RowTime(r, now, calibrated))
 	if r.state == "max" then St.Color(row.time, St.MUTED) else St.Color(row.time, St.CREAM) end   -- the joke is not data

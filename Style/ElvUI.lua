@@ -140,7 +140,9 @@ end
 -- that tone so the panels sit inside the skin's window as one family. With plain ElvUI: ElvUI's own colours.
 local function skinnedWindow(frame)
 	local w = window(frame)
-	return w ~= nil and w ~= frame and w.GetRegions ~= nil and skinArt(w)
+	local yes = w ~= nil and w ~= frame and w.GetRegions ~= nil and skinArt(w)
+	if yes then X.skinSeen = true end   -- a skin dresses our windows this session (pages built later follow it)
+	return yes
 end
 X.SkinnedWindow = skinnedWindow
 
