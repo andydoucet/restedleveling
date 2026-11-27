@@ -91,6 +91,14 @@ local function words(parent, text, size, color)
 	return t
 end
 
+	-- Under plain ElvUI: ElvUI's own backdrop colour; inside a skin's window (checked on show): its warm well.
+function O.PaintPanel(p)
+	-- skinned: the Settings window itself, or a skin seen on our own windows this session (the page sits beside them)
+	local skinned = St.SkinnedWindow(p) or (St.backend and St.backend.skinSeen)
+	local fill = not skinned and St.HostFill()
+	if fill then p.bg:SetColorTexture(unpack(fill)) else St.Paint(p.bg, "sw_host_well") end
+end
+
 function O.Panel()
 	if O.panel then return O.panel end
 	St.Ensure()
@@ -98,11 +106,6 @@ function O.Panel()
 	p.name = "Rested Leveling"
 	p.bg = p:CreateTexture(nil, "BACKGROUND")   -- our own near-black panel, like the roster's wells, in both themes
 	St.Paint(p.bg, "sw_host_well")
-	-- Under plain ElvUI: ElvUI's own backdrop colour; inside a skin's window (checked on show): its warm well.
-	p:HookScript("OnShow", function()
-		local fill = not St.SkinnedWindow(p) and St.HostFill()
-		if fill then p.bg:SetColorTexture(unpack(fill)) else St.Paint(p.bg, "sw_host_well") end
-	end)
 	p.bg:SetAllPoints()
 	local title = Wg.Text(p, "title", nil, 20)
 	title:SetPoint("TOPLEFT", 16, -16)
@@ -206,7 +209,7 @@ function O.Panel()
 	about:SetWidth(600)   -- the canvas has no width of its own when this runs: wrap at a fixed measure
 	about:SetWordWrap(true)
 	about:SetText("|cffd6b56bAbout|r  Builds on Rested Watch by doc_biddle (GPL-3.0). Thank you.")   -- one line: the rest is in /ec
-	p:SetScript("OnShow", function() O.RefreshPanel(p) end)
+	p:SetScript("OnShow", function() O.PaintPanel(p) O.RefreshPanel(p) end)
 	O.panel = p
 	if Settings and Settings.RegisterCanvasLayoutCategory then
 		O.category = Settings.RegisterCanvasLayoutCategory(p, "Rested Leveling")

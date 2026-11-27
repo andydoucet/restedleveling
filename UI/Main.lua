@@ -145,7 +145,7 @@ function Main.Create()
 		b.text = Wg.Text(b, "label", nil, 12)
 		b.text:SetPoint("CENTER")
 		b.text:SetText(v[2])
-		b:SetWidth(b.text:GetStringWidth() + 16)
+		b:SetSize(math.max(64, b.text:GetStringWidth() + 16), 24)   -- a real target, not a text link
 		b.line = b:CreateTexture(nil, "OVERLAY")
 		b.line:SetColorTexture(1, 0.84, 0.45, 1)
 		b.line:SetPoint("BOTTOMLEFT", 6, -1)

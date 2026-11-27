@@ -98,7 +98,7 @@ function Hero.Create(parent, w, h)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 
 	Hero.BAR_W = w - 168 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
-	f.bar = Wg.BubbleBar(f, Hero.BAR_W, 18, BAR_SEGS)
+	f.bar = Wg.BubbleBar(f, Hero.BAR_W, 14, BAR_SEGS)   -- below the name in weight
 	f.bar:SetPoint("TOPLEFT", f.sub, "BOTTOMLEFT", -1, -10)
 	f.sheen = f.bar.bar:CreateTexture(nil, "OVERLAY", nil, 6)   -- a gold sheen sweeps the bar when the window opens
 	f.sheen:SetTexture(St.MEDIA .. "glow")
@@ -157,12 +157,19 @@ function Hero.Create(parent, w, h)
 	St.Font(f.steps[1].verb, "name", 13)
 	f.steps[1].verb:SetTextColor(0.81, 0.76, 0.65)
 	f.steps[2].verb:SetTextColor(1, 0.95, 0.79)
+	-- The lit step: a gold-rimmed pill (a 1 px rim around a dark warm fill), so it reads lit, not disabled.
+	f.pillRim = f.action:CreateTexture(nil, "BACKGROUND", nil, 1)
+	f.pillRim:SetColorTexture(0.79, 0.64, 0.29, 1)
+	f.pillRim:SetPoint("TOPLEFT", f.steps[2].disc, "TOPLEFT", -7, 5)
+	f.pillRim:SetPoint("BOTTOMRIGHT", f.steps[2].verb, "BOTTOMRIGHT", 11, -6)
 	f.pill = f.action:CreateTexture(nil, "BACKGROUND", nil, 2)
-	f.pill:SetColorTexture(1, 0.88, 0.6, 0.12)
-	f.pill:SetPoint("TOPLEFT", f.steps[2].disc, "TOPLEFT", -6, 4)
-	f.pill:SetPoint("BOTTOMRIGHT", f.steps[2].verb, "BOTTOMRIGHT", 10, -5)
+	f.pill:SetColorTexture(0.23, 0.19, 0.13, 1)
+	f.pill:SetPoint("TOPLEFT", f.pillRim, "TOPLEFT", 1, -1)
+	f.pill:SetPoint("BOTTOMRIGHT", f.pillRim, "BOTTOMRIGHT", -1, 1)
+	f.steps[1].disc:SetDesaturated(true)   -- step 1's disc recedes: "do this, then THIS"
+	f.steps[1].disc:SetAlpha(0.7)
 	f.ahead = text(f.action, "small", 13, { r = 0.83, g = 0.77, b = 0.66 })   -- who comes after: a line of its own
-	f.ahead:SetPoint("TOPLEFT", f.steps[1].text, "BOTTOMLEFT", 0, -8)   -- on the steps' text edge, not the disc
+	f.ahead:SetPoint("TOPLEFT", f.steps[2].text, "BOTTOMLEFT", 0, -9)   -- under step 2: what follows it
 	f.open = St.MakeButton(f.action, 120, "View card", true)
 	f.open:SetPoint("RIGHT", -8, 0)
 	f.ctaW = w - 6 - 22 - 120 - 8 - 12   -- from its inset to 12 px short of the button
@@ -289,6 +296,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 	for i, st in ipairs(f.steps) do
 		for _, k in ipairs({ "disc", "n", "text", "verb" }) do st[k]:SetShown(s1 ~= nil) end
 		f.pill:SetShown(s1 ~= nil)
+		f.pillRim:SetShown(s1 ~= nil)
 		local who, verb = (i == 1 and s1 or s2 or ""):match("^(.-:)%s+(.+)$")   -- the name coloured, the verb cream
 		st.text:SetText(who or "")
 		st.verb:SetText(verb or "")

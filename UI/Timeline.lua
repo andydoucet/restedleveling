@@ -14,7 +14,7 @@ Tl.LABEL_W = 216        -- portrait, name and how full it is now
 Tl.AXIS_H = 24          -- the tick labels over the plot
 Tl.NIGHT_FROM, Tl.NIGHT_TO = 20, 6   -- local hours drawn as night
 Tl.MAX_LANE_H = 46
-Tl.GUTTER = 112         -- right of the plot: the date for a lane that fills after the window
+Tl.GUTTER = 126         -- right of the plot: the date for a lane that fills after the window
 local DAYS = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
@@ -75,7 +75,9 @@ function Tl.Ticks(now, span, dateFn)
 			local frac = (t - now) / span
 			out[#out + 1] = { frac = frac, day = d.hour == 0,
 				quiet = d.hour % 12 ~= 0,   -- a line every 6 hours, a label every 12: room for "Wed 25 Nov"
-				label = d.hour == 0 and ("%s %d %s"):format(DAYS[d.wday], d.day, MONTHS[d.month]) or ("%02d:00"):format(d.hour) }
+				-- midnight names the date; noon names its day, so the two noons never read alike
+				label = d.hour == 0 and ("%s %d %s"):format(DAYS[d.wday], d.day, MONTHS[d.month])
+					or (d.hour == 12 and (DAYS[d.wday] .. " 12:00")) or ("%02d:00"):format(d.hour) }
 		end
 		t = t + 3600
 	end
@@ -89,7 +91,7 @@ function Tl.Label(lane, now, dateFn)
 	if lane.left <= 0 then return "Full now" end
 	local d = dateFn("*t", now + lane.left)
 	local hm = ("%02d:%02d"):format(d.hour, d.min)
-	if lane.row and lane.row.state == "outside" then return "Not filling:\nfind an inn" end   -- what to do, not a date weeks out
+	if lane.row and lane.row.state == "outside" then return "Not filling:\nrest at an inn" end   -- what to do, not a date weeks out
 	if lane.beyond then   -- two lines in the gutter, so lanes full the same day still part: date, then time
 		return ("%s %d %s\n%s"):format(DAYS[d.wday], d.day, MONTHS[d.month], hm)   -- the column says what it is
 	end
@@ -140,9 +142,8 @@ local function lane(f)
 	l:SetScript("OnEnter", function(self)
 		local r = self.lane and self.lane.row
 		if not r then return end
-		GameTooltip:SetOwner(self, "ANCHOR_NONE")   -- inside the window, hanging just under its own lane
-		local x = self.lane and not self.lane.beyond and self.lane.frac < 0.4 and (self.endX or 0) + 16 or 8
-		GameTooltip:SetPoint("LEFT", self, "LEFT", Tl.LABEL_W + x, 0)   -- on its own lane, just right of the marker
+		GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		GameTooltip:SetPoint("LEFT", self, "RIGHT", Tl.GUTTER + 16, 0)   -- level with its lane, outside the chart: covers no lane
 		GameTooltip:AddLine(St.ClassText(r.c.class, r.c.full or "?"))
 		local s = St.STATE[r.state] or St.STATE.max
 		GameTooltip:AddLine(Wd.RowFull(r, self.now or time()), s.r, s.g, s.b)
@@ -299,8 +300,10 @@ function Tl.Update(f, rows, now, h)
 		local s = St.STATE[state]
 		l.when:SetTextColor(s.r * 0.5 + 0.45, s.g * 0.5 + 0.45, s.b * 0.5 + 0.4)
 		l.when:ClearAllPoints()
-		if ln.beyond then   -- the date in the gutter, past the arrow, never on the bar
+		l.when:SetWidth(0)
+		if ln.beyond or (r.state == "outside" and ln.left > 0) then   -- the date (or the advice) in the gutter, never on the bar
 			l.when:SetPoint("LEFT", l, "LEFT", f.plotX + f.plotW + 18, cy)
+			l.when:SetWidth(Tl.GUTTER - 10)
 		elseif ln.frac > 0.8 then   -- near the right edge: the label sits left of the marker, above the bar
 			l.when:SetPoint("BOTTOMRIGHT", l, "LEFT", f.plotX + endX - 6, cy + 7)
 		else
