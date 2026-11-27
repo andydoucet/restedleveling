@@ -37,7 +37,7 @@ function Cur.Create(parent, w, h)
 	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -5)
 	f.left:SetWidth(C.value + Wg.VALUE_W - C.bar)
 	f.pill = Wg.Chip(f, 20)   -- the rows' chip, in the rows' STATE column
-	f.pill:SetPoint("LEFT", X + C.chip, 0)
+	f.pill:SetPoint("RIGHT", f, "LEFT", X + C.chip + Wg.CHIP_W, 0)   -- the rows' right edge
 	f.detail = Wg.Text(f, "small", nil, 13)   -- under the name, in the text column
 	f.detail:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 0, -3)
 	f.detail:SetWidth(C.bar - C.text - 10)

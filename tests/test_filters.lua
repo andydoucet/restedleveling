@@ -162,4 +162,24 @@ function cases.a_filter_that_leaves_nobody_says_so()
 	T.clean(h)
 end
 
+-- Review round 2 (ILL-1272): when the #1 lives on the other account, its "Account 3" tag sits on the meta line (not
+-- under the chip, over the bar's right end), and the hero chip is as wide as its word ("NEARLY FULL").
+function cases.hero_account_tag_on_the_meta_line_and_the_chip_holds_its_word()
+	local h, state = world()
+	local ns = state.ns
+	local c = W.DB(h).chars["N:Le Bankken@?"]
+	c.rested, c.t = math.floor(1.38 * 10000), W.NOW   -- 92%: nearly full
+	ns.Options.SetAccounts("bbbbbb")
+	h.Slash("RESTEDLEVELING", "")
+	local hero = ns.Main.frame.hero
+	T.has(hero.acct:GetText(), "Account 3", "the tag shows")
+	local pt = hero.acct.__points[#hero.acct.__points]
+	T.ok(pt[1] == "LEFT" and pt[2] == hero.sub and pt[3] == "RIGHT", "anchored after the meta line, not under the chip")
+	local chip = hero.chip
+	T.eq(chip.text:GetText(), "NEARLY FULL", "the nearly-full chip")
+	local icon = chip.icon:IsShown() and (chip.icon:GetWidth() + 5) or 0
+	T.ok(chip:GetWidth() >= chip.text:GetStringWidth() + icon + 14, "wide enough for its word")
+	T.clean(h)
+end
+
 return cases

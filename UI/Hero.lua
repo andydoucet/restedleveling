@@ -93,8 +93,8 @@ function Hero.Create(parent, w, h)
 	f.statSub:SetJustifyH("RIGHT")
 	f.chip:ClearAllPoints()   -- the #1's state, as a tag under its figure ("FULL")
 	f.chip:SetPoint("TOPRIGHT", f.statSub, "BOTTOMRIGHT", 0, -8)
-	f.acct = Wg.Text(f, "label", nil, 11)
-	f.acct:SetPoint("TOPRIGHT", f.chip, "BOTTOMRIGHT", 0, -6)
+	f.acct = Wg.Text(f, "label", nil, 11)   -- on the meta line, after it: clear of the bar and the figure column
+	f.acct:SetPoint("LEFT", f.sub, "RIGHT", 10, 0)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 
 	Hero.BAR_W = w - 168 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
@@ -269,8 +269,18 @@ function Hero.Update(f, row, now, me, rows, empty)
 	f.name:SetText(St.ClassText(c.class, c.full or "?"))
 	local raceName = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
 	local className = c.class and (c.class:sub(1, 1) .. c.class:sub(2):lower()) or ""
-	f.sub:SetText(("Level %d %s %s  ·  %s  ·  seen %s"):format(c.level or 0, raceName, className, Wd.Place(c),
-		U.Ago(now - (c.t or now))))
+	local tag = St.AccountTag(c)
+	local acct = tag and (c.src == "sync" and (tag .. " · synced") or tag) or ""
+	f.acct:SetText(acct)
+	-- The meta line and the account tag share the text column, up to the chip (which ends on the bar's right edge):
+	-- the place shortens first, then the tag drops "· synced".
+	local seen = U.Ago(now - (c.t or now))
+	local function room() return Hero.BAR_W - f.chip:GetWidth() - 16 - (tag and (f.acct:GetStringWidth() + 10) or 0) end
+	for _, place in ipairs({ Wd.Place(c), Wd.ShortPlace(c) or Wd.Place(c) }) do
+		f.sub:SetText(("Level %d %s %s  ·  %s  ·  seen %s"):format(c.level or 0, raceName, className, place, seen))
+		if f.sub:GetStringWidth() <= room() then break end
+	end
+	if tag and f.sub:GetStringWidth() > room() then f.acct:SetText(tag) end
 	local calibrated = ns.DB().calib.n ~= nil
 	Wg.SetBubbleBar(f.bar, p.pct, row.state, not calibrated)
 	if empty then   -- nothing banked anywhere: the figure is the real-life wait, not a 0.0
@@ -305,8 +315,6 @@ function Hero.Update(f, row, now, me, rows, empty)
 	end
 	if not s1 then Hero.FitAction(f, Wd.Action(name, meName, ns.Snap.RestingNow(), empty)) end
 	f.open:SetLabel("View details")   -- the name is right above it
-	local tag = St.AccountTag(c)
-	f.acct:SetText(tag and (c.src == "sync" and (tag .. " · synced") or tag) or "")
 	say(f, ns.Lines and ns.Lines.Short(row, now))   -- the joke; the action bar carries the decision
 	if fresh and not ns.DB().opts.reduceMotion then f.sweep:Play() end
 end

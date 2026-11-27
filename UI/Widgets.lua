@@ -219,6 +219,7 @@ function Wg.Chip(parent, h, w)
 	local f = CreateFrame("Frame", nil, parent, "BackdropTemplate")
 	f:SetSize(w or Wg.CHIP_W, h or 20)
 	f.fixed = w ~= false
+	f.minW = w or Wg.CHIP_W   -- never narrower; wider when its word needs it (grows from its right anchor)
 	f.icon = f:CreateTexture(nil, "ARTWORK")
 	f.icon:SetSize(12, 12)   -- one icon size in every chip
 	f.icon:SetPoint("LEFT", 4, 0)
@@ -248,7 +249,7 @@ function Wg.SetChip(f, state, text)
 	local icon = key == "outside" or key == "near" or key == "full" or key == "resting"
 	f.icon:SetShown(icon)
 	local group = f.text:GetStringWidth() + (icon and (f.icon:GetWidth() + 5) or 0)
-	if not f.fixed then f:SetWidth(group + 14) end
+	if not f.fixed then f:SetWidth(group + 14) else f:SetWidth(math.max(f.minW, group + 14)) end
 	f.icon:ClearAllPoints()   -- icon and word centred as one group: no dead space on the right
 	f.icon:SetPoint("LEFT", math.max(6, math.floor((f:GetWidth() - group) / 2)), 0)
 	f.text:ClearAllPoints()

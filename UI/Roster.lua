@@ -113,7 +113,7 @@ local function createRow(parent, w)
 	f.time:SetWidth(COL.value + Wg.VALUE_W - COL.bar)
 	St.Color(f.time, St.CREAM)
 	f.chip = Wg.Chip(f, 20)
-	f.chip:SetPoint("LEFT", COL.chip, 0)
+	f.chip:SetPoint("RIGHT", f, "LEFT", COL.chip + Wg.CHIP_W, 0)   -- right-aligned: one right edge even if a word grows it
 	f:SetScript("OnEnter", rowTooltip)
 	f:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	f:SetScript("OnClick", function(self) if self.data and ns.ShowDetail then ns.ShowDetail(self.data.key) end end)
