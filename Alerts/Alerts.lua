@@ -281,16 +281,12 @@ function A.MenuStrip()
 	f:SetSize(A.STRIP_MAX, 112)   -- A.LayoutStrip sizes it from the menu on every show
 	surface(f, "toast", "outside")   -- a neutral panel: it must not read as another red menu button
 	f.stripe:Hide()   -- no red rail either: the banner owns that shape
-	-- Its own shape, so it never reads as a second banner: an ESC MENU tag, a moon, one instruction, and the next
+	-- Its own shape, so it never reads as a second banner: a gold moon, one instruction, and the next
 	-- character without a button (the menu is open: the window is one click away).
 	f.icon = f:CreateTexture(nil, "ARTWORK")
 	f.icon:SetSize(22, 22)
-	f.icon:SetPoint("TOPLEFT", 16, -32)
+	f.icon:SetPoint("TOPLEFT", 16, -16)
 	f.icon:SetTexture(A.MENU_ICON)
-	f.tag = Wg.Text(f, "label", nil, 11)
-	f.tag:SetPoint("TOPLEFT", 16, -14)   -- inside the frame, under its top edge
-	f.tag:SetText("ESC MENU")
-	f.tag:SetTextColor(0.89, 0.70, 0.29)
 	f.text = Wg.Text(f, "name", nil, 15)
 	f.text:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, 0)
 	f.text:SetTextColor(0.98, 0.55, 0.15)
@@ -340,9 +336,11 @@ function A.OnMenuShown()
 		if f:IsShown() then
 			local me = ns.Me()   -- name who, like the banner
 			f.who:SetText(((me and me.full) or "This character") .. " is outside a rest area.")
-			f.action:SetText(me and me.bind and ("Hearth to %s or find an inn."):format(me.bind) or "Hearth or find an inn.")
+			f.action:SetText(A.HearthLine(me))   -- the banner's own words
 			setAlt(f, nextUp())   -- the alt and whether nobody has rest banked
 			f.altBtn:Hide()
+			if f.altLine then f.altLine = f.altLine:gsub(" · [^·]* banked$", "") end   -- who and their state: the banner has the rest
+			f.altText:SetText(f.altLine)
 			A.LayoutStrip(f)
 			relayout(f, A.LayoutStrip)
 		end
@@ -359,7 +357,7 @@ function A.LayoutStrip(f)
 		f:ClearAllPoints()
 		f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
 	end
-	local top = 32 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
+	local top = 16 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
 	local bottom = f.alt:IsShown() and layoutAlt(f, 48, top) or (top - 8)   -- 48: under the text, right of the icon
 	f:SetHeight(bottom + 12)
 end

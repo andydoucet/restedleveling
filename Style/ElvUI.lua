@@ -125,9 +125,31 @@ function X.HostColors(fade)
 	local er, eg, eb = rgb(m.bordercolor)
 	return { bg = { r, g, b, fade and (a or 0.8) or 1 }, edge = er and { er, eg, eb, 1 }, tex = m.blankTex }
 end
+-- The top-level window a frame sits in (its last ancestor below UIParent).
+local function window(frame)
+	local f, n = frame, 0
+	while f and f.GetParent and n < 12 do
+		local p = f:GetParent()
+		if not p or p == UIParent then return f end
+		f, n = p, n + 1
+	end
+	return f
+end
+-- Does a skin on top of ElvUI paint its own art on this frame's window? Then that skin sets the look, and its insets
+-- are a warm recessed near-black (the r3 well, which the council matched to the in-game references); our wells take
+-- that tone so the panels sit inside the skin's window as one family. With plain ElvUI: ElvUI's own colours.
+local function skinnedWindow(frame)
+	local w = window(frame)
+	return w ~= nil and w ~= frame and w.GetRegions ~= nil and skinArt(w)
+end
+X.SkinnedWindow = skinnedWindow
+
 function X.Well(frame, fade)
 	local c = X.HostColors(fade)
-	if not (c and c.tex and frame.SetBackdrop) then St.Backdrop(frame, "sw_host_well", "sw_host_line", 1) return end
+	if not (c and c.tex and frame.SetBackdrop) or skinnedWindow(frame) then
+		St.Backdrop(frame, fade and "sw_host_stage" or "sw_host_well", "sw_host_line", 1)
+		return
+	end
 	frame:SetBackdrop({ bgFile = c.tex, edgeFile = c.tex, edgeSize = 1 })   -- ElvUI's own 1 px template
 	frame:SetBackdropColor(unpack(c.bg))
 	if c.edge then frame:SetBackdropBorderColor(unpack(c.edge)) end

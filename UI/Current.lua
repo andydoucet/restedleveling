@@ -79,10 +79,12 @@ function Cur.Update(f)
 	-- The bar column: what is left (and the double-XP kills it buys), or, with nothing left, one plain line and no
 	-- empty track.
 	local used = (s.used or 0) / s.xpMax
-	-- The rows' columns: the bar (an empty track when nothing is left) and its line under it.
+	-- The rows' columns: the bar and its line under it. With nothing left, no empty track (it read as an input
+	-- field): one line in the bar column (r3, which the council scored higher than the track).
 	local none = s.levels < Wd.BANKED_MIN   -- under a twentieth of a level: nothing worth counting
+	f.bar:SetShown(not none)
 	f.left:ClearAllPoints()
-	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7)
+	if none then f.left:SetPoint("LEFT", f, "LEFT", X + Wg.COL.bar, 0) else f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7) end
 	if none then
 		f.left:SetText("No rested XP: kills give normal XP")
 		St.Color(f.left, St.CREAM)

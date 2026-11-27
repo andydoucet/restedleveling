@@ -28,7 +28,7 @@ Card.GAP, Card.BUBBLE_LEFT, Card.TAIL = 12, 14, 12   -- clearance; the bubble's 
 Card.MODEL_ZOOM = 0.35   -- PlayerModel:SetPortraitZoom: 0 is the full body, 0.6 Blizzard's head-and-shoulders portrait
 -- The bubble's text width: what is left of the bubble's column after its 12 px insets, the tail and the gap.
 Card.BUBBLE_W = Card.FIG_LEFT - Card.GAP - Card.TAIL - Card.BUBBLE_LEFT - 24
-Card.BUBBLE_TOP = 22
+Card.BUBBLE_TOP = 38   -- lower, level with the face it points at
 Card.NAME_TOP = 108          -- the left column's name block (name, who and where, chip) reaches this high
 Card.CONTROLS_BOTTOM = 116   -- "Save my look" sits on the left, above the name block
 local TALK, TALK_EXCLAIM = 60, 64   -- AnimationData ids (EmoteTalk, EmoteExclamation): checked with HasAnimation
@@ -458,7 +458,7 @@ function Card.Show(key)
 	local raceName = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
 	local className = c.class and (c.class:sub(1, 1) .. c.class:sub(2):lower()) or ""
 	local tag = St.AccountTag(c)
-	local crest = c.class and ("|A:classicon-" .. c.class:lower() .. ":14:14|a ") or ""
+	local crest = ""   -- the portrait carries the class badge; an inline icon only indented this line
 	local ago = now - (c.t or now)
 	local days = math.floor(ago / 86400)
 	s.sub:SetText(("%sLevel %s %s %s\nSeen %s ago%s"):format(crest, c.level or "?", raceName, className,

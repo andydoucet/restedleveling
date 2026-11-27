@@ -44,7 +44,8 @@ end
 function O.AccountChoices()
 	local out = { { nil, "All accounts" } }
 	for _, a in ipairs(ns.Accounts()) do
-		out[#out + 1] = { a.mine and "mine" or a.id, a.mine and "This account" or a.label }
+		local label = a.label:match("^#(%d+)$") and ("Account " .. a.label:sub(2)) or a.label   -- not a bare "#3"
+		out[#out + 1] = { a.mine and "mine" or a.id, a.mine and "This account" or label }
 	end
 	return out
 end
@@ -97,8 +98,11 @@ function O.Panel()
 	p.name = "Rested Leveling"
 	p.bg = p:CreateTexture(nil, "BACKGROUND")   -- our own near-black panel, like the roster's wells, in both themes
 	St.Paint(p.bg, "sw_host_well")
-	local fill = St.HostFill()   -- under ElvUI: ElvUI's own backdrop colour, like the Settings panel it sits in
-	if fill then p.bg:SetColorTexture(unpack(fill)) end
+	-- Under plain ElvUI: ElvUI's own backdrop colour; inside a skin's window (checked on show): its warm well.
+	p:HookScript("OnShow", function()
+		local fill = not St.SkinnedWindow(p) and St.HostFill()
+		if fill then p.bg:SetColorTexture(unpack(fill)) else St.Paint(p.bg, "sw_host_well") end
+	end)
 	p.bg:SetAllPoints()
 	local title = Wg.Text(p, "title", nil, 20)
 	title:SetPoint("TOPLEFT", 16, -16)
@@ -173,7 +177,7 @@ function O.Panel()
 	end)
 	local mvText = words(p, "Drag the logout warning, the toasts and the Esc menu card where you want them.", 12, St.SECOND)
 	mvText:SetPoint("TOPLEFT", p.move, "BOTTOMLEFT", 2, -6)   -- under its button, never to the panel's edge
-	y = y - 70
+	y = y - 78
 	heading(p, "WINDOW AND DISPLAY", 16, y)
 	y = y - 20
 	p.checks = {}
@@ -201,8 +205,7 @@ function O.Panel()
 	about:SetPoint("TOPLEFT", 16, y - 12)
 	about:SetWidth(600)   -- the canvas has no width of its own when this runs: wrap at a fixed measure
 	about:SetWordWrap(true)
-	about:SetText("|cffd6b56bAbout|r  Builds on Rested Watch by doc_biddle (GPL-3.0). Thank you. Sync uses hidden addon "
-		.. "messages between your own clients only.")
+	about:SetText("|cffd6b56bAbout|r  Builds on Rested Watch by doc_biddle (GPL-3.0). Thank you.")   -- one line: the rest is in /ec
 	p:SetScript("OnShow", function() O.RefreshPanel(p) end)
 	O.panel = p
 	if Settings and Settings.RegisterCanvasLayoutCategory then

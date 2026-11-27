@@ -123,4 +123,14 @@ function cases.inner_panels_take_elvui_media_colours()
 	T.clean(h)
 end
 
+-- Council r5: inside a skin's own window art (a skin on top of ElvUI), the wells take the skin's warm well, so panels
+-- and window read as one family; with plain ElvUI they keep ElvUI's colours (the test above).
+function cases.inside_a_skinned_window_wells_take_the_skins_warm_tone()
+	local h = world(nil, true)   -- a skin drew its own window art
+	h.Slash("RESTEDLEVELING", "")
+	local main = h.Env().RestedLevelingMain
+	T.has(main.list.__backdrop.bgFile, "sw_host_well", "the roster well takes the skin's warm well")
+	T.clean(h)
+end
+
 return cases
