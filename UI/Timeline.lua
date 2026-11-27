@@ -14,7 +14,7 @@ Tl.LABEL_W = 216        -- portrait, name and how full it is now
 Tl.AXIS_H = 24          -- the tick labels over the plot
 Tl.NIGHT_FROM, Tl.NIGHT_TO = 20, 6   -- local hours drawn as night
 Tl.MAX_LANE_H = 46
-Tl.GUTTER = 150   -- room for "Wed 2 Dec" / "01:36" and "Not filling" with padding         -- right of the plot: the date for a lane that fills after the window
+Tl.GUTTER = 150   -- right of the plot: "Wed 2 Dec" / "01:36" or "Not filling", with padding
 local DAYS = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 

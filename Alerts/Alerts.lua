@@ -268,7 +268,7 @@ local function chat(kind, text) if enabled(kind) then U.Print(text) end end
 
 -- The Esc-menu strip: informational only, under the Game Menu while not resting and no banner is up.
 A.MENU_ICON = "Interface\\AddOns\\RestedLeveling\\media\\moon_gold"   -- the Esc card's gold crescent (and its mover's)
-A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 340, 380, 12   -- about 70% of the banner: a small card, not a second banner   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
+A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 340, 380, 12   -- about 70% of the banner: a small card, not a second banner
 function A.MenuStrip()
 	if A.strip or not GameMenuFrame then return A.strip end
 	-- A top-level window like the banner and the toasts (so a host skin dresses all three alike), shown and hidden
@@ -290,7 +290,7 @@ function A.MenuStrip()
 	f.text = Wg.Text(f, "name", nil, 15)
 	f.text:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, 0)
 	f.text:SetTextColor(0.98, 0.55, 0.15)
-	f.text:SetText("Find an inn before you log out")
+	f.text:SetText("Rest at an inn before logging out")   -- the banner's title: one wording
 	f.who = Wg.Text(f, "name", nil, 13)
 	f.who:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -4)
 	St.Color(f.who, St.CREAM)

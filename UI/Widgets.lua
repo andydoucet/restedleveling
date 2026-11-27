@@ -25,7 +25,7 @@ end
 -- The window's one column grid (desk steer r7): rank | portrait | name + meta | bar | value | chip. Every strip that
 -- shows a character (NOW PLAYING, the rows) uses these x positions; chips are one fixed width on one right edge.
 Wg.COL = { rank = 4, portrait = 32, text = 94, bar = 350, value = 540, chip = 600 }
-Wg.BAR_W, Wg.VALUE_W = 180, 48   -- bar from COL.bar; the value ("92%") right-aligned in the column after it   -- the Well Rested moons sit on the bar's caption line
+Wg.BAR_W, Wg.VALUE_W = 180, 48   -- bar from COL.bar; the value ("92%") right-aligned in the column after it
 
 -- Drop a trailing partial UTF-8 character (a lead byte without all its continuation bytes) left by a byte cut.
 local function dropPartial(t)

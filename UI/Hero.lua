@@ -23,11 +23,11 @@ function Hero.Create(parent, w, h)
 	f.art:SetPoint("TOPLEFT", 1, -1)
 	f.art:SetPoint("BOTTOMRIGHT", -1, ACTION_H)
 	f.art:SetTexCoord(0, 1, 0.22, 1)
-	f.shadeArt = f:CreateTexture(nil, "BACKGROUND", nil, 1)   -- the painting stays atmosphere: 35% dark over it
+	f.shadeArt = f:CreateTexture(nil, "BACKGROUND", nil, 1)   -- the painting stays atmosphere: a dark veil over it
 	f.shadeArt:SetPoint("TOPLEFT", f.art)
 	f.shadeArt:SetPoint("BOTTOMRIGHT", f.art)
 	St.Paint(f.shadeArt, "sw_black")
-	f.shadeArt:SetVertexColor(1, 1, 1, 0.62)   -- the art stays atmosphere behind the text   -- the inn reads as an inn; the fade keeps text clear
+	f.shadeArt:SetVertexColor(1, 1, 1, 0.62)   -- 62%: the inn still reads; the text stays clear
 	f.fade = f:CreateTexture(nil, "BACKGROUND", nil, 2)   -- dark under the text, the inn shows on the right
 	f.fade:SetTexture(St.MEDIA .. "fade_h")
 	f.fade:SetPoint("TOPLEFT", 1, -1)

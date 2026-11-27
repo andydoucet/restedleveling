@@ -69,8 +69,7 @@ function St.Color(fs, c) fs:SetTextColor(c.r, c.g, c.b) end
 -- "Account 3" for another account's character (the options' wording); nil for this account's own.
 function St.AccountTag(c)
 	if not c.account or c.account == ns.DB().account then return nil end
-	local label = ns.AccountLabel(c.account)
-	return label:match("^#(%d+)$") and ("Account " .. label:sub(2)) or label
+	return ns.AccountName(c.account)
 end
 
 function St.StateColor(state)

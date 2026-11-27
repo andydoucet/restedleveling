@@ -107,12 +107,18 @@ function ns.AccountFilter()
 	return nil
 end
 
--- "All accounts", "This account" or the peer's label, for the footer control and the options.
+-- The one way an account is named on screen: "Account 3" for a "#3" label, else the label as set.
+function ns.AccountName(id)
+	local label = ns.AccountLabel(id)
+	return label:match("^#(%d+)$") and ("Account " .. label:sub(2)) or label
+end
+
+-- "All accounts", "This account" or the peer's name, for the footer control, its tip and the options.
 function ns.AccountFilterLabel()
 	local f = ns.AccountFilter()
 	if not f then return "All accounts" end
 	if f == ns.DB().account then return "This account" end
-	return ns.AccountLabel(f)
+	return ns.AccountName(f)
 end
 
 local myKey   -- canonical key of the logged-in character, once resolved

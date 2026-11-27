@@ -59,7 +59,11 @@ function cases.the_filter_drops_hidden_accounts_everywhere()
 	T.has(ns.Broker.Text(ns.Rows({ hideGrey = true })), "1 full", "the datatext counts only the shown account")
 	ns.Options.SetAccounts("bbbbbb")
 	T.eq(names(ns.Rows()), "Le Bankken", "the other account only")
-	T.eq(ns.AccountFilterLabel(), "#3", "labelled with the peer's label")
+	T.eq(ns.AccountFilterLabel(), "Account 3", "named the one way: Account 3")
+	local names_ = {}
+	for _, c in ipairs(ns.Options.AccountChoices()) do names_[#names_ + 1] = c[2] end
+	T.eq(table.concat(names_, "|"), "All accounts|This account|Account 3", "the options say the same")
+	T.eq(state.ns.Style.AccountTag({ account = "bbbbbb" }), "Account 3", "and the rows' tag")
 	W.DB(h).chars["N:Le Bankken@?"] = nil   -- that account's characters are gone (pruned)
 	T.eq(names(ns.Rows()), "Le Dette,Le Nette", "a filter for an account with no characters shows all")
 	T.clean(h)
@@ -77,7 +81,7 @@ function cases.footer_control_cycles_the_accounts()
 		FakeWoW.RunScript(f.acctBtn, "OnClick")
 		seen[i] = ns.AccountFilterLabel()
 	end
-	T.eq(table.concat(seen, "|"), "This account|#3|All accounts", "all -> this account -> #3 -> all")
+	T.eq(table.concat(seen, "|"), "This account|Account 3|All accounts", "all -> this account -> Account 3 -> all")
 	FakeWoW.RunScript(f.acctBtn, "OnClick")
 	T.eq(f.acctBtn.label:GetText(), "This account", "the button's visible label follows the filter")
 	W.DB(h).chars["N:Le Bankken@?"] = nil
