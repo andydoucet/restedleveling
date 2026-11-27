@@ -1,67 +1,66 @@
 {
   "scores": {
-    "visual_appeal": 7,
-    "play_next_clarity": 8,
-    "state_colours": 9,
+    "visual_appeal": 8,
+    "play_next_clarity": 9,
+    "state_colours": 8,
     "character_identity": 8,
-    "default_theme": 7,
-    "elvui_wc3_fit": 6,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
     "alerts_ux": 8,
     "readability": 7,
     "layout_polish": 7,
-    "delight": 7
+    "delight": 8
   },
   "changes": {
     "visual_appeal": [
-      "Replace the tightly segmented XP bars with continuous fills, a subtle vertical bevel and at most four milestone ticks. The repeated black divisions dominate both the hero and roster, making the interface look like a bank of LED meters rather than a crafted Warcraft panel.",
-      "Remove the blurred terminal glow on roster bars, or restrict it to a 2 px highlight inside the fill. Keep state colour concentrated in the fill, chip and 3 px left rail.",
-      "Give the outer frame a stronger material hierarchy: a 3 px dark iron perimeter in #17191B, a 1 px bronze inner lip in #806039, and four restrained corner fasteners. The current many thin gold rectangles look assembled rather than art-directed."
+      "Reduce the visual competition between segmented XP bars, portrait rims, row dividers and chip borders. Keep the four state colours, but render bar segment dividers at roughly 20% opacity and row dividers at #493B28.",
+      "Establish three text tiers consistently: primary information #F0E5CA, secondary information #C8BDA9, tertiary metadata #A79C89. Preserve class-coloured names and state-coloured labels; stop giving almost every supporting line the same cream emphasis."
     ],
-    "play_next_clarity": [
-      "Move 'Seen 4d ago' out of the gold switching instruction and into the hero's identity metadata. Keep the action on its own line: 'Next: log out and select Le Nette.'",
-      "Replace the tiny 'Open card >' text with an approximately 88 \u00d7 24 px button, and make the entire hero a clearly highlighted card-opening target. Do not style the switching instruction as an executable character-switch button.",
-      "In compact tooltips, replace 'Not resting \u00b7 in 27d 22h' with 'Not resting \u00b7 full in ~27d'. The current abbreviated copy is ambiguous beside the main roster's '27d here'; distinguish estimated fill time from time spent at a location."
+    "state_colours": [
+      "In the exhausted-rest toast, the green left rail currently accompanies a warning about the current character. Use the current character's relevant warning colour on the rail, and reserve green for the recommended character's Full label and portrait accent.",
+      "Add a small numeric percentage beside each timeline character name. The orange lanes currently look equally full despite representing substantially different rested amounts; state colour alone cannot explain them.",
+      "Keep the chip family, but give its text 4 px horizontal inset and use consistently sized 12 px state icons. The current narrow chips crowd the icons and lettering."
     ],
     "character_identity": [
-      "Increase roster portraits from 40 to 44 px and retain the separate class medallion, but limit the medallion to 14 px with a 1 px dark outline so it does not obscure the jaw.",
-      "For the live-portrait fallback, avoid showing the same emblem as both the large portrait and its attached class badge, as happens for Jacques Hammer. Use a race silhouette or an initial over a textured shield for the main fallback.",
-      "Keep the atmospheric stage and speech treatment, but give the character name a consistent 22 px size and reserve a separate 13 px metadata line below it. Account and last-seen information should never compete with the character's name."
+      "Recompose the saved-look character card: place a 128\u2013144 px portrait at the upper left and the speech bubble to its right with a 16 px gap. The current upper-right portrait leaves a large dead area and disconnects the speech from its speaker.",
+      "Move the level badge into the character metadata line rather than leaving a tiny black circle attached to the portrait. Retain the class badge on the saved face and the race/gender badge on class-icon fallbacks.",
+      "Replace Acct #3 and the options choice #3 with a player-defined account alias, falling back to Account 3. Keep the alias in a secondary 12 px treatment rather than competing with the character name."
     ],
     "default_theme": [
-      "Make the oak grain legible primarily on the title rail and outer frame; keep information wells at #100E0C. Currently the default is competent dark-and-gold chrome, but the wood is too understated to establish a distinctive identity.",
-      "Replace the bright yellow stock close glyph with a restrained bronze cross on dark red enamel: #79251F face, #B88748 edge, 22 \u00d7 22 px visible button and at least 26 \u00d7 26 px hit area.",
-      "Use one consistent button family for Compact, Link account and Open card: 24 px height, 1 px bronze edge and cream #EAD9B5 labels. The current controls feel borrowed from different interface systems."
+      "Darken the roster surfaces slightly toward #211B14 and reduce the amber saturation of their outlines. The default scene still reads as stacked brown boxes rather than a single composed panel.",
+      "Apply a #100D0A overlay at approximately 35% opacity to the hero background artwork, strongest behind its text. Preserve the oak-and-bronze chrome, but make the illustration subordinate to the recommendation.",
+      "Standardize default-theme buttons to a 24 px height, 12 px horizontal text padding and a quieter #705735 border; the gold action strip and gold buttons currently compete for attention."
     ],
     "elvui_wc3_fit": [
-      "Fix the title integration before approval: the ElvUI renders show a cramped central title plate with a conspicuous right-hand bracket or seam. Allocate the measured title width plus 32 px padding and remove overlapping title-frame pieces.",
-      "Increase the title rail to approximately 30 px and restore a continuous dark iron silhouette around it. The rendered ElvUI version loses the default's material coherence and reads as flat strips surrounding a different interior.",
-      "Use the installed skin's supported textures and controls for a consistent red Compact button, bronze framing and corner treatment. If its generic portrait-frame handler cannot provide a coherent result, offer an explicit 'Use Rested Leveling frame with ElvUI fonts' option rather than treating the handler call alone as successful visual integration.",
-      "Validate the result in game against the user's actual UI. I am not counting the simulator's lighter washes as a defect, but correcting those washes alone will not supply the missing plank, iron and enamel hierarchy."
+      "Without altering Gatewood's supplied art or frame seams, standardize addon-owned interior panel padding to 12 px and use the same near-black content fill across roster, character card and alerts.",
+      "Use the configured ElvUI body font for addon-owned metadata, options and alert text, while retaining the display treatment for titles. Match the real Character window's stronger distinction between bright labels and secondary information.",
+      "Reduce addon-owned gold rules to #79623C and reserve brighter gold for active tabs and important headings. This will sit more quietly beside the supplied Character and Options windows without requiring WC3-specific skin code."
     ],
     "alerts_ux": [
-      "Make 'Hearth first' a separate gold action-emphasis line or a genuine 92 \u00d7 24 px action when supported. In the logout render it is buried at the end of the explanatory sentence.",
-      "Replace 'Right-click: stop these warnings' with 'Right-click: disable logout warnings'. Keep the explicit close button for dismissing only this alert; permanent suppression should be unambiguous.",
-      "In the rested-XP-used-up toast, identify whose XP ran out: 'Jacques Hammer: rested XP used up', followed by 'Play next: Le Nette'. The current portrait belongs to the recommendation while the headline describes another character.",
-      "Give the Esc-menu warning strip its own 18 \u00d7 18 px dismiss control and an explicit options toggle. Do not rely on the larger logout banner's dismissal affordance to explain this separate surface."
+      "The logout banner tells the player to cancel but only offers Details. Add a 24 px-high Cancel logout button if the client API permits it, followed by a secondary Details action; otherwise explicitly say Cancel the logout countdown, then hearth to an inn.",
+      "Make the exhausted-rest toast lead with Le Jette: no rested XP in at least 13 px text, then Play Le Dette on the next line. The current first line is too subordinate for the event that triggered the notification.",
+      "In move mode, show a dashed outline labelled Esc menu anchor above its attached card. This makes attachment understandable even when the actual menu is hidden; keep the existing Reset behaviour.",
+      "Give every alert dismissal control a minimum 24 \u00d7 24 px hit target, even if its visible close artwork remains smaller."
     ],
     "readability": [
-      "Raise roster names to 15 px and supporting text to 13 px at addon-native scale, with approximately 56\u201358 px rows. The ElvUI full-screen render is visibly dense, especially the bar captions and state chips.",
-      "Remove the redundant calendar deadline from each bar caption. Use '93% \u00b7 full in 14h 25m' and move the exact day/time to a tooltip; this also prevents long location text from pressing into the bar column.",
-      "Use #EADFCB for primary supporting text and no darker than #B8AC98 for secondary text on dark wells. Increase chip text to 12 px and allow 108 px width for 'NOT RESTING'.",
-      "Offer a readable-scale preset that maintains at least 12 screen pixels for secondary text after UI scaling, rather than judging legibility only from the enlarged roster crop."
+      "Increase roster supporting text and ETA text to at least 13 px at native UI scale, with 15 px names and 12 px minimum helper text. This is a size and hierarchy issue, not a criticism of the simulator's narrower font rendering.",
+      "The primary roster still omits calendar timestamps for most characters. Use a stable two-line ETA block: 21% \u00b7 Full in 7d 21h, then Wed 2 Dec, 01:36 in secondary text. Increase row height from roughly 58 px to 66 px if necessary.",
+      "Rewrite Full since 1d 16h ago: rest is going to waste. as Full for 1d 16h \u00b7 further rest is wasted. The current grammar is awkward and the sentence is longer than its information warrants.",
+      "Raise timeline date-gutter text to 12\u201313 px and add 8 px clearance after the arrow tips. The current small dates are among the most useful information in that view but receive one of its weakest treatments."
     ],
     "layout_polish": [
-      "Resolve the visible truncation of long row metadata such as Stonetalon Mountains with a measured text boundary and ellipsis, leaving at least 12 px before the XP column.",
-      "Give account tags and Well Rested moons dedicated slots rather than stacking them opportunistically at the row edge. Reserve a 60 px trailing column and align each element consistently.",
-      "Rework the history chart into a continuous area or line with a clear full threshold. In the full-rest card, the gold bars sit below the green full line and there is no visible 'Full the whole time' explanation, making a full history look sub-full.",
-      "Reduce the character card's repeated framing: use one stage frame, one stats region and one chart frame rather than individually outlining every tile. Keep 8 px gutters and 10\u201312 px section spacing."
+      "Rebuild roster rows on fixed columns: 24 px rank, 48 px portrait, flexible identity, 244 px progress/ETA and 116 px state, with 12 px gutters. Align all chip edges and all bar starts to these columns.",
+      "Move the character card's XP bar and full-time text into its main content panel, immediately below the name and metadata with a 12 px gap. The edge-to-edge bar floating between two bordered panels looks assembled rather than designed.",
+      "Give the timeline a visibly labelled After 48h gutter with a subtle vertical separator. All long-duration lanes currently terminate at the same place, making the graphic look more informative than it actually is.",
+      "In options, place the Move notifications helper below its button instead of extending across the page. Use 16 px between sections and 24 px setting-row spacing; keep the existing two-column alert group.",
+      "Reserve a consistent 40 px footer across roster and timeline, with 12 px side insets and vertically centred controls. The current footer feels packed against the lower frame compared with the spacious hero."
     ],
     "delight": [
-      "Keep the character-specific speech, warm inn setting and cold outdoor setting; those are the strongest personality elements. Add a restrained 200 ms speech-bubble reveal and a single settling motion when opening a card, respecting reduced-motion preferences.",
-      "Replace some repetitive system language with short state-specific character lines while retaining factual labels: for example, 'Ready when you are' for full rest and 'Get me to an inn' for an unrested logout.",
-      "Use a small lantern or moon ornament as the distinctive brand motif instead of multiplying generic gold borders. Carry it through the title, empty state and toast without adding continuous glow or animation."
+      "Make character speech more specific to saved context: a location-aware line such as Thunder Bluff has excellent napping spots is more characterful than Comfy here. Keep lines short enough for two lines at 14 px.",
+      "Add a restrained 400 ms gold-to-state accent transition when the recommended character changes, respecting Reduce motion. Avoid adding another shimmer to an already ornamented interface.",
+      "Add a short contextual timeline summary above the lanes, such as Next full: Le Bankken in 19h 11m. This turns the view into a useful anticipation moment rather than just a set of long coloured lines."
     ]
   },
-  "overall_notes": "The recommendation hierarchy and four-state colour system work immediately, and the portraits, atmospheric cards and parchment speech give this a stronger identity than a typical utility addon. The main weaknesses are miniature supporting text, excessively segmented bars, repetitive boxed chrome and an ElvUI variant that is less coherent than the default. This is a promising, usable addon, not yet a demanding-user visual sign-off. I have not penalized absent simulator models or live portraits, and I have separated the documented colour-rendering limitation from actual framing and layout problems. The next pass should prioritize readability, title-frame integration and material hierarchy rather than adding more decoration.",
+  "overall_notes": "A substantial improvement over the real baseline: the recommendation is unmistakable, the empty current-character bar is gone, and the shared alert treatment is more coherent. I would not yet approve this as a 9-level demanding-user release. The remaining problems are information hierarchy, incomplete calendar-time presentation in the main roster, an under-composed saved-look card and a timeline whose identical long lanes communicate little about actual rested amounts. The default theme is credible but still over-outlined; ElvUI mode is recognizably compatible without being fully typographically integrated. I have not deducted for simulator model limitations, prescribed portrait fallbacks, class-coloured names, the four state colours or Gatewood-owned frame artwork.",
   "model": "gpt-6.1-sol"
 }

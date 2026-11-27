@@ -5,64 +5,64 @@
     "state_colours": 8,
     "character_identity": 8,
     "default_theme": 8,
-    "elvui_wc3_fit": 6,
-    "alerts_ux": 7,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 8,
     "readability": 8,
     "layout_polish": 8,
     "delight": 8
   },
   "changes": {
     "visual_appeal": [
-      "Replace the flat brown title wash with a real oak-plank texture (horizontal grain, 34px rail) plus 8px bronze rivets inset 10px from each corner and a 2px #1A120C iron line under the rail.",
-      "Stop using the same saturated red as NOT RESTING for Compact and close: Compact 72x22 enamel #6E1C1C with 1px #C9A36A rim; close 18x18. Keep #E33B3B only for unrested state.",
-      "Hero XP bar is a flat neon slab. Give it 2px #1A120C end caps, a 1px #F4E8C4 highlight on the top edge, and move '100%' to the right of the bar in 12px #F3E6C4 so the bar stays a material, not a web widget."
+      "The roster is the strongest surface; the options page and move-mode coachmark are not. Skin the Move notifications panel to the same wood fill and 2px #C6A15A outline as the alerts, instead of a flat dark rectangle floating in the dim.",
+      "Replace the empty light-grey options header slab with a 22px field, fill #1A120C, 1px #8A7040, so it matches the near-black settings panel rather than a dead bar.",
+      "Keep one button metal per window: filled bronze for actions, outlined chips for state. Blue Compact beside gold View details breaks the header."
     ],
     "play_next_clarity": [
-      "Two rows are FULL, so '#1 PLAY NEXT' does not say why Le Nette beats Le Beouf. Add 12px gold under the reason: 'Most banked on this account \u00b7 1.7 levels vs 0.x'.",
-      "The '0.6 of a level rested left' block sits in the hero's right margin and reads as hers. Move it into the NOW PLAYING row, right of Jacques Hammer, 12px #E7D3A1, single line, no wrap.",
-      "Datatext header 'play next, top first' is cryptic. Replace with 'Sorted by banked rested XP'."
+      "Compact still says Full for 1d 16h, the ambiguous phrase the hero retired. Use Full since 1d 16h ago in #7DDEA2, same wording as the hero, so it cannot be read as time remaining.",
+      "The action line is doing the real work but is smaller than the waste line. Set it at 15px #F3E6C8 and the two character names at 16px in class colour; keep the waste line at 13px #8FE08A so the order of operations wins the scan.",
+      "Add the same 4px state rail used on roster rows to the NOW PLAYING strip, #FF4D4D while not banking, so the current mistake is visible before the sentence."
     ],
     "state_colours": [
-      "Row tint is nearly invisible. Paint a 4px left bar in the state colour and a full-row wash at about 18% (#3DDC6A / #F2DB3B / #F07D28 / #E33B3B over #12100E).",
-      "Gold rank numerals and gold moons sit on the yellow NEARLY FULL bar and collapse into it. Ranks #F3E6C4, moons #E8C56B only on FULL/NEARLY FULL; dim moons to #6A6248 on orange/red.",
-      "NEARLY FULL chip text on #F2DB3B needs 11px #1A120C bold with 6px horizontal padding inside the 98px chip so the words do not touch the edge."
+      "RESTING chips still read as gold buttons. Chips: fill #140E0A, 1px border and label in the state hex only: full #3DDC7A, nearly #FFE066, resting #FF8A2A, outside #FF4D4D. Action buttons stay filled #6B4E2E with #F0E0C0 labels.",
+      "Colour only the percent (92%, 21%) in that state hex at 13px semibold. Leave Full in ... in #C4B49A so metadata is not another rainbow.",
+      "Nearly-full #F2C14B is too close to the figure gold. Shift the 1.5 figure to #F4E2B0 and the nearly state to #FFE066. Left rails 4px, full row height, same hex, including NOW PLAYING."
     ],
     "character_identity": [
-      "The card stage is a large dead black field with a ~64px face. Scale the fallback portrait to 160px, drop a 220x28 floor ellipse at 40% black under it, and pin the z's 8px above the head.",
-      "Class crest at 4 o'clock is a speck. Use a 22px disc, 2px #0E0C0A stroke, icon 16px, so class reads at roster size.",
-      "List subtitle is zone-only. Lead with race/class colour pip: 'Undead Mage \u00b7 Brill inn \u00b7 4d' at 12px so identity does not depend on opening the card."
+      "The hero race badge is still a speck on the class circle. Overlap a 28px badge at 4 o'clock with a 2px #120C08 ring and a 1px #C6A15A rim.",
+      "Roster portraits to 40px, class badge 16px on the same dark disc. Tan class names such as #C79C6E need a 1px #120C08 outline plus the existing shadow or they turn grey on the red outside tint.",
+      "Row meta should lead with the class word in class colour before the inn, 12px, so the Le* alts separate without squinting at the icon."
     ],
     "default_theme": [
-      "Oak rail reads as a brown gradient, not the door's planks. Use a repeating plank texture, 3 vertical seams, and a 6px #2A2118 inner shadow under the rail.",
-      "Inner wells are featureless #near-black. Add a 1px #3A2E1C top edge and 1px #000 bottom edge so panels have the same cut as the WC3 iron straps.",
-      "Corner rivets are too small to register at 1080p. 8px circles, #8A6A3A fill, #E6C98A highlight at 2px offset."
+      "The oak stops at the title band. Paint content wells with a vertical gradient #3C2A1C to #24160F and a 1px top inner highlight #C6A15A at about 35% opacity so the bronze edge is continuous.",
+      "The close control is a red square and reads as the ElvUI X. Use a 22px disc, fill #8A6230, glyph #F4E4C4, 1px rim #E6C98A.",
+      "Compact and View details must share one control: height 22, gradient #4A3422 to #2C1E14, label #F0E0C0 13px, 1px #C6A15A."
     ],
     "elvui_wc3_fit": [
-      "ElvUI scenes show a flat 1px brown frame and a ~12px title, no planks, straps, or rivets, while texture pixels would have shown Gatewood if it were applied. Do not rely on HandlePortraitFrame alone: draw a 36px wood title plate, 16px black-iron L corners, and four rivets in the addon frame.",
-      "Match the user's panel type: title 16px #F3E6C4 centred, tracking 1px; close is a 22px red enamel square, not a tiny glyph.",
-      "ElvUI inner rows went greyer and lost the bronze 1px separators. Force separators to a baked #6B5428 texture so the sim's colour curve cannot wash them out."
+      "In the ElvUI roster, Compact and Unlink are Blizzard blue while View details and All accounts are Gatewood gold. Send every header and footer button through the same skinned button, height 22, label #F5E6C8, so none stay on the blue template.",
+      "The move-mode coachmark is unskinned flat black next to three wood alerts. Give it the same backdrop, title #F0D78C 14px, and 2px gold outline as those alerts.",
+      "Alert Details buttons are blue slabs on wood banners. Skin them to the roster gold button, 18px tall, so the stack can sit beside the character frame."
     ],
     "alerts_ux": [
-      "Scene 05 banner almost touches the logout dialog. Drop it 28px below that dialog, min-height 76px, 2px #E33B3B edge, title 16px #F4E4C4, body 13px #E7D7C3, and an 18px hit-target close.",
-      "Scene 06 shows the Esc warning and the play-next toast together. Queue the toast until the logout warning is gone, per the one-surface rule.",
-      "Esc strip is a passive sentence. Make it 44px tall with a gold 'Hearth first' and the same red edge as the banner. Toast needs a real 3px #F2DB3B timer along the bottom, portrait 36px, title 13px."
+      "The two logout banners repeat one instruction. If Cancel logout, then rest in an inn is up, do not also show Find an inn before you log out.",
+      "Gear exists only on the first banner. Either remove it or put an 18px close and an optional 16px gear at the same x and y on every alert, 8px from the top right.",
+      "Type ramp: title 14px #F0D78C, body 13px #F4EFE4, hearth line 12px #D9CBB2, 4px between lines, 10px inset. On the green toast, set Play Le Dette in class colour #C7A0E8 so the next actor is not the same weight as the character who just ran out."
     ],
     "readability": [
-      "Subtitles (#A89880-class grey on #14110E) are the weak layer. Set all 12px meta to #D4C4A8 and the 11px hints to 12px #CDB892.",
-      "Hero right column wraps 'nothing used this session yet' into a ragged block. Keep one line, 12px, or drop it to the tooltip.",
-      "Footer 'Synced 2d ago from Acct #3' is ~10px. Bump to 12px #CDB892 and left-align it to the rank column, not the window edge."
+      "Secondary meta on #251D14 is the weak spot. Raise inn, seen, and paired lines from the current grey-brown to #D2C4AE at 12px.",
+      "Timeline axis labels to #E8DCC8 at 12px; date gutter #F0E2C8 12px. Keep night bands darker than the labels, not the other way around.",
+      "Options helpers to #B7A894 at 12px. Section headers stay #E6C36A 13px with 8px below. Legend caption NEXT BEST to #E6D7C3, counts 12px, 6px after the 10px dot."
     ],
     "layout_polish": [
-      "NOW PLAYING bar is ~200px while roster bars are much longer, so the eye loses the column. Use the same bar x/width as the rows beneath.",
-      "Hero puts 100% inside the bar; rows put it beside the bar. One rule: percent always left of the duration, 12px, never inside the fill.",
-      "Card tile grid wraps unevenly (professions vs hearth). Lock tiles to 168x52, icon 16px at 8px inset, two-line cap, 8px gap. Pin the card 10px from the main window and top-align titles on the same 34px rail height."
+      "Lock a 210px time column ending 8px before the chips. Chips 92px wide, right inset 12px, so 92% \u00b7 Full in 19h 11m (today 23:12) cannot push NEARLY FULL.",
+      "Align the hero 1.5 right edge with that chip column. Match the NOW PLAYING bar's left x and 13px height to the roster bars; give the strip 8px 12px padding.",
+      "On the character card the 9% value reads as a short stub. Draw an 8px track the full width of the tidbit column, #1A120C, fill #FF8A2A. In options, change Move notifications from a wide blue bar to a 22px inline gold button on the same baseline as its helper, and cut the gap under the tab row to 8px."
     ],
     "delight": [
-      "When the 48h chart is flat, the solid gold block has no sentence. Centre 13px #F3E6C4 'Full the whole time' on the plot; on the unrested chart the ticks are nearly invisible \u2014 use 3px columns, #E33B3B below full and #3DDC6A only at the full line.",
-      "First-run blows a crest icon up to hero size inside a thick cyan ring. Use a 96px dimmed portrait, the quote in 14px italic #F3E6C4, and a parchment speech bubble so the empty state matches the card.",
-      "Stage mood is too shy. Warm pool should be a 280px radial #E7A24A at 35% under rested characters; unrested a #1C3A55 fog gradient from the top. Keep the speech bubble parchment but add a 2px #6B5428 stroke and a 12px tail so it belongs to the bronze UI."
+      "NOW PLAYING is a status report next to a hero that talks. Add one 12px #E6D7C3 aside tied to state, for example The inn is the whole plan, and drop it when the strip already says Banking rest here.",
+      "Let only the full green bar pulse opacity from 85% to 100% over 8s. No row shimmer. That is enough to make rest is going to waste felt.",
+      "The card z z Z at 14px disappears on the bronze portrait. Draw it #F4E4C4 with a 1px #1A120C shadow, 4px above the circle. Give the green toast one in-voice second line in that same register, not only Full \u00b7 double XP waiting."
     ]
   },
-  "overall_notes": "Default chrome, the play-next hero, and the one-word state chips are a coherent utility and close to shippable. It still misses a demanding Gatewood bar: ElvUI mode is a flat dark frame with none of the door's planks, iron, or rivets, the card stage is an empty void, and logout warnings split across a small Esc note plus a simultaneous toast. Fix the inherited frame with real textures, unify the bar column, and make the unrested alert one loud non-modal surface.",
+  "overall_notes": "Round 2 landed the real structural fixes: one alert surface, an ordered play-next sentence, chip and legend consistency, a readable timeline gutter, and a settings page with actual hierarchy. It is a coherent addon now, not a mock. It is not a 9. The ElvUI window still mixes blue template buttons with gold skinned ones, compact still uses the ambiguous Full for wording the hero abandoned, resting chips still look like buttons, and the move-mode coachmark plus the options header sit outside the visual system. Fix those and this is close to something a demanding alt-aholic would leave enabled.",
   "model": "grok-4.7"
 }
