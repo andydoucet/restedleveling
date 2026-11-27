@@ -131,7 +131,7 @@ end
 function cases.rows_show_the_real_time_to_full_even_outside()
 	local Wd = load().Words
 	local t = Wd.RowTime(row("outside", { pct = 0.3, levels = 0.45, left = 27 * D + 22 * H }), NOW, false, utc)
-	T.eq(t, "~30%  ·  Full in 27d 22h", "over two days: no clock time, so the row never clips")
+	T.eq(t, "~30%  ·  Full in 27d 22h outside", "over two days: no clock time, so the row never clips")
 	t = Wd.RowTime(row("resting", { pct = 0.8, levels = 1.2, left = 2 * D }), NOW, true, utc)
 	T.eq(t, "80%  ·  Full in 2d (Sun 15 Nov, 20:00)", "two days: still the clock")
 	t = Wd.RowTime(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, false, utc)
@@ -203,7 +203,7 @@ function cases.the_plan_is_two_steps_each_led_by_its_character()
 	local Wd = load().Words
 	local a, b = Wd.Steps("Le Dette", "Le Jette", false, false)
 	T.eq(a, "Le Jette: hearth to an inn", "step 1: the one you are on, outside")
-	T.eq(b, "Le Dette: play next", "step 2: who to play")
+	T.eq(b, "Le Dette: play now", "step 2: who to play")
 	T.eq((Wd.Steps("Le Dette", "Le Jette", true, false)), "Le Jette: log out here", "already resting: log out here")
 	T.eq(Wd.Steps("Le Dette", "Le Jette", false, true), nil, "nobody to switch to: no plan")
 end

@@ -21,7 +21,7 @@ local function create()
 	St.Color(f.title, St.GOLD)
 	f.sub = Wg.Text(f, "small", nil, 12)
 	f.sub:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -2)   -- what the order means, under the title
-	f.sub:SetText("best to play first")
+	f.sub:SetText("Play the top one first")
 	St.Color(f.sub, St.MUTED)
 	f.rule = f:CreateTexture(nil, "ARTWORK")
 	St.Paint(f.rule, "sw_rule")

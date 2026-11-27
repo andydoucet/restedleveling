@@ -85,7 +85,7 @@ function Cur.Update(f)
 	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7)
 	if none then
 		f.left:SetText("No rested XP: kills give normal XP")
-		St.Color(f.left, St.SECOND)
+		St.Color(f.left, St.CREAM)
 		return
 	end
 	local parts = { Wd.Levels(s.levels) .. " left" }

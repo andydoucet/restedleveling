@@ -136,7 +136,7 @@ end
 function Wd.Steps(name, meName, restingNow, empty)
 	if empty then return nil end
 	meName = meName or "This character"
-	return ("%s: %s"):format(meName, restingNow and "log out here" or "hearth to an inn"), ("%s: play next"):format(name)
+	return ("%s: %s"):format(meName, restingNow and "log out here" or "hearth to an inn"), ("%s: play now"):format(name)
 end
 
 -- The hero's action bar. The "first, ..." part is always about the character you are on (`meName`), never the
@@ -158,7 +158,8 @@ function Wd.RowTime(r, now, calibrated, dateFn)
 	local p = r.p
 	if not p then return r.state == "max" and "Max level. I keep the bench warm." or "" end
 	local full = p.left > Wd.ROW_CLOCK_MAX and ("Full in " .. U.Duration(p.left)) or Wd.FullLine(p, now, dateFn)
-	return (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%  ·  " .. full
+	-- Parked outside, the wait holds only while it stays outside (4x slower): say so, not a bare promise.
+	return (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%  ·  " .. full .. (r.state == "outside" and " outside" or "")
 end
 
 -- Why #1 beats #2, in one short line with the same rounding as the rows: "2d ahead of Le Beouf (full for 8h)".

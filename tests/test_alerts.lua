@@ -219,7 +219,7 @@ function cases.esc_strip_lays_out_from_its_own_edges_the_same_on_every_show()
 	T.ok(f:IsShown(), "strip shown")
 	local A = state.ns.Alerts
 	-- Sized from the menu, hung under it with a gap.
-	T.eq(f:GetWidth(), 448, "a little wider than the 280 px menu (280 x 1.6)")
+	T.eq(f:GetWidth(), 364, "a little wider than the 280 px menu (280 x 1.3)")
 	local top = pointOf(f, "TOP")
 	T.ok(top and top[2] == menu and top[3] == "BOTTOM" and top[5] == -A.STRIP_GAP, "TOP under the menu's BOTTOM, with a gap")
 	T.eq(#points(f), 1, "one anchor: nothing else pulls it over the menu")
@@ -237,7 +237,7 @@ function cases.esc_strip_lays_out_from_its_own_edges_the_same_on_every_show()
 	T.ok(not btn:IsShown(), "no button on the Esc card")
 	local tr = pointOf(f.altText, "RIGHT")
 	T.ok(tr and tr[2] == f and tr[3] == "RIGHT" and tr[4] == -A.INSET, "text ends at the card's right inset")
-	local room = f:GetWidth() - 54 - 22 - 12 - A.INSET
+	local room = f:GetWidth() - 48 - 22 - 12 - A.INSET
 	T.ok(f.altText:GetStringWidth() <= room, "the long line is shortened to fit")
 	T.has(f.altText:GetText(), "...", "with an ellipsis")
 	-- The first show matches the next: the queued relayout and a second Esc change nothing.

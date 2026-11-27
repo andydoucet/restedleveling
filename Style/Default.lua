@@ -179,6 +179,11 @@ function D.MakeClose(parent)
 	b.x:SetVertexColor(0.98, 0.92, 0.80, 1)
 	b.x:SetSize(14, 14)
 	b.x:SetPoint("CENTER")
+	b.xLift = b.face:CreateTexture(nil, "OVERLAY", nil, 1)   -- an additive copy: a bright cross, not a disabled grey one
+	b.xLift:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
+	b.xLift:SetDesaturated(true)
+	b.xLift:SetBlendMode("ADD")
+	b.xLift:SetAllPoints(b.x)
 	b:SetScript("OnClick", function() parent:Hide() end)
 	return b
 end

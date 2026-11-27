@@ -260,15 +260,15 @@ end
 
 -- The travel advice, named for this character's own hearth when it is known.
 function A.HearthLine(me)
-	return me and me.bind and ("Hearth to %s or find an inn, then log out."):format(me.bind)
-		or "Hearth or find an inn, then log out."
+	return me and me.bind and ("Hearth to %s, or find an inn."):format(me.bind)   -- the title already says "then rest"
+		or "Hearth, or find an inn."
 end
 
 local function chat(kind, text) if enabled(kind) then U.Print(text) end end
 
 -- The Esc-menu strip: informational only, under the Game Menu while not resting and no banner is up.
-A.MENU_ICON = "Interface\\Icons\\Spell_Nature_Sleep"   -- the Esc card's moon (and its placeholder's in move mode)
-A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 420, 460, 12   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
+A.MENU_ICON = "Interface\\AddOns\\RestedLeveling\\media\\moon_gold"   -- the Esc card's gold crescent (and its mover's)
+A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 340, 380, 12   -- about 70% of the banner: a small card, not a second banner   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
 function A.MenuStrip()
 	if A.strip or not GameMenuFrame then return A.strip end
 	-- A top-level window like the banner and the toasts (so a host skin dresses all three alike), shown and hidden
@@ -280,15 +280,15 @@ function A.MenuStrip()
 	GameMenuFrame:HookScript("OnHide", function() f:Hide() end)
 	f:SetSize(A.STRIP_MAX, 112)   -- A.LayoutStrip sizes it from the menu on every show
 	surface(f, "toast", "outside")   -- a neutral panel: it must not read as another red menu button
+	f.stripe:Hide()   -- no red rail either: the banner owns that shape
 	-- Its own shape, so it never reads as a second banner: an ESC MENU tag, a moon, one instruction, and the next
 	-- character without a button (the menu is open: the window is one click away).
 	f.icon = f:CreateTexture(nil, "ARTWORK")
-	f.icon:SetSize(26, 26)
-	f.icon:SetPoint("TOPLEFT", 18, -28)
+	f.icon:SetSize(22, 22)
+	f.icon:SetPoint("TOPLEFT", 16, -32)
 	f.icon:SetTexture(A.MENU_ICON)
-	f.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 	f.tag = Wg.Text(f, "label", nil, 11)
-	f.tag:SetPoint("TOPLEFT", 18, -11)
+	f.tag:SetPoint("TOPLEFT", 16, -14)   -- inside the frame, under its top edge
 	f.tag:SetText("ESC MENU")
 	f.tag:SetTextColor(0.89, 0.70, 0.29)
 	f.text = Wg.Text(f, "name", nil, 15)
@@ -354,13 +354,13 @@ end
 function A.LayoutStrip(f)
 	local menu = f.menu
 	local mw = menu and menu.GetWidth and menu:GetWidth() or 0
-	f:SetWidth(math.max(A.STRIP_MIN, math.min(A.STRIP_MAX, math.floor(mw * 1.6))))
+	f:SetWidth(math.max(A.STRIP_MIN, math.min(A.STRIP_MAX, math.floor(mw * 1.3))))
 	if not ns.Move.Apply(f, "menu") then   -- attached (the default) unless it was moved
 		f:ClearAllPoints()
 		f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
 	end
-	local top = 28 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
-	local bottom = f.alt:IsShown() and layoutAlt(f, 54, top) or (top - 8)   -- 54: under the text, right of the icon
+	local top = 32 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
+	local bottom = f.alt:IsShown() and layoutAlt(f, 48, top) or (top - 8)   -- 48: under the text, right of the icon
 	f:SetHeight(bottom + 12)
 end
 
