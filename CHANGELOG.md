@@ -17,7 +17,8 @@ v1.3 (ILL-1299), icon, title bar and settings:
   through ElvUI's own close and arrow-button skins, so a skin such as WC3 dresses them as its own.
 - A Settings window of its own (the cog, the minimap right-click, `/rlvl options`): General, Accounts (whose
   characters show, link or unlink), Alerts (each alert and the low rest threshold), Positions and About. Esc closes
-  it, and it opens where you last dragged it. The page in Esc > Options > AddOns shows the same content.
+  it, and it opens where you last dragged it; on a screen too short for it the page scrolls. The page in Esc >
+  Options > AddOns shows the same content, and a change on one shows on the other.
 - Positions: "Unlock notifications" enters move mode with the settings window docked beside the placeholders, and
   reads "Lock notifications" until you lock them again; "Reset positions" puts them all back. `/rlvl move` still
   works.

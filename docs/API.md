@@ -182,6 +182,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `IsEventRegistered` | doc | doc |  |
 | method | `IsObjectType` | doc | doc |  |
 | method | `IsShown` | doc | doc |  |
+| method | `IsVisible` | doc | doc |  |
 | method | `LockHighlight` | doc | doc |  |
 | method | `Play` | doc | doc |  |
 | method | `Raise` | doc | doc |  |
@@ -232,6 +233,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetScaleFrom` | doc | doc |  |
 | method | `SetScaleTo` | doc | doc |  |
 | method | `SetScript` | doc | doc |  |
+| method | `SetScrollChild` | doc | doc |  |
 | method | `SetShadowColor` | doc | doc |  |
 | method | `SetShadowOffset` | doc | doc |  |
 | method | `SetSheathed` | doc | doc |  |
@@ -256,6 +258,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetValueStep` | doc | doc |  |
 | method | `SetVertTile` | doc | doc |  |
 | method | `SetVertexColor` | doc | doc |  |
+| method | `SetVerticalScroll` | doc | doc |  |
 | method | `SetWidth` | doc | doc |  |
 | method | `SetWordWrap` | doc | doc |  |
 | method | `Show` | doc | doc |  |

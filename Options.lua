@@ -67,7 +67,14 @@ function O.ShowLow(sl)
 end
 function O.LowText(pct) return ("Warn when under %d%% of a full bar is left"):format(pct) end
 
-function O.RefreshAll() for _, p in ipairs(O.pages) do if p:IsShown() then O.Refresh(p) end end end
+-- Every page on screen, after any change (a hidden page fills itself on show). Guarded: a slider set here fires its
+-- own OnValueChanged, which comes back here.
+function O.RefreshAll()
+	if O.refreshing then return end
+	O.refreshing = true
+	for _, p in ipairs(O.pages) do if p:IsVisible() then O.Refresh(p) end end
+	O.refreshing = nil
+end
 
 local function apply(sw, v)
 	sw.set(ns.DB(), v and true or false)
@@ -152,6 +159,7 @@ local function general(p)
 		b:SetScript("OnClick", function()
 			ns.DB().opts.style = st[1]
 			for _, o in ipairs(p.styleButtons) do o:SetChecked(o == b) end
+			O.RefreshAll()
 		end)
 		b.value = st[1]
 		p.styleButtons[i] = b
@@ -202,8 +210,10 @@ local function alerts(p)
 	sl.value = words(s, "", St.SECOND)
 	sl.value:SetPoint("TOPLEFT", p.lowLabel, "BOTTOMLEFT", 0, -8)
 	sl:SetScript("OnValueChanged", function(self, v)
+		if O.refreshing then O.ShowLow(self) return end   -- being filled from the saved value: nothing to write back
 		O.SetLow(v)
 		O.ShowLow(self)
+		O.RefreshAll()
 	end)
 	p.low = sl
 	s:SetHeight(-y + 54)
@@ -376,12 +386,15 @@ local function elvOptions()
 			end,
 			get = function() return ns.AccountFilter() and (ns.DB().opts.accounts or "all") or "all" end,
 			set = function(_, v) O.SetAccounts(v ~= "all" and v or nil) end },
-		move = { order = 5, type = "execute", name = "Unlock notifications", func = function()
-			if ns.Move.Start() then
-				local e = ElvUI and ElvUI[1]
-				if e and e.Config_CloseWindow then pcall(e.Config_CloseWindow, e) end
-			end
-		end },
+		move = { order = 5, type = "execute",   -- the same toggle as the Positions section
+			name = function() return ns.Move.Active() and "Lock notifications" or "Unlock notifications" end,
+			func = function()
+				if ns.Move.Toggle() then   -- unlocked: /ec steps aside so the placeholders can be dragged
+					local e = ElvUI and ElvUI[1]
+					if e and e.Config_CloseWindow then pcall(e.Config_CloseWindow, e) end
+				end
+				O.RefreshAll()
+			end },
 		lowPct = { order = 4, type = "range", name = "Low rest warning (% of a full bar left)", min = ns.LOW_MIN,
 			max = ns.LOW_MAX, step = 1, get = function() return ns.DB().opts.lowPct end, set = function(_, v) O.SetLow(v) end },
 	}

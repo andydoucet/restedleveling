@@ -34,6 +34,7 @@ local function stubbedWorld(opts, version, withElvUI, positions, failing)
 		game.UISpecialFrames = {}
 		game.GameTooltip = game.CreateFrame("GameTooltip", "GameTooltip")
 		game.SetPortraitTexture = function() end
+		game.UIParent:SetSize(1920, 1080)   -- a real screen (the fake's default is 100 x 20)
 	end }
 	local _, h = W.New(state)
 	local icon = h.Env().LibStub("LibDBIcon-1.0")
@@ -151,6 +152,66 @@ function cases.settings_window_holds_the_same_page_and_toggles_move_mode()
 	T.ok(not Mv.Active(), "lock: move mode ends")
 	T.eq(f.page.move.label:GetText(), "Unlock notifications", "back to unlock")
 	T.eq((f:GetPoint(1)), "CENTER", "back where it was")
+	T.clean(h)
+end
+
+-- Review r1: a window first opened while unlocked (cog right-click, then left-click) takes the move-mode layer too.
+function cases.settings_opened_while_unlocked_sits_above_the_shade()
+	local h, state = stubbedWorld()
+	local env = h.Env()
+	h.Slash("RESTEDLEVELING", "")
+	local m = env.RestedLevelingMain
+	FakeWoW.RunScript(m.cogBtn, "OnClick", "RightButton")
+	T.ok(state.ns.Move.Active(), "unlocked first")
+	FakeWoW.RunScript(m.cogBtn, "OnClick", "LeftButton")
+	local f = env.RestedLevelingSettings
+	T.ok(f:IsShown(), "then the settings")
+	T.eq(f:GetFrameLevel(), 30, "over the shade, the placeholders and the move bar")
+	T.eq((f:GetPoint(1)), "LEFT", "docked beside the placeholders")
+	T.eq(f.page.move.label:GetText(), "Lock notifications", "and says it is unlocked")
+	FakeWoW.RunScript(m.cogBtn, "OnClick", "RightButton")
+	T.eq((f:GetPoint(1)), "CENTER", "locked: back in its place")
+	T.clean(h)
+end
+
+-- Review r1: one change shows on every page on screen (our window and the Blizzard page), radios and slider too.
+function cases.every_page_follows_a_change()
+	local h = stubbedWorld()
+	local env = h.Env()
+	h.Slash("RESTEDLEVELING", "options")
+	local mine, blizz = env.RestedLevelingSettings.page, env.RestedLevelingOptions
+	FakeWoW.RunScript(mine.low, "OnValueChanged", 30)
+	T.eq(W.DB(h).opts.lowPct, 30, "saved")
+	T.has(blizz.low.value:GetText(), "30%", "the other page's slider follows")
+	local default
+	for _, b in ipairs(blizz.styleButtons) do if b.value == "default" then default = b end end
+	FakeWoW.RunScript(default, "OnClick")
+	for _, b in ipairs(mine.styleButtons) do T.eq(b:GetChecked(), b.value == "default", "style " .. b.value .. " on our window") end
+	FakeWoW.RunScript(blizz.low, "OnValueChanged", 30)   -- a page being filled never writes an old value back
+	T.eq(W.DB(h).opts.lowPct, 30, "still 30%")
+	T.clean(h)
+end
+
+-- Review r1: on a 768-unit screen with bigger windows the page scrolls (mouse wheel) instead of running off screen.
+function cases.settings_scroll_on_a_small_screen()
+	local h = stubbedWorld({ scale = 1.15 })
+	local env = h.Env()
+	env.UIParent:SetSize(1366, 768)
+	h.Slash("RESTEDLEVELING", "options")
+	local f = env.RestedLevelingSettings
+	T.ok(f:GetHeight() * 1.15 <= 768 - 40, "fits the screen")
+	T.ok(f.scrollMax > 0 and f.thumb:IsShown(), "the page scrolls, with a thumb")
+	FakeWoW.RunScript(f.scroll, "OnMouseWheel", -1)
+	T.eq(f.scrollAt, 40, "the wheel scrolls 40")
+	for _ = 1, 50 do FakeWoW.RunScript(f.scroll, "OnMouseWheel", -1) end
+	T.eq(f.scrollAt, f.scrollMax, "never past the end")
+	f:Hide()
+	env.UIParent:SetSize(1920, 1080)
+	W.DB(h).opts.scale = nil
+	f:SetScale(1)
+	f:Show()
+	T.eq(f.scrollMax, 0, "a full-size screen: no scrolling")
+	T.ok(not f.thumb:IsShown(), "and no thumb")
 	T.clean(h)
 end
 

@@ -2,6 +2,7 @@
 -- own movable window in the main window's chrome around the settings page (Options.lua builds the same page into the
 -- Blizzard Settings panel). Esc closes it; where it was dragged is saved (RestedLevelingDB.positions.settings).
 -- While the notifications are unlocked it docks at the left edge, above the dimmed screen, beside the placeholders.
+-- Taller than the screen (a small screen with bigger windows): the page scrolls with the mouse wheel.
 
 local _, ns = ...
 local St = ns.Style
@@ -13,7 +14,11 @@ local PAD, INSET = 20, 14
 -- The window's rect in UIParent units: what positions are saved in.
 local function ratio(f) return f:GetEffectiveScale() / UIParent:GetEffectiveScale() end
 
+-- Where and on which layer, from the current move-mode state (also for a window first opened while unlocked).
 local function place(f)
+	local on = ns.Move.Active()
+	f:SetFrameStrata(on and "FULLSCREEN_DIALOG" or "HIGH")
+	if on then f:SetFrameLevel(30) end   -- over the shade (1), the placeholders (10) and the move bar (20)
 	f:ClearAllPoints()
 	local r = ratio(f)
 	if ns.Move.Active() then   -- beside the placeholders (they start in the middle of the screen)
@@ -41,7 +46,6 @@ function Se.Create()
 		f = CreateFrame("Frame", "RestedLevelingSettings", UIParent, "BackdropTemplate")
 		St.Panel(f, "card")
 	end
-	f:SetFrameStrata("HIGH")
 	f:SetToplevel(true)
 	f:SetMovable(true)
 	f:SetClampedToScreen(true)
@@ -57,13 +61,25 @@ function Se.Create()
 	St.Scale(f)
 	tinsert(UISpecialFrames, "RestedLevelingSettings")
 	f.top = St.HostFrame() and 40 or (St.RAIL + 12)   -- under the host skin's title band, or our rail
-	f.page = CreateFrame("Frame", nil, f, "BackdropTemplate")
-	f.page:SetPoint("TOPLEFT", PAD, -f.top)
-	f.page:SetWidth(ns.Options.W + INSET * 2)
-	St.Well(f.page)
+	local w = ns.Options.W + INSET * 2
+	f.well = CreateFrame("Frame", nil, f, "BackdropTemplate")   -- the page's well, behind the scrolling area
+	f.well:SetPoint("TOPLEFT", PAD, -f.top)
+	f.well:SetWidth(w)
+	St.Well(f.well)
+	f.scroll = CreateFrame("ScrollFrame", nil, f)
+	f.scroll:SetPoint("TOPLEFT", f.well, "TOPLEFT", 0, 0)
+	f.scroll:SetPoint("BOTTOMRIGHT", f.well, "BOTTOMRIGHT", 0, 0)
+	f.page = CreateFrame("Frame", nil, f.scroll)
+	f.page:SetWidth(w)
+	f.scroll:SetScrollChild(f.page)
+	f.scroll:EnableMouseWheel(true)
+	f.scroll:SetScript("OnMouseWheel", function(_, delta) Se.ScrollTo((f.scrollAt or 0) - delta * 40) end)
+	f.thumb = f.well:CreateTexture(nil, "OVERLAY")   -- where the view is, when the page scrolls
+	f.thumb:SetColorTexture(0.84, 0.66, 0.30, 0.8)
+	f.thumb:SetWidth(4)
 	ns.Options.Build(f.page, INSET, -INSET)
-	f:SetWidth(ns.Options.W + INSET * 2 + PAD * 2)
-	f:SetScript("OnShow", function() Se.Refresh() end)
+	f:SetWidth(w + PAD * 2)
+	f:SetScript("OnShow", function() place(f) Se.Refresh() end)
 	Se.frame = f
 	f:Hide()
 	place(f)
@@ -77,7 +93,28 @@ function Se.Refresh()
 	ns.Options.Refresh(f.page)
 	local h = ns.Options.Height(f.page) + INSET   -- Height counts the top inset
 	f.page:SetHeight(h)
-	f:SetHeight(f.top + h + PAD)
+	local room = (UIParent:GetHeight() - 40) / ratio(f)   -- the screen, in the window's own units
+	local winH = math.min(f.top + h + PAD, room)
+	f:SetHeight(winH)
+	f.well:SetHeight(winH - f.top - PAD)
+	f.scrollMax = math.max(0, h - (winH - f.top - PAD))
+	Se.ScrollTo(f.scrollAt or 0)
+end
+
+-- Scroll the page to `y` (clamped), and move the thumb to match.
+function Se.ScrollTo(y)
+	local f = Se.frame
+	local max = f.scrollMax or 0
+	f.scrollAt = math.max(0, math.min(max, y))
+	f.scroll:SetVerticalScroll(f.scrollAt)
+	f.thumb:SetShown(max > 0)
+	if max > 0 then
+		local view = f.well:GetHeight()
+		local th = math.max(24, view * view / (view + max))
+		f.thumb:SetHeight(th)
+		f.thumb:ClearAllPoints()
+		f.thumb:SetPoint("TOPRIGHT", f.well, "TOPRIGHT", -3, -(view - th) * f.scrollAt / max)
+	end
 end
 
 function Se.Show()
@@ -92,11 +129,9 @@ function Se.Toggle()
 end
 
 -- Unlocked: above the dimmed screen at the left edge; locked again: back where it was.
-ns.RegisterCallback(Se, "MOVE_MODE", function(_, on)
+ns.RegisterCallback(Se, "MOVE_MODE", function()
 	local f = Se.frame
 	if not f then return end
-	f:SetFrameStrata(on and "FULLSCREEN_DIALOG" or "HIGH")
-	if on then f:SetFrameLevel(30) end   -- over the shade (1), the placeholders (10) and the move bar (20)
 	place(f)
 end)
 ns.RegisterCallback(Se, "ROSTER_CHANGED", function() Se.Refresh() end)
