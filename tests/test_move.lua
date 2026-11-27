@@ -148,6 +148,7 @@ function cases.elvui_movers_share_the_saved_positions()
 		created[name] = { holder = holder, text = text, postdrag = postdrag, types = types, mover = mover }
 	end
 	function E:SaveMoverPosition(name) saved[name] = true; self.db.movers[name] = "saved" end
+	function E:ResetMovers(name) created.reset = name; self.db.movers[name] = nil end
 	function E:ConfigMode_AddGroup(key, label) created.group = key .. "=" .. label end
 	local h, state = world({ saved = { positions = { banner = { point = "TOP", relPoint = "TOP", x = 0, y = -300 } } },
 		setup = function(_, hh) rawset(hh.Env(), "ElvUI", { E }) end })   -- an addon global, not a client name
@@ -171,6 +172,38 @@ function cases.elvui_movers_share_the_saved_positions()
 	T.ok(saved.RestedLevelingMenuMover, "our move updates the ElvUI mover")
 	Mv.Reset("menu")
 	T.ok(E.db.movers.RestedLevelingMenuMover == nil, "our reset clears ElvUI's copy")
+	T.eq(created.reset, "RestedLevelingMenuMover", "through ElvUI's own E:ResetMovers")
+	T.clean(h)
+end
+
+-- Review (ILL-1272): our DB is the source of truth. Another ElvUI profile's mover entry is overwritten at load.
+function cases.our_saved_position_wins_over_another_elvui_profile()
+	local saved = {}
+	local E = { db = { movers = { RestedLevelingBannerMover = "TOP,UIParent,TOP,0,-500" } } }
+	function E:CreateMover(holder) holder.mover = { SetPoint = function(self, ...) self.points = { ... } end,
+		ClearAllPoints = function() end } end
+	function E:SaveMoverPosition(name) saved[name] = true end
+	local h = world({ saved = { positions = { banner = { point = "TOPLEFT", relPoint = "TOPLEFT", x = 40, y = -60 } } },
+		setup = function(_, hh) rawset(hh.Env(), "ElvUI", { E }) end })
+	local holder = h.Env().RestedLevelingbannerHolder
+	T.ok(saved.RestedLevelingBannerMover, "our position is saved into ElvUI's profile")
+	T.eq(table.concat({ holder.mover.points[1], holder.mover.points[4], holder.mover.points[5] }, ","), "TOPLEFT,40,-60",
+		"and the mover sits there, not at the other profile's spot")
+	T.clean(h)
+end
+
+-- Review (ILL-1272): placeholders are not left user-placed for the client's layout cache; every one says where it is.
+function cases.placeholders_are_not_user_placed_and_all_say_where()
+	local h, state = world()
+	local Mv = state.ns.Move
+	h.Slash("RESTEDLEVELING", "move")
+	local ph = Mv.frames.toasts
+	local placed = {}
+	ph.SetUserPlaced = function(_, v) placed[#placed + 1] = v end
+	ph.__left, ph.__bottom = 600, 300
+	FakeWoW.RunScript(ph, "OnDragStop")
+	T.eq(placed[#placed], false, "SetUserPlaced(false) after a drag")
+	T.ok(ph.where:IsShown() and ph.where:GetText():find("Custom position", 1, true), "the toasts placeholder says where too")
 	T.clean(h)
 end
 

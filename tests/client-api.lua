@@ -222,6 +222,7 @@ return {
 		["SetToFinalAlpha"] = true,
 		["SetToplevel"] = true,
 		["SetUnit"] = true,
+		["SetUserPlaced"] = true,
 		["SetValue"] = true,
 		["SetValueStep"] = true,
 		["SetVertTile"] = true,

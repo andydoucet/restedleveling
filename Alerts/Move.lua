@@ -131,11 +131,13 @@ local function syncMover(key, pos)
 	holder.mover:ClearAllPoints()
 	holder.mover:SetPoint(p.point, UIParent, p.relPoint, p.x, p.y)
 	if pos then pcall(e.SaveMoverPosition, e, moverName(key))
+	elseif type(e.ResetMovers) == "function" then pcall(e.ResetMovers, e, moverName(key))   -- ElvUI's own reset
 	elseif type(e.db) == "table" and type(e.db.movers) == "table" then e.db.movers[moverName(key)] = nil end
 end
 
 -- One mover per alert, on an invisible holder of the alert's size; ElvUI keeps its own copy of the position, and a
--- drag in /moveui (or ElvUI's reset) comes back here through postdrag.
+-- drag in /moveui (or ElvUI's reset) comes back here through postdrag. Our saved position is the source of truth: at
+-- load it is pushed to the mover even when ElvUI's profile holds another (several ElvUI profiles, one of ours).
 function Mv.RegisterElvUI()
 	local e = elv()
 	if not e or Mv.elvDone then return end
@@ -146,7 +148,7 @@ function Mv.RegisterElvUI()
 		local holder = CreateFrame("Frame", "RestedLeveling" .. key .. "Holder", UIParent)
 		holder:SetSize(it.w, it.h)
 		local mine = Mv.Get(key)
-		local p = mine or it.default or Mv.MenuDefault()
+		local p = it.default or Mv.MenuDefault()   -- the mover's origin is the default, so ElvUI's reset returns there
 		holder:SetPoint(p.point, UIParent, p.relPoint, p.x, p.y)
 		Mv.holders[key] = holder
 		local name = moverName(key)
@@ -158,10 +160,7 @@ function Mv.RegisterElvUI()
 				Mv.Reset(key, true)
 			end
 		end, "ALL,RESTEDLEVELING")
-		-- Moved in our own mode before ElvUI was enabled: ElvUI takes over our position.
-		if ok and mine and not (type(e.db) == "table" and type(e.db.movers) == "table" and e.db.movers[name]) then
-			syncMover(key, mine)
-		end
+		if ok and mine then syncMover(key, mine) end
 	end
 end
 
@@ -241,11 +240,12 @@ local function placeholder(key)
 	St.Color(f.where, St.MUTED)
 	f.reset = St.MakeButton(f, 64, "Reset", false, 22)   -- the same place on every placeholder
 	f.reset:SetPoint("TOPRIGHT", -10, -12)
-	if it.h < 100 then f.where:Hide() f.icon:SetPoint("TOPLEFT", 18, -12) end   -- a toast is short: no status line
+	if it.h < 100 then f.icon:SetPoint("TOPLEFT", 18, -12) end
 	f.reset:SetScript("OnClick", function() Mv.Reset(key) end)
 	f:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	f:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
+		self:SetUserPlaced(false)   -- our DB holds the position, not the client's layout cache
 		Mv.Save(key, self:GetLeft(), self:GetBottom(), self:GetWidth(), self:GetHeight())
 	end)
 	return f

@@ -90,6 +90,7 @@ Styling:
   media, fonts, LSM statusbar). Auto-detect, override in options: auto / default / elvui.
 - One addon, ElvUI optional (OptionalDeps: ElvUI). No separate ElvUI_ addon.
 - Never touch ElvUI frames or profiles. Textures and colours only on our own frames.
+  Exception: our own three movers are stored in E.db.movers like any third-party mover.
 
 ## 5. Cross-account roster
 

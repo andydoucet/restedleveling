@@ -241,6 +241,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetToFinalAlpha` | doc | doc |  |
 | method | `SetToplevel` | doc | doc |  |
 | method | `SetUnit` | doc | doc |  |
+| method | `SetUserPlaced` | doc | doc |  |
 | method | `SetValue` | doc | doc |  |
 | method | `SetValueStep` | doc | doc |  |
 | method | `SetVertTile` | doc | doc |  |
