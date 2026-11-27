@@ -15,6 +15,10 @@ local DEFAULTS = {
 }
 ns.LOW_MIN, ns.LOW_MAX = 5, 50   -- the low-rest warning threshold, % of a full bar left
 
+local POSITION_KEYS = { banner = true, toasts = true, menu = true }
+local POINTS = { TOP = true, BOTTOM = true, LEFT = true, RIGHT = true, CENTER = true, TOPLEFT = true, TOPRIGHT = true,
+	BOTTOMLEFT = true, BOTTOMRIGHT = true }
+
 local function tbl(v) return type(v) == "table" and v or {} end
 local NUMS = { "xpMax", "xp", "rested", "level", "t", "ranks", "wasted", "sex" }
 
@@ -49,6 +53,12 @@ function ns.DB()
 	-- v2 (ILL-1272): the low-rest threshold (whole %, 5..50) and the account filter (nil = all, "mine", or an id).
 	local low = tonumber(d.opts.lowPct)
 	d.opts.lowPct = low and U.Clamp(math.floor(low + 0.5), ns.LOW_MIN, ns.LOW_MAX) or DEFAULTS.lowPct
+	-- Notification positions (Alerts/Move.lua): only usable entries are kept.
+	if type(d.positions) ~= "table" then d.positions = nil end
+	for k, pos in pairs(d.positions or {}) do
+		if not (POSITION_KEYS[k] and type(pos) == "table" and POINTS[pos.point] and POINTS[pos.relPoint]
+			and U.Num(pos.x) and U.Num(pos.y)) then d.positions[k] = nil end
+	end
 	local acc = d.opts.accounts
 	if acc ~= "mine" and not (type(acc) == "string" and acc:match("^%x%x%x%x%x%x$")) then d.opts.accounts = nil end
 	-- One SavedVariables file per WoW account, so this 6-hex id names the account the roster lives on.

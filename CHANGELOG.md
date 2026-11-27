@@ -21,6 +21,17 @@ v1.1 (ILL-1272), options:
   line says it: "running low here: 0.1 levels left, under 10% of full".
 - Saved data moves to version 2; v1 files load with the defaults, and damaged values are reset.
 
+v1.1 (ILL-1272), movable notifications:
+
+- /rlvl move (or "Move notifications" on the options page or /ec) shows the logout warning, the toasts and the Esc
+  menu card as labelled placeholders in their real size and style. Drag them; Reset puts one back, Reset all puts all
+  back, Done or Esc finishes. Not in combat (combat closes it).
+- Positions are saved per account, anchored to the nearest screen edge, kept on screen, and applied again when the
+  UI scale or the window size changes. Toasts stack away from the nearer edge.
+- The Esc menu card stays attached under the menu until you move it; Reset attaches it again.
+- With ElvUI, the three are also ElvUI movers in their own "Rested Leveling" group in /moveui. Moving or resetting
+  them either way saves to the same place.
+
 Fixes from the first in-game run (ILL-1274):
 
 - Button labels stay readable on hover (every button and the close cross): the label draws above the hover face.

@@ -90,6 +90,7 @@ Styling:
   media, fonts, LSM statusbar). Auto-detect, override in options: auto / default / elvui.
 - One addon, ElvUI optional (OptionalDeps: ElvUI). No separate ElvUI_ addon.
 - Never touch ElvUI frames or profiles. Textures and colours only on our own frames.
+  Exception: our own three movers are stored in E.db.movers like any third-party mover.
 
 ## 5. Cross-account roster
 
@@ -119,6 +120,7 @@ optional sound, chat line. No StaticPopup.
 - Login digest in chat: who's full, who fills soon, last logout was outside.
 - Cozy Sleeping Bag ready (from RW).
 - Optional resting pill near the XP bar: Resting / Not resting.
+- v1.1: the logout banner, toasts and Esc-menu card can be moved (/rlvl move; ElvUI movers too).
 
 ## 7. Architecture
 
