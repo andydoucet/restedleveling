@@ -41,15 +41,11 @@ function cases.nights_and_ticks_follow_the_local_clock()
 	-- First night 20:00 -> 06:00: from 4h40m in to 14h40m in.
 	T.ok(math.abs(nights[1].from - (4 * H + 40 * 60) / (48 * H)) < 1e-9, "starts at 20:00")
 	T.ok(math.abs(nights[1].to - (14 * H + 40 * 60) / (48 * H)) < 1e-9, "ends at 06:00")
-	local ticks = Tl.Ticks(NOW, 48 * H, utc)
-	T.eq(ticks[1].label, "18:00", "first tick at 18:00")
-	T.eq(#ticks, 8, "every 6 hours")
-	local days = 0
-	for _, t in ipairs(ticks) do if t.day then days = days + 1 end end
-	T.eq(days, 2, "two midnights, labelled with the day")
-	local mid = NOW + 8 * H + 40 * 60
-	T.eq(ticks[2].label, utc("%a ", mid) .. tonumber(utc("%d", mid)) .. utc(" %b", mid), "midnight shows day, date and month")
-	T.ok(ticks[1].quiet and not ticks[2].quiet, "a label every 12 hours (18:00 is a quiet tick)")
+	local ticks = Tl.Ticks(NOW, 48 * H)
+	T.eq(#ticks, 7, "a line every 6 hours between Now and +48h")
+	local labels = {}
+	for _, t in ipairs(ticks) do if not t.quiet then labels[#labels + 1] = t.label end end
+	T.eq(table.concat(labels, " "), "+12h +24h +36h", "relative labels every 12 hours")
 end
 
 function cases.marker_labels_say_when()
@@ -84,7 +80,11 @@ function cases.main_window_switches_to_the_timeline_and_remembers_it()
 	local shown = 0
 	for _, l in ipairs(f.timeline.lanes) do if l:IsShown() then shown = shown + 1 end end
 	T.eq(shown, 2, "one lane per character")
+	T.eq(f.timeline.detail:GetText(), state.ns.Timeline.HINT, "a fixed detail line under the chart")
 	FakeWoW.RunScript(f.timeline.lanes[1], "OnEnter")
+	T.has(f.timeline.detail:GetText(), "banked", "hover fills the detail line, not a tooltip over another lane")
+	FakeWoW.RunScript(f.timeline.lanes[1], "OnLeave")
+	T.eq(f.timeline.detail:GetText(), state.ns.Timeline.HINT, "and leaving restores the hint")
 	T.clean(h)
 end
 

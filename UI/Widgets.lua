@@ -22,7 +22,10 @@ end
 
 -- The roster's column grid (x offsets inside a row), shared with the current-character strip so bars line up.
 -- rank | portrait | name + sub | bar + caption | state chip | Well Rested moons
-Wg.COL = { rank = 4, portrait = 32, text = 94, bar = 350, chip = 596 }   -- the Well Rested moons sit on the bar's caption line
+-- The window's one column grid (desk steer r7): rank | portrait | name + meta | bar | value | chip. Every strip that
+-- shows a character (NOW PLAYING, the rows) uses these x positions; chips are one fixed width on one right edge.
+Wg.COL = { rank = 4, portrait = 32, text = 94, bar = 350, value = 540, chip = 600 }
+Wg.BAR_W, Wg.VALUE_W = 180, 48   -- bar from COL.bar; the value ("92%") right-aligned in the column after it   -- the Well Rested moons sit on the bar's caption line
 
 -- Drop a trailing partial UTF-8 character (a lead byte without all its continuation bytes) left by a byte cut.
 local function dropPartial(t)
@@ -50,6 +53,7 @@ end
 
 function Wg.Text(parent, role, layer, size)
 	local fs = parent:CreateFontString(nil, layer or "OVERLAY")
+	fs.rlRole = role   -- its tier on the type scale (St.TYPE)
 	St.Font(fs, role, size)
 	fs:SetJustifyH("LEFT")
 	fs:SetWordWrap(false)

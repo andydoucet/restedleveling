@@ -3,67 +3,71 @@
     "visual_appeal": 8,
     "play_next_clarity": 8,
     "state_colours": 8,
-    "character_identity": 7,
+    "character_identity": 8,
     "default_theme": 8,
-    "elvui_wc3_fit": 7,
+    "elvui_wc3_fit": 8,
     "alerts_ux": 8,
-    "readability": 7,
-    "layout_polish": 7,
-    "delight": 7
+    "readability": 8,
+    "layout_polish": 8,
+    "delight": 8
   },
   "changes": {
     "visual_appeal": [
-      "The hero repeats '1.7 levels banked' three times: in the bubble, in the 1.7 / 'levels banked' figure, and in 'Fully rested for 2 days. 1.7 levels of double XP waiting.' Cut the bottom caption to 'Full for 2 days' and drop 'Full for 2d' from the comparison line. That line then reads only 'Le Beouf full in 8h' as the runner-up, which frees about 14 px of vertical air in the hero.",
-      "The 1 px light tick at the right end of every rested bar (rows, Now Playing, hero) reads like a stray cursor. Either remove it or make it a 2 px #51412B cap that sits inside the bar's border.",
-      "Rows 2\u20137 each stack a chip and a moon strip, so the right column has twice the visual noise of the left. Move the moons into the bar's caption line, after the time ('93% \u00b7 full in 14h 25m'), and right-align them at 10 px with 2 px gaps. Then centre the chip vertically in the 48 px row."
+      "Hero card: below the 1.5 / LEVELS BANKED / FULL stack there is about 60 px of dead dark area beside the two status lines. Move the status lines under the bar to full width (230 to 775 px), or lift the FULL chip up by 6 px so the right stack ends level with the bar's top edge.",
+      "The steps strip (1 Le Jette / 2 Le Dette / View details) reads as a third visual style between the hero and NOW PLAYING. Give it the same well fill as the rows (about #2A2219 at 85%). Use a 1 px #5A4A32 top rule only, and drop the gold outline box around step 2 in favour of a 3 px gold left tick, so the window has one fewer bordered rectangle.",
+      "Row wells alternate so subtly that rows 5 to 7 blur together in ElvUI. Raise the zebra contrast to about +6% luminance (for example #241D16 and #2B231A) or add a 1 px #3A3024 divider at 60% alpha."
     ],
     "play_next_clarity": [
-      "The strip 'First: hearth or reach an inn. Then play Le Nette' is the real instruction, but it sits at 13 px under the hero, below the fold of attention. Make it 14 px cream #F2E6C8 with a 16 px hearthstone icon at its left. Cut the bubble to the joke only ('Water's conjured.'), because the decision is already in the #1 label, the big figure and the strip.",
-      "The 'View Le Nette' red button competes with the close button for 'primary red'. In the default theme, use the gold-edged enamel (#7A1E14 fill, #C9A24A 1 px edge) and keep it 26 px tall, matching the 'Compact' button height."
+      "Hero status copy: 'Full since 1d 16h ago' is a since/ago redundancy. Write 'Full for 1d 16h' on one line in #7FD67F, with 'More rest is wasted' on the same line after a middle dot in the cream tier. This saves a line and reads as one thought.",
+      "'Then play Le Bankken, full in 19h 11m' floats centred under step 2 and looks orphaned. Make it step 3 with the same numbered disc ('3 Le Bankken: full in 19h 11m'), greyed, inline on the steps row. Or right-align it under View details at 12 px muted.",
+      "Step 2 is the real call to action. Make 'play now' the strongest text on the strip: 14 px bold in the class colour plus white, not the same weight as step 1."
     ],
     "state_colours": [
-      "The NOT RESTING (#6E2222) and OUTSIDE AN INN chips both use bright red text-boxes. OUTSIDE AN INN describes the current character, not the roster state. Give it the alert treatment instead: an outline-only red chip (#C0392B 1 px border, transparent fill) so it is not confused with roster rows 6\u20137.",
-      "In the compact tooltip, 'Not resting \u00b7 park in an inn' renders pink (#F08080-ish). Use the chip label colour #FFD4D4 for the state word and the muted #B8A88A for the advice, so the red family stays consistent."
+      "Jacques Hammer's bar uses a desaturated brick (#8A3A30-ish) while the chip and accent are a brighter red. Use one red for the bar fill, the accent and the chip border (about #D2402F) so RED reads as one state, not two shades.",
+      "The NEARLY FULL chip's yellow fill on a yellow border is the only filled chip. RESTING and NOT RESTING are outlined. Either fill all chips at 18% alpha of their state colour or none. A consistent treatment matters more than emphasis here.",
+      "Legend dots in the NEXT BEST header are about 8 px and the orange and red dots are close at that size. Raise them to 10 px and add a 1 px dark #000 at 60% ring."
     ],
     "character_identity": [
-      "Card bubble: 'Hearth me home and I'll fill up.' leaves the orphan 'up.' on its own line, and there is a ~14 px dead gap between the title line and the body. Widen the bubble to 190 px, or balance-wrap the lines, and set the title-to-body gap to 4 px.",
-      "The 'z z Z' at the top-right of the ring is barely visible at 12 px muted. Animate it as a 3-step drift (8/10/12 px, #B8A88A at 60/80/100% alpha) and only when the character is resting, so it means something.",
-      "The level badge (22, 15) sits on the ring at 4 o'clock and overlaps the portrait art. Move it to 5 o'clock, 2 px outside the ring, with a 1 px #51412B edge."
+      "Race/gender badges overlap the class icon by about 40% and at about 18 px the faces are mush (Le Jedde's and Le Beouf's badges). Grow the badge to 22 px with a 1.5 px gold ring and offset it so it overlaps no more than 30%.",
+      "NOW PLAYING shows a class icon for the logged-in character in these renders. Make sure the live face path is what ships, and give the NOW PLAYING portrait the same 46 px diameter as the rows rather than its slightly smaller ring.",
+      "Card: the name 'Le Beouf' at about 18 px gold sits below the speech bubble and competes with it. Put the name directly above 'Level 11 Tauren Druid' at the top-left (y 70) and move the bubble beside the portrait at mid-height so identity is read first."
     ],
     "default_theme": [
-      "The default card window ends ~95 px above the main window's bottom edge. Either match the heights (stretch the chart region) or align the card's top to the hero's top (y +45), so the pair reads as a deliberate spread rather than two floats.",
-      "The chart body in the full-state card collapses to a single strip with lots of empty frame under it. Show the 48 px chart even when full (a flat green line at 100%) or remove the section and end the card at the tidbits."
+      "Default title bar: the moon glyph plus title is centred, but the Compact button and X box are different heights (about 22 vs 20 px). Match them at 22 px and give X the same parchment bevel as Compact.",
+      "The Default hero uses a forest painting that pushes the cream sub-lines toward about 5:1 at the bright patches. Add a left-to-right gradient scrim (#000 at 55% to 0% over the left 60%) behind the text block.",
+      "View details in Default is gold-outlined and in ElvUI it is blue. That is fine per theme, but the Default version's 1 px border is lighter than the Compact button. Unify at #C8A050."
     ],
     "elvui_wc3_fit": [
-      "The interior in ElvUI mode is pixel-identical to default apart from the chrome. His Character and Options windows have NO painted art and NO tinted rows. Drop the hero painting to 15% and desaturate it 50%. Drop the row washes to 10%, and keep state only on the 3 px left bar and the chips.",
-      "The skinned Options window uses #1A1410-ish section header bars with cream 13 px text ('Gameplay', 'General'). Render NOW PLAYING / NEXT BEST / GETTING STARTED as those 20 px header bars (#1E1813 fill) under ElvUI instead of loose 11 px labels.",
-      "The hero's bright green left rule (3 px) and the selected-row gold outline are brighter than anything in his skinned windows. Under ElvUI, reduce the rule to 2 px at 70% alpha.",
-      "There is a stray ~120 px horizontal bar centred under the footer (y\u2248790) in the ElvUI main window, and another under the card bar. If that is the WC3 bottom ornament, anchor it to the frame edge. If it is a scroll/resize remnant, hide it."
+      "The ElvUI Character and Options references use flat dark wells (#15110C) with thin gold-grey rules. The addon's hero well is warmer and lighter (about #2A2218). Darken the wells 2 to 3 steps toward #1A1510 so the window sits beside the Character pane without looking browner.",
+      "The ElvUI blue buttons (Compact, View details, Unlink, All accounts) match the skin, but All accounts sits mid-footer with no label. Write 'Accounts: All' or move it into the header as a filter chip so it does not read as an action.",
+      "Section labels such as ROSTER/TIMELINE should use the skin's caps style: same font as the Character pane's 'General' header, centred in a #2A2A2A plate, or at least the same 12 px caps tracking +1."
     ],
     "alerts_ux": [
-      "The '4x slower' in the logout banner is not visibly orange in the render; it reads the same gold as the rest. Use #FF9A3C with no outline so it pops.",
-      "'Rest builds 4x slower in / The Barrens.' wraps with an orphan. Shorten it to 'Rest builds 4x slower out here.', or widen the text column by using the ~110 px of empty space right of the text.",
-      "The ESC-menu toast says 'Not resting: rest builds 4x slower.' but does not name who. Match the banner: 'Jacques Hammer isn't resting. Rest builds 4x slower.'",
-      "The compact toast's progress line under the text looks like a stray underline. Make it 2 px tall, full toast width, at the bottom inner edge, coloured #6B5344."
+      "Logout banner: the gear and red X sit 4 px apart at the top-right with View details 30 px below. Give the gear and X a 24 px hit box with 8 px spacing, and align View details' right edge with the X's right edge.",
+      "The 'Find an inn before you log out' card body is 12 px in the cream tier on a wood texture. Raise it to 13 px per the new scale and add a #000 at 40% inner panel behind the text so the planks do not stripe through the glyphs.",
+      "Toast title 'Le Jette: rested XP used up' in gold competes with 'Play Le Dette' in white. Make the action line the headline (14 px white) and the cause line the 12 px caps-free muted subline above it.",
+      "Move mode placeholders: the instructions ('Default position. Drag anywhere on this panel.') are 12 px over a dark wood texture. Use 13 px and put a 1 px dashed #C8A050 inner border on each placeholder so the draggable area is unmistakable."
     ],
     "readability": [
-      "Row sub-lines ('Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago') and bar captions are ~11 px on a dark fill. Raise them to 12 px #D8CBAA.",
-      "The legend ('2 full \u00b7 2 nearly full \u00b7 1 resting \u00b7 2 not resting') at ~10 px is the smallest text in the window. Make it 11 px and add 6 px between items.",
-      "Tidbit labels (HEARTH, /PLAYED\u2026) at 9\u201310 px caps are fine. Set their values to 13 px, not 12, so the eye lands on the data.",
-      "The chart labels '50%' and '0%' have no gridlines. Add 1 px #2A221A dashed rules at 50% and 0% across the plot."
+      "The 13 px meta line in rows ('Lv 8 Warrior \u00b7 Goldshire inn \u00b7 3d ago') in the cream secondary tier is legible now but thin with the narrow face. Give the reading-tier font an OUTLINE-free 1 px #000 at 70% shadow at offset (1,-1) in ElvUI to match the skin's text.",
+      "Hero sub-meta ('Level 6 Gnome Warlock \u00b7 Thunderbrew Distillery inn \u00b7 seen 2d ago') is the longest line in the window. Truncate the inn to the town name at hero width (as the rows do) so it never wraps at 115% scale.",
+      "Timeline 'FULL AFTER 48h' dates wrap to two lines ('Wed 2 Dec' / '01:36'). Widen that column by about 24 px or use 'Wed 01:36' on one line, with the full date in the detail line on hover.",
+      "Compact tooltip: the % and time strings at the right are right-aligned, but the % values are not tabular (92% vs 9%). Pad them to a fixed 4-char column so the dots line up."
     ],
     "layout_polish": [
-      "Card ElvUI: the state bar under the stage runs to the frame's inner edge with no inset. Give it 10 px left/right padding, matching the tidbit panel.",
-      "Card description 'Park it in an / inn.' leaves an orphan. Rephrase to 'Not resting: fills 4x slower. 0.5 levels banked. Park it in an inn.' or balance-wrap.",
-      "In first run, the hero shows Jacques Hammer and so does the NOW PLAYING strip directly below. Hide the NOW PLAYING portrait and name when it is the same character, and show only the bar and the OUTSIDE AN INN chip.",
-      "Compact tooltip: 'Full \u00b7 full for 2d' repeats 'full'. Use 'Full \u00b7 2d'."
+      "The grid works now: the chips share one right edge and NOW PLAYING's chip sits on it. Finish the job by aligning NOW PLAYING's 'No rested XP: kills give normal XP' baseline with the rows' bar line (it sits about 4 px high). Also align the rank numbers' x with the NOW PLAYING accent offset.",
+      "Timeline: '+48h' crowds into the 'FULL AFTER 48h' header and the last gridline butts against the wrapped dates. Inset the chart's right end by 8 px and right-align the +48h label to the line.",
+      "Timeline: Le Dette's 100% lane has no bar, only 'Full now', so the first lane looks empty. Draw a full-height green dot at Now with a short #7FD67F stub, so every lane has a glyph at x = Now.",
+      "Card: the tidbits grid has the left column icons at x 78 but the bar and text above start at x 75. Snap both to the same 16 px inset. The bottom tidbits panel also has about 14 px more padding at its bottom than its top, so equalise it.",
+      "Options: the left nav is empty apart from one entry, leaving about 190 px of dead column. Fine for Blizzard parity, but vertically space the right panel's sections at a consistent 14 px gap (APPEARANCE to ACCOUNTS is tighter than NOTIFICATIONS to WINDOW AND DISPLAY). Also split 'About  Builds on...' into a caps label and a body line.",
+      "Compact tooltip: the brown highlight block behind 'Rested Leveling / Play the top one first' looks like a stuck selection. Remove it or extend it full width as a proper header plate."
     ],
     "delight": [
-      "Give the #1 hero a one-time 600 ms gold sheen across the 1.7 figure when the window opens (off with Reduce motion).",
-      "When a row crosses to FULL while the window is open, pulse its chip once and slide it up with a 200 ms ease; that reordering is the product's 'aha' moment.",
-      "Write per-class/race joke pools of at least 3 lines each, so reopening the card does not repeat the same line; vary it on every open."
+      "The zZz on the resting card is lovely. Give the hero a matching tiny touch: a slow 2 s shimmer across the green bar when FULL (respect Reduce motion).",
+      "When the lane is hovered in the timeline, pulse that row's endpoint dot once (scale 1.0 to 1.3, 200 ms) so the hover feels alive.",
+      "Speech lines: allow a second short line like the card's ('Thunder Bluff suits me.') in the hero bubble too, so the hero feels as characterful as the card."
     ]
   },
-  "overall_notes": "Solid, coherent and clearly a crafted addon now. The dark bubble is a real improvement, tails point correctly, and the chip colours read without leaning on gold. What keeps it below 9: (1) the hero says the same fact three times and the play instruction is visually the weakest line; (2) ElvUI mode is just default interior plus WC3 chrome. His real skinned windows are flat, almost art-free, with header-bar sections, and this still carries a painted hero, tinted rows and bright rules; (3) recurring wrap orphans ('up.', 'inn.', 'The Barrens.'), stray end-ticks on bars and a stray bar under the ElvUI footer; (4) the card's chart and height leave dead space and don't align with the main window. Fix those and it is a 9.",
+  "overall_notes": "The systemic steer worked. The single column grid is visible: the chips form one clean right edge, % values sit in their own right-aligned column, NOW PLAYING's chip lines up with the roster, and the footer shares the left edge. Rows at 62 px with a 13 px second line read comfortably. This is the first round where readability and layout_polish are no longer the weak spots, and I am moving both to 8. What keeps everything from 9 is a layer of finish rather than structure. The hero has dead space and awkward 'Full since ... ago' copy. The 'Then play...' line floats. Red has two shades. The ElvUI wells are a touch warmer and lighter than the reference Character pane. The timeline's right edge crowds and wraps. Alerts have small, tightly packed corner controls. The compact tooltip has a stray header highlight. None of these needs a new system; together they are the difference between a very good addon and one a demanding user approves without notes.",
   "model": "claude-opus-5-5"
 }

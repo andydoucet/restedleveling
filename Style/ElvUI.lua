@@ -228,7 +228,7 @@ function X.Font(fs, role, size)
 	if (role == "number") and E and E.media and E.media.combatFont then file = E.media.normFont end
 	local outline = (E and E.db and E.db.general and E.db.general.fontStyle) or "OUTLINE"
 	if outline == "NONE" then outline = "" end
-	fs:SetFont(file, math.max(St.MIN_TEXT, size or SIZES[role] or 12), outline)   -- the host's own outline on every role
+	fs:SetFont(file, St.Size(role, size or SIZES[role]), outline)   -- the host's own outline on every role
 	fs:SetShadowOffset(1, -1)
 	fs:SetShadowColor(0, 0, 0, 0.9)
 end

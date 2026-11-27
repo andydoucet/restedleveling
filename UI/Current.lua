@@ -31,11 +31,11 @@ function Cur.Create(parent, w, h)
 	St.Color(f.kicker, St.GOLD)
 	f.name = Wg.Text(f, "name", nil, 15)
 	f.name:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -3)
-	f.bar = Wg.BubbleBar(f, C.chip - C.bar - 26, 13, 30)   -- the roster bars' width and height
+	f.bar = Wg.BubbleBar(f, Wg.BAR_W, 13, 30)   -- the roster bars' width and height
 	f.bar:SetPoint("TOPLEFT", X + C.bar, -12)
 	f.left = Wg.Text(f, "small", nil, 13)
 	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -5)
-	f.left:SetWidth(C.chip - C.bar - 6)
+	f.left:SetWidth(C.value + Wg.VALUE_W - C.bar)
 	f.pill = Wg.Chip(f, 20)   -- the rows' chip, in the rows' STATE column
 	f.pill:SetPoint("LEFT", X + C.chip, 0)
 	f.detail = Wg.Text(f, "small", nil, 13)   -- under the name, in the text column

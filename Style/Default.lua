@@ -209,7 +209,7 @@ local SIZES = { title = 16, hero = 22, name = 15, body = 14, small = 13, number 
 
 function D.Font(fs, role, size)
 	local file = (role == "title" or role == "hero") and FONT_TITLE or (role == "number" and FONT_NUM) or FONT_BODY
-	fs:SetFont(file, math.max(St.MIN_TEXT, size or SIZES[role] or 12), (role == "hero" or role == "label") and "OUTLINE" or "")
+	fs:SetFont(file, St.Size(role, size or SIZES[role]), (role == "hero" or role == "label") and "OUTLINE" or "")
 	fs:SetShadowOffset(1, -1)
 	fs:SetShadowColor(0, 0, 0, 0.9)
 end

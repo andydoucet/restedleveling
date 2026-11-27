@@ -160,7 +160,7 @@ function Main.Create()
 	-- The footer's link field (the guide has its own while it shows): status, Link account... / Unlink, and the
 	-- inline name field in place.
 	f.link = ns.Link.Create(f, Main.W - PAD * 2 - 236)
-	f.link:SetPoint("BOTTOMLEFT", PAD + 8, 19)
+	f.link:SetPoint("BOTTOMLEFT", PAD, 19)   -- the window's one left edge (hero, NOW PLAYING, roster)
 	f.greyCheck = CreateFrame("CheckButton", nil, f, "UICheckButtonTemplate")
 	f.greyCheck:SetSize(24, 24)
 	f.greyCheck:SetPoint("BOTTOMRIGHT", -210, 20)
