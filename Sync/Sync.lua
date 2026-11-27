@@ -129,7 +129,9 @@ local function sendRoster(target)
 	end
 end
 
--- Say hello on every shared channel and to linked names and known peers.
+-- Say hello on every shared channel and to linked names and known peers. A name that has confirmed the link (mutual)
+-- also gets our roster now when it changed (sendRoster skips an unchanged one), so a login or /rlvl sync never waits
+-- for the 15-minute ticker. A one-way link only gets the hello: the trust model is unchanged.
 function S.Announce()
 	local s, msg = sync(), hello()
 	if U.Call(IsInGuild) then enqueue(msg, "GUILD") end
@@ -139,6 +141,7 @@ function S.Announce()
 		if n < S.MAX_WHISPERS then
 			enqueue(hello(name), "WHISPER", name); n = n + 1
 			echoed[S.NameKey(name)] = time()
+			if s.confirmed[S.NameKey(name)] then sendRoster(name) end
 		end
 	end
 	S.Pump()
@@ -195,7 +198,7 @@ local function onData(body, sender)
 	local key = S.NameKey(sender)
 	local peerAccount = key and linked(sender) and s.confirmed[key]
 	if not peerAccount then return end   -- only from a mutually linked name
-	local id, seq, total, data = body:match("^(%d+);(%d+);(%d+);(.*)$")
+	local id, seq, total, data = body:match("^(%d+);(%d+);(%d+);(.*)$")   -- digits only: a "1.5" index never matches
 	id, seq, total = tonumber(id), tonumber(seq), tonumber(total)
 	if not id or seq < 1 or total < 1 or seq > total or total > S.MAX_CHUNKS then return end
 	local b = buffers[key]   -- one roster in flight per sender; a new id replaces it

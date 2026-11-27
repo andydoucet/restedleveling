@@ -223,4 +223,31 @@ function cases.names_keep_a_realm_that_is_not_ours()
 	T.clean(h)
 end
 
+-- Review (ILL-1272): the peer said hello a minute ago, so it does not answer ours again (RESEND); our own announce
+-- must still send a changed roster to a confirmed peer.
+function cases.announce_sends_a_changed_roster_to_a_confirmed_peer_at_once()
+	local a, b, deliver = pair(true)
+	a.h.Slash("RESTEDLEVELING", "link " .. b.name)
+	b.h.Slash("RESTEDLEVELING", "link " .. a.name)
+	deliver()
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 60) end   -- well inside the 5-minute resend window
+	W.DB(a.h).chars["N:Le Fresh@?"] = rec("Le Fresh", W.NOW + 50, { account = "aaaaaa" })
+	a.state.ns.Sync.Announce()
+	deliver()
+	T.ok(W.Char(b.h, "Le Fresh"), "the new alt arrives without waiting for the ticker")
+	T.clean(a.h); T.clean(b.h)
+end
+
+-- Review (ILL-1272): a non-integer index never stores a part (the header takes digits only).
+function cases.a_chunk_with_a_fractional_index_is_dropped()
+	local h, state = confirmed()
+	local C = state.ns.Codec
+	local parts = C.Chunk(C.EncodeRoster({ ["N:Le Odd@?"] = rec("Le Odd", W.NOW) }, "bbbbbb"), 400)
+	h.Fire("CHAT_MSG_ADDON", "RLVL1", "D9;1.0;1;" .. parts[1], "WHISPER", "Le Bankken")
+	T.ok(not W.Char(h, "Le Odd"), "not a chunk index")
+	h.Fire("CHAT_MSG_ADDON", "RLVL1", "D9;1;1;" .. parts[1], "WHISPER", "Le Bankken")
+	T.ok(W.Char(h, "Le Odd"), "the same chunk with a whole index is taken")
+	T.clean(h)
+end
+
 return cases
