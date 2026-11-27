@@ -1,104 +1,105 @@
 {
   "round": "r4",
   "images": [
-    "/home/amdo/Projects/rested-leveling/refs/andy_ui_panels.png",
-    "/home/amdo/Projects/rested-leveling/refs/ref_door.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_01_main_default.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_02_main_elvui.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_03_card_default.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_04_card_elvui.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_05_alerts.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_06_compact.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_07_first_run_empty.png",
-    "/home/amdo/Projects/rested-leveling-desk/rounds/r4/img/scene_08_esc_menu.png"
+    "/home/amdo/Projects/rested-leveling-desk/refs-ingame/andy_v112_main.png",
+    "/home/amdo/Projects/rested-leveling-desk/refs-ingame/character_r16.png",
+    "/home/amdo/Projects/rested-leveling-desk/refs-ingame/wow_options_r16.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_01_main_elvui.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_02_main_default.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_03_timeline_elvui.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_04_move_mode_elvui.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_05_alerts_custom_elvui.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_06_card_saved_look_elvui.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_07_options_elvui.png",
+    "/home/amdo/Projects/rested-leveling-desk/rounds-1272/r4/img/scene_08_compact_datatext_elvui.png"
   ],
   "pass": false,
   "judges": {
     "opus": {
       "model": "claude-opus-5-5",
-      "min": 4,
-      "avg": 6.9,
+      "min": 7,
+      "avg": 7.6,
       "below9": {
-        "visual_appeal": 7,
+        "visual_appeal": 8,
         "play_next_clarity": 8,
         "state_colours": 8,
-        "character_identity": 7,
-        "default_theme": 7,
-        "elvui_wc3_fit": 4,
-        "alerts_ux": 8,
+        "character_identity": 8,
+        "default_theme": 8,
+        "elvui_wc3_fit": 7,
+        "alerts_ux": 7,
         "readability": 7,
-        "layout_polish": 6,
-        "delight": 7
+        "layout_polish": 7,
+        "delight": 8
       },
       "scores": {
-        "visual_appeal": 7,
+        "visual_appeal": 8,
         "play_next_clarity": 8,
         "state_colours": 8,
-        "character_identity": 7,
-        "default_theme": 7,
-        "elvui_wc3_fit": 4,
-        "alerts_ux": 8,
+        "character_identity": 8,
+        "default_theme": 8,
+        "elvui_wc3_fit": 7,
+        "alerts_ux": 7,
         "readability": 7,
-        "layout_polish": 6,
-        "delight": 7
+        "layout_polish": 7,
+        "delight": 8
       }
     },
     "sol": {
       "model": "gpt-6.1-sol",
-      "min": 5,
-      "avg": 7.2,
+      "min": 7,
+      "avg": 7.8,
       "below9": {
-        "visual_appeal": 7,
+        "visual_appeal": 8,
         "play_next_clarity": 8,
         "state_colours": 8,
         "character_identity": 8,
-        "default_theme": 7,
-        "elvui_wc3_fit": 5,
+        "default_theme": 8,
+        "elvui_wc3_fit": 8,
         "alerts_ux": 8,
         "readability": 7,
         "layout_polish": 7,
-        "delight": 7
+        "delight": 8
       },
       "scores": {
-        "visual_appeal": 7,
+        "visual_appeal": 8,
         "play_next_clarity": 8,
         "state_colours": 8,
         "character_identity": 8,
-        "default_theme": 7,
-        "elvui_wc3_fit": 5,
+        "default_theme": 8,
+        "elvui_wc3_fit": 8,
         "alerts_ux": 8,
         "readability": 7,
         "layout_polish": 7,
-        "delight": 7
+        "delight": 8
       }
     },
     "grok": {
       "model": "grok-4.7",
-      "min": 5,
-      "avg": 6.6,
+      "min": 6,
+      "avg": 7.1,
       "below9": {
-        "visual_appeal": 6,
+        "visual_appeal": 7,
         "play_next_clarity": 8,
         "state_colours": 7,
-        "character_identity": 7,
-        "default_theme": 6,
-        "elvui_wc3_fit": 5,
+        "character_identity": 8,
+        "default_theme": 7,
+        "elvui_wc3_fit": 6,
         "alerts_ux": 7,
         "readability": 7,
         "layout_polish": 7,
-        "delight": 6
+        "delight": 7
       },
       "scores": {
-        "visual_appeal": 6,
+        "visual_appeal": 7,
         "play_next_clarity": 8,
         "state_colours": 7,
-        "character_identity": 7,
-        "default_theme": 6,
-        "elvui_wc3_fit": 5,
+        "character_identity": 8,
+        "default_theme": 7,
+        "elvui_wc3_fit": 6,
         "alerts_ux": 7,
         "readability": 7,
         "layout_polish": 7,
-        "delight": 6
+        "delight": 7
       }
     }
   }
