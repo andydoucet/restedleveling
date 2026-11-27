@@ -16,19 +16,21 @@ local St, Wg, Wd, U, M = ns.Style, ns.Widgets, ns.Words, ns.Util, ns.Model
 local Card = {}
 ns.Card = Card
 
-local W, STAGE_H, PAD = 460, 300, 22   -- PAD: the band plus a 12 px inset, the same for every section
+local W, STAGE_H, PAD = 460, 250, 22   -- PAD: the band plus a 12 px inset, the same for every section
 local IW = W - PAD * 2
 -- The figure column, in stage pixels from the stage's left edge (the stage is IW = 416 wide, STAGE_H = 300 tall).
 -- FIG_X: the portrait disc's centre right of the stage centre, so its ring starts at Card.FIG_LEFT.
 local FIG_X, DISC = 112, 150
-local MODEL_BOTTOM = 66   -- the live model stops above the name plate and the chip
+local MODEL_BOTTOM = 40   -- the live model stands where the portrait disc stands: waist up
+local FIG_BOTTOM = 40    -- the portrait disc's foot
 Card.FIG_LEFT = math.floor(IW / 2 + FIG_X - DISC * 1.1 / 2)   -- the ring's left edge: 237
 Card.GAP, Card.BUBBLE_LEFT, Card.TAIL = 12, 14, 12   -- clearance; the bubble's left edge; how far the tail sticks out
 Card.MODEL_ZOOM = 0.35   -- PlayerModel:SetPortraitZoom: 0 is the full body, 0.6 Blizzard's head-and-shoulders portrait
 -- The bubble's text width: what is left of the bubble's column after its 12 px insets, the tail and the gap.
 Card.BUBBLE_W = Card.FIG_LEFT - Card.GAP - Card.TAIL - Card.BUBBLE_LEFT - 24
 Card.BUBBLE_TOP = 22
-Card.CONTROLS_BOTTOM = 68   -- "Save my look" sits on the left, above the name plate
+Card.NAME_TOP = 108          -- the left column's name block (name, who and where, chip) reaches this high
+Card.CONTROLS_BOTTOM = 116   -- "Save my look" sits on the left, above the name block
 local TALK, TALK_EXCLAIM = 60, 64   -- AnimationData ids (EmoteTalk, EmoteExclamation): checked with HasAnimation
 local ICONS = {
 	["/played"] = "Interface\\Icons\\INV_Misc_PocketWatch_01", Hearth = "Interface\\Icons\\INV_Misc_Rune_01",
@@ -101,24 +103,18 @@ local function makeStage(f)
 	s.floor = s:CreateTexture(nil, "ARTWORK", nil, 1)
 	s.floor:SetTexture(St.MEDIA .. "glow")   -- a soft shadow under the figure
 	s.floor:SetSize(190, 26)
-	s.floor:SetPoint("BOTTOM", FIG_X, 62)
+	s.floor:SetPoint("BOTTOM", FIG_X, FIG_BOTTOM - 16)
 	s.floor:SetVertexColor(0, 0, 0, 1)
 	s.pedestal = s:CreateTexture(nil, "ARTWORK", nil, 2)   -- a thin bronze line the figure stands on
 	St.Paint(s.pedestal, "sw_lip")
 	s.pedestal:SetSize(150, 2)
-	s.pedestal:SetPoint("BOTTOM", FIG_X, 76)
+	s.pedestal:SetPoint("BOTTOM", FIG_X, FIG_BOTTOM - 2)
 	s.figure = Wg.Portrait(s, DISC)
-	s.figure:SetPoint("BOTTOM", FIG_X, 78)
+	s.figure:SetPoint("BOTTOM", FIG_X, FIG_BOTTOM)
 	for i, z in ipairs(s.zs) do   -- the sleep cluster belongs to the sleeper: just over the disc's top right
 		z:ClearAllPoints()
 		z:SetPoint("BOTTOMLEFT", s.figure, "TOPRIGHT", -34 + i * 9, -14 + i * 5)
 	end
-	s.note = Wg.Text(s, "small", "OVERLAY", 12)   -- beside the crest, under the bubble: why there is no face
-	s.note:SetPoint("BOTTOMRIGHT", s.figure, "BOTTOMLEFT", -20, 8)
-	s.note:SetWidth(160)
-	s.note:SetJustifyH("RIGHT")
-	s.note:SetWordWrap(true)
-	St.Color(s.note, St.CREAM)   -- on the stage art: the full-contrast cream
 	s.settle = s.figure:CreateAnimationGroup()   -- one small settling motion as the card opens
 	local st = s.settle:CreateAnimation("Scale")
 	st:SetScaleFrom(0.96, 0.96)
@@ -167,24 +163,17 @@ local function makeStage(f)
 	s.bubble = b
 	s:EnableMouse(true)
 	s:SetScript("OnMouseUp", function() if f.typer:IsShown() then f.typer.t = 99 end end)
-	-- Name plate: a level badge, the name in class colour, then who and where.
-	-- The figure on the stage is the face; its gold level disc sits on the ring at 4 o'clock.
-	s.lvl = s.figure:CreateTexture(nil, "OVERLAY", nil, 6)
-	St.Paint(s.lvl, "disc_gold")
-	s.lvl:SetSize(24, 24)
-	s.lvl:SetPoint("CENTER", s.figure, "CENTER", -54, -54)   -- 7 o'clock, overlapping the ring a little: attached
-	s.lvlText = Wg.Text(s.figure, "number", "OVERLAY", 14)
-	s.lvlText:SetDrawLayer("OVERLAY", 7)
-	s.lvlText:SetPoint("CENTER", s.lvl)
-	s.lvlText:SetTextColor(0.14, 0.09, 0.03)
-	s.lvlText:SetShadowOffset(0, 0)
-	s.plate = Wg.Text(s, "hero", "OVERLAY", 22)
-	s.plate:SetPoint("BOTTOMLEFT", 14, 36)
-	s.sub = Wg.Text(s, "body", "OVERLAY", 13)
-	s.sub:SetPoint("TOPLEFT", s.plate, "BOTTOMLEFT", 1, -2)
-	St.Color(s.sub, St.CREAM)
+	-- Name block, in the left column beside the figure (under the speech): the name in class colour, who and where
+	-- (the level is in that line: no medallion on the face), then the state chip.
 	s.chip = Wg.Chip(s, 20)
-	s.chip:SetPoint("BOTTOMRIGHT", -14, 40)   -- on the name line, clear of "Seen ..."
+	s.chip:SetPoint("BOTTOMLEFT", Card.BUBBLE_LEFT, 14)
+	s.sub = Wg.Text(s, "body", "OVERLAY", 13)
+	s.sub:SetPoint("BOTTOMLEFT", s.chip, "TOPLEFT", 1, 8)
+	s.sub:SetWidth(Card.FIG_LEFT - Card.GAP - Card.BUBBLE_LEFT)
+	s.sub:SetWordWrap(true)
+	St.Color(s.sub, St.CREAM)
+	s.plate = Wg.Text(s, "hero", "OVERLAY", 22)
+	s.plate:SetPoint("BOTTOMLEFT", s.sub, "TOPLEFT", -1, 3)
 	s.lookBox = ns.Look.CardControls(s)   -- "Save my look", under the bubble: the character you are on only
 	s.lookBox:SetPoint("BOTTOMLEFT", Card.BUBBLE_LEFT, Card.CONTROLS_BOTTOM)
 	return s
@@ -239,14 +228,14 @@ function Card.Create()
 	f.box = CreateFrame("Frame", nil, f, "BackdropTemplate")
 	f.stage = makeStage(f)
 	f.stage:SetFrameLevel(f.box:GetFrameLevel() + 1)
-	f.bar = Wg.BubbleBar(f.box, IW - 28, 10, 30)
+	f.bar = Wg.BubbleBar(f.box, IW - 28, 14, 30)
 	f.bar:SetPoint("TOPLEFT", f.stage, "BOTTOMLEFT", 12, -10)
 	f.why = Wg.Text(f.box, "body", nil, 13)
 	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 0, -8)
 	f.why:SetWidth(IW - 24)
 	f.box:SetPoint("TOPLEFT", f.stage, "TOPLEFT")
 	f.box:SetPoint("TOPRIGHT", f.stage, "TOPRIGHT")
-	f.box:SetPoint("BOTTOM", f.why, "BOTTOM", 0, -8)
+	f.box:SetHeight(STAGE_H + 10 + 18 + 8 + 36 + 8)   -- stage, bar, its two-line rest text: never anchored to its own child
 	St.Panel(f.box, "inset")
 	f.why:SetHeight(36)
 	f.why:SetJustifyV("TOP")
@@ -272,7 +261,7 @@ function Card.Create()
 		b.hook:SetText(hook:sub(1, n))
 		b.text:SetText(n > #hook and text:sub(1, n - #hook) or "")
 		local talking = n < #hook + #text
-		f.stage.figure:SetPoint("BOTTOM", FIG_X, 78 + (talking and math.abs(math.sin(self.t * 14)) * 3 or 0))
+		f.stage.figure:SetPoint("BOTTOM", FIG_X, FIG_BOTTOM + (talking and math.abs(math.sin(self.t * 14)) * 3 or 0))
 		if not talking then b.hook:SetText(hook); b.text:SetText(text); Card.FitBubble(f.stage); self:Hide() end
 	end)
 	f:HookScript("OnHide", function() ns.selectedKey = nil; if ns.Main then ns.Main.Refresh() end end)
@@ -281,13 +270,12 @@ function Card.Create()
 	return f
 end
 
--- The bubble wraps to as many lines as the line needs and grows down the stage; only if it would then reach the note
--- (or the card's buttons, or the name plate) does it drop one font step. Never "...". Sized for the full line while it
+-- The bubble wraps to as many lines as the line needs and grows down the stage; only if it would then reach the card's
+-- buttons or the name block does it drop one font step. Never "...". Sized for the full line while it
 -- types out.
 Card.BUBBLE_SIZES = { { 17, 13 }, { 15, 12 } }   -- hook and facts: the normal size, then one step down
 function Card.BubbleRoom(s)   -- px the bubble may take from its top (inside the 10 px top inset) to what is below it
-	local floor = 84   -- the name plate's top
-	if s.note:IsShown() then floor = 86 + s.note:GetStringHeight() + 8 end   -- the note's top
+	local floor = Card.NAME_TOP + 8   -- the name block's top
 	if s.lookBox:IsShown() then floor = Card.CONTROLS_BOTTOM + s.lookBox:GetHeight() + 8 end   -- the buttons' top
 	return STAGE_H - Card.BUBBLE_TOP - floor
 end
@@ -459,38 +447,28 @@ function Card.Show(key)
 	s.model:SetShown(modelShown)
 	s.figure:SetShown(not modelShown)
 	s.floor:SetShown(not modelShown and not host)   -- under a host skin: no floor shadow or bronze rule
-	s.note:SetShown(not modelShown)
 	s.pedestal:SetShown(false)   -- no rule under the portrait
 	if not modelShown then
-		-- The saved look, or the class crest with the race emblem. Only the crest needs a note (why there is no face);
-		-- under a face it would repeat the meta line.
-		local kind = Wg.SetPortrait(s.figure, c, false, state)
-		s.note:SetShown(kind ~= "look")
-		s.note:SetText(Card.OfflineNote(c))
-		Wg.Balance(s.note, 160)   -- no "them." alone on the last line
-		St.Paint(s.lvl, host and "disc_dark" or "disc_gold")   -- under ElvUI a restrained dark disc, not a gold medallion
-		s.lvlRing = s.lvlRing or s.figure:CreateTexture(nil, "OVERLAY", nil, 7)
-		St.Paint(s.lvlRing, "ring_bronze")
-		s.lvlRing:SetAllPoints(s.lvl)
-		s.lvlRing:SetShown(host)   -- a thin bronze ring so it reads on the dark stage
-		s.lvlText:SetTextColor(unpack(host and { 0.95, 0.90, 0.77 } or { 0.14, 0.09, 0.03 }))
+		-- The saved look, or the class crest with the race emblem; the name block beside it says who.
+		Wg.SetPortrait(s.figure, c, false, state)
 		s.breathe:Play()
 	end
 	ns.Look.UpdateCardControls(s.lookBox, key, isMe)
 	s.plate:SetText(St.ClassText(c.class, c.full or "?"))
-	s.lvlText:SetText(c.level or "?")
 	local raceName = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
 	local className = c.class and (c.class:sub(1, 1) .. c.class:sub(2):lower()) or ""
 	local tag = St.AccountTag(c)
 	local crest = c.class and ("|A:classicon-" .. c.class:lower() .. ":14:14|a ") or ""
 	local ago = now - (c.t or now)
 	local days = math.floor(ago / 86400)
-	s.sub:SetText(("%sLevel %s %s %s  ·  Seen %s ago%s"):format(crest, c.level or "?", raceName, className,
+	s.sub:SetText(("%sLevel %s %s %s\nSeen %s ago%s"):format(crest, c.level or "?", raceName, className,
 		days >= 1 and (days .. (days == 1 and " day" or " days")) or U.Long(ago), tag and ("  ·  " .. tag) or ""))
 	Wg.SetChip(s.chip, isMe and "resting" or state, isMe and "NOW PLAYING" or Wd.Chip(row))
 	Wg.SetBubbleBar(f.bar, p and p.pct or 0, state, false)
-	f.why:SetText(isMe and "This is the character you're on." or Wd.Why(row, now))   -- ends with the real-life time to full
-	Wg.Balance(f.why, IW - 24)
+	-- Two deliberate lines: where and how much, then the real-life time to full.
+	local why = isMe and "This is the character you're on." or Wd.Why(row, now)
+	f.why:SetWidth(IW - 24)
+	f.why:SetText((why:gsub("%.%s+(Full [^%.]*%.?)$", ".\n%1")))
 	local n = fillTiles(f, c, now)
 	-- Sit next to the main window, top edges level.
 	f:ClearAllPoints()
@@ -504,16 +482,6 @@ function Card.Show(key)
 	Card.opens = Card.opens or {}
 	Card.opens[key] = (Card.opens[key] or 0) + 1
 	talk(f, ns.Lines.Parts(row, now, isMe, Card.opens[key] % 2 == 1 and 0 or 2))
-end
-
--- Under the crest of a character that is not logged in: "Last seen as a level 46 Gnome Warrior. Log in to see them."
--- With a saved look the face is theirs, so only the first sentence.
-function Card.OfflineNote(c)
-	local race = c.race == "Scourge" and "Undead" or (c.race and c.race:gsub("(%l)(%u)", "%1 %2")) or ""
-	local class = c.class and (c.class:sub(1, 1) .. c.class:sub(2):lower()) or ""
-	local who = (race .. " " .. class):gsub("^%s+", ""):gsub("%s+$", "")
-	local line = ("Last seen as a level %s %s."):format(c.level or "?", who ~= "" and who or "character")
-	return c.look and line or (line .. " Log in to see them.")
 end
 
 ns.ShowDetail = Card.Show

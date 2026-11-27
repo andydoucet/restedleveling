@@ -21,7 +21,7 @@ local function altLine(f)
 	f.alt = Wg.Portrait(f, A.ROW_H)
 	f.altText = Wg.Text(f, "small", nil, 13)
 	St.Color(f.altText, St.SECOND)
-	f.altBtn = St.MakeButton(f, 72, "Details", false, A.ROW_H)
+	f.altBtn = St.MakeButton(f, 104, "View details", false, A.ROW_H)   -- the main window's wording
 	f.altBtn:SetScript("OnClick", function(self) if self.key and ns.ShowDetail then ns.ShowDetail(self.key) end end)
 	f.altBtn:SetScript("OnEnter", function(self)
 		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
@@ -60,9 +60,10 @@ local function layoutAlt(f, left, top)
 	f.altBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -A.INSET, -top)
 	f.altText:ClearAllPoints()
 	f.altText:SetPoint("LEFT", f.alt, "RIGHT", 12, 0)
-	f.altText:SetPoint("RIGHT", f.altBtn, "LEFT", -10, 0)
+	local btn = f.altBtn:IsShown() and (f.altBtn:GetWidth() + 10) or 0   -- the Esc card has no button: the text takes it
+	f.altText:SetPoint("RIGHT", f, "RIGHT", -A.INSET - btn, 0)
 	if f.altLine then
-		Wg.Fit(f.altText, f.altLine, f:GetWidth() - left - A.ROW_H - 12 - 10 - f.altBtn:GetWidth() - A.INSET)
+		Wg.Fit(f.altText, f.altLine, f:GetWidth() - left - A.ROW_H - 12 - btn - A.INSET)
 	end
 	return top + A.ROW_H
 end
@@ -113,15 +114,15 @@ function A.Banner()
 	f.title = Wg.Text(f, "name", nil, 15)
 	f.title:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 12, 0)
 	f.title:SetWidth(360)
-	f.text = Wg.Text(f, "body", nil, 13)   -- the situation, secondary; the instruction under it leads
-	f.text:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -3)
-	f.text:SetWidth(400)
-	St.Color(f.text, St.SECOND)
 	f.action = Wg.Text(f, "name", nil, 13)   -- the second step
-	f.action:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -3)
+	f.action:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -4)   -- the instruction first, under its title
 	f.action:SetWidth(420)   -- the inn guidance on one line where it can be
 	f.action:SetWordWrap(true)
 	St.Color(f.action, St.CREAM)   -- only "4x slower" is coloured
+	f.text = Wg.Text(f, "body", nil, 12)   -- the situation, secondary, after the instruction
+	f.text:SetPoint("TOPLEFT", f.action, "BOTTOMLEFT", 0, -3)
+	f.text:SetWidth(400)
+	St.Color(f.text, St.SECOND)
 	altLine(f)
 	f.close = closeButton(f)   -- a 32 px column on the right holds close and options
 	f.options = optionsButton(f, "logout")
@@ -198,9 +199,10 @@ local function toastFrame(i)
 	f.kicker = Wg.Text(f, "name", nil, 12)   -- what happened (the trigger), in amber; the line under it says what to do
 	f.kicker:SetPoint("TOPLEFT", 76, -11)
 	f.kicker:SetWidth(A.WIDTH - 118)   -- clear of the close button
-	f.kicker:SetTextColor(0.90, 0.64, 0.27)
-	f.text = Wg.Text(f, "name", nil, 15)
-	f.text:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -3)
+	f.kicker:SetTextColor(0.82, 0.55, 0.23)
+	f.text = Wg.Text(f, "name", nil, 15)   -- the advice: cream, after a 6 px gap from its cause
+	f.text:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -6)
+	St.Color(f.text, St.CREAM)
 	f.text:SetWidth(A.WIDTH - 104)
 	f.sub = Wg.Text(f, "body", nil, 12)
 	f.sub:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -3)
@@ -265,6 +267,7 @@ end
 local function chat(kind, text) if enabled(kind) then U.Print(text) end end
 
 -- The Esc-menu strip: informational only, under the Game Menu while not resting and no banner is up.
+A.MENU_ICON = "Interface\\Icons\\Spell_Nature_Sleep"   -- the Esc card's moon (and its placeholder's in move mode)
 A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 420, 460, 12   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
 function A.MenuStrip()
 	if A.strip or not GameMenuFrame then return A.strip end
@@ -277,20 +280,27 @@ function A.MenuStrip()
 	GameMenuFrame:HookScript("OnHide", function() f:Hide() end)
 	f:SetSize(A.STRIP_MAX, 112)   -- A.LayoutStrip sizes it from the menu on every show
 	surface(f, "toast", "outside")   -- a neutral panel: it must not read as another red menu button
+	-- Its own shape, so it never reads as a second banner: an ESC MENU tag, a moon, one instruction, and the next
+	-- character without a button (the menu is open: the window is one click away).
 	f.icon = f:CreateTexture(nil, "ARTWORK")
-	f.icon:SetSize(24, 24)
-	f.icon:SetPoint("TOPLEFT", 18, -14)
-	f.icon:SetTexture(St.PLACE.inn.icon)   -- an inn, not the banner's warning sign: the two read apart at a glance
+	f.icon:SetSize(26, 26)
+	f.icon:SetPoint("TOPLEFT", 18, -28)
+	f.icon:SetTexture(A.MENU_ICON)
 	f.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-	f.text = Wg.Text(f, "name", nil, 15)   -- the same pattern as the banner: what to do, then who and how
+	f.tag = Wg.Text(f, "label", nil, 11)
+	f.tag:SetPoint("TOPLEFT", 18, -11)
+	f.tag:SetText("ESC MENU")
+	f.tag:SetTextColor(0.89, 0.70, 0.29)
+	f.text = Wg.Text(f, "name", nil, 15)
 	f.text:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, 0)
 	f.text:SetTextColor(0.98, 0.55, 0.15)
 	f.text:SetText("Find an inn before you log out")
 	f.who = Wg.Text(f, "name", nil, 13)
 	f.who:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -4)
 	St.Color(f.who, St.CREAM)
+	f.who:Hide()   -- the instruction says it: one line, not the banner's three
 	f.action = Wg.Text(f, "name", nil, 13)
-	f.action:SetPoint("TOPLEFT", f.who, "BOTTOMLEFT", 0, -3)
+	f.action:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -4)
 	St.Color(f.action, St.CREAM)
 	altLine(f)
 	f.close = closeButton(f)
@@ -332,6 +342,7 @@ function A.OnMenuShown()
 			f.who:SetText(((me and me.full) or "This character") .. " is outside a rest area.")
 			f.action:SetText(me and me.bind and ("Hearth to %s or find an inn."):format(me.bind) or "Hearth or find an inn.")
 			setAlt(f, nextUp())   -- the alt and whether nobody has rest banked
+			f.altBtn:Hide()
 			A.LayoutStrip(f)
 			relayout(f, A.LayoutStrip)
 		end
@@ -348,7 +359,7 @@ function A.LayoutStrip(f)
 		f:ClearAllPoints()
 		f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
 	end
-	local top = 14 + f.text:GetStringHeight() + 4 + f.who:GetStringHeight() + 3 + f.action:GetStringHeight() + 8
+	local top = 28 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
 	local bottom = f.alt:IsShown() and layoutAlt(f, 54, top) or (top - 8)   -- 54: under the text, right of the icon
 	f:SetHeight(bottom + 12)
 end

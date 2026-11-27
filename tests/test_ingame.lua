@@ -43,7 +43,7 @@ function cases.button_labels_draw_above_the_hover_face()
 	for i, b in ipairs(buttons) do
 		T.eq(b.hl:GetDrawLayer(), "HIGHLIGHT", "button " .. i .. ": hover face on the highlight layer")
 		T.ok(b.hl:GetParent() == b, "button " .. i .. ": hover face belongs to the button")
-		local text = b.label or b.x
+		local text = b.label or b.x   -- the close cross
 		local holder = text:GetParent()
 		T.ok(holder ~= b, "button " .. i .. ": label not on the button itself")
 		T.ok(holder:GetParent() == b, "button " .. i .. ": label on a child of the button")
@@ -167,8 +167,7 @@ function cases.card_stage_is_live_only_for_the_character_you_are_on()
 	local card = h.Env().RestedLevelingCard
 	T.ok(not card.stage.model:IsShown(), "no 3D lookalike for Le Jette")
 	T.ok(card.stage.figure:IsShown(), "her crest instead")
-	T.ok(card.stage.note:IsShown(), "with a note saying why")
-	T.eq(card.stage.note:GetText(), "Last seen as a level 46 Gnome Warrior. Log in to see them.", "the note")
+	T.has(card.stage.sub:GetText(), "Level 46 Gnome Warrior", "level, race and class in the name block")
 	T.clean(h)
 end
 
@@ -179,7 +178,6 @@ function cases.card_for_the_character_you_are_on_is_the_live_model()
 	local card = h.Env().RestedLevelingCard
 	T.ok(card.stage.model:IsShown(), "Le Nette stands on the stage as herself")
 	T.ok(not card.stage.figure:IsShown(), "no crest figure")
-	T.ok(not card.stage.note:IsShown(), "no offline note")
 	T.clean(h)
 end
 
@@ -189,7 +187,7 @@ function cases.card_rest_line_shows_real_time_and_explains_itself()
 	h.Slash("RESTEDLEVELING", "")
 	FakeWoW.RunScript(h.Env().RestedLevelingMain.hero, "OnClick")
 	local card = h.Env().RestedLevelingCard
-	T.has(card.why:GetText(), "Resting at Feathermoon Stronghold inn. Nothing banked yet. Full in 9d 23h (", "real-life time to full")
+	T.has(card.why:GetText(), "Resting at Feathermoon Stronghold inn. Nothing banked yet.\nFull in 9d 23h (", "two lines: where, then the real-life time to full")
 	local tip = h.Env().GameTooltip
 	local lines = {}
 	tip.AddLine = function(_, text) lines[#lines + 1] = text end
@@ -228,7 +226,9 @@ function cases.hero_with_rest_names_the_current_character_in_first_hearth()
 	h.Slash("RESTEDLEVELING", "")
 	local hero = h.Env().RestedLevelingMain.hero
 	T.eq(hero.kicker:GetText(), "#1  ·  PLAY NEXT", "rest banked: play next")
-	T.eq(strip(hero.cta:GetText()), "First: hearth Le Nette to an inn. Then: play Le Jette.", "hearth is about Le Nette")
+	T.eq(strip(hero.steps[1].text:GetText()), "Le Nette: hearth to an inn", "step 1 is about Le Nette")
+	T.eq(strip(hero.steps[2].text:GetText()), "Le Jette: play next", "step 2 is who to play")
+	T.ok(hero.steps[1].disc:IsShown() and not hero.cta:IsShown(), "numbered steps, not one sentence")
 	T.has(hero.why:GetText(), "Full in ", "real-life time to full")
 	T.clean(h)
 end

@@ -22,7 +22,7 @@ end
 
 -- The roster's column grid (x offsets inside a row), shared with the current-character strip so bars line up.
 -- rank | portrait | name + sub | bar + caption | state chip | Well Rested moons
-Wg.COL = { rank = 4, portrait = 32, text = 94, bar = 330, chip = 596 }   -- the Well Rested moons sit on the bar's caption line
+Wg.COL = { rank = 4, portrait = 32, text = 94, bar = 350, chip = 596 }   -- the Well Rested moons sit on the bar's caption line
 
 -- Drop a trailing partial UTF-8 character (a lead byte without all its continuation bytes) left by a byte cut.
 local function dropPartial(t)

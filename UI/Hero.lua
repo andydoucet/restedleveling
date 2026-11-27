@@ -86,16 +86,15 @@ function Hero.Create(parent, w, h)
 	-- The figure and its unit read as one ("1.5 LEVELS BANKED"), right-aligned on the bar's right end, under the name's
 	-- size so the name leads.
 	f.stat = Wg.Text(f, "hero", nil, 38)
-	f.stat:SetPoint("TOPRIGHT", -20, -16)
+	f.stat:SetPoint("TOPRIGHT", -20, -30)   -- the figure, its unit and its state chip: one group centred on the portrait
 	f.stat:SetJustifyH("RIGHT")
 	f.statSub = text(f, "label", 12, St.CREAM)
 	f.statSub:SetPoint("TOPRIGHT", f.stat, "BOTTOMRIGHT", 0, -2)   -- one right edge for the figure, unit and runner-up
 	f.statSub:SetJustifyH("RIGHT")
-	f.ahead = text(f, "small", 12, St.MUTED)   -- the runner-up, read last: fills the column under the figure
-	f.ahead:SetPoint("TOPRIGHT", f.statSub, "BOTTOMRIGHT", 0, -8)
-	f.ahead:SetJustifyH("RIGHT")
+	f.chip:ClearAllPoints()   -- the #1's state, as a tag under its figure ("FULL")
+	f.chip:SetPoint("TOPRIGHT", f.statSub, "BOTTOMRIGHT", 0, -8)
 	f.acct = Wg.Text(f, "label", nil, 11)
-	f.acct:SetPoint("TOPRIGHT", f.ahead, "BOTTOMRIGHT", 0, -4)
+	f.acct:SetPoint("TOPRIGHT", f.chip, "BOTTOMRIGHT", 0, -6)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 
 	Hero.BAR_W = w - 168 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
@@ -118,7 +117,8 @@ function Hero.Create(parent, w, h)
 	fa:SetDuration(0.5)
 	f.why = text(f, "body", 14, St.CREAM)
 	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -8)
-	f.why:SetWidth(Hero.BAR_W)
+	f.waste = text(f, "body", 14, { r = 0.89, g = 0.70, b = 0.29 })   -- the reason to switch, in amber, not success green
+	f.waste:SetPoint("LEFT", f.why, "RIGHT", 6, 0)
 
 	-- The action bar: what to do next, and the card button.
 	f.action = CreateFrame("Frame", nil, f, "BackdropTemplate")
@@ -133,6 +133,26 @@ function Hero.Create(parent, w, h)
 	f.actionRule:SetHeight(1)
 	f.cta = text(f.action, "name", 16, { r = 0.95, g = 0.89, b = 0.69 })   -- cream: the names in it keep their class colours
 	f.cta:SetPoint("LEFT", 22, 0)
+	-- The plan as two numbered steps (Words.Steps): a gold disc with the step's number, then its line.
+	f.steps = {}
+	for i = 1, 2 do
+		local disc = f.action:CreateTexture(nil, "ARTWORK")
+		St.Paint(disc, "disc_gold")
+		disc:SetSize(20, 20)
+		local n = Wg.Text(f.action, "number", nil, 13)
+		n:SetPoint("CENTER", disc, "CENTER", 0, 0)
+		n:SetText(i)
+		n:SetTextColor(0.12, 0.08, 0.03)
+		n:SetShadowOffset(0, 0)
+		local t = text(f.action, "name", 15, { r = 0.95, g = 0.89, b = 0.69 })
+		t:SetPoint("LEFT", disc, "RIGHT", 8, 0)
+		f.steps[i] = { disc = disc, n = n, text = t }
+	end
+	f.steps[1].disc:SetPoint("LEFT", 18, 0)
+	f.steps[2].disc:SetPoint("LEFT", f.steps[1].text, "RIGHT", 22, 0)
+	f.ahead = text(f.action, "small", 12, { r = 0.85, g = 0.78, b = 0.60 })   -- the runner-up: the plan's step 3
+	f.ahead:SetPoint("RIGHT", -136, 0)
+	f.ahead:SetJustifyH("RIGHT")
 	f.open = St.MakeButton(f.action, 120, "View card", true)
 	f.open:SetPoint("RIGHT", -8, 0)
 	f.ctaW = w - 6 - 22 - 120 - 8 - 12   -- from its inset to 12 px short of the button
@@ -157,8 +177,8 @@ function Hero.Create(parent, w, h)
 end
 
 local function setShown(f, on)
-	f.chip:Hide()   -- the bar and the one line already say the state
-	for _, k in ipairs({ "bar", "why", "ahead", "sub", "acct", "stat", "statSub", "action", "badge", "badgeRing", "badgeText", "say" }) do
+	for _, k in ipairs({ "bar", "why", "ahead", "sub", "acct", "stat", "statSub", "action", "badge", "badgeRing", "badgeText", "say",
+		"chip", "waste" }) do
 		f[k]:SetShown(on)
 	end
 	f.quote:SetShown(not on)
@@ -239,10 +259,14 @@ function Hero.Update(f, row, now, me, rows, empty)
 		f.statSub:SetText("UNTIL FULL")
 		f.why:SetText(("Nobody is rested yet. %s fills first: Full in %s."):format(c.full or "?", U.Duration(p.left)))
 		f.ahead:SetText("full " .. Wd.When(now + p.left, now))   -- the clock time under the wait
+		f.waste:SetText("")
 	else
 		f.stat:SetText(("%.1f"):format(math.floor(p.levels * 10 + 0.5) / 10))
 		f.statSub:SetText(p.levels >= 0.95 and p.levels < 1.05 and "LEVEL BANKED" or "LEVELS BANKED")
-		f.why:SetText(Wd.HeroWhy(row, now))   -- the state, then the real-life time to full
+		-- the state, then the real-life time to full; a full #1's "more rest is wasted" in amber after it
+		local why, waste = Wd.HeroWhy(row, now):match("^(.-)%s+·%s+(.+)$")
+		f.why:SetText(why or Wd.HeroWhy(row, now))
+		f.waste:SetText(waste and ("·  " .. waste) or "")
 		f.ahead:SetText(rows and Wd.Ahead(rows, now) or "")
 	end
 	f.stat:SetTextColor(0.96, 0.86, 0.58)   -- one warm cream-gold figure in both themes; the accent and bar carry state
@@ -250,7 +274,13 @@ function Hero.Update(f, row, now, me, rows, empty)
 	-- The next step. Any "first, ..." is about the character you are on, never the one to play next.
 	local name = St.ClassText(c.class, c.full or "them")
 	local meName = me and St.ClassText(me.class, me.full or "this character") or nil
-	Hero.FitAction(f, Wd.Action(name, meName, ns.Snap.RestingNow(), empty))
+	local s1, s2 = Wd.Steps(name, meName, ns.Snap.RestingNow(), empty)
+	f.cta:SetShown(s1 == nil)
+	for i, st in ipairs(f.steps) do
+		for _, k in ipairs({ "disc", "n", "text" }) do st[k]:SetShown(s1 ~= nil) end
+		st.text:SetText(i == 1 and s1 or s2 or "")
+	end
+	if not s1 then Hero.FitAction(f, Wd.Action(name, meName, ns.Snap.RestingNow(), empty)) end
 	f.open:SetLabel("View details")   -- the name is right above it
 	local tag = St.AccountTag(c)
 	f.acct:SetText(tag and (c.src == "sync" and (tag .. " · synced") or tag) or "")
