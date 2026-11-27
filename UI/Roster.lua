@@ -196,8 +196,10 @@ local function fillRow(row, r, n, now, calibrated, alt)
 	local ago = U.Ago(now - (c.t or now))
 	local place = Wd.ShortPlace(c)
 	local room = COL.bar - COL.text - 14
+	-- "Lv 6 Warlock · Thunderbrew inn · 2d ago": the class in words too, so alts with one family name part at a glance
+	local lv = ("Lv %d%s"):format(c.level or 0, c.class and (" " .. c.class:sub(1, 1) .. c.class:sub(2):lower()) or "")
 	if place then
-		row.sub:SetText(("Lv %d  ·    ·  %s"):format(c.level or 0, ago))
+		row.sub:SetText(("%s  ·    ·  %s"):format(lv, ago))
 		local fixed = row.sub:GetStringWidth()
 		local fitted
 		for _, form in ipairs(Wd.PlaceForms(place)) do
@@ -205,9 +207,9 @@ local function fillRow(row, r, n, now, calibrated, alt)
 			if row.sub:GetStringWidth() <= room - fixed then fitted = form break end
 		end
 		fitted = fitted or Wg.Fit(row.sub, place, math.max(30, room - fixed))
-		row.sub:SetText(("Lv %d  ·  %s  ·  %s"):format(c.level or 0, fitted, ago))
+		row.sub:SetText(("%s  ·  %s  ·  %s"):format(lv, fitted, ago))
 	else
-		row.sub:SetText(("Lv %d  ·  %s"):format(c.level or 0, ago))
+		row.sub:SetText(("%s  ·  %s"):format(lv, ago))
 	end
 	row.bar:SetShown(p ~= nil and not grey)
 	if p and not grey then Wg.SetBubbleBar(row.bar, p.pct, r.state, not calibrated) end

@@ -223,7 +223,7 @@ function cases.the_bubble_stays_left_of_the_figure_on_every_card()
 	for _, p in ipairs(s.model.__points) do pts[p[1]] = p end
 	T.ok(pts.BOTTOMLEFT and pts.BOTTOMLEFT[4] == Card.FIG_LEFT, "the model starts at the figure column")
 	T.ok(pts.TOPRIGHT, "and runs to the stage's right edge")
-	T.ok(pts.BOTTOMLEFT[5] >= 60, "its bottom above the name plate: the model is cut at the waist, not the feet")
+	T.ok(pts.BOTTOMLEFT[5] >= 40, "its foot where the portrait stands: the model is cut at the waist, not the feet")
 	-- the disc's ring starts at the figure column too
 	local fig = s.figure.__points[#s.figure.__points]
 	T.ok(416 / 2 + fig[2] - s.figure:GetWidth() * 1.1 / 2 >= Card.FIG_LEFT, "the portrait's ring inside the figure column")
@@ -270,7 +270,7 @@ function cases.the_hero_action_line_is_never_cut()
 	local h, state = world()
 	h.Slash("RESTEDLEVELING", "")
 	local Hero, hero = state.ns.Hero, h.Env().RestedLevelingMain.hero
-	T.ok(hero.cta:GetText() and #hero.cta:GetText() > 10, "an action line")
+	T.ok(hero.steps[1].text:GetText() and #hero.steps[1].text:GetText() > 10, "the plan's first step")
 	local lines = {
 		"First: log |cffc69b6dLe Jedde|r out here. Then: play |cffc69b6dLe Jette|r.",
 		"First: hearth |cffc69b6dColonol Sunders|r to an inn. Then: play |cff3fc7ebAmdo Moto|r.",

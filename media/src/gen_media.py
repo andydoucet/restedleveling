@@ -195,7 +195,7 @@ def fade_h(w=256, h=8):
 PAL = {
     "body": (18, 15, 12), "panel": (56, 43, 30), "inset": (40, 31, 23), "strip": (48, 37, 26), "warn": (34, 14, 12),
     "well": (11, 9, 8), "bronze": (112, 88, 56), "bronze_hi": (176, 138, 76), "line": (58, 49, 38), "parch": (240, 227, 196),
-    "ink": (52, 34, 18), "gold": (206, 160, 74), "black": (0, 0, 0), "row0": (37, 29, 20), "row1": (43, 34, 24),
+    "ink": (52, 34, 18), "gold": (206, 160, 74), "black": (0, 0, 0), "row0": (36, 28, 19), "row1": (47, 37, 26),
     "toast": (24, 20, 16), "iron": (23, 25, 27), "lip": (128, 96, 57), "btn": (30, 23, 15), "btn_hi": (46, 36, 22),
     "enamel": (110, 28, 28), "enamel_hi": (150, 44, 38), "rule": (107, 82, 38), "top": (58, 46, 28), "ghost": (40, 35, 28),
     "div": (60, 46, 30), "bronze_btn": (89, 69, 39), "bevel_hi": (150, 116, 66), "bevel_lo": (36, 28, 18), "band": (30, 24, 19), "bubble": (28, 25, 20), "bubble_edge": (107, 83, 68), "edge": (74, 54, 32), "host_well": (21, 16, 11), "host_stage": (26, 18, 12), "host_line": (42, 33, 24),
@@ -418,6 +418,7 @@ if __name__ == "__main__":
     rail()
     enamel("btn_red", (142, 30, 30))
     enamel("btn_blue", (30, 58, 142))
+    enamel("btn_bronze", (106, 75, 36))   # the default theme's main action: a lighter bronze than the frame
     rings()
     chips()
     print("media written to", OUT)

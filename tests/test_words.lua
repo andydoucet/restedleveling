@@ -199,4 +199,13 @@ function cases.fit_never_leaves_half_a_character()
 	T.clean(h)
 end
 
+function cases.the_plan_is_two_steps_each_led_by_its_character()
+	local Wd = load().Words
+	local a, b = Wd.Steps("Le Dette", "Le Jette", false, false)
+	T.eq(a, "Le Jette: hearth to an inn", "step 1: the one you are on, outside")
+	T.eq(b, "Le Dette: play next", "step 2: who to play")
+	T.eq((Wd.Steps("Le Dette", "Le Jette", true, false)), "Le Jette: log out here", "already resting: log out here")
+	T.eq(Wd.Steps("Le Dette", "Le Jette", false, true), nil, "nobody to switch to: no plan")
+end
+
 return cases

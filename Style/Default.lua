@@ -90,8 +90,8 @@ function D.Chrome(frame, title)
 		frame.rlTitle:SetPoint("CENTER", frame, "TOP", 11, -(St.BAND + St.RAIL_H / 2) + 1)   -- the icon-and-title group is centred
 		frame.rlTitle:SetTextColor(0.94, 0.78, 0.38)   -- gold on the rail
 		frame.rlMoon = frame:CreateTexture(nil, "OVERLAY")
-		frame.rlMoon:SetTexture(St.MEDIA .. "icon")
-		frame.rlMoon:SetSize(20, 20)
+		frame.rlMoon:SetTexture(St.MEDIA .. "moon_gold")   -- a crisp gold moon, not the shrunken logo
+		frame.rlMoon:SetSize(16, 16)
 		frame.rlMoon:SetPoint("RIGHT", frame.rlTitle, "LEFT", -10, 0)
 	end
 	St.Font(frame.rlTitle, "title", 15)
@@ -125,7 +125,8 @@ function D.Close(btn) end
 -- dark lip, so it leads without a second colour. Red is kept for the "not resting" state alone.
 -- enamel: secondary buttons in blue enamel (the ElvUI path); otherwise they are quiet bronze ghosts on our oak.
 function D.MakeButton(parent, w, label, primary, h, enamel)
-	local face = enamel and "btn_blue" or "sw_bronze_btn"
+	-- our oak: the main action is a warmer, lighter bronze, so it lifts off the frame; the rest a dark bronze
+	local face = enamel and "btn_blue" or (primary and "btn_bronze" or "sw_bronze_btn")
 	local b = CreateFrame("Button", nil, parent, "BackdropTemplate")
 	b:SetSize(w, h or 24)
 	St.Backdrop(b, face, primary and "sw_gold" or "sw_lip", 1)
@@ -172,11 +173,12 @@ function D.MakeClose(parent)
 	b.hl:SetVertexColor(1, 1, 1, 0.35)
 	b.face = CreateFrame("Frame", nil, b)   -- the cross above the hover face, as on every button
 	b.face:SetAllPoints()
-	b.x = b.face:CreateFontString(nil, "OVERLAY")
-	D.Font(b.x, "number", 15)
-	b.x:SetPoint("CENTER", 0, 1)
-	b.x:SetText("X")
-	b.x:SetTextColor(0.96, 0.89, 0.77)
+	b.x = b.face:CreateTexture(nil, "OVERLAY")   -- a drawn cross (the game's own), in cream: not a letter X
+	b.x:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
+	b.x:SetDesaturated(true)
+	b.x:SetVertexColor(0.98, 0.92, 0.80, 1)
+	b.x:SetSize(14, 14)
+	b.x:SetPoint("CENTER")
 	b:SetScript("OnClick", function() parent:Hide() end)
 	return b
 end

@@ -1,74 +1,76 @@
 {
   "scores": {
-    "visual_appeal": 7,
+    "visual_appeal": 8,
     "play_next_clarity": 8,
     "state_colours": 8,
     "character_identity": 8,
-    "default_theme": 7,
-    "elvui_wc3_fit": 5,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
     "alerts_ux": 8,
     "readability": 7,
     "layout_polish": 7,
-    "delight": 7
+    "delight": 8
   },
   "changes": {
     "visual_appeal": [
-      "Reduce competing ornament: keep the state rail and chip, but remove the repeated vertical ticks from XP bars. Use a smooth fill with a 1 px dark border and a restrained top highlight.",
-      "Give the hero a deliberate focal hierarchy: 26 px character name, 30 px banked-level figure, 14 px supporting copy. Move its explanation immediately under the figure rather than leaving several small lines scattered across the panel.",
-      "Replace the conspicuous bright corner dots with shaded bronze rivets approximately 4\u20135 px across, seated inside iron corner plates. The current perimeter reads more like a studded picture frame than substantial Warcraft hardware."
+      "Reduce competing hero accents: retain the green state rail and portrait ring, but lower the full bar's saturation approximately 15% and make its internal tick marks 20% opacity. The large green rectangle currently competes with the recommended character's name.",
+      "Use one 14 px body treatment and one 12 px secondary treatment across the main window. The current mixture of bold metadata, gold headings, segmented bars and outlined chips makes nearly every element demand attention.",
+      "Give the hero's plan strip 12 px horizontal padding and at least 8 px vertical padding; its contents currently read as a tightly packed toolbar rather than a considered recommendation."
     ],
     "play_next_clarity": [
-      "Do not universally instruct 'log out, then play Le Nette' while the current character is explicitly outside an inn. In this state use 'First: hearth or reach an inn. Then play Le Nette.' Keep the recommendation visible without contradicting the addon's central objective.",
-      "Replace '1d ahead of Le Beouf (full for 8h)' with an explicit comparison such as 'Full longest \u00b7 Le Beouf became full 8h ago'. Explain the actual ranking criterion in a tooltip; the current comparison mixes elapsed full time with an unexplained lead.",
-      "Rename 'Open card' to 'View Le Nette' and give it a 112 \u00d7 28 px minimum footprint. It should clearly be an inspection action, not appear to execute the recommended character switch."
+      "Make the repair action visibly conditional: change step 1 to 'Before switching: Le Jette, hearth to an inn' and step 2 to 'Play Le Dette'. Keep the character names in their existing class colours.",
+      "Move 'Then Le Bankken, full in 19h' onto a separate, subordinate line below the numbered actions. It currently introduces a third character into the same narrow decision strip.",
+      "Replace 'Full since 1d 16h ago' with 'Full for 1d 16h'. Put 'Rest beyond the cap is wasted' on its own 12 px amber line rather than appending another bold clause to the success message."
     ],
     "state_colours": [
-      "Do not render the current character's remaining rested-XP bar red solely because they are outside an inn. Use a neutral blue fill such as #76B9DC for remaining XP and reserve #E66565 for the separate location warning.",
-      "Standardize the four state accents across rows, chips, compact indicators and charts: green #65D995, yellow #F1D568, orange #F0A34B and red #E66565. Preserve the written state and distinct icon alongside each colour.",
-      "Make unearned moon marks substantially quieter, around #665B45, and leave at least 8 px between the state chip and the moon group. Currently the bright repeated moons compete with the actual readiness state."
+      "For red characters, explicitly qualify the estimate: 'Full in 31d 14h outside an inn'. Repeat that qualifier in the timeline tooltip and compact tooltip; the enormous red ETA currently appears directly comparable to inn-resting estimates without explanation.",
+      "Use the same state hues for rails, portrait outlines, bars and chips, with lighter text variants only where required for contrast. In particular, bring the dark red timeline lane closer to the roster's clearly legible warning red.",
+      "In compact mode, add a tooltip that names each pip's character and state, and provide at least 4 px separation between state groups. The adjacent orange pips are otherwise an indistinguishable cluster."
     ],
     "character_identity": [
-      "Keep the staged portrait/model as the primary identity image, but make the persistent identity portrait 36\u201340 px and integrate its level badge cleanly below the rim. The card currently repeats the same face at two nearby scales without a strong compositional reason.",
-      "Position the speech bubble in a reserved upper-left region with a 12 px safe gap from the model silhouette and nameplate. Preserve this arrangement for live models rather than allowing tall equipment to collide with the bubble.",
-      "Make the character's individual facts inform the spoken hook: for example, 'Water's conjured. Brill is home.' Keep mechanical XP quantities in the separate status area instead of repeating them inside the speech bubble."
+      "On the character card, align the speech bubble, character name, metadata and state chip to a shared left edge at 76 px in the shown crop. The current 76\u201387 px offsets look accidental.",
+      "Move the card's name block approximately 24 px upward, reducing the large gap below the speech bubble. Preserve the portrait's size and its settled class-badge treatment.",
+      "Separate the two tidbit concepts currently combined as 'HEARTH \u00b7 LOGGED OUT': use 'HEARTH' above its destination, and put the logout location in the rest-summary line. Identical locations in this fixture conceal the ambiguity."
     ],
     "default_theme": [
-      "Make oak visible as a material, not just a narrow brown border: use a 24\u201328 px title plank with low-contrast longitudinal grain, a charcoal iron underside and bronze hardware. Keep body surfaces near #15110E.",
-      "Replace the generic flat red and blue button rectangles with restrained enamel shading: red #79251E or blue #203F68, a 1 px bronze rim and a 2 px upper highlight. Match their bevel depth to the frame hardware.",
-      "Use one consistent inset treatment for the current-player strip, roster and fact panel: 1 px #514331 edge, 8\u201312 px padding and a dark fill. Avoid alternating unrelated brown blocks and nearly black panels."
+      "Darken the scenic hero background with a uniform black overlay around 45% opacity. Its brightest rocks sit behind metadata and weaken the otherwise deliberate bronze framing.",
+      "Use a dark brown track such as #17130E rather than pure black for unfilled default-theme bars, with a 1 px #665039 border. The current empty tracks look cut out of the warm panel.",
+      "Reserve the lighter bronze button treatment for the primary action. Make Compact, Unlink and the account selector visibly secondary with a darker fill and equal 22 px heights."
     ],
     "elvui_wc3_fit": [
-      "The rendered skin path is not visually successful yet: its header is predominantly black metal, the roster becomes broad opaque taupe slabs, and the buttons are gray with yellow decorative strokes rather than recognizable red/blue enamel. Correct the actual rendered backdrop, texture and button-state layers rather than treating skin-handler invocation as proof of inheritance.",
-      "Reduce inner-panel opacity so the skin's dark wood remains visible. Target an approximately #17130F body with 85\u201392% opacity instead of the current light brown roster and fact-panel fills.",
-      "Ensure the primary action receives the skin's complete red button texture and secondary actions receive its complete blue texture, including normal, hover and pressed states. Remove or correctly clip the yellow curved overlay visible across the button labels.",
-      "Match the user's in-game restraint: thin bronze panel divisions, cream body copy and selective gold headings. Keep all title and button textures inside their bounds, with the close button inset 8 px rather than hanging on the outer corner."
+      "The frame and blue buttons belong beside the supplied host windows, but the typography does not yet match as closely. Apply the host's configured ElvUI font to body text and controls rather than retaining the addon\u2019s conspicuously serif-heavy treatment.",
+      "Match the host's red close-button dimensions and inset consistently across the main window, character card and alerts; the tiny alert crosses currently look like a separate control family.",
+      "Style the addon's options using the host's actual checkbox, radio and slider treatments. The flat grey checkbox blocks and pale slider thumb in the render do not resemble the supplied yellow-filled host controls.",
+      "Give Roster and Timeline explicit 22 px tab targets with a restrained selected background and gold underline. Their current tiny text links feel less finished than the surrounding WC3 controls."
     ],
     "alerts_ux": [
-      "Preserve the non-modal placement below the logout countdown, but reserve a 32 px right-hand close-button column. The long warning heading currently crowds the close control; use a 16 px heading reading 'Logging out outside an inn'.",
-      "Use a clear two-step message: 'Move to cancel logout.' followed by 'Then hearth or reach an inn to rest 4\u00d7 faster.' Keep the next-character recommendation as a quieter optional third line.",
-      "Replace the tiny 'Right-click for options' footer with a visible 24 px options target and retain a separate dismiss control. In its menu, distinguish 'Dismiss this warning' from 'Disable future logout warnings'.",
-      "Increase the used-up toast heading to 13 px and its recommendation to 16 px. Keep the red loss accent, but avoid squeezing the entire event description into a small uppercase line."
+      "Shorten the logout banner's primary instruction to 'Cancel logout and hearth to an inn'. Use the next line for 'Hearth: Feathermoon Stronghold', avoiding the repeated inn instruction across title and body.",
+      "Give dismiss and settings controls separate, consistent 22 \u00d7 22 px hit areas with at least 6 px between them. Keep the dismissal cross visually distinct from the nearby frame ornament.",
+      "Use a genuine moon symbol for the Esc card and its mover. The shown scroll-like icon does not read as a moon and weakens the intended distinction from the other warnings.",
+      "Add a visible 'Attached to Esc menu' badge and a small anchor indicator to the Esc mover. Keep 'Drag to detach' below it so the attachment behavior is understandable before the player moves it.",
+      "In the toast, reduce the trigger line's weight and increase its contrast to approximately #D9AD65. Keep 'Play Le Dette' as the sole 15 px primary line."
     ],
     "readability": [
-      "At the supplied display scale, chips, metadata, chart labels and footers remain small. Target rendered sizes of at least 14 px for body copy, 13 px for metadata and 12 px for labels; verify at the user's actual UI scale rather than only checking configured font values.",
-      "Use a clean WoW-compatible sans-serif for roster metadata and numeric values, with cream #E6D7C3 text and a restrained 1 px dark shadow. Reserve the decorative serif treatment for window titles and character names.",
-      "Separate 'Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago' into consistent metadata positions or supply explicit headers/tooltips. Keep the last-seen value aligned so it can be scanned independently of zone-name length.",
-      "In the compact tooltip, split state and estimate into separate aligned columns. Replace approximate red entries such as 'Not resting \u00b7 full in about 27d' with 'Not resting \u00b7 park in an inn', putting the slow-fill estimate in secondary detail."
+      "Increase roster metadata and ETA text to at least 13 px at the shown 1:1 size, and use 14 px for actionable advice. Do not depend on the optional 115% setting to make routine information comfortable.",
+      "Show the calendar ETA for every roster row, not only the nearly-full row: use a second line such as 'Thu 3 Dec, 05:00' under 'Full in 9d'. Increase row height from roughly 58 px to 66 px if necessary.",
+      "Increase the timeline's after-48-hour column to approximately 120 px and use two intentional lines: 'Wed 2 Dec' and '01:36'. Remove the repeated 'Full' prefix from every lane.",
+      "Increase options-row spacing to 26 px and place long explanations beneath their labels in 12 px muted text. The current window-and-display checklist is visually cramped.",
+      "Replace the cryptic account label '#3' with 'Account 3', and provide the actual account alias in its tooltip."
     ],
     "layout_polish": [
-      "Reduce the hero's approximately 180 px presentation area by 24\u201332 px, primarily by tightening the empty space beneath its explanation. Reinvest that space in more comfortable roster typography and row padding.",
-      "Use a fixed roster grid with 12 px outer padding, a 40 px portrait column, a stable name column, a 148 px bar column and a 104 px state column. Give the moon group its own space rather than letting it visually touch the chip.",
-      "Correct the card's inconsistent time reporting: Le Nette is described as full for 2 days, while the facts report 'Time at full: 6h total'. Label different measurement windows explicitly or reconcile the values before displaying both.",
-      "Do not enlarge the history chart simply to consume card height. Cap it around 110\u2013120 px, include a visible percentage scale, and label an autoscaled plot 'Scale: 0\u201316%'. Otherwise the nearly full-height red area visually exaggerates a low-rest character.",
-      "Give an opened row a clearly visible 2 px gold inset outline or 6 px gold selection marker. The selection should remain immediately identifiable in both themes without replacing its state colour."
+      "Resolve the hero's right-column alignment: center the numeric value, LEVELS BANKED label and FULL chip on one vertical axis, and reserve a fixed 112 px column for that group.",
+      "Split the plan into an action area and a right-aligned View details button with a fixed 12 px gutter. Do not squeeze the runner-up into the remaining space between them.",
+      "Preserve roster ordering when switching to Timeline, or explicitly label the alternate sort 'By time to full'. Jacques Hammer changes position between views without a visible explanation.",
+      "Increase the options panel's bottom padding to 20 px and separate the About copy from the alert settings with a 1 px divider and 12 px gap. It currently looks appended to the last checkbox section.",
+      "Use a consistent 12 px internal gutter for the character card's summary box and tidbit box; their text and bar currently start on slightly different vertical guides."
     ],
     "delight": [
-      "Turn the stage into a small character vignette: a restrained floor light, grounded pedestal and one location-appropriate background treatment. Judge the live model within that composition; adding more portrait circles is not a substitute for staging.",
-      "Use character-specific, short speech hooks with several variants and a repeat cooldown. Keep the hook at 17 px and remove duplicated XP exposition so opening a card feels conversational rather than like another status tooltip.",
-      "Make the new-#1 celebration a single 400\u2013600 ms bronze sheen across the recommendation rail, then settle. Avoid continuous glow or looping attention effects.",
-      "In the empty state, remove the visibly doubled quotation marks around the welcome line and change the copy to 'Log each alt in once. Park them in an inn. Your best-rested character rises to the top.' Present account linking as optional rather than a required third onboarding step."
+      "Make the speech feel character-specific: retain the short first line, then use a class or location-aware second line rather than generic comfort copy. Keep both within the existing bubble instead of enlarging the card.",
+      "On a new recommended character, use a restrained 250\u2013350 ms gold edge sweep on the hero only, disabled by Reduce motion. Avoid animating the whole roster or adding persistent glow.",
+      "When dismissing an alert, briefly show 'Dismissed for this session' in the same footprint for about 1.5 seconds. This supplies quiet confirmation without introducing a popup.",
+      "Give the compact strip a clear hover state around the entire clickable area, not just its individual icons, so the miniature presentation feels intentional rather than like exposed status tokens."
     ]
   },
-  "overall_notes": "A capable and increasingly characterful addon, but not yet demanding-user approval quality. The strongest elements are the unmistakable first-place character, portrait-led roster, redundant state labels and dismissable warnings. The default theme is serviceable rather than premium; excessive small ornament and dense secondary text hold it back. The ElvUI render is the largest miss: invoking the correct skin code has not produced convincing Gatewood materials or finished buttons. I have not penalized absent simulator models or portrait fallbacks; the staging, surrounding composition, visible information and rendered skin are what drive these scores.",
+  "overall_notes": "A substantial improvement over the real baseline: the recommendation has stronger hierarchy, the current-character strip is coherent, and the character card is much less wasteful. The WC3 framing and blue controls convincingly establish the intended environment. This is still not demanding-user approval territory. Dense small typography, a congested action strip, inconsistent information density between views, and underqualified outside-rest-area estimates remain material issues. The default theme is attractive but slightly overdecorated; the ElvUI mode needs closer control and font integration rather than more ornament. The simulator's missing 3D rendering and narrower fonts are not counted as defects, and the settled portrait and state-colour rules are respected.",
   "model": "gpt-6.1-sol"
 }

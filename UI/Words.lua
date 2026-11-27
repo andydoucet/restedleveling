@@ -75,7 +75,7 @@ function Wd.PlaceForms(place)
 	local out = { place }
 	local base, suffix = place:match("^(.-)( inn)$")
 	base = base or place
-	local first = base:match("^(%S+)%s")
+	local first = base:match("^(%S%S%S%S%S%S+)%s")   -- a first word of 6+ letters ("Thunderbrew"), never "Dun"
 	if first then out[#out + 1] = first .. (suffix or "") end
 	if suffix then out[#out + 1] = first or base end
 	return out
@@ -129,6 +129,14 @@ function Wd.FillsFirst(rows)
 		if r.p and r.group and r.group < 5 and (not best or r.p.left < best.p.left) then best = r end
 	end
 	return best
+end
+
+-- The hero's plan as two numbered steps, each led by the character it is about (so its class colour leads):
+-- "Le Jette: hearth to an inn", "Le Dette: play next". nil when there is nobody to switch to (Action says why).
+function Wd.Steps(name, meName, restingNow, empty)
+	if empty then return nil end
+	meName = meName or "This character"
+	return ("%s: %s"):format(meName, restingNow and "log out here" or "hearth to an inn"), ("%s: play next"):format(name)
 end
 
 -- The hero's action bar. The "first, ..." part is always about the character you are on (`meName`), never the

@@ -188,7 +188,7 @@ function cases.banner_uses_the_one_button_family()
 	local banner = h.Env().RestedLevelingBanner
 	T.eq(banner.close.label and banner.close.label:GetText(), "X", "the dismiss is the bronze secondary button, not a yellow X")
 	T.eq(banner.altBtn:GetHeight(), 22, "the next character is secondary to the warning")
-	T.eq(banner.altBtn.label:GetText(), "Details", "a small Details button")
+	T.eq(banner.altBtn.label:GetText(), "View details", "the main window's View details")
 	T.has(banner.altText:GetText(), "Next: Le Nette · Full", "a line that says who is next and why")
 	T.clean(h)
 end
@@ -233,10 +233,11 @@ function cases.esc_strip_lays_out_from_its_own_edges_the_same_on_every_show()
 	local ap = pointOf(f.alt, "TOPLEFT")
 	T.eq(ap[5], bp[5], "same top as the portrait: centred on one row")
 	T.eq(f.alt:GetHeight(), btn:GetHeight(), "and the same height")
-	-- The line sits between the portrait and Details, shortened, never pushing the button.
+	-- The Esc card has no View details (the menu is open): the line runs to the card's inset, shortened to fit.
+	T.ok(not btn:IsShown(), "no button on the Esc card")
 	local tr = pointOf(f.altText, "RIGHT")
-	T.ok(tr and tr[2] == btn and tr[3] == "LEFT" and tr[4] == -10, "text ends 10 px left of Details")
-	local room = f:GetWidth() - 54 - 22 - 12 - 10 - btn:GetWidth() - A.INSET
+	T.ok(tr and tr[2] == f and tr[3] == "RIGHT" and tr[4] == -A.INSET, "text ends at the card's right inset")
+	local room = f:GetWidth() - 54 - 22 - 12 - A.INSET
 	T.ok(f.altText:GetStringWidth() <= room, "the long line is shortened to fit")
 	T.has(f.altText:GetText(), "...", "with an ellipsis")
 	-- The first show matches the next: the queued relayout and a second Esc change nothing.
@@ -329,6 +330,19 @@ function cases.nothing_banked_ties_at_zero_still_pick_the_resting_one()
 	local bannerLine, stripLine, h = fillsFirstLine(saved)
 	T.eq(bannerLine, "Zz Resting fills first: full in 10d", "banner: 0.0 each, the inn fills first")
 	T.eq(stripLine, "Zz Resting fills first: full in 10d", "Esc card: the same")
+	T.clean(h)
+end
+
+-- Council r3: the Esc card has its own shape, so it never reads as a second banner.
+function cases.esc_card_has_its_own_shape()
+	local _, h = world({ resting = false, saved = { chars = { ["N:Le Nette@?"] = alt("Le Nette", 1.5, 2 * D, true) } } })
+	FakeWoW.RunScript(h.Env().GameMenuFrame, "OnShow")
+	local strip = h.Env().RestedLevelingMenuStrip
+	T.ok(strip:IsShown(), "shown under the menu")
+	T.eq(strip.tag:GetText(), "ESC MENU", "tagged")
+	T.ok(not strip.altBtn:IsShown(), "no View details button: the menu is open")
+	T.ok(not strip.who:IsShown(), "one instruction, not the banner's three lines")
+	T.has(strip.altText:GetText(), "Le Nette", "still names who is next")
 	T.clean(h)
 end
 
