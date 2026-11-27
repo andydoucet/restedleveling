@@ -12,6 +12,15 @@ v1.1 (ILL-1272), sync:
 - A sender's "-Realm" is kept when it is not our realm, so a same-named character on another realm never matches a
   link (Forever reports no realm, so nothing changes there).
 
+v1.1 (ILL-1272), options:
+
+- Show accounts: all, this account, or one linked account (options page, the ElvUI /ec page, /rlvl accounts, and a
+  button in the main window's footer when more than one account is in the roster). Hidden accounts leave the hero,
+  the roster, compact mode, the datatext and the alerts' "play next".
+- Low rest warning threshold: 5 to 50% of a full bar (default 10%), on the options page, /ec and /rlvl low. The chat
+  line says it: "running low here: 0.1 levels left, under 10% of full".
+- Saved data moves to version 2; v1 files load with the defaults, and damaged values are reset.
+
 Fixes from the first in-game run (ILL-1274):
 
 - Button labels stay readable on hover (every button and the close cross): the label draws above the hover face.

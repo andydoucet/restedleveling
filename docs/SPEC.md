@@ -78,8 +78,8 @@ Main window (/rlvl, minimap button, datatext click):
   % and "full in 6h 20m / 18:40", location badge (inn / city / campfire / outside), account tag (#2/#3),
   Well Rested pips, last seen.
 - Current-character strip: rested left, ~kills at double XP, rested used this session.
-- Filters: hide character, target level, show max level. (Scope change for v1.0: the account filter is deferred;
-  rows from another account carry an account tag instead.)
+- Filters: hide character, target level, show max level. (v1.1: an account filter, all / this account / one
+  linked account; rows from another account also carry an account tag.)
 - Compact mode: one line of coloured dots, hover for the row.
 - Optional v1.1: 48h fill timeline (each alt as a lane, marker where it hits full).
 
@@ -114,7 +114,7 @@ optional sound, chat line. No StaticPopup.
 - Game Menu guard: when Esc menu opens while not resting, a slim red strip under the menu:
   "Not resting: this character will fill 4x slower". Informational only.
 - Rested ran out on the current character: "Out of rested. Next up: Le Nette (full)."
-- Rested low (fixed at 10% left in v1.0; making it configurable is deferred): heads-up in chat.
+- Rested low (threshold 5..50% of a full bar, default 10%, v1.1): heads-up in chat.
 - An alt filled up while you play: toast, digested if several.
 - Login digest in chat: who's full, who fills soon, last logout was outside.
 - Cozy Sleeping Bag ready (from RW).

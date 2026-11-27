@@ -179,6 +179,14 @@ function D.MakeClose(parent)
 	return b
 end
 function D.Check(cb) end
+-- A horizontal slider: a dark well with a bronze lip and a gold thumb.
+function D.Slider(sl)
+	St.Backdrop(sl, "sw_well", "sw_lip", 1)
+	local thumb = sl:CreateTexture(nil, "OVERLAY")
+	St.Paint(thumb, "sw_bronze_btn")
+	thumb:SetSize(12, 20)
+	sl:SetThumbTexture(thumb)
+end
 function D.Tab(tab) end
 function D.ScrollBar(sb) end
 

@@ -109,7 +109,7 @@ end
 -- The interface. kind for Panel: "card", "inset", "row", "strip", "toast", "tooltip".
 -- role for Font: "title", "hero", "name", "body", "small", "number", "label".
 for _, m in ipairs({ "Window", "Panel", "Button", "Close", "Check", "Bar", "Tab", "ScrollBar", "Font", "BarTexture",
-	"MakeButton", "MakeClose" }) do
+	"MakeButton", "MakeClose", "Slider" }) do
 	St[m] = call(m)
 end
 

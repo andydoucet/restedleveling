@@ -151,6 +151,10 @@ function X.ScrollBar(sb)
 	if sb.ScrollBox or sb.Track then handle("HandleTrimScrollBar", sb) else handle("HandleScrollBar", sb) end
 end
 
+function X.Slider(sl)
+	if not handle("HandleSliderFrame", sl) then St.backends.default.Slider(sl) end
+end
+
 function X.BarTexture()
 	if E and E.media and E.media.normTex then return E.media.normTex end
 	if LSM and E and E.private and E.private.general then

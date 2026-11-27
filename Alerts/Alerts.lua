@@ -360,8 +360,9 @@ function A.OnSessionChanged(rested)
 		local me = ns.Me()
 		A.Toast({ kind = "outrest", kicker = (me and me.full or "This character") .. ": rested XP used up", text = text,
 			sub = sub, state = top and top.state or "outside", accent = top and top.state or "outside", row = top })   -- a recommendation: its rail in the target's state
-	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap) then
-		chat("lowrest", ("rested XP is running low here: %s left."):format(ns.Words.Levels(rested / xpMax)))
+	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap, Ru.LowFraction(ns.DB())) then
+		chat("lowrest", ("rested XP is running low here: %s left, under %d%% of full."):format(
+			ns.Words.Levels(rested / xpMax), math.floor(Ru.LowFraction(ns.DB()) * 100 + 0.5)))
 	end
 end
 

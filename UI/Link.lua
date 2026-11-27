@@ -18,6 +18,12 @@ local function text(f, role, size, color)
 	return t
 end
 
+-- The room the field has (the footer gives some to the account filter when there is one).
+function Lk.SetWidth(f, w)
+	f:SetWidth(w)
+	f.status:SetWidth(w - 142)
+end
+
 -- w: the room the field has; the status text wraps onto a second line when it needs to.
 function Lk.Create(parent, w)
 	local f = CreateFrame("Frame", nil, parent)
@@ -28,8 +34,8 @@ function Lk.Create(parent, w)
 	f.unlink:SetPoint("LEFT", 0, 0)
 	f.status = text(f, "small", 13, St.SECOND)
 	f.status:SetPoint("LEFT", f.open, "RIGHT", 12, 0)
-	f.status:SetWidth(w - 142)
 	f.status:SetWordWrap(true)
+	Lk.SetWidth(f, w)
 
 	f.edit = CreateFrame("EditBox", nil, f, "BackdropTemplate")
 	f.edit:SetSize(EDIT_W, 24)

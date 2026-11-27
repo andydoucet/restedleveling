@@ -15,7 +15,13 @@ Ru.KINDS = {
 	digest  = { label = "Login digest in chat" },
 	bag     = { label = "Cozy Sleeping Bag ready" },
 }
-Ru.LOW = 0.10   -- "low" = 10% of the cap left
+Ru.LOW = 0.10   -- default "low": 10% of the cap left (d.opts.lowPct overrides it, 5..50)
+
+-- The low mark as a fraction of the cap, from the saved option.
+function Ru.LowFraction(d)
+	local pct = d and d.opts and tonumber(d.opts.lowPct)
+	return pct and pct / 100 or Ru.LOW
+end
 
 function Ru.Enabled(d, kind) return not (d.alertsOff and d.alertsOff[kind]) end
 
@@ -34,9 +40,9 @@ Ru.MenuStrip = Ru.LogoutWarning
 -- Rested went from something to nothing on this kill.
 function Ru.RanOut(before, after) return (before or 0) > 0 and (after or 0) <= 0 end
 
--- Crossed below the low mark (fires once per crossing).
-function Ru.WentLow(before, after, cap)
-	local mark = Ru.LOW * cap
+-- Crossed below the low mark (fires once per crossing). `low`: fraction of the cap (default Ru.LOW).
+function Ru.WentLow(before, after, cap, low)
+	local mark = (low or Ru.LOW) * cap
 	return (before or 0) > mark and (after or 0) <= mark and (after or 0) > 0
 end
 
