@@ -20,7 +20,9 @@ local function elvui(calls, skinArt)
 			end
 		end
 	end })
-	local E = { media = { normFont = "Fonts\\FRIZQT__.TTF", normTex = "Interface\\Buttons\\WHITE8X8" } }
+	local E = { media = { normFont = "Fonts\\FRIZQT__.TTF", normTex = "Interface\\Buttons\\WHITE8X8",
+		blankTex = "Interface\\Buttons\\WHITE8X8", backdropcolor = { r = 0.1, g = 0.1, b = 0.1 },
+		backdropfadecolor = { r = 0.06, g = 0.06, b = 0.06, a = 0.8 }, bordercolor = { r = 0, g = 0, b = 0 } } }
 	function E:GetModule(name) if name == "Skins" then return S end end
 	return { E }
 end
@@ -108,6 +110,17 @@ function cases.a_skins_window_art_shows_through_our_window()
 	local h2 = world(nil, false)
 	h2.Slash("RESTEDLEVELING", "")
 	T.eq(h2.Env().RestedLevelingMain.Center:GetAlpha(), 1, "plain ElvUI keeps its fill")
+end
+
+-- Desk steer (r5): ElvUI mode inherits ElvUI's own panel colours (E.media), it does not invent them.
+function cases.inner_panels_take_elvui_media_colours()
+	local h = world()
+	h.Slash("RESTEDLEVELING", "")
+	local main = h.Env().RestedLevelingMain
+	local bg = main.list.__bg
+	T.ok(bg and bg[1] == 0.1 and bg[2] == 0.1 and bg[3] == 0.1, "the roster well is E.media.backdropcolor")
+	T.eq(main.list.__backdrop.bgFile, "Interface\\Buttons\\WHITE8X8", "on ElvUI's blank texture")
+	T.clean(h)
 end
 
 return cases

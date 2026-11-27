@@ -39,9 +39,9 @@ function cases.card_reason_for_each_state_ends_with_the_real_time_to_full()
 		"Resting at Goldshire inn. 0.8 of a level banked. Full in 5h (tomorrow 01:00).", "resting")
 	T.eq(Wd.Why(row("resting", { pct = 0, levels = 0, left = 240 * H }, { resting = true, restKind = "inn", subzone = "Feathermoon Stronghold" }), NOW, utc),
 		"Resting at Feathermoon Stronghold inn. Nothing banked yet. Full in 10d (Mon 23 Nov, 20:00).", "empty in an inn")
-	T.has(Wd.Why(row("outside", { pct = 0.2, levels = 0.3, left = 90 * H }, { zone = "Durotar" }), NOW, utc), "4x slower", "outside")
-	T.has(Wd.Why(row("outside", { pct = 0.2, levels = 0.3, left = 90 * H }, { zone = "Durotar" }), NOW, utc),
-		"Full in 3d 18h (Tue 17 Nov, 14:00)", "outside, real time")
+	local out = Wd.Why(row("outside", { pct = 0.2, levels = 0.3, left = 90 * H }, { zone = "Durotar" }), NOW, utc)
+	T.has(out, "Not filling: rest at an inn", "outside: what to do")
+	T.lacks(out, "Full in", "and no fill time promised")
 end
 
 function cases.hero_line_is_the_state_then_the_real_time_to_full()
@@ -53,7 +53,7 @@ function cases.hero_line_is_the_state_then_the_real_time_to_full()
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 8 * H, utc),
 		"Resting. Full in 6h 20m (today 18:20).", "resting, same day")
 	T.eq(Wd.HeroWhy(row("outside", { pct = 0.2, levels = 0.3, left = 36 * D }), NOW, utc),
-		"Not resting, fills 4x slower. Full in 36d (Sat 19 Dec, 20:00).", "outside")
+		"Not filling: rest at an inn.", "outside: what to do, no 36-day promise")
 end
 
 -- One formatter for "how much longer until fully rested", at its boundaries.
@@ -131,7 +131,7 @@ end
 function cases.rows_show_the_real_time_to_full_even_outside()
 	local Wd = load().Words
 	local t = Wd.RowTime(row("outside", { pct = 0.3, levels = 0.45, left = 27 * D + 22 * H }), NOW, false, utc)
-	T.eq(t, "~30%  ·  Full in 27d 22h outside", "over two days: no clock time, so the row never clips")
+	T.eq(t, "~30%  ·  Not filling: rest at an inn", "outside: what to do, not a 27-day promise")
 	t = Wd.RowTime(row("resting", { pct = 0.8, levels = 1.2, left = 2 * D }), NOW, true, utc)
 	T.eq(t, "80%  ·  Full in 2d (Sun 15 Nov, 20:00)", "two days: still the clock")
 	t = Wd.RowTime(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, false, utc)

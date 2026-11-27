@@ -1,4 +1,20 @@
-# Round 5 of v1.1 (ILL-1272): answers council r4 (opus 7.6, sol 7.8, grok 7.1)
+# Round 5 of v1.1 (ILL-1272): answers council r4 (opus 7.6, sol 7.8, grok 7.1) and the desk's steer
+
+## Desk steer
+
+- **ElvUI mode inherits; it does not invent.** Under ElvUI our inner panels take ElvUI's own colours and texture at
+  runtime: E.media.backdropcolor / backdropfadecolor / bordercolor on E.media.blankTex, guarded, with our baked well
+  as the fallback. That covers the hero, NOW PLAYING, the roster well, the card stage and the options page. Fonts were
+  already E.media.normFont and bars E.media.normTex. Windows, alerts, toasts and the Esc card go through ElvUI's own
+  S:Handle* calls, so the active skin (WC3 here) dresses them all alike. With stock ElvUI the panels come out
+  near-black, as in the in-game references.
+- **The renders now show those colours as the game does.** wow-ui-sim treats vertex and backdrop colours as linear and
+  re-encodes them, so ElvUI's 0.1 backdrop drew as a 0.35 grey slab. That was also the "taupe" Settings panel and the
+  grey square judges saw. A render-sandbox shim (tools/sim/fixture/Gamma.lua, never installed) linearises those colours
+  first, so every addon's colours (ElvUI's and ours) render as in the game. No addon code depends on it.
+- **Red rows promise no fill time** (desk; grok, sol). Rows, tooltips, the compact tip, the card and the hero say "Not
+  filling: rest at an inn". The timeline lane says "Not filling: find an inn" in its date column. (`Words.RowFull`,
+  `Words.NOT_FILLING`.)
 
 **Desk note: r4 scored below r3.** I compared r3 (8924e8e) with r4 (dfdd343). The drop came almost entirely from grok
 (7.9 to 7.1). Three things r4 introduced read worse in the render, and this round fixes each at its cause:
@@ -25,7 +41,6 @@ dates, the grey night bands, and the card's name block beside the portrait.
 - **Filled state chips** (opus, grok). Each chip has its state's own dark fill, its edge and a light tint of its colour
   for the word; outlines read as form fields. Icons only where they add meaning: the warning on NOT RESTING, the
   arrow on NEARLY FULL, the tick on FULL. RESTING has no smudgy icon (opus).
-- **Red rows no longer promise a bare fill time** (grok, sol): "20% · Full in 31d 14h outside".
 - **Esc card** (all three). It is about 70% of the banner's width (340-380 px), with no red rail and a crisp gold
   crescent (the title's moon, not a spell icon). The ESC MENU tag sits inside the frame. Its move-mode placeholder
   has the same moon, the same width and no rail.
@@ -48,8 +63,6 @@ dates, the grey night bands, and the card's name block beside the portrait.
 - **"Full for 1d 16h" again** (sol): two judges asked for "Full since" in r2.
 - **More options spacing and helper lines under each checkbox** (opus, sol): the Settings canvas is a fixed height, and
   the page already uses it to the bottom; more spacing would push About off the canvas.
-- **ElvUI mode near-black and the host's sans font** (grok, sol): our wells are already ElvUI's near-black; the warm
-  tone is the WC3 skin's window art, and fonts come from ElvUI's own media through the style layer.
 - **The compact tip's lighter header block, the Settings Close sliver, the stray grey square and bar in move mode**:
   WC3 or ElvUI frames, not ours.
 - **Not done this round** (one judge each):
@@ -59,7 +72,8 @@ dates, the grey night bands, and the card's name block beside the portrait.
 
 ## Checks
 
-- `lua5.1 tests/run.lua`: 178 pass. luacheck is clean. tools/apicheck.py: 0 unverified, at every layer.
-- New or changed tests: the plan's name and verb are separate; red rows say "outside"; chips are filled with
+- `lua5.1 tests/run.lua`: 179 pass. luacheck is clean. tools/apicheck.py: 0 unverified, at every layer.
+- New or changed tests: ElvUI's E.media colours on our panels (fails without the inheritance); the plan's name and verb
+  are separate; red rows, the hero and the card say "Not filling: rest at an inn" with no fill time; chips are filled with
   meaningful icons only; the Esc card width; timeline ticks (day, date, month; a label every 12 hours).
 - All 8 renders come from the real addon in wow-ui-sim. 04 is the full-screen context shot; the others are 1:1 crops.
