@@ -81,7 +81,7 @@ Main window (/rlvl, minimap button, datatext click):
 - Filters: hide character, target level, show max level. (v1.1: an account filter, all / this account / one
   linked account; rows from another account also carry an account tag.)
 - Compact mode: one line of coloured dots, hover for the row.
-- Optional v1.1: 48h fill timeline (each alt as a lane, marker where it hits full).
+- v1.1: 48h fill timeline (each alt as a lane, marker where it hits full), the main window's TIMELINE tab.
 
 Datatext / LDB text: "3 full | 2 resting | 1 outside", tooltip is the mini roster.
 

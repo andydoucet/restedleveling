@@ -128,6 +128,30 @@ function Main.Create()
 	St.Panel(f.list, "inset")
 	f.roster = ns.Roster.Create(f.list, inner - 8, Main.VISIBLE)
 	f.roster:SetPoint("TOPLEFT", 4, -4)
+	f.timeline = ns.Timeline.Create(f.list, inner - 8)
+	f.timeline:SetPoint("TOPLEFT", 4, -4)
+	-- The band's view tabs, on its right end: ROSTER | TIMELINE (the 48-hour fill timeline).
+	f.tabs = {}
+	local prevTab
+	for _, v in ipairs({ { "timeline", "TIMELINE" }, { "roster", "ROSTER" } }) do   -- laid out right to left
+		local b = CreateFrame("Button", nil, f)
+		b:SetSize(76, 20)
+		if prevTab then b:SetPoint("RIGHT", prevTab, "LEFT", -6, 0) else b:SetPoint("RIGHT", f.list, "RIGHT", -10, 0) end
+		b:SetPoint("TOP", f.headerBtn, "TOP", 0, 0)
+		b.text = Wg.Text(b, "label", nil, 12)
+		b.text:SetPoint("CENTER")
+		b.text:SetText(v[2])
+		b:SetWidth(b.text:GetStringWidth() + 16)
+		b.line = b:CreateTexture(nil, "OVERLAY")
+		b.line:SetColorTexture(1, 0.84, 0.45, 1)
+		b.line:SetPoint("BOTTOMLEFT", 6, -1)
+		b.line:SetPoint("BOTTOMRIGHT", -6, -1)
+		b.line:SetHeight(2)
+		b.view = v[1]
+		b:SetScript("OnClick", function(self) ns.Timeline.SetView(self.view) end)
+		f.tabs[#f.tabs + 1] = b
+		prevTab = b
+	end
 
 	-- The footer's link field (the guide has its own while it shows): status, Link account... / Unlink, and the
 	-- inline name field in place.
@@ -205,9 +229,19 @@ function Main.Refresh()
 	local n = { full = 0, near = 0, resting = 0, outside = 0 }
 	for _, r in ipairs(rows) do if r.group ~= 5 and n[r.state] then n[r.state] = n[r.state] + 1 end end
 	for state, t in pairs(f.legend.parts) do t:SetText(n[state] .. " " .. St.STATE[state].word:lower()) end
-	f.legend:SetShown(#rows > 0)
-	f.moonHead:SetShown(#rows > 0)
-	f.header:SetText(#rows > 0 and "NEXT BEST" or "GETTING STARTED")
+	local timeline = ns.Timeline.View() == "timeline" and #rows > 0
+	f.roster:SetShown(not timeline)
+	f.timeline:SetShown(timeline)
+	if timeline then ns.Timeline.Update(f.timeline, rows, now, listH) end
+	for _, b in ipairs(f.tabs) do
+		local on = (b.view == "timeline") == timeline
+		b:SetShown(#rows > 0)
+		if on then St.Color(b.text, St.CREAM) else St.Color(b.text, St.MUTED) end
+		b.line:SetShown(on)
+	end
+	f.legend:SetShown(#rows > 0 and not timeline)
+	f.moonHead:SetShown(false)   -- the view tabs own the band's right end; the chips name their states
+	f.header:SetText(#rows == 0 and "GETTING STARTED" or (timeline and "NEXT 48 HOURS" or "NEXT BEST"))
 	f.link:SetShown(not f.roster.guide:IsShown())
 	ns.Link.Refresh(f.link, now)
 	local multi = #ns.Accounts() > 1

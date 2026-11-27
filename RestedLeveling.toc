@@ -41,6 +41,7 @@ UI\Current.lua
 UI\Tip.lua
 UI\Compact.lua
 UI\Roster.lua
+UI\Timeline.lua
 UI\Main.lua
 
 Detail\Lines.lua
