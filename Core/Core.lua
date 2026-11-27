@@ -59,6 +59,7 @@ function ns.DB()
 		if not (POSITION_KEYS[k] and type(pos) == "table" and POINTS[pos.point] and POINTS[pos.relPoint]
 			and U.Num(pos.x) and U.Num(pos.y)) then d.positions[k] = nil end
 	end
+	if d.opts.view ~= "timeline" then d.opts.view = nil end   -- the main window's view: roster (nil) or timeline
 	local acc = d.opts.accounts
 	if acc ~= "mine" and not (type(acc) == "string" and acc:match("^%x%x%x%x%x%x$")) then d.opts.accounts = nil end
 	-- One SavedVariables file per WoW account, so this 6-hex id names the account the roster lives on.

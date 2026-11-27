@@ -32,6 +32,13 @@ v1.1 (ILL-1272), movable notifications:
 - With ElvUI, the three are also ElvUI movers in their own "Rested Leveling" group in /moveui. Moving or resetting
   them either way saves to the same place.
 
+v1.1 (ILL-1272), 48-hour fill timeline:
+
+- The main window's band has two tabs, ROSTER and TIMELINE (remembered). The timeline runs from now to 48 hours
+  ahead with the nights shaded and a NOW line: one lane per character, soonest full first, a bar in its state colour
+  up to the moment it is full and the clock time there. One already full sits on NOW; one that fills later runs to
+  the edge, fades, and gives the date. Hover a lane for "Full in ... (clock)"; click it for the card.
+
 Fixes from the first in-game run (ILL-1274):
 
 - Button labels stay readable on hover (every button and the close cross): the label draws above the hover face.
