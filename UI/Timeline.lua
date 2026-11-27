@@ -63,23 +63,14 @@ function Tl.Nights(now, span, dateFn)
 	return out
 end
 
--- Tick marks every 6 hours on the local clock: { frac, label, day }. Midnight is labelled with the day ("Fri"),
--- the others with the time ("06:00").
-function Tl.Ticks(now, span, dateFn)
-	dateFn, span = dateFn or date, span or Tl.SPAN
+-- The axis (desk steer r7): relative to now, one line every 6 hours, a label every 12: "+12h", "+24h", "+36h"; "Now"
+-- and "+48h" own the ends. The nights behind keep the local clock; calendar dates live in the FULL AFTER 48h column.
+function Tl.Ticks(now, span)
+	span = span or Tl.SPAN
 	local out = {}
-	local t = (math.floor(now / 3600) + 1) * 3600
-	while t <= now + span do
-		local d = dateFn("*t", t)
-		if d.hour % 6 == 0 and d.min == 0 then
-			local frac = (t - now) / span
-			out[#out + 1] = { frac = frac, day = d.hour == 0,
-				quiet = d.hour % 12 ~= 0,   -- a line every 6 hours, a label every 12: room for "Wed 25 Nov"
-				-- midnight names the date; noon names its day, so the two noons never read alike
-				label = d.hour == 0 and ("%s %d %s"):format(DAYS[d.wday], d.day, MONTHS[d.month])
-					or (d.hour == 12 and (DAYS[d.wday] .. " 12:00")) or ("%02d:00"):format(d.hour) }
-		end
-		t = t + 3600
+	for k = 1, 7 do
+		local hours = k * span / 8 / 3600
+		out[#out + 1] = { frac = k / 8, quiet = k % 2 == 1, label = ("+%dh"):format(hours) }
 	end
 	return out
 end
@@ -109,6 +100,14 @@ local function pool(list, i, make)
 end
 local function hideFrom(list, n) for i = n, #list do list[i]:Hide() end end
 
+Tl.HINT = "Hover a lane for its exact time to full. Click it for the card."
+Tl.DETAIL_H = 26   -- the fixed detail line under the chart
+-- The detail line for a lane: "Le Bankken  ·  Full in 19h 11m (today 23:12)  ·  1.4 levels banked  ·  Goldshire inn".
+function Tl.Detail(r, now)
+	return ("%s  ·  %s  ·  %s banked  ·  %s"):format(St.ClassText(r.c.class, r.c.full or "?"), Wd.RowFull(r, now),
+		Wd.Levels(r.p.levels), Wd.Place(r.c))
+end
+
 local function lane(f)
 	local l = CreateFrame("Frame", nil, f)
 	l:EnableMouse(true)
@@ -118,6 +117,10 @@ local function lane(f)
 	l.rule:SetPoint("BOTTOMRIGHT", 0, 0)
 	l.rule:SetHeight(1)
 	l.rule:SetAlpha(0.5)
+	l.hover = l:CreateTexture(nil, "BACKGROUND", nil, 2)   -- the hovered lane, lit
+	l.hover:SetAllPoints()
+	l.hover:SetColorTexture(1, 0.85, 0.45, 0.05)
+	l.hover:Hide()
 	l.portrait = Wg.Portrait(l, 28)
 	l.portrait:SetPoint("LEFT", 8, 0)
 	l.name = Wg.Text(l, "name", nil, 13)
@@ -139,18 +142,14 @@ local function lane(f)
 	l.marker:SetSize(16, 16)
 	l.when = Wg.Text(l, "small", nil, 13)
 	l.when:SetWordWrap(true)
+	-- Hover: the details go in the fixed line under the chart, never in a tooltip over another lane (desk steer r7).
 	l:SetScript("OnEnter", function(self)
 		local r = self.lane and self.lane.row
 		if not r then return end
-		GameTooltip:SetOwner(self, "ANCHOR_NONE")
-		GameTooltip:SetPoint("LEFT", self, "RIGHT", Tl.GUTTER + 16, 0)   -- level with its lane, outside the chart: covers no lane
-		GameTooltip:AddLine(St.ClassText(r.c.class, r.c.full or "?"))
-		local s = St.STATE[r.state] or St.STATE.max
-		GameTooltip:AddLine(Wd.RowFull(r, self.now or time()), s.r, s.g, s.b)
-		GameTooltip:AddLine(("%s banked · %s"):format(Wd.Levels(r.p.levels), Wd.Place(r.c)), 0.9, 0.85, 0.75)
-		GameTooltip:Show()
+		f.detail:SetText(Tl.Detail(r, self.now or time()))
+		l.hover:Show()
 	end)
-	l:SetScript("OnLeave", function() GameTooltip:Hide() end)
+	l:SetScript("OnLeave", function() f.detail:SetText(Tl.HINT) l.hover:Hide() end)
 	l:SetScript("OnMouseUp", function(self) if self.lane and ns.ShowDetail then ns.ShowDetail(self.lane.row.key) end end)
 	return l
 end
@@ -171,7 +170,7 @@ function Tl.Create(parent, w)
 	f.nowLine:SetWidth(2)
 	f.nowLine:SetColorTexture(1, 0.84, 0.45, 0.9)
 	f.nowLabel = Wg.Text(f, "label", nil, 12)
-	f.nowLabel:SetText("NOW")
+	f.nowLabel:SetText("Now")
 	f.nowLabel:SetTextColor(1, 0.84, 0.45)
 	f.endLabel = Wg.Text(f, "label", nil, 12)
 	f.endLabel:SetText("+48h")
@@ -185,6 +184,10 @@ function Tl.Create(parent, w)
 	f.gutterLine = f:CreateTexture(nil, "BACKGROUND", nil, 3)
 	f.gutterLine:SetColorTexture(1, 0.9, 0.7, 0.18)
 	f.gutterLine:SetWidth(1)
+	f.detail = Wg.Text(f, "body", nil, 13)   -- the hovered lane's details: a fixed line under the chart
+	f.detail:SetPoint("BOTTOMLEFT", 8, 6)
+	f.detail:SetPoint("BOTTOMRIGHT", -8, 6)
+	St.Color(f.detail, St.SECOND)
 	f.empty = Wg.Text(f, "body", nil, 13)
 	f.empty:SetPoint("CENTER")
 	St.Color(f.empty, St.SECOND)
@@ -202,7 +205,9 @@ function Tl.Update(f, rows, now, h)
 	f.rows, f.now = rows, now
 	f.offset = math.max(0, math.min(f.offset or 0, #lanes - n))
 	f.empty:SetShown(n == 0)
-	local laneH = n > 0 and math.min(Tl.MAX_LANE_H, math.floor((h - Tl.AXIS_H - 4) / n)) or 0
+	local laneH = n > 0 and math.min(Tl.MAX_LANE_H, math.floor((h - Tl.AXIS_H - Tl.DETAIL_H - 4) / n)) or 0
+	f.detail:SetShown(n > 0)
+	f.detail:SetText(Tl.HINT)
 	local plotTop, plotH = -Tl.AXIS_H, n * laneH
 	-- Night bands behind every lane, and the 6-hour ticks with their labels.
 	local nights = Tl.Nights(now)

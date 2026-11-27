@@ -159,6 +159,12 @@ function Wd.Action(name, meName, restingNow, empty)
 	return ("First: hearth %s to an inn. Then: play %s."):format(meName, name)
 end
 
+-- The roster's second line under the bar (the % has its own value column): "Full in 14h 25m (today 18:25)",
+-- "Not filling: rest at an inn", or the max-level joke.
+function Wd.RowWhen(r, now, dateFn)
+	return (Wd.RowTime(r, now, true, dateFn):gsub("^%d+%%  ·  ", ""))
+end
+
 -- The roster's time line for a row: "93%  ·  Full in 14h 25m (today 18:25)". Over two days away the clock time is
 -- dropped ("~30%  ·  Full in 27d 22h") so the line never clips; the tooltip and the card keep it.
 Wd.ROW_CLOCK_MAX = 2 * 86400

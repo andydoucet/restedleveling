@@ -50,6 +50,17 @@ St.CREAM = { r = 0.92, g = 0.87, b = 0.80 }
 St.SECOND = { r = 0.90, g = 0.84, b = 0.76 }
 St.ACTION = { r = 1.0, g = 0.83, b = 0.42 }   -- what to do next
 St.MIN_TEXT = 12   -- no text smaller than this, in either style
+
+-- One type scale for every window (desk steer, ILL-1272 r7): the reading tiers are fixed, whatever size a caller asks
+-- for: body and meta 13, names 14, window titles 16, caps labels and chips 12 (the project's floor). Only display
+-- type (hero names and figures, numbers, headline names) keeps a larger size of its own.
+St.TYPE = { title = 16, name = 14, body = 13, small = 13, label = 12 }
+function St.Size(role, size)
+	local fixed = St.TYPE[role]
+	if role == "name" or role == "title" then return math.max(fixed, size or fixed) end   -- headlines may be larger
+	if fixed then return fixed end
+	return math.max(St.MIN_TEXT, size or 13)   -- hero, number: display sizes
+end
 St.MUTED = { r = 0.81, g = 0.76, b = 0.66 }   -- captions: still readable
 St.BRONZE = { r = 0.40, g = 0.32, b = 0.22 }
 

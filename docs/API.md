@@ -258,7 +258,6 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `UnregisterEvent` | doc | doc |  |
 | event | `ADDON_LOADED` | doc | doc |  |
 | event | `ANCHOR_BOTTOM` | used | used |  |
-| event | `ANCHOR_NONE` | used | used |  |
 | event | `ANCHOR_RIGHT` | used | used |  |
 | event | `ANCHOR_TOP` | used | used |  |
 | event | `ARTWORK` | used | used |  |

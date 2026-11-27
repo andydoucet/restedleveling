@@ -30,7 +30,7 @@ end
 local cases = {}
 
 function cases.main_window_shows_the_play_next_order()
-	local h = world()
+	local h, state = world()
 	h.Slash("RESTEDLEVELING", "")
 	local main = h.Env().RestedLevelingMain
 	T.ok(main and main:IsShown(), "window open")
@@ -40,7 +40,17 @@ function cases.main_window_shows_the_play_next_order()
 	local first = main.roster.rows[1].name:GetText():gsub("|c%x+", ""):gsub("|r", "")
 	T.eq(first, "Le Dette", "then the resting one")
 	T.eq(main.roster.rows[2].chip.text:GetText(), "NOT RESTING", "the outside one says not resting")
-	T.eq(main.roster.rows[2].time:GetText(), "~20%  ·  Not filling: rest at an inn", "outside: no weeks-long promise, what to do instead")
+	T.eq(main.roster.rows[2].time:GetText(), "Not filling: rest at an inn", "outside: no weeks-long promise, what to do instead")
+	T.eq(main.roster.rows[2].value:GetText(), "~20%", "the % in its own value column")
+	-- one grid: chips share one width and one left edge (so one right edge), and the value column sits before them
+	local W_ = state.ns.Widgets
+	for i = 1, 2 do
+		local r = main.roster.rows[i]
+		T.eq(r.chip:GetWidth(), W_.CHIP_W, "row " .. i .. ": the fixed chip width")
+		T.eq(r.chip.__points[#r.chip.__points][2], W_.COL.chip, "row " .. i .. ": on the chip column")
+	end
+	T.ok(W_.COL.value + W_.VALUE_W < W_.COL.chip, "the value column ends before the chips")
+	T.eq(main.current.pill.__points[#main.current.pill.__points][2], 4 + W_.COL.chip, "NOW PLAYING's chip on the rows' chip column")
 	T.eq(main.hero.acct:GetText(), "", "no account tag for this account's own characters")
 	T.has(main.current.name:GetText(), "Le Jette", "current character strip")
 	T.clean(h)
@@ -68,6 +78,7 @@ function cases.no_text_under_12_px_and_every_text_colour_reads()
 		if fs.__size then
 			n = n + 1
 			T.ok(fs.__size >= 12, ("text at %s px: %s"):format(fs.__size, tostring(fs.__text)))
+			if fs.rlRole == "body" or fs.rlRole == "small" then T.ok(fs.__size >= 13, "reading text at 13 px or more") end
 		end
 	end
 	T.ok(n > 50, "checked the main window and the card")

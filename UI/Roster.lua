@@ -5,7 +5,7 @@ local St, Wg, Wd, U = ns.Style, ns.Widgets, ns.Words, ns.Util
 local R = {}
 ns.Roster = R
 
-R.ROW_H = 58
+R.ROW_H = 62   -- rows grow rather than squeeze their second line (13 px meta)
 
 local function rowTooltip(row)
 	local r = row.data
@@ -93,7 +93,7 @@ local function createRow(parent, w)
 	f.portrait = Wg.Portrait(f, 44)
 	f.portrait:SetPoint("LEFT", COL.portrait, 0)
 	f.name = Wg.Text(f, "name", nil, 14)
-	f.name:SetPoint("TOPLEFT", COL.text, -10)
+	f.name:SetPoint("TOPLEFT", COL.text, -12)
 	f.name:SetShadowColor(0, 0, 0, 0.9)   -- class colours (shaman blue) stay clear of the state tint
 	f.name:SetShadowOffset(1, -1)
 	f.acct = Wg.Text(f, "label", nil, 11)   -- "Account 3", only for the other account's characters
@@ -102,11 +102,15 @@ local function createRow(parent, w)
 	f.sub = Wg.Text(f, "small", nil, 13)
 	f.sub:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 0, -5)
 	St.Color(f.sub, St.SECOND)
-	f.bar = Wg.BubbleBar(f, COL.chip - COL.bar - 26, 13, 30)
-	f.bar:SetPoint("TOPLEFT", COL.bar, -10)
+	f.bar = Wg.BubbleBar(f, Wg.BAR_W, 13, 30)
+	f.bar:SetPoint("TOPLEFT", COL.bar, -12)
+	f.value = Wg.Text(f, "number", nil, 14)   -- "92%": its own column, right-aligned, on the bar's line
+	f.value:SetPoint("RIGHT", f, "LEFT", COL.value + Wg.VALUE_W, 0)
+	f.value:SetPoint("TOP", f.bar, "TOP", 0, 2)
+	f.value:SetJustifyH("RIGHT")
 	f.time = Wg.Text(f, "small", nil, 13)
 	f.time:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7)
-	f.time:SetWidth(COL.chip - COL.bar - 90)
+	f.time:SetWidth(COL.value + Wg.VALUE_W - COL.bar)
 	St.Color(f.time, St.CREAM)
 	f.chip = Wg.Chip(f, 20)
 	f.chip:SetPoint("LEFT", COL.chip, 0)
@@ -214,8 +218,12 @@ local function fillRow(row, r, n, now, calibrated, alt)
 	row.bar:SetShown(p ~= nil and not grey)
 	if p and not grey then Wg.SetBubbleBar(row.bar, p.pct, r.state, not calibrated) end
 	row.bar.fill:SetAlpha(r.state == "outside" and 0.45 or 1)   -- banked, but not moving: no live-looking fill
-	row.time:SetWidth(COL.chip - COL.bar - 6)
-	row.time:SetText(r.hidden and "hidden" or Wd.RowTime(r, now, calibrated))
+	row.time:SetWidth(COL.value + Wg.VALUE_W - COL.bar)
+	row.time:SetText(r.hidden and "hidden" or Wd.RowWhen(r, now))
+	row.value:SetText(p and ((calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%") or "")
+	local vr, vg, vb = St.StateColor(r.state)
+	row.value:SetTextColor(vr * 0.6 + 0.4, vg * 0.6 + 0.4, vb * 0.6 + 0.4)
+	row.value:SetShown(p ~= nil and not grey)
 	if r.state == "max" then St.Color(row.time, St.MUTED) else St.Color(row.time, St.CREAM) end   -- the joke is not data
 	row:SetAlpha(grey and 0.7 or 1)   -- max level and hidden rows recede
 	row.time:SetAlpha(grey and 0.7 or 1)
