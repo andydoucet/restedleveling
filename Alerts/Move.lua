@@ -2,10 +2,10 @@
 -- of the player's choosing, saved per account in RestedLevelingDB.positions as { point, relPoint, x, y } against
 -- UIParent, anchored to the nearest edge (so it survives a resolution or UI scale change) and clamped to the screen.
 --
--- /rlvl move (Options > Move notifications, or a right-click on the cog) shows each one as a labelled placeholder in its real size and style,
--- to drag, with Reset per item, Reset all and Done; Esc leaves. The Esc-menu card hangs under the menu until it is
--- moved (detached); Reset attaches it again. With ElvUI the three are also ElvUI movers in their own "Rested Leveling"
--- group in /moveui; both ways of moving them save to the same place. Not in combat.
+-- /rlvl move (Options > Move notifications, or a right-click on the cog) shows each one as a labelled placeholder in
+-- its real size and style, to drag, with Reset per item, Reset all and Done; Esc leaves. The Esc-menu card hangs under
+-- the menu until it is moved (detached); Reset attaches it again. With ElvUI the three are also ElvUI movers in their
+-- own "Rested Leveling" group in /moveui; both ways of moving them save to the same place. Not in combat.
 
 local _, ns = ...
 local St, Wg, U = ns.Style, ns.Widgets, ns.Util
