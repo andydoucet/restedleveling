@@ -435,7 +435,7 @@ function Card.Show(key)
 	local host = St.HostFrame()   -- under a host skin the stage is a flat well, like its own windows
 	s.bg:SetShown(not host)
 	s.shade:SetShown(not host)
-	if host then St.Backdrop(s, "sw_host_stage", "sw_host_line", 1) end   -- his panel colour, not a black void
+	if host then St.Well(s, true) end   -- ElvUI's own (fade) panel colour, not a black void
 	s.warm:SetShown(not outside and not host)
 	s.cold:SetShown(outside and not host)
 	s.fog:SetShown(outside and not host)

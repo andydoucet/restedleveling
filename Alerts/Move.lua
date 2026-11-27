@@ -19,7 +19,7 @@ Mv.ITEMS = {
 		default = { point = "TOP", relPoint = "TOP", x = 0, y = -8 } },
 	toasts = { label = "Toasts", note = "Filled up, ran out, running low, sleeping bag.", state = "full", w = 360, h = 74,
 		default = { point = "BOTTOM", relPoint = "BOTTOM", x = 0, y = 150 } },
-	menu = { icon = "MENU_ICON", label = "Esc menu card", note = "Under the Esc menu while you are not resting.", state = "outside", w = 440, h = 112 },
+	menu = { icon = "MENU_ICON", label = "Esc menu card", note = "Under the Esc menu when not resting.", state = "outside", w = 360, h = 112 },
 }
 Mv.TOAST_STEP = 78   -- one toast above (or below) the last
 
@@ -219,6 +219,7 @@ local function placeholder(key)
 	f.stripe:SetPoint("BOTTOMLEFT", 4, 4)
 	f.stripe:SetWidth(4)
 	St.Paint(f.stripe, "st_" .. it.state)
+	f.stripe:SetShown(key ~= "menu")   -- like the real card: the Esc card has no red rail
 	f.edge = CreateFrame("Frame", nil, f, "BackdropTemplate")   -- a gold outline: this one can be picked up
 	f.edge:SetPoint("TOPLEFT", -3, 3)
 	f.edge:SetPoint("BOTTOMRIGHT", 3, -3)
@@ -226,7 +227,8 @@ local function placeholder(key)
 	f.icon = f:CreateTexture(nil, "ARTWORK")
 	f.icon:SetSize(26, 26)
 	f.icon:SetPoint("TOPLEFT", 18, -14)
-	f.icon:SetTexture(it.icon and A[it.icon] or St.STATE[it.state].icon)   -- each placeholder wears its alert's icon
+	f.icon:SetTexture(it.icon and A[it.icon] or St.STATE[it.state].icon)
+	if it.icon then f.icon:SetTexCoord(0, 1, 0, 1) end   -- each placeholder wears its alert's icon
 	f.title = Wg.Text(f, "name", nil, 16)
 	f.title:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, 1)
 	f.title:SetText(it.label)

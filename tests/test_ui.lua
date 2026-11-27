@@ -36,11 +36,11 @@ function cases.main_window_shows_the_play_next_order()
 	T.ok(main and main:IsShown(), "window open")
 	T.eq(main.hero.name:GetText():gsub("|c%x+", ""):gsub("|r", ""), "Le Nette", "hero is the full one")
 	T.eq(main.hero.why:GetText(), "Full since 2d ago", "hero says why, in real time")
-	T.eq(main.hero.waste:GetText(), "·  more rest is wasted.", "and the reason to switch, apart (amber)")
+	T.eq(main.hero.waste:GetText(), "More rest is wasted.", "and the reason to switch, apart (amber)")
 	local first = main.roster.rows[1].name:GetText():gsub("|c%x+", ""):gsub("|r", "")
 	T.eq(first, "Le Dette", "then the resting one")
 	T.eq(main.roster.rows[2].chip.text:GetText(), "NOT RESTING", "the outside one says not resting")
-	T.eq(main.roster.rows[2].time:GetText(), "~20%  ·  Full in 31d 23h", "its real-life time to full, slow outside (no clock time past two days)")
+	T.eq(main.roster.rows[2].time:GetText(), "~20%  ·  Not filling: rest at an inn", "outside: no weeks-long promise, what to do instead")
 	T.eq(main.hero.acct:GetText(), "", "no account tag for this account's own characters")
 	T.has(main.current.name:GetText(), "Le Jette", "current character strip")
 	T.clean(h)
@@ -94,6 +94,17 @@ function cases.one_button_family_and_quiet_rows()
 	T.eq(row.stripe:GetWidth(), 5, "a 5 px state rail")
 	T.ok(row.pips == nil, "no moon meter in the rows (it is on the card and in the tooltip)")
 	T.clean(h)
+end
+
+-- Council r4: chips are filled tags; icons only where they add something (warning, nearly full, tick).
+function cases.chips_are_filled_and_quiet_about_icons()
+	local _, h, state = W.New({})
+	local Wg = state.ns.Widgets
+	local chip = Wg.Chip(h.Env().UIParent, 20)
+	Wg.SetChip(chip, "resting", "RESTING")
+	T.ok(not chip.icon:IsShown(), "no icon on RESTING")
+	Wg.SetChip(chip, "outside", "NOT RESTING")
+	T.ok(chip.icon:IsShown(), "the warning on NOT RESTING")
 end
 
 return cases

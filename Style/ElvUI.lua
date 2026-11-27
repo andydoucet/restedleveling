@@ -108,6 +108,31 @@ function X.MakeClose(parent)
 	return b
 end
 
+-- Inherit, don't invent (desk, council r4): ElvUI's own panel colours and texture, read at runtime from E.media
+-- (backdropcolor, backdropfadecolor, bordercolor, blankTex). With a skin such as WC3 the windows wear its art (through
+-- S:Handle*); our inner panels take ElvUI's backdrop, so stock ElvUI gives its near-black. nil when ElvUI has none.
+local function rgb(t)
+	if type(t) ~= "table" then return nil end
+	local r, g, b = t.r or t[1], t.g or t[2], t.b or t[3]
+	if type(r) ~= "number" or type(g) ~= "number" or type(b) ~= "number" then return nil end
+	return r, g, b, t.a or t[4]
+end
+function X.HostColors(fade)
+	local m = E and E.media
+	if type(m) ~= "table" then return nil end
+	local r, g, b, a = rgb(fade and m.backdropfadecolor or m.backdropcolor)
+	if not r then return nil end
+	local er, eg, eb = rgb(m.bordercolor)
+	return { bg = { r, g, b, fade and (a or 0.8) or 1 }, edge = er and { er, eg, eb, 1 }, tex = m.blankTex }
+end
+function X.Well(frame, fade)
+	local c = X.HostColors(fade)
+	if not (c and c.tex and frame.SetBackdrop) then St.Backdrop(frame, "sw_host_well", "sw_host_line", 1) return end
+	frame:SetBackdrop({ bgFile = c.tex, edgeFile = c.tex, edgeSize = 1 })   -- ElvUI's own 1 px template
+	frame:SetBackdropColor(unpack(c.bg))
+	if c.edge then frame:SetBackdropBorderColor(unpack(c.edge)) end
+end
+
 -- Floating surfaces are top-level windows too (HandleFrame, once per frame: it strips the frame's textures).
 -- Inner panels are our own dark wells (baked fills), so the content keeps its contrast on any skin.
 local FLOATING = { toast = true, tooltip = true, warn = true, top = true }
@@ -118,8 +143,8 @@ function X.Panel(frame, kind)
 		skinTopLevel(frame, "HandleFrame")
 		return
 	end
-	-- Inner wells: flat near-black brown with the host's thin dark line, like its own skinned windows.
-	if kind == "card" or kind == "inset" or kind == "strip" then St.Backdrop(frame, "sw_host_well", "sw_host_line", 1) return end
+	-- Inner wells: ElvUI's own backdrop and border, like its own skinned windows.
+	if kind == "card" or kind == "inset" or kind == "strip" then X.Well(frame) return end
 	St.backends.default.Panel(frame, kind)
 end
 

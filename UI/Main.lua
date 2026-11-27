@@ -46,7 +46,7 @@ function Main.Create()
 		f = CreateFrame("Frame", "RestedLevelingMain", UIParent, "BackdropTemplate")
 		St.Panel(f, "card")
 	end
-	f.heroH, f.curH = 234, 62
+	f.heroH, f.curH = 262, 62
 	f.fullHeroH = f.heroH
 	f:SetSize(Main.W, chromeH(f, Main.VISIBLE * ns.Roster.ROW_H))
 	f:SetPoint("CENTER", -160, 10)

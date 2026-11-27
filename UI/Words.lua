@@ -87,6 +87,14 @@ local function banked(levels)
 	return Wd.Levels(levels) .. " banked"
 end
 
+-- A character parked outside a rest area is not filling to speak of (a quarter speed: weeks), so no row, lane or tip
+-- promises it a fill time; it says what to do instead (desk, council r4).
+Wd.NOT_FILLING = "Not filling: rest at an inn"
+function Wd.RowFull(r, now, dateFn)
+	if r.state == "outside" and r.p and r.p.left > 0 then return Wd.NOT_FILLING end
+	return Wd.FullLine(r.p, now, dateFn)
+end
+
 -- The card's reason, in plain words, with the real-life time to full.
 function Wd.Why(r, now, dateFn)
 	local p, c = r.p, r.c
@@ -99,7 +107,7 @@ function Wd.Why(r, now, dateFn)
 	elseif r.state == "resting" then
 		return ("Resting at %s. %s. %s."):format(Wd.Place(c), banked(p.levels), full)
 	end
-	return ("Not resting: fills 4x slower. %s. %s. Park it in an inn."):format(banked(p.levels), full)
+	return ("%s. %s."):format(Wd.NOT_FILLING, banked(p.levels))
 end
 
 -- The hero's one line under its bar: the state in a word or two, then the real-life time to full.
@@ -114,7 +122,7 @@ function Wd.HeroWhy(r, now, dateFn)
 	end
 	if r.state == "near" then return ("%d%% full. %s."):format(math.floor(p.pct * 100), full) end
 	if r.state == "resting" then return ("Resting. %s."):format(full) end
-	return ("Not resting, fills 4x slower. %s."):format(full)
+	return Wd.NOT_FILLING .. "."
 end
 
 -- Nobody has rest worth switching to: the best alt is not (nearly) full and has under BANKED_MIN levels.
@@ -136,7 +144,7 @@ end
 function Wd.Steps(name, meName, restingNow, empty)
 	if empty then return nil end
 	meName = meName or "This character"
-	return ("%s: %s"):format(meName, restingNow and "log out here" or "hearth to an inn"), ("%s: play next"):format(name)
+	return ("%s: %s"):format(meName, restingNow and "log out here" or "hearth to an inn"), ("%s: play now"):format(name)
 end
 
 -- The hero's action bar. The "first, ..." part is always about the character you are on (`meName`), never the
@@ -158,6 +166,7 @@ function Wd.RowTime(r, now, calibrated, dateFn)
 	local p = r.p
 	if not p then return r.state == "max" and "Max level. I keep the bench warm." or "" end
 	local full = p.left > Wd.ROW_CLOCK_MAX and ("Full in " .. U.Duration(p.left)) or Wd.FullLine(p, now, dateFn)
+	if r.state == "outside" and p.left > 0 then full = Wd.NOT_FILLING end   -- what to do, not a weeks-long promise
 	return (calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%  ·  " .. full
 end
 

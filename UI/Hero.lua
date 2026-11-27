@@ -6,7 +6,7 @@ local St, Wg, Wd, U = ns.Style, ns.Widgets, ns.Words, ns.Util
 local Hero = {}
 ns.Hero = Hero
 
-local BAR_SEGS, ACTION_H = 30, 42
+local BAR_SEGS, ACTION_H = 30, 58   -- the plan strip: its two steps, then who comes after on a line of its own
 
 local function text(f, role, size, color)
 	local t = Wg.Text(f, role, nil, size)
@@ -27,12 +27,12 @@ function Hero.Create(parent, w, h)
 	f.shadeArt:SetPoint("TOPLEFT", f.art)
 	f.shadeArt:SetPoint("BOTTOMRIGHT", f.art)
 	St.Paint(f.shadeArt, "sw_black")
-	f.shadeArt:SetVertexColor(1, 1, 1, 0.22)   -- the inn reads as an inn; the fade keeps text clear
+	f.shadeArt:SetVertexColor(1, 1, 1, 0.45)   -- the art stays atmosphere behind the text   -- the inn reads as an inn; the fade keeps text clear
 	f.fade = f:CreateTexture(nil, "BACKGROUND", nil, 2)   -- dark under the text, the inn shows on the right
 	f.fade:SetTexture(St.MEDIA .. "fade_h")
 	f.fade:SetPoint("TOPLEFT", 1, -1)
 	f.fade:SetPoint("BOTTOMLEFT", 1, ACTION_H)
-	f.fade:SetWidth(w * 0.42)   -- dark only under the text: the barrels and hearth show
+	f.fade:SetWidth(w * 0.62)   -- dark only under the text: the barrels and hearth show
 	f.edge = f:CreateTexture(nil, "BORDER")
 	f.edge:SetPoint("TOPLEFT", 1, -1)
 	f.edge:SetPoint("BOTTOMLEFT", 1, 1)
@@ -76,7 +76,7 @@ function Hero.Create(parent, w, h)
 	-- whose tail points back at the portrait. One line; the row is reserved so the layout holds without it.
 	f.say = Wg.Bubble(f, 14)
 	f.say:SetHeight(24)
-	f.say:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 24, -6)   -- the tail clear of the class badge; 6 px gaps
+	f.say:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 12, -6)   -- from the name's edge (the tail reaches back); 6 px gaps
 	f.sayText = f.say.text
 	f.sayText:SetPoint("LEFT", 10, 0)
 	Wg.PointTail(f.say, "left")
@@ -86,7 +86,7 @@ function Hero.Create(parent, w, h)
 	-- The figure and its unit read as one ("1.5 LEVELS BANKED"), right-aligned on the bar's right end, under the name's
 	-- size so the name leads.
 	f.stat = Wg.Text(f, "hero", nil, 38)
-	f.stat:SetPoint("TOPRIGHT", -20, -30)   -- the figure, its unit and its state chip: one group centred on the portrait
+	f.stat:SetPoint("TOPRIGHT", -20, -38)   -- the figure, its unit and its state chip: one group centred on the portrait
 	f.stat:SetJustifyH("RIGHT")
 	f.statSub = text(f, "label", 12, St.CREAM)
 	f.statSub:SetPoint("TOPRIGHT", f.stat, "BOTTOMRIGHT", 0, -2)   -- one right edge for the figure, unit and runner-up
@@ -117,8 +117,8 @@ function Hero.Create(parent, w, h)
 	fa:SetDuration(0.5)
 	f.why = text(f, "body", 14, St.CREAM)
 	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -8)
-	f.waste = text(f, "body", 14, { r = 0.89, g = 0.70, b = 0.29 })   -- the reason to switch, in amber, not success green
-	f.waste:SetPoint("LEFT", f.why, "RIGHT", 6, 0)
+	f.waste = text(f, "body", 13, { r = 0.88, g = 0.63, b = 0.38 })   -- the reason to switch: its own amber line
+	f.waste:SetPoint("TOPLEFT", f.why, "BOTTOMLEFT", 0, -3)
 
 	-- The action bar: what to do next, and the card button.
 	f.action = CreateFrame("Frame", nil, f, "BackdropTemplate")
@@ -144,15 +144,16 @@ function Hero.Create(parent, w, h)
 		n:SetText(i)
 		n:SetTextColor(0.12, 0.08, 0.03)
 		n:SetShadowOffset(0, 0)
-		local t = text(f.action, "name", 15, { r = 0.95, g = 0.89, b = 0.69 })
+		local t = text(f.action, "name", 15, { r = 0.95, g = 0.89, b = 0.69 })   -- the name, in its class colour
 		t:SetPoint("LEFT", disc, "RIGHT", 8, 0)
-		f.steps[i] = { disc = disc, n = n, text = t }
+		local v = text(f.action, "name", 15, { r = 0.95, g = 0.89, b = 0.69 })   -- the verb, always cream
+		v:SetPoint("LEFT", t, "RIGHT", 5, 0)
+		f.steps[i] = { disc = disc, n = n, text = t, verb = v }
 	end
-	f.steps[1].disc:SetPoint("LEFT", 18, 0)
-	f.steps[2].disc:SetPoint("LEFT", f.steps[1].text, "RIGHT", 22, 0)
-	f.ahead = text(f.action, "small", 12, { r = 0.85, g = 0.78, b = 0.60 })   -- the runner-up: the plan's step 3
-	f.ahead:SetPoint("RIGHT", -136, 0)
-	f.ahead:SetJustifyH("RIGHT")
+	f.steps[1].disc:SetPoint("TOPLEFT", 18, -9)
+	f.steps[2].disc:SetPoint("LEFT", f.steps[1].verb, "RIGHT", 24, 0)
+	f.ahead = text(f.action, "small", 12, { r = 0.85, g = 0.79, b = 0.66 })   -- who comes after: a line of its own
+	f.ahead:SetPoint("TOPLEFT", f.steps[1].disc, "BOTTOMLEFT", 1, -7)
 	f.open = St.MakeButton(f.action, 120, "View card", true)
 	f.open:SetPoint("RIGHT", -8, 0)
 	f.ctaW = w - 6 - 22 - 120 - 8 - 12   -- from its inset to 12 px short of the button
@@ -266,7 +267,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 		-- the state, then the real-life time to full; a full #1's "more rest is wasted" in amber after it
 		local why, waste = Wd.HeroWhy(row, now):match("^(.-)%s+·%s+(.+)$")
 		f.why:SetText(why or Wd.HeroWhy(row, now))
-		f.waste:SetText(waste and ("·  " .. waste) or "")
+		f.waste:SetText(waste and (waste:gsub("^%l", string.upper)) or "")
 		f.ahead:SetText(rows and Wd.Ahead(rows, now) or "")
 	end
 	f.stat:SetTextColor(0.96, 0.86, 0.58)   -- one warm cream-gold figure in both themes; the accent and bar carry state
@@ -277,8 +278,10 @@ function Hero.Update(f, row, now, me, rows, empty)
 	local s1, s2 = Wd.Steps(name, meName, ns.Snap.RestingNow(), empty)
 	f.cta:SetShown(s1 == nil)
 	for i, st in ipairs(f.steps) do
-		for _, k in ipairs({ "disc", "n", "text" }) do st[k]:SetShown(s1 ~= nil) end
-		st.text:SetText(i == 1 and s1 or s2 or "")
+		for _, k in ipairs({ "disc", "n", "text", "verb" }) do st[k]:SetShown(s1 ~= nil) end
+		local who, verb = (i == 1 and s1 or s2 or ""):match("^(.-:)%s+(.+)$")   -- the name coloured, the verb cream
+		st.text:SetText(who or "")
+		st.verb:SetText(verb or "")
 	end
 	if not s1 then Hero.FitAction(f, Wd.Action(name, meName, ns.Snap.RestingNow(), empty)) end
 	f.open:SetLabel("View details")   -- the name is right above it

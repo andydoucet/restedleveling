@@ -147,7 +147,7 @@ end
 function Wg.BubbleBar(parent, w, h, segs)
 	local holder = CreateFrame("Frame", nil, parent, "BackdropTemplate")
 	holder:SetSize(w + 4, h + 4)
-	St.Backdrop(holder, "sw_well", "sw_black", 1)
+	St.Backdrop(holder, "sw_well", "sw_edge", 1)   -- a warm bronze edge: an empty bar still reads as a bar
 	local bar = CreateFrame("StatusBar", nil, holder)
 	bar:SetPoint("TOPLEFT", 2, -2)
 	bar:SetPoint("BOTTOMRIGHT", -2, 2)
@@ -229,14 +229,20 @@ function Wg.SetChip(f, state, text)
 	f.icon:SetTexture(s.icon)
 	f.text:SetText(text or s.word:upper())
 	local key = St.STATE[state] and state or "max"
-	f.text:SetTextColor(St.StateColor(key))   -- the word in the state's own colour, the same as its edge and bar
-	-- One chip family: a near-black fill, a 1 px edge and the word in the state colour (the bars' own token).
-	St.Backdrop(f, "chipfill_max", "st_" .. key, 1)
-	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.35) end   -- quiet fills, like his flat cells
-	local group = f.text:GetStringWidth() + f.icon:GetWidth() + 5
+	local r, g, b = St.StateColor(key)
+	f.text:SetTextColor(r * 0.55 + 0.45, g * 0.55 + 0.45, b * 0.55 + 0.45)   -- a light tint of the state, clear of its fill
+	-- A filled tag, not a hollow box: the state's own dark fill and its edge (council r4: outlines read as form fields).
+	St.Backdrop(f, "chipfill_" .. key, "st_" .. key, 1)
+	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.85) end
+	-- Icons only where they say something the word does not: the warning, the nearly-full arrow, the tick.
+	local icon = key == "outside" or key == "near" or key == "full"
+	f.icon:SetShown(icon)
+	local group = f.text:GetStringWidth() + (icon and (f.icon:GetWidth() + 5) or 0)
 	if not f.fixed then f:SetWidth(group + 14) end
 	f.icon:ClearAllPoints()   -- icon and word centred as one group: no dead space on the right
 	f.icon:SetPoint("LEFT", math.max(6, math.floor((f:GetWidth() - group) / 2)), 0)
+	f.text:ClearAllPoints()
+	if icon then f.text:SetPoint("LEFT", f.icon, "RIGHT", 5, 0) else f.text:SetPoint("CENTER", 0, 0) end
 end
 
 -- Place badge: icon (+ optional text).

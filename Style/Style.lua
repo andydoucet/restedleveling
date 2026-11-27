@@ -113,6 +113,18 @@ for _, m in ipairs({ "Window", "Panel", "Button", "Close", "Check", "Bar", "Tab"
 	St[m] = call(m)
 end
 
+-- An inner panel in the host's own colours under a host skin (ElvUI: E.media), else our inset. fade: the lighter fill.
+function St.Well(frame, fade)
+	St.Ensure()
+	if St.HostFrame() and St.backend.Well then St.backend.Well(frame, fade) else St.Panel(frame, "inset") end
+end
+-- The host's panel fill { r, g, b, a } under a host skin, or nil.
+function St.HostFill(fade)
+	St.Ensure()
+	local c = St.HostFrame() and St.backend.HostColors and St.backend.HostColors(fade)
+	return c and c.bg or nil
+end
+
 -- The window scale option (a readable-size preset): 0.8 to 1.4, applied to our own windows only.
 function St.Scale(frame)
 	local sc = tonumber(ns.DB().opts.scale) or 1

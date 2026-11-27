@@ -97,6 +97,8 @@ function O.Panel()
 	p.name = "Rested Leveling"
 	p.bg = p:CreateTexture(nil, "BACKGROUND")   -- our own near-black panel, like the roster's wells, in both themes
 	St.Paint(p.bg, "sw_host_well")
+	local fill = St.HostFill()   -- under ElvUI: ElvUI's own backdrop colour, like the Settings panel it sits in
+	if fill then p.bg:SetColorTexture(unpack(fill)) end
 	p.bg:SetAllPoints()
 	local title = Wg.Text(p, "title", nil, 20)
 	title:SetPoint("TOPLEFT", 16, -16)

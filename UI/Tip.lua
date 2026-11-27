@@ -21,7 +21,7 @@ local function create()
 	St.Color(f.title, St.GOLD)
 	f.sub = Wg.Text(f, "small", nil, 12)
 	f.sub:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -2)   -- what the order means, under the title
-	f.sub:SetText("best to play first")
+	f.sub:SetText("Play the top one first")
 	St.Color(f.sub, St.MUTED)
 	f.rule = f:CreateTexture(nil, "ARTWORK")
 	St.Paint(f.rule, "sw_rule")
@@ -78,7 +78,7 @@ function Tip.Show(owner)
 			local word, detail
 			if not p then word = s.word
 			elseif p.left == 0 then word = Wd.FullLine(p, now)
-			else word, detail = (r.state == "outside" and "Outside" or (math.floor(p.pct * 100) .. "%")), Wd.FullLine(p, now) end
+			else word, detail = (r.state == "outside" and "Outside" or (math.floor(p.pct * 100) .. "%")), Wd.RowFull(r, now) end
 			line.state:SetText(("|c%s%s|r|cffb8a88a%s|r"):format(St.Hex(s.r, s.g, s.b), word, detail and ("  ·  " .. detail) or ""))
 		end
 	end

@@ -89,6 +89,7 @@ function Tl.Label(lane, now, dateFn)
 	if lane.left <= 0 then return "Full now" end
 	local d = dateFn("*t", now + lane.left)
 	local hm = ("%02d:%02d"):format(d.hour, d.min)
+	if lane.row and lane.row.state == "outside" then return "Not filling:\nfind an inn" end   -- what to do, not a date weeks out
 	if lane.beyond then   -- two lines in the gutter, so lanes full the same day still part: date, then time
 		return ("%s %d %s\n%s"):format(DAYS[d.wday], d.day, MONTHS[d.month], hm)   -- the column says what it is
 	end
@@ -144,7 +145,7 @@ local function lane(f)
 		GameTooltip:SetPoint("LEFT", self, "LEFT", Tl.LABEL_W + x, 0)   -- on its own lane, just right of the marker
 		GameTooltip:AddLine(St.ClassText(r.c.class, r.c.full or "?"))
 		local s = St.STATE[r.state] or St.STATE.max
-		GameTooltip:AddLine(Wd.FullLine(r.p, self.now or time()), s.r, s.g, s.b)
+		GameTooltip:AddLine(Wd.RowFull(r, self.now or time()), s.r, s.g, s.b)
 		GameTooltip:AddLine(("%s banked · %s"):format(Wd.Levels(r.p.levels), Wd.Place(r.c)), 0.9, 0.85, 0.75)
 		GameTooltip:Show()
 	end)

@@ -1,4 +1,5 @@
 ## Interface: 16001
 ## Title: Rested Leveling render fixture (offline only)
 ## Notes: Saved data and identity for wow-ui-sim renders. Never install in the game.
+Gamma.lua
 Fixture.lua
