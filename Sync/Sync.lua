@@ -17,6 +17,8 @@ S.PREFIX = "RLVL1"
 S.CHUNK = 220            -- data bytes per message (the client allows 255 including our header)
 S.BURST, S.REFILL = 6, 1.2   -- token bucket: up to 6 at once, then one message per 1.2 s
 S.RESEND = 300           -- don't resend the same roster to the same peer within 5 minutes
+S.ACTIVE = 960           -- a peer whose last hello is older than this (16 min: past one ticker) may be offline
+S.REPLY_GAP = 60         -- a hello that shows the peer lacks our roster is answered unless we sent it this recently
 S.MAX_CHUNKS = 120
 S.MAX_WHISPERS = 12
 S.MAX_LINKS = 8          -- linked names and known peer accounts
@@ -111,12 +113,13 @@ local function hello(target)
 		(target and linked(target)) and "1" or "0")
 end
 
-local function sendRoster(target)
+-- gap: skip when this same roster went to this name within `gap` seconds (default S.RESEND).
+local function sendRoster(target, gap)
 	local d = ns.DB()
 	local digest = C.Digest(d.chars)
 	local tkey = S.NameKey(target)
 	local last = sentTo[tkey]
-	if last and last.digest == digest and time() - last.t < S.RESEND then return end
+	if last and last.digest == digest and time() - last.t < (gap or S.RESEND) then return end
 	local chunks = C.Chunk(C.EncodeRoster(d.chars, d.account), S.CHUNK)
 	if #chunks > S.MAX_CHUNKS then   -- too big to send: say so once, and never record it as sent
 		if not S.warnedSize then S.warnedSize = true; U.Print("the roster is too large to sync in one go; sync skipped.") end
@@ -130,8 +133,10 @@ local function sendRoster(target)
 end
 
 -- Say hello on every shared channel and to linked names and known peers. A name that has confirmed the link (mutual)
--- also gets our roster now when it changed (sendRoster skips an unchanged one), so a login or /rlvl sync never waits
--- for the 15-minute ticker. A one-way link only gets the hello: the trust model is unchanged.
+-- and said hello within S.ACTIVE also gets our roster now when it changed (sendRoster skips an unchanged one), so a
+-- login or /rlvl sync never waits for the 15-minute ticker. One not heard from lately may be offline: it gets only
+-- the hello, and neither the send nor the echo is recorded, so its own login hello is answered in full. A one-way
+-- link only gets the hello: the trust model is unchanged.
 function S.Announce()
 	local s, msg = sync(), hello()
 	if U.Call(IsInGuild) then enqueue(msg, "GUILD") end
@@ -140,8 +145,12 @@ function S.Announce()
 	for name in pairs(s.links) do
 		if n < S.MAX_WHISPERS then
 			enqueue(hello(name), "WHISPER", name); n = n + 1
-			echoed[S.NameKey(name)] = time()
-			if s.confirmed[S.NameKey(name)] then sendRoster(name) end
+			local account = s.confirmed[S.NameKey(name)]
+			local peer = account and s.peers[account]
+			if peer and peer.seen and time() - peer.seen < S.ACTIVE then
+				echoed[S.NameKey(name)] = time()
+				sendRoster(name)
+			end
 		end
 	end
 	S.Pump()
@@ -189,7 +198,9 @@ local function onHello(body, sender, channel)
 		echoed[key] = time()
 		enqueue(hello(sender), "WHISPER", sender)
 	end
-	if newly or digest ~= C.Digest(d.chars) then sendRoster(sender) end
+	-- Their digest differs from ours: they lack our roster (a send may have gone out while they were away), so send,
+	-- unless the same roster went to them in the last minute (the handshake's own burst).
+	if newly or digest ~= C.Digest(d.chars) then sendRoster(sender, S.REPLY_GAP) end
 	S.Pump()
 end
 

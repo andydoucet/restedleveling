@@ -250,4 +250,24 @@ function cases.a_chunk_with_a_fractional_index_is_dropped()
 	T.clean(h)
 end
 
+-- Review round 2 (ILL-1272): our announce goes out while the peer is offline (lost); the peer logs in two minutes later.
+-- Its login hello must still get our new roster, and ours its, without waiting for the 15-minute ticker.
+function cases.a_peer_logging_in_after_our_announce_still_gets_our_roster()
+	local a, b, deliver, net = pair(true)
+	a.h.Slash("RESTEDLEVELING", "link " .. b.name)
+	b.h.Slash("RESTEDLEVELING", "link " .. a.name)
+	deliver()
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 3600) end
+	W.DB(a.h).chars["N:Le Newbie@?"] = rec("Le Newbie", W.NOW + 3500, { account = "aaaaaa" })
+	a.state.ns.Sync.Announce()   -- A's ticker; B is offline
+	for _ = 1, 50 do a.h.Env().__now = a.h.Env().__now + 2; a.state.ns.Sync.Pump() end
+	local q = net()
+	for i = #q, 1, -1 do q[i] = nil end   -- nobody there to receive it
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 120) end
+	b.state.ns.Sync.Announce()   -- B logs in
+	deliver()
+	T.ok(W.Char(b.h, "Le Newbie"), "B has A's new alt after its own login hello")
+	T.clean(a.h); T.clean(b.h)
+end
+
 return cases
