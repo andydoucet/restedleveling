@@ -18,13 +18,13 @@ local function legend(parent)
 	local prev
 	for _, state in ipairs({ "full", "near", "resting", "outside" }) do   -- each item follows the last one's text
 		local s = St.STATE[state]
-		local icon = f:CreateTexture(nil, "ARTWORK")
-		icon:SetTexture(s.icon)
-		icon:SetSize(13, 13)
+		local icon = f:CreateTexture(nil, "ARTWORK")   -- a dot in the state colour: the chips carry the icons
+		St.Paint(icon, "pip_" .. state)
+		icon:SetSize(10, 10)
 		if prev then icon:SetPoint("LEFT", prev, "RIGHT", 14, 0) else icon:SetPoint("LEFT", 0, 0) end
 		local t = Wg.Text(f, "small", nil, 13)
 		t:SetPoint("LEFT", icon, "RIGHT", 4, 0)
-		t:SetTextColor(s.r, s.g, s.b)
+		t:SetTextColor(0.5 + s.r * 0.5, 0.5 + s.g * 0.5, 0.5 + s.b * 0.5)
 		f.parts[state] = t
 		prev = t
 	end

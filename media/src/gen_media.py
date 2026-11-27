@@ -418,6 +418,7 @@ if __name__ == "__main__":
     rail()
     enamel("btn_red", (142, 30, 30))
     enamel("btn_blue", (30, 58, 142))
+    enamel("btn_gold", (150, 104, 30))   # the main action: red is kept for "not resting" only
     rings()
     chips()
     print("media written to", OUT)

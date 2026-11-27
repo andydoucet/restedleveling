@@ -77,12 +77,14 @@ function Hero.Create(parent, w, h)
 	f.sub = text(f, "body", 13, St.SECOND)
 	f.sub:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 1, -34)   -- 6 px under the speech bubble
 
-	f.stat = Wg.Text(f, "hero", nil, 48)
-	f.stat:SetPoint("TOPRIGHT", -12, -8)
+	-- The figure and its unit read as one ("1.5 LEVELS BANKED"), right-aligned on the bar's right end, under the name's
+	-- size so the name leads.
+	f.stat = Wg.Text(f, "hero", nil, 38)
+	f.stat:SetPoint("TOPRIGHT", -20, -16)
 	f.stat:SetJustifyH("RIGHT")
-	f.statSub = text(f, "label", 13, St.SECOND)
-	f.statSub:SetPoint("TOPRIGHT", f.stat, "BOTTOMRIGHT", 0, -6)   -- one right edge for the figure, unit and runner-up
-	f.statSub:SetJustifyH("CENTER")
+	f.statSub = text(f, "label", 12, St.CREAM)
+	f.statSub:SetPoint("TOPRIGHT", f.stat, "BOTTOMRIGHT", 0, -2)   -- one right edge for the figure, unit and runner-up
+	f.statSub:SetJustifyH("RIGHT")
 	f.ahead = text(f, "small", 13, St.MUTED)   -- the runner-up, read last
 	f.ahead:SetPoint("TOPRIGHT", f.statSub, "BOTTOMRIGHT", 0, -8)
 	f.ahead:SetJustifyH("RIGHT")
@@ -90,7 +92,8 @@ function Hero.Create(parent, w, h)
 	f.acct:SetPoint("TOPRIGHT", f.ahead, "BOTTOMRIGHT", 0, -4)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 
-	f.bar = Wg.BubbleBar(f, w - 319, 18, BAR_SEGS)   -- ends on the roster bars' right edge
+	Hero.BAR_W = w - 156 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
+	f.bar = Wg.BubbleBar(f, Hero.BAR_W, 18, BAR_SEGS)
 	f.bar:SetPoint("TOPLEFT", f.sub, "BOTTOMLEFT", -1, -10)
 	f.sheen = f.bar.bar:CreateTexture(nil, "OVERLAY", nil, 6)   -- a gold sheen sweeps the bar when the window opens
 	f.sheen:SetTexture(St.MEDIA .. "glow")
@@ -101,7 +104,7 @@ function Hero.Create(parent, w, h)
 	f.sheen:SetAlpha(0)
 	f.sweep = f.sheen:CreateAnimationGroup()
 	local mv = f.sweep:CreateAnimation("Translation")
-	mv:SetOffset(w - 319, 0)
+	mv:SetOffset(Hero.BAR_W, 0)
 	mv:SetDuration(0.5)
 	local fa = f.sweep:CreateAnimation("Alpha")
 	fa:SetFromAlpha(1)
@@ -109,7 +112,7 @@ function Hero.Create(parent, w, h)
 	fa:SetDuration(0.5)
 	f.why = text(f, "body", 14, St.CREAM)
 	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -8)
-	f.why:SetWidth(w - 319)
+	f.why:SetWidth(Hero.BAR_W)
 
 	-- The action bar: what to do next, and the card button.
 	f.action = CreateFrame("Frame", nil, f, "BackdropTemplate")
@@ -226,12 +229,12 @@ function Hero.Update(f, row, now, me, rows, empty)
 	Wg.SetBubbleBar(f.bar, p.pct, row.state, not calibrated)
 	if empty then   -- nothing banked anywhere: the figure is the real-life wait, not a 0.0
 		f.stat:SetText(U.Duration(p.left))
-		f.statSub:SetText("until full")
+		f.statSub:SetText("UNTIL FULL")
 		f.why:SetText(("Nobody is rested yet. %s fills first: Full in %s."):format(c.full or "?", U.Duration(p.left)))
 		f.ahead:SetText("full " .. Wd.When(now + p.left, now))   -- the clock time under the wait
 	else
 		f.stat:SetText(("%.1f"):format(math.floor(p.levels * 10 + 0.5) / 10))
-		f.statSub:SetText("levels banked")
+		f.statSub:SetText(p.levels >= 0.95 and p.levels < 1.05 and "LEVEL BANKED" or "LEVELS BANKED")
 		f.why:SetText(Wd.HeroWhy(row, now))   -- the state, then the real-life time to full
 		f.ahead:SetText(rows and Wd.Ahead(rows, now) or "")
 	end
