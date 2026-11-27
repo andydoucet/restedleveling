@@ -346,4 +346,16 @@ function cases.esc_card_has_its_own_shape()
 	T.clean(h)
 end
 
+-- Council r7 (sol): the Esc card wraps its lines inside its own width; nothing runs past its right edge.
+function cases.esc_card_text_wraps_inside_the_card()
+	local _, h = world({ resting = false, saved = { chars = { ["N:Le Nette@?"] = alt("Le Nette", 1.5, 2 * D, true) } } })
+	FakeWoW.RunScript(h.Env().GameMenuFrame, "OnShow")
+	local strip = h.Env().RestedLevelingMenuStrip
+	for _, fs in ipairs({ strip.text, strip.action }) do
+		T.ok(fs:GetWidth() > 0 and fs:GetWidth() <= strip:GetWidth() - 48 - 12, "held to the card's text column")
+		T.ok(fs.__wrap, "and wraps on words")
+	end
+	T.clean(h)
+end
+
 return cases

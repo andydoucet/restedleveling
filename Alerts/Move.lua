@@ -240,7 +240,7 @@ local function placeholder(key)
 	f.where = Wg.Text(f, "body", nil, 12)   -- the drag hint, right under the note: readable, no dead gap
 	f.where:SetPoint("TOPLEFT", f.note, "BOTTOMLEFT", 0, -6)
 	St.Color(f.where, St.CREAM)
-	f.reset = St.MakeButton(f, 64, "Reset", false, 22)   -- the same place on every placeholder
+	f.reset = St.MakeButton(f, 112, "Reset position", false, 22)   -- the same place on every placeholder
 	f.reset:SetPoint("TOPRIGHT", -10, -12)
 	if it.h < 100 then f.icon:SetPoint("TOPLEFT", 18, -12) end
 	f.reset:SetScript("OnClick", function() Mv.Reset(key) end)
@@ -290,7 +290,7 @@ local function bar()
 	f.done = St.MakeButton(f, 96, "Done", true, 24)
 	f.done:SetPoint("BOTTOMRIGHT", f, "BOTTOM", -6, 12)
 	f.done:SetScript("OnClick", function() Mv.Stop() end)
-	f.resetAll = St.MakeButton(f, 96, "Reset all", false, 24)
+	f.resetAll = St.MakeButton(f, 150, "Reset all positions", false, 24)
 	f.resetAll:SetPoint("BOTTOMLEFT", f, "BOTTOM", 6, 12)
 	f.resetAll:SetScript("OnClick", function() Mv.ResetAll() end)
 	f:SetScript("OnHide", function() Mv.Stop() end)   -- Esc (UISpecialFrames) hides it

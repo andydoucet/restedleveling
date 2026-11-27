@@ -199,7 +199,7 @@ local function toastFrame(i)
 	f.kicker = Wg.Text(f, "name", nil, 12)   -- what happened (the trigger), in amber; the line under it says what to do
 	f.kicker:SetPoint("TOPLEFT", 76, -11)
 	f.kicker:SetWidth(A.WIDTH - 118)   -- clear of the close button
-	f.kicker:SetTextColor(0.82, 0.55, 0.23)
+	St.Color(f.kicker, St.MUTED)   -- the cause, quiet; the advice under it is the headline
 	f.text = Wg.Text(f, "name", nil, 15)   -- the advice: cream, after a 6 px gap from its cause
 	f.text:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -6)
 	St.Color(f.text, St.CREAM)
@@ -359,6 +359,13 @@ function A.LayoutStrip(f)
 		f:ClearAllPoints()
 		f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
 	end
+	-- Measured wrapping inside the card: text from the moon's right to 12 px short of the close column (24 + 8).
+	local textW = f:GetWidth() - 48 - 12 - 32
+	for _, fs in ipairs({ f.text, f.action }) do
+		fs:SetWidth(textW)
+		fs:SetWordWrap(true)
+		fs:SetHeight(0)
+	end
 	local top = 16 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
 	local bottom = f.alt:IsShown() and layoutAlt(f, 48, top) or (top - 8)   -- 48: under the text, right of the icon
 	f:SetHeight(bottom + 12)
@@ -379,7 +386,7 @@ function A.OnSessionChanged(rested)
 		local me = ns.Me()
 		A.Toast({ kind = "outrest", kicker = (me and me.full or "This character") .. ": rested XP used up", text = text,
 			sub = sub, state = top and top.state or "outside", row = top,
-			accent = S.RestingNow() and "resting" or "outside" })   -- the rail is about who ran out; green stays on the advice
+			accent = "max" })   -- a recommendation, not a warning: a neutral rail (red is the logout warning's)
 	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap, Ru.LowFraction(ns.DB())) then
 		chat("lowrest", ("rested XP is running low here: %s left, under %d%% of full."):format(
 			ns.Words.Levels(rested / xpMax), math.floor(Ru.LowFraction(ns.DB()) * 100 + 0.5)))

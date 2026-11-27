@@ -27,7 +27,7 @@ function Hero.Create(parent, w, h)
 	f.shadeArt:SetPoint("TOPLEFT", f.art)
 	f.shadeArt:SetPoint("BOTTOMRIGHT", f.art)
 	St.Paint(f.shadeArt, "sw_black")
-	f.shadeArt:SetVertexColor(1, 1, 1, 0.45)   -- the art stays atmosphere behind the text   -- the inn reads as an inn; the fade keeps text clear
+	f.shadeArt:SetVertexColor(1, 1, 1, 0.62)   -- the art stays atmosphere behind the text   -- the inn reads as an inn; the fade keeps text clear
 	f.fade = f:CreateTexture(nil, "BACKGROUND", nil, 2)   -- dark under the text, the inn shows on the right
 	f.fade:SetTexture(St.MEDIA .. "fade_h")
 	f.fade:SetPoint("TOPLEFT", 1, -1)
@@ -157,15 +157,17 @@ function Hero.Create(parent, w, h)
 	St.Font(f.steps[1].verb, "name", 13)
 	f.steps[1].verb:SetTextColor(0.81, 0.76, 0.65)
 	f.steps[2].verb:SetTextColor(1, 0.95, 0.79)
-	-- The lit step: a gold-rimmed pill (a 1 px rim around a dark warm fill), so it reads lit, not disabled.
-	f.pillRim = f.action:CreateTexture(nil, "BACKGROUND", nil, 1)
-	f.pillRim:SetColorTexture(0.79, 0.64, 0.29, 1)
-	f.pillRim:SetPoint("TOPLEFT", f.steps[2].disc, "TOPLEFT", -7, 5)
-	f.pillRim:SetPoint("BOTTOMRIGHT", f.steps[2].verb, "BOTTOMRIGHT", 11, -6)
-	f.pill = f.action:CreateTexture(nil, "BACKGROUND", nil, 2)
-	f.pill:SetColorTexture(0.23, 0.19, 0.13, 1)
-	f.pill:SetPoint("TOPLEFT", f.pillRim, "TOPLEFT", 1, -1)
-	f.pill:SetPoint("BOTTOMRIGHT", f.pillRim, "BOTTOMRIGHT", -1, 1)
+	-- The lit step: a 3 px gold tick on its left and a faint warm wash, no outlined box (one fewer rectangle).
+	f.pillRim = f.action:CreateTexture(nil, "BACKGROUND", nil, 2)
+	f.pillRim:SetColorTexture(0.85, 0.69, 0.33, 1)
+	f.pillRim:SetWidth(3)
+	f.pillRim:SetPoint("TOPLEFT", f.steps[2].disc, "TOPLEFT", -8, 4)
+	f.pillRim:SetPoint("BOTTOMLEFT", f.steps[2].disc, "BOTTOMLEFT", -8, -4)
+	f.pill = f.action:CreateTexture(nil, "BACKGROUND", nil, 1)
+	f.pill:SetColorTexture(1, 0.88, 0.6, 0.06)
+	f.pill:SetPoint("TOPLEFT", f.pillRim, "TOPLEFT", 0, 0)
+	f.pill:SetPoint("BOTTOMRIGHT", f.steps[2].verb, "BOTTOMRIGHT", 10, -4)
+	St.Font(f.steps[2].verb, "name", 15)
 	f.steps[1].disc:SetDesaturated(true)   -- step 1's disc recedes: "do this, then THIS"
 	f.steps[1].disc:SetAlpha(0.7)
 	f.ahead = text(f.action, "small", 13, { r = 0.83, g = 0.77, b = 0.66 })   -- who comes after: a line of its own

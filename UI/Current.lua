@@ -84,7 +84,11 @@ function Cur.Update(f)
 	local none = s.levels < Wd.BANKED_MIN   -- under a twentieth of a level: nothing worth counting
 	f.bar:SetShown(not none)
 	f.left:ClearAllPoints()
-	if none then f.left:SetPoint("LEFT", f, "LEFT", X + Wg.COL.bar, 0) else f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7) end
+	if none then   -- on the rows' bar line
+		f.left:SetPoint("TOPLEFT", f, "TOPLEFT", X + Wg.COL.bar, -12)
+	else
+		f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7)
+	end
 	if none then
 		f.left:SetText("No rested XP: kills give normal XP")
 		St.Color(f.left, St.CREAM)

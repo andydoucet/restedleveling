@@ -118,7 +118,7 @@ function Wd.HeroWhy(r, now, dateFn)
 	if r.state == "full" then   -- not a countdown: it has been full that long, and the rest since is wasted
 		local since = now - (p.fullSince or now)
 		if since < 60 then return "Fully rested just now." end
-		return ("Full since %s ago · more rest is wasted."):format(U.Duration(since))
+		return ("Full since %s ago · bank is full: time logged out adds nothing now."):format(U.Duration(since))
 	end
 	if r.state == "near" then return ("%d%% full. %s."):format(math.floor(p.pct * 100), full) end
 	if r.state == "resting" then return ("Resting. %s."):format(full) end
@@ -181,9 +181,11 @@ function Wd.Ahead(rows, now)
 	local b = rows[2]
 	if not (rows[1] and b and b.p and b.group and b.group <= 4) then return nil end
 	local name = b.c.full or "?"
-	if b.p.left == 0 then return ("Then play %s, full since %s ago"):format(name, U.Short(now - (b.p.fullSince or now))) end
-	if b.group == 2 then return ("Then play %s, full in %s"):format(name, U.Duration(b.p.left)) end
-	return ("Then play %s with %s"):format(name, Wd.Levels(b.p.levels))
+	-- "After Le Dette: Le Bankken, full in 19h 11m": a future recommendation, not a second switch now (sol).
+	local after = ("After %s: "):format(rows[1].c.full or "that")
+	if b.p.left == 0 then return ("%s%s, full since %s ago"):format(after, name, U.Short(now - (b.p.fullSince or now))) end
+	if b.group == 2 then return ("%s%s, full in %s"):format(after, name, U.Duration(b.p.left)) end
+	return ("%s%s with %s"):format(after, name, Wd.Levels(b.p.levels))
 end
 
 -- Short label for the state chip.

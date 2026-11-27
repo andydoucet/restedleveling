@@ -88,7 +88,7 @@ function Wg.Portrait(parent, size)
 	f.stateRing:SetPoint("CENTER")
 	f.stateRing:SetSize(size * 1.0, size * 1.0)
 	-- The class crest sits outside the ring at 4 o'clock, in its own dark circle.
-	local cs = math.max(19, math.min(28, math.floor(size * 0.25)))   -- legible: the race or class reads at a glance
+	local cs = math.max(21, math.min(28, math.floor(size * 0.25)))   -- legible: the race or class reads at a glance
 	f.noBadge = size < 36   -- a small disc (alert rows, timeline lanes) shows the picture alone: no double blob
 	f.crestEdge = f:CreateTexture(nil, "OVERLAY", nil, 1)   -- a 1 px bronze rim parts the badge from the portrait
 	St.Paint(f.crestEdge, "ring_bronze")
@@ -243,7 +243,7 @@ function Wg.SetChip(f, state, text)
 	local r, g, b = St.StateColor(key)
 	f.text:SetTextColor(r * 0.55 + 0.45, g * 0.55 + 0.45, b * 0.55 + 0.45)   -- a light tint of the state, clear of its fill
 	-- A filled tag, not a hollow box: the state's own dark fill and its edge (council r4: outlines read as form fields).
-	St.Backdrop(f, "chipfill_" .. key, "st_" .. key, 1)
+	St.Backdrop(f, "chipfill_max", "st_" .. key, 1)   -- one dark neutral fill; the edge, mark and word carry the state
 	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.85) end
 	local icon = key == "outside" or key == "near" or key == "full" or key == "resting"
 	f.icon:SetShown(icon)

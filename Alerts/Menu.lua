@@ -106,7 +106,7 @@ end
 function A.OptionsButton(f, kind)
 	local b = CreateFrame("Button", nil, f)
 	b:SetSize(24, 24)
-	b:SetPoint("RIGHT", f.close, "LEFT", -8, 0)
+	b:SetPoint("RIGHT", f.close, "LEFT", -12, 0)   -- clear of the close's hit area
 	b.icon = b:CreateTexture(nil, "ARTWORK")   -- 16 px and muted: it must not compete with the warning sign
 	b.icon:SetSize(18, 18)   -- findable, still muted
 	b.icon:SetPoint("CENTER")
