@@ -4,5 +4,5 @@
 SlashCmdList.WC3THEME("wc3")
 SlashCmdList.RESTEDLEVELING("")
 RestedLevelingMain:Hide()
-RestedLevelingDB.positions = { toasts = { point = "BOTTOMRIGHT", relPoint = "BOTTOMRIGHT", x = -60, y = 220 } }
+RestedLevelingDB.positions = { toasts = { point = "BOTTOMRIGHT", relPoint = "BOTTOMRIGHT", x = -60, y = 236 } }
 SlashCmdList.RESTEDLEVELING("move")

@@ -37,13 +37,19 @@ function Hero.Create(parent, w, h)
 	f.edge:SetPoint("TOPLEFT", 1, -1)
 	f.edge:SetPoint("BOTTOMLEFT", 1, 1)
 	f.edge:SetWidth(4)
+	f.pulse = f.edge:CreateAnimationGroup()   -- a slow breath on the accent while a full #1 wastes rest
+	f.pulse:SetLooping("BOUNCE")
+	local breath = f.pulse:CreateAnimation("Alpha")
+	breath:SetFromAlpha(1)
+	breath:SetToAlpha(0.5)
+	breath:SetDuration(2)
 	f.hover = f:CreateTexture(nil, "HIGHLIGHT")
 	f.hover:SetPoint("TOPLEFT", 1, -1)
 	f.hover:SetPoint("BOTTOMRIGHT", -1, ACTION_H)
 	St.Paint(f.hover, "sw_btn_hi")
 	f.hover:SetAlpha(0.2)
 
-	f.portrait = Wg.Portrait(f, 104)
+	f.portrait = Wg.Portrait(f, 112)
 	f.portrait:SetPoint("TOPLEFT", 28, -22)
 	f.badge = f.portrait:CreateTexture(nil, "OVERLAY", nil, 6)
 	St.Paint(f.badge, "disc_gold")
@@ -61,10 +67,10 @@ function Hero.Create(parent, w, h)
 	f.badgeText:SetShadowOffset(0, 0)
 
 	f.kicker = text(f, "label", 13, { r = 0.94, g = 0.82, b = 0.50 })   -- #1 · PLAY NEXT: a heading, not a caption
-	f.kicker:SetPoint("TOPLEFT", f.portrait, "TOPRIGHT", 24, 0)
+	f.kicker:SetPoint("TOPLEFT", f.portrait, "TOPRIGHT", 28, 0)   -- clear of the portrait's badge
 	f.chip = Wg.Chip(f, 22, 86)
 	f.chip:SetPoint("LEFT", f.kicker, "RIGHT", 10, 0)
-	f.name = Wg.Text(f, "hero", nil, 28)
+	f.name = Wg.Text(f, "hero", nil, 30)
 	f.name:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -6)
 	-- The #1 speaks on its own row under its name, decision first ("Send me. 1.7 levels banked."), in a dark bubble
 	-- whose tail points back at the portrait. One line; the row is reserved so the layout holds without it.
@@ -85,14 +91,14 @@ function Hero.Create(parent, w, h)
 	f.statSub = text(f, "label", 12, St.CREAM)
 	f.statSub:SetPoint("TOPRIGHT", f.stat, "BOTTOMRIGHT", 0, -2)   -- one right edge for the figure, unit and runner-up
 	f.statSub:SetJustifyH("RIGHT")
-	f.ahead = text(f, "small", 13, St.MUTED)   -- the runner-up, read last
+	f.ahead = text(f, "small", 12, St.MUTED)   -- the runner-up, read last: fills the column under the figure
 	f.ahead:SetPoint("TOPRIGHT", f.statSub, "BOTTOMRIGHT", 0, -8)
 	f.ahead:SetJustifyH("RIGHT")
 	f.acct = Wg.Text(f, "label", nil, 11)
 	f.acct:SetPoint("TOPRIGHT", f.ahead, "BOTTOMRIGHT", 0, -4)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 
-	Hero.BAR_W = w - 156 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
+	Hero.BAR_W = w - 168 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
 	f.bar = Wg.BubbleBar(f, Hero.BAR_W, 18, BAR_SEGS)
 	f.bar:SetPoint("TOPLEFT", f.sub, "BOTTOMLEFT", -1, -10)
 	f.sheen = f.bar.bar:CreateTexture(nil, "OVERLAY", nil, 6)   -- a gold sheen sweeps the bar when the window opens
@@ -218,6 +224,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 	local c, p = row.c, row.p
 	local r, g, b = St.StateColor(row.state)
 	St.Paint(f.edge, "st_" .. row.state)
+	if row.state == "full" and not ns.DB().opts.reduceMotion then f.pulse:Play() else f.pulse:Stop() end
 	Wg.SetPortrait(f.portrait, c, false, row.state)
 	Wg.SetChip(f.chip, row.state, Wd.Chip(row))
 	f.name:SetText(St.ClassText(c.class, c.full or "?"))

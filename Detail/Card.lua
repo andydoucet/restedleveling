@@ -35,6 +35,7 @@ local ICONS = {
 	Gold = "Interface\\Icons\\INV_Misc_Coin_01", Professions = "Interface\\Icons\\Trade_Engineering",
 	Guild = "Interface\\Icons\\INV_Shirt_GuildTabard_01", Title = "Interface\\Icons\\INV_Scroll_11",
 	Gear = "Interface\\Icons\\INV_Chest_Chain", ["Logged out in"] = "Interface\\Icons\\INV_Misc_Map_01",
+	["Hearth · logged out"] = "Interface\\Icons\\INV_Misc_Rune_01",
 	["Rest bonus"] = "Interface\\Icons\\Spell_Nature_Sleep", ["Time at full"] = "Interface\\Icons\\INV_Misc_PocketWatch_02",
 }
 
@@ -234,12 +235,19 @@ function Card.Create()
 	St.Window(f, "")
 	tinsert(UISpecialFrames, "RestedLevelingCard")
 	f.typer = CreateFrame("Frame", nil, f)
+	-- One panel: the stage, then its rest bar and line inside the same box (not a bar floating between two panels).
+	f.box = CreateFrame("Frame", nil, f, "BackdropTemplate")
 	f.stage = makeStage(f)
-	f.bar = Wg.BubbleBar(f, IW - 4, 16, 30)   -- inside the panels' edges, like the stage and the facts
-	f.bar:SetPoint("TOPLEFT", f.stage, "BOTTOMLEFT", 0, -10)
-	f.why = Wg.Text(f, "body", nil, 13)
-	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 10, -8)
-	f.why:SetWidth(IW - 20)
+	f.stage:SetFrameLevel(f.box:GetFrameLevel() + 1)
+	f.bar = Wg.BubbleBar(f.box, IW - 28, 10, 30)
+	f.bar:SetPoint("TOPLEFT", f.stage, "BOTTOMLEFT", 12, -10)
+	f.why = Wg.Text(f.box, "body", nil, 13)
+	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 0, -8)
+	f.why:SetWidth(IW - 24)
+	f.box:SetPoint("TOPLEFT", f.stage, "TOPLEFT")
+	f.box:SetPoint("TOPRIGHT", f.stage, "TOPRIGHT")
+	f.box:SetPoint("BOTTOM", f.why, "BOTTOM", 0, -8)
+	St.Panel(f.box, "inset")
 	f.why:SetHeight(36)
 	f.why:SetJustifyV("TOP")
 	f.why:SetWordWrap(true)
@@ -380,7 +388,7 @@ local function fillTiles(f, c, now)
 	local full = IW - 16
 	local half = (full - 8) / 2
 	f.stats:ClearAllPoints()
-	f.stats:SetPoint("TOPLEFT", f.why, "BOTTOMLEFT", -10, -6)
+	f.stats:SetPoint("TOPLEFT", f.box, "BOTTOMLEFT", 0, -10)
 	local y, col, n = -4, 0, 0
 	for i, t in ipairs(f.tiles) do
 		local item = list[i]
@@ -482,7 +490,7 @@ function Card.Show(key)
 	Wg.SetChip(s.chip, isMe and "resting" or state, isMe and "NOW PLAYING" or Wd.Chip(row))
 	Wg.SetBubbleBar(f.bar, p and p.pct or 0, state, false)
 	f.why:SetText(isMe and "This is the character you're on." or Wd.Why(row, now))   -- ends with the real-life time to full
-	Wg.Balance(f.why, IW - 20)
+	Wg.Balance(f.why, IW - 24)
 	local n = fillTiles(f, c, now)
 	-- Sit next to the main window, top edges level.
 	f:ClearAllPoints()
@@ -490,7 +498,7 @@ function Card.Show(key)
 	local docked = main and main:IsShown()
 	if docked then f:SetPoint("TOPLEFT", main, "TOPRIGHT", 10, 0) else f:SetPoint("CENTER", 220, 10) end
 	f:Show()
-	local top, bottom = f:GetTop(), (n > 0 and f.stats or f.why):GetBottom()   -- the card ends at its tidbits
+	local top, bottom = f:GetTop(), (n > 0 and f.stats or f.box):GetBottom()   -- the card ends at its tidbits
 	if top and bottom then f:SetHeight(top - bottom + PAD) end
 	-- a different line on each open, never the one the hero is saying (the hero uses turn 1)
 	Card.opens = Card.opens or {}

@@ -19,6 +19,10 @@ function Cur.Create(parent, w, h)
 		if button == "RightButton" then ns.Look.Menu(self) elseif ns.MyKey() then ns.ShowDetail(ns.MyKey()) end
 	end)
 	local C = Wg.COL
+	f.rail = f:CreateTexture(nil, "ARTWORK")   -- the rows' state rail: red while this character banks nothing
+	f.rail:SetPoint("TOPLEFT", 1, -1)
+	f.rail:SetPoint("BOTTOMLEFT", 1, 1)
+	f.rail:SetWidth(5)
 	f.portrait = Wg.Portrait(f, 44)
 	f.portrait:SetPoint("LEFT", X + C.portrait, 0)
 	f.kicker = Wg.Text(f, "label", nil, 11)
@@ -69,8 +73,9 @@ function Cur.Update(f)
 		f.detail:SetText("")
 		return
 	end
-	-- Under the name: whether this character is banking rest right now, and what to do if not.
-	f.detail:SetText(resting and "Banking rest here" or "Not banking: log out in an inn")
+	-- Under the name: where it is (the chip already says whether that is resting).
+	St.Paint(f.rail, "st_" .. (resting and "resting" or "outside"))
+	f.detail:SetText(resting and (Wd.ShortPlace(me) or "Resting") or ("Outside  ·  " .. (me.zone or "the open world")))
 	-- The bar column: what is left (and the double-XP kills it buys), or, with nothing left, one plain line and no
 	-- empty track.
 	local used = (s.used or 0) / s.xpMax

@@ -161,17 +161,17 @@ function O.Panel()
 		O.ShowLow(self)
 	end)
 	p.low = sl
-	y = y - 66
+	y = y - 70
 	-- Where the notifications show: a button into move mode (the same as /rlvl move).
 	heading(p, "NOTIFICATIONS", 16, y)
-	p.move = St.MakeButton(p, 170, "Move notifications", false, 24)
-	p.move:SetPoint("TOPLEFT", 16, y - 20)
+	p.move = St.MakeButton(p, 170, "Move notifications", false, 22)
+	p.move:SetPoint("TOPLEFT", 16, y - 22)
 	p.move:SetScript("OnClick", function()
 		if ns.Move.Start() and SettingsPanel and SettingsPanel.IsShown and SettingsPanel:IsShown() then HideUIPanel(SettingsPanel) end
 	end)
 	local mvText = words(p, "Drag the logout warning, the toasts and the Esc menu card where you want them.", 12, St.SECOND)
-	mvText:SetPoint("LEFT", p.move, "RIGHT", 12, 0)
-	y = y - 50
+	mvText:SetPoint("TOPLEFT", p.move, "BOTTOMLEFT", 2, -6)   -- under its button, never to the panel's edge
+	y = y - 70
 	heading(p, "WINDOW AND DISPLAY", 16, y)
 	y = y - 20
 	p.checks = {}
@@ -180,7 +180,7 @@ function O.Panel()
 		if sw.key:find("^alert_") and not alerts then   -- the alert kinds: their own heading, two columns
 			alerts = true
 			heading(p, "ALERTS", 16, y - 8)
-			y = y - 28
+			y = y - 26
 		end
 		local cb = CreateFrame("CheckButton", nil, p, "UICheckButtonTemplate")
 		cb:SetSize(24, 24)
@@ -192,9 +192,9 @@ function O.Panel()
 		cb.sw = sw
 		p.checks[#p.checks + 1] = cb
 		if alerts then col = 1 - col end
-		if col == 0 then y = y - 24 end
+		if col == 0 then y = y - 22 end
 	end
-	if col == 1 then y = y - 24 end
+	if col == 1 then y = y - 22 end
 	local about = words(p, "", 11, St.MUTED)
 	about:SetPoint("TOPLEFT", 16, y - 12)
 	about:SetWidth(600)   -- the canvas has no width of its own when this runs: wrap at a fixed measure

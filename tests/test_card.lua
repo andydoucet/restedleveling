@@ -313,4 +313,20 @@ function cases.bubble_drops_one_font_step_only_when_it_must()
 	T.clean(h)
 end
 
+-- Council r2: one place, one tile. Hearth and the logout place merge when they name the same town.
+function cases.hearth_and_logout_place_merge_when_they_match()
+	local _, _, state = W.New({})
+	local Tb = state.ns.Tidbits
+	local function labels(c)
+		local out = {}
+		for _, t in ipairs(Tb.List(c, W.NOW)) do out[#out + 1] = t[1] .. "=" .. t[2] end
+		return table.concat(out, "|")
+	end
+	T.has(labels({ bind = "Thunder Bluff", zone = "Thunder Bluff" }), "Hearth · logged out=Thunder Bluff", "merged")
+	T.lacks(labels({ bind = "Thunder Bluff", zone = "Thunder Bluff" }), "Logged out in", "not twice")
+	local apart = labels({ bind = "Goldshire", zone = "Elwynn Forest", subzone = "Northshire" })
+	T.has(apart, "Hearth=Goldshire", "different places: the hearth")
+	T.has(apart, "Logged out in=Northshire, Elwynn Forest", "and where it logged out")
+end
+
 return cases

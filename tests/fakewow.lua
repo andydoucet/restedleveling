@@ -104,6 +104,7 @@ function Frame:SetTexture(file)
 end
 function Frame:GetTextureFileID() return self.__fileID end
 function Frame:SetAtlas(atlas) self.__atlas = atlas; self.__tex = nil end
+function Frame:SetDesaturation(v) self.__desat = v end
 function Frame:GetTexture() return self.__tex end
 function Frame:SetDrawLayer(layer, sub) self.__layer, self.__sub = layer, sub or 0 end
 function Frame:GetDrawLayer() return self.__layer, self.__sub end

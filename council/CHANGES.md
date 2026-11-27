@@ -1,63 +1,78 @@
-# Round 2 of v1.1 (ILL-1272): answers council r1 (opus 7.0, sol 7.5, grok 7.2)
+# Round 3 of v1.1 (ILL-1272): answers council r2 (opus 7.5, sol 7.9, grok 7.9)
 
-I grouped the requests by root cause. Everything below was asked for by at least two judges, unless a single judge is
+I grouped the requests by root cause. Each change below was asked for by at least two judges, unless a single judge is
 named. The renders are the same 8 scenes.
 
 ## Changed
 
-- **Move mode** (all three). Every placeholder has Reset in the same place, top right. The beige glow behind the text
-  is gone: each placeholder is the real alert surface with a 2 px gold outline. The copy states the attachment: "Attached
-  to the Esc menu. Drag to detach it." / "Custom position. Reset attaches it to the Esc menu again." The dimmed screen
-  now sits above everything else, under the placeholders.
-- **One alert surface** (opus, sol). The Esc menu card is now a top-level window like the banner and the toasts. It
-  shows and hides with the menu and still hangs under it. The skin therefore dresses all three alike (scene 05). It was
-  a flat grey panel before.
-- **Banner copy** (all three). The title is "Cancel logout, then rest in an inn". The banner is wider, so "Hearth to
-  Feathermoon Stronghold or find an inn, then log out." fits on one line with no empty line.
-- **NOW PLAYING** (all three). The empty track and "0.0 of a level left" are gone. Under a twentieth of a level the bar
-  hides and one line says "No rested XP: kills give normal XP". Under the name it says "Not banking: log out in an
-  inn" (or "Banking rest here"). With rest left, the 13 px bar matches the roster's, with "0.4 levels left · ~12
-  double-XP kills".
-- **Hero** (all three). "#1 · PLAY NEXT" is a 13 px heading. The action reads as two ordered clauses: "First: hearth
-  Le Jette to an inn. Then: play Le Dette." It is set in cream so the class-coloured names stand out. "Full since 1d
-  16h ago: rest is going to waste." replaces the ambiguous "Full for". The state accent now shows under ElvUI too
-  (opus). The figure is the same cream-gold in both themes (opus). The speech bubble is 14 px with more padding and
-  sits clear of the badge.
-- **Race/class badges** (all three). They are 17-24 px (was 14), on a dark disc with a bronze rim.
-- **One chip family** (opus, sol, grok). Every chip has a near-black fill, a 1 px edge and the word in its state colour.
-  NEARLY FULL is no longer olive, and RESTING no longer blends into a brown row.
-- **Legend dots** (grok, opus). They are 10 px with a dark ring.
-- **Rows** (opus, sol). The default rows are darker (#251D14 / #2B2218) with a lighter outside tint. Names have a dark
-  shadow, so shaman blue reads on the red-tinted row. There are 7 px between each bar and its time.
-- **Footer** (all three). One row. The status fits on one line ("Paired: Le Bankken · synced 3h ago"), next to the
-  Unlink button. The account button is narrower.
-- **Timeline** (all three). Dates for lanes that fill after 48 h sit in a 112 px right gutter, never on the bar. Those
-  bars stay solid to the edge and end in an arrow cap (sol). Night bands are quieter. Hour labels are lighter, and
-  midnight shows the date ("Wed 25"). The hover tooltip opens left of the window so it never covers the dates.
-- **Options page** (all three). It has its own near-black panel. Gold headings (APPEARANCE, ACCOUNTS, LOW REST
-  WARNING · 10%, NOTIFICATIONS, WINDOW AND DISPLAY, ALERTS) separate cream settings and softer helper lines; no yellow
-  paragraphs. The style choices are evenly spaced. The slider has a visible thumb. The About line is short and fits.
-- **Character card** (opus, sol, grok). With a saved look, the "Last seen as ..." note is gone: the meta line already
-  says who it is. The sleep "z z Z" is 14 px and sits over the portrait's top right.
+- **One button family per theme** (grok, opus, sol). Under ElvUI every button is the host's blue: Compact, View
+  details, Unlink, All accounts, Done, Reset all, Move notifications. In the default theme every button is bronze. The
+  main action (View details, Done) is the same button with a 1 px gold rim; there is no second colour. The gold enamel
+  is gone. The default close button is a cream X on bronze with a gold rim instead of a red square (opus, grok).
+- **One wording for "full"** (opus, grok). Everywhere a character is full, it says "Full since 1d 16h ago": rows, the
+  compact tip, the card and tooltips. "Full for" read like time remaining. The hero says "Full since 1d 16h ago · more
+  rest is wasted.", which is shorter, as sol asked.
+- **Race and class badges in colour** (all three). They were washed out, and the simulator draws any desaturation as
+  full grey, so every row showed the same grey head. Badges are now in full colour, 19-28 px on a dark disc with a
+  bronze rim. Discs under 36 px (alert "Next:" rows, timeline lanes) show the picture alone, with no double blob
+  (opus). The portrait rule itself is unchanged: no look = class icon + race badge; a face = class badge.
+- **Chips** (grok, sol, opus). The word is now exactly the state colour, the same as its edge, the legend dot and the
+  bar. Every chip uses one 12 px icon size with a 6 px inset. Legend text is in the exact state colour (opus).
+- **Hero** (opus, grok):
+  - The portrait is 112 px (was 104) and the name 30 px.
+  - The empty column under "1.5 LEVELS BANKED" now names the runner-up ("Then Le Bankken, full in 19h").
+  - The text column clears the larger badge.
+  - When #1 is full, the state accent breathes slowly. Reduce motion turns this off.
+- **NOW PLAYING** (opus, grok). A red state rail, like the rows. The line under the name gives the place ("Outside ·
+  Feralas"). It no longer repeats the NOT RESTING chip.
+- **Character card** (all three):
+  - The rest bar and its line are inside one box with the stage, 12 px in, under the name and meta line. They no
+    longer float between two panels.
+  - Hearth and logout place merge into one tile when they are the same town (opus).
+- **Timeline** (sol, opus, grok):
+  - Each lane shows how full it is now (21%, 14%), so the long lanes differ (sol).
+  - The right column has an "AFTER 48H" heading over a quiet separator.
+  - Dates are 13 px with more room after the arrow.
+  - Night bands are darker and nearly neutral, no longer slate blue.
+  - The band heading names who fills next: "NEXT 48 HOURS · Le Bankken full in 19h 11m" (sol).
+- **Move mode** (grok, opus). The coachmark panel uses the alerts' surface and gold outline, so it matches the
+  placeholders. Buttons follow the one-family rule. The toast placeholder sits clear of the chat panel in scene 04.
+- **Alerts** (opus, sol, grok):
+  - **Banner.** The situation line is secondary (13 px, softer); the instruction leads (13 px cream).
+  - **Esc card.** Its icon is an inn, not the banner's warning sign, so the two read apart.
+  - **Toast.** Its trigger line ("Le Jette: rested XP used up") is 12 px amber. Its rail is in the colour of the
+    character who ran out (sol, second round asking). Green stays on the advice line.
+  - **Close buttons.** Every close button has a 32 px hit target (sol).
+- **Options** (opus, sol, grok). The Move notifications helper sits under its 22 px button, never to the panel edge.
+  The spacing above headings is more even.
+- **Footer** (opus). The account button sits 12 px from the checkbox, grouped with it on the right.
 
 ## DECLINED
 
-- **The stray bar and grey square in move mode** (opus, grok) are ElvUI's own frames in the simulator. The brief
-  forbids touching ElvUI frames. The dimmed screen now covers everything it is allowed to.
-- **Gatewood dialog art on the roster, the options page and the compact tip's header, and the "seam" in the window
-  frame** (grok, opus, sol) come from the WC3 skin's own art. WC3-specific code is out of scope. Our frames go
-  through ElvUI's skin calls, and all three alerts now get the same treatment.
-- **UIPanelButtonTemplate stone buttons and a classic gold dialog for the default theme** (grok) would change the
-  settled default chrome (oak and bronze). The other two judges did not ask for it.
-- **A "Play Le Dette" button** (grok): an addon cannot switch characters. The action line names who to play.
-- **Opus: "Le Beouf's roster row shows the class icon"**: row 7 already shows his saved face with the class crest as
-  its badge (scenes 01 and 02). **Opus: NOW PLAYING shows a class icon**: the simulator draws no live portrait; in game
-  it is `SetPortraitTexture("player")`.
-- **Not done this round (one judge each):** the compressed 48 h to 10 d tail (opus), the "Ding" sound (opus), the
-  hover shimmer (opus), the account pill (opus), the toast's rail colour (sol), and the card's bar inside the stage box
-  (opus).
+- **Class-coloured names and a gold "First:"/"Then:" in the action line** (opus, grok): they are already inline colour
+  codes. The simulator draws an inline colour only at the start of a string (a known wow-ui-sim limit), so the names
+  look cream in the render. In game they are class-coloured.
+- **The Settings panel's outer frame and its grey search bar, and the blue sliver by Close** (opus, grok): these
+  belong to Blizzard's Settings panel, skinned by ElvUI, not to our canvas. Our canvas paints only its own near-black
+  panel.
+- **The stray bar and grey square in move mode** (from r1): these are ElvUI frames, and touching them is ruled out.
+- **The dark block on the right of the logout placeholder's wood** (opus): it is the WC3 skin's own art. I tried
+  resizing the frame once shown, so the skin lays it out again; it did not change, and I reverted it. The real banner
+  at the same width draws full wood (scene 05).
+- **The compact tip's brown header block and the window frame "seam"**: these are WC3 skin art. WC3-specific code is
+  ruled out.
+- **A Cancel logout button** (sol): CancelLogout is restricted for addons. The banner says to cancel the countdown
+  first.
+- **Faction-tinted badge discs** (opus): the coloured badges now separate the rows.
+- **Not done this round** (one judge each):
+  - sol: a two-line ETA with the calendar date in every row and taller rows, a portrait-left card layout, the level
+    badge moved into the meta line, account aliases, and a dashed "Esc menu" anchor.
+  - grok: the class word in row meta, and a percent coloured by state.
+  - opus: a mood glyph on row hover, and a sparkle on "Full now".
 
 ## Checks
 
-- `lua5.1 tests/run.lua`: all pass. luacheck is clean. tools/apicheck.py: 0 unverified, at every layer.
+- `lua5.1 tests/run.lua`: 175 pass. luacheck is clean. tools/apicheck.py: 0 unverified, at every layer.
+- New tests: badges drawn in colour (the old desaturated badge fails it); hearth and logout place merge; the runner-up
+  line for every group; the timeline heading names who fills next.
 - All 8 renders come from the real addon in wow-ui-sim. 04 is the full-screen context shot; the others are 1:1 crops.

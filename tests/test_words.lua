@@ -32,7 +32,7 @@ function cases.card_reason_for_each_state_ends_with_the_real_time_to_full()
 	local ns = load()
 	local Wd = ns.Words
 	T.eq(Wd.Why(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 9 * H }), NOW, utc),
-		"Full for 9h. 1.5 levels of double XP waiting.", "full")
+		"Full since 9h ago. 1.5 levels of double XP waiting.", "full")
 	T.eq(Wd.Why(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, utc),
 		"93% full. Full in 2h (today 22:00). 1.4 levels of double XP ready.", "near")
 	T.eq(Wd.Why(row("resting", { pct = 0.5, levels = 0.75, left = 5 * H }, { resting = true, restKind = "inn", subzone = "Goldshire" }), NOW, utc),
@@ -47,7 +47,7 @@ end
 function cases.hero_line_is_the_state_then_the_real_time_to_full()
 	local Wd = load().Words
 	T.eq(Wd.HeroWhy(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 2 * D - 4 * H }), NOW, utc),
-		"Full since 2d 4h ago: rest is going to waste.", "full")
+		"Full since 2d 4h ago · more rest is wasted.", "full")
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 2 * H, utc),
 		"Resting. Full in 6h 20m (tomorrow 00:20).", "resting")   -- 18:00 + 6h 20m crosses midnight: says which day
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 8 * H, utc),
@@ -66,7 +66,7 @@ function cases.full_line_at_its_boundaries()
 	T.eq(at(D), "Full in 1d (tomorrow 20:00)", "1d")
 	T.eq(at(9 * D + 23 * H), "Full in 9d 23h (Mon 23 Nov, 19:00)", "9d23h")
 	T.eq(at(10), "Full in 1m (today 20:01)", "under a minute rounds up to 1m")
-	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 2 * D - 4 * H }, NOW, utc), "Full for 2d 4h", "full")
+	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 2 * D - 4 * H }, NOW, utc), "Full since 2d 4h ago", "full")
 	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 30 }, NOW, utc), "Full now", "just filled")
 	T.eq(Wd.FullLine(nil, NOW, utc), "", "max level: nothing to fill")
 end
@@ -158,10 +158,16 @@ function cases.hero_says_why_number_one_beats_number_two()
 	local a = row("full", { pct = 1, levels = 1.7, left = 0, fullSince = NOW - 2 * D }, { full = "Le Nette" })
 	local b = row("full", { pct = 1, levels = 1.6, left = 0, fullSince = NOW - 8 * H }, { full = "Le Beouf" })
 	a.group, b.group = 1, 1
-	T.eq(Wd.Ahead({ a, b }, NOW), "Then Le Beouf, full for 8h", "both full")
+	T.eq(Wd.Ahead({ a, b }, NOW), "Then Le Beouf, full since 8h ago", "both full")
 	local c = row("resting", { pct = 0.5, levels = 0.8, left = H }, { full = "Le Bankke" })
 	c.group = 3
-	T.eq(Wd.Ahead({ a, c }, NOW), nil, "different groups need no explanation")
+	T.eq(Wd.Ahead({ a, c }, NOW), "Then Le Bankke with 0.8 of a level", "the runner-up, whatever its group")
+	local n = row("near", { pct = 0.92, levels = 1.38, left = 19 * H }, { full = "Le Bankken" })
+	n.group = 2
+	T.eq(Wd.Ahead({ a, n }, NOW), "Then Le Bankken, full in 19h", "nearly full: how soon")
+	local m = row("max", nil, { full = "Le Max" })
+	m.group = 5
+	T.eq(Wd.Ahead({ a, m }, NOW), nil, "nobody worth naming")
 end
 
 -- Wg.Fit cuts whole UTF-8 characters only: never half a "·" or an accented letter (review of ILL-1274).

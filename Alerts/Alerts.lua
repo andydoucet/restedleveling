@@ -113,11 +113,11 @@ function A.Banner()
 	f.title = Wg.Text(f, "name", nil, 15)
 	f.title:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 12, 0)
 	f.title:SetWidth(360)
-	f.text = Wg.Text(f, "name", nil, 14)
+	f.text = Wg.Text(f, "body", nil, 13)   -- the situation, secondary; the instruction under it leads
 	f.text:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -3)
 	f.text:SetWidth(400)
-	St.Color(f.text, St.CREAM)
-	f.action = Wg.Text(f, "body", nil, 13)   -- the second step
+	St.Color(f.text, St.SECOND)
+	f.action = Wg.Text(f, "name", nil, 13)   -- the second step
 	f.action:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -3)
 	f.action:SetWidth(420)   -- the inn guidance on one line where it can be
 	f.action:SetWordWrap(true)
@@ -195,10 +195,10 @@ local function toastFrame(i)
 	fl:SetFromAlpha(1)
 	fl:SetToAlpha(0)
 	fl:SetDuration(0.4)
-	f.kicker = Wg.Text(f, "small", nil, 11)   -- what happened, small; the line under it says what to do
+	f.kicker = Wg.Text(f, "name", nil, 12)   -- what happened (the trigger), in amber; the line under it says what to do
 	f.kicker:SetPoint("TOPLEFT", 76, -11)
 	f.kicker:SetWidth(A.WIDTH - 118)   -- clear of the close button
-	St.Color(f.kicker, St.MUTED)
+	f.kicker:SetTextColor(0.90, 0.64, 0.27)
 	f.text = Wg.Text(f, "name", nil, 15)
 	f.text:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -3)
 	f.text:SetWidth(A.WIDTH - 104)
@@ -277,11 +277,11 @@ function A.MenuStrip()
 	GameMenuFrame:HookScript("OnHide", function() f:Hide() end)
 	f:SetSize(A.STRIP_MAX, 112)   -- A.LayoutStrip sizes it from the menu on every show
 	surface(f, "toast", "outside")   -- a neutral panel: it must not read as another red menu button
-	local s = St.STATE.outside
 	f.icon = f:CreateTexture(nil, "ARTWORK")
 	f.icon:SetSize(24, 24)
 	f.icon:SetPoint("TOPLEFT", 18, -14)
-	f.icon:SetTexture(s.icon)
+	f.icon:SetTexture(St.PLACE.inn.icon)   -- an inn, not the banner's warning sign: the two read apart at a glance
+	f.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 	f.text = Wg.Text(f, "name", nil, 15)   -- the same pattern as the banner: what to do, then who and how
 	f.text:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, 0)
 	f.text:SetTextColor(0.98, 0.55, 0.15)
@@ -367,7 +367,8 @@ function A.OnSessionChanged(rested)
 		local text, sub = Ru.NextUp(rows, St.ClassText)
 		local me = ns.Me()
 		A.Toast({ kind = "outrest", kicker = (me and me.full or "This character") .. ": rested XP used up", text = text,
-			sub = sub, state = top and top.state or "outside", accent = top and top.state or "outside", row = top })   -- a recommendation: its rail in the target's state
+			sub = sub, state = top and top.state or "outside", row = top,
+			accent = S.RestingNow() and "resting" or "outside" })   -- the rail is about who ran out; green stays on the advice
 	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap, Ru.LowFraction(ns.DB())) then
 		chat("lowrest", ("rested XP is running low here: %s left, under %d%% of full."):format(
 			ns.Words.Levels(rested / xpMax), math.floor(Ru.LowFraction(ns.DB()) * 100 + 0.5)))

@@ -139,7 +139,7 @@ function cases.offline_portraits_show_crest_and_race_emblem_not_a_stock_face()
 	T.ok(p.tex:GetTexture() == nil or not tostring(p.tex:GetTexture()):find("TemporaryPortrait"), "no stock race portrait")
 	T.eq(p.crest.__atlas, "raceicon128-gnome-female", "her race emblem in the badge")
 	T.ok(p.crest:IsShown(), "badge shown")
-	T.ok(p.crestLift:IsShown() and p.crestLift.__atlas == p.crest.__atlas, "lifted by an additive copy, not a grey blob")
+	T.eq(p.crest.__desat, 0, "in colour, not a grey blob")
 	T.ok(not p.live, "not a live portrait")
 	local cur = main.current.portrait
 	T.ok(cur.live, "Le Nette (logged in) keeps her real portrait")
@@ -147,7 +147,7 @@ function cases.offline_portraits_show_crest_and_race_emblem_not_a_stock_face()
 	for _, call in ipairs(state.portraits) do if call.tex == cur.tex and call.unit == "player" then drew = true end end
 	T.ok(drew, "drawn with SetPortraitTexture(player)")
 	T.eq(cur.crest.__atlas, "classicon-mage", "her class crest in the badge")
-	T.ok(not cur.crestLift:IsShown(), "her own class crest drawn as is")
+	T.eq(cur.crest.__atlas, "classicon-mage", "her own class crest as the badge")
 	T.clean(h)
 end
 

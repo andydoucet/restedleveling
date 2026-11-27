@@ -138,8 +138,13 @@ end)
 function Tb.List(c, now)
 	local out = {}
 	local function add(label, value) if value and value ~= "" then out[#out + 1] = { label, value } end end
-	add("Hearth", c.bind)
-	add("Logged out in", c.subzone and c.zone and (c.subzone .. ", " .. c.zone) or c.zone)
+	local out_ = c.subzone and c.zone and (c.subzone .. ", " .. c.zone) or c.zone
+	if c.bind and (c.bind == c.zone or c.bind == c.subzone) then   -- one place: one tile, not the same name twice
+		add("Hearth · logged out", c.bind)
+	else
+		add("Hearth", c.bind)
+		add("Logged out in", out_)
+	end
 	add("/played", c.played and U.Duration(c.played))
 	add("Gold", c.money and U.Gold(c.money))
 	add("Professions", Tb.CleanProfs(c.profs))   -- synced records may still carry duplicates

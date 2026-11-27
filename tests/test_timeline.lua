@@ -80,7 +80,7 @@ function cases.main_window_switches_to_the_timeline_and_remembers_it()
 	FakeWoW.RunScript(tab, "OnClick")
 	T.eq(W.DB(h).opts.view, "timeline", "remembered")
 	T.ok(f.timeline:IsShown() and not f.roster:IsShown(), "the timeline replaces the roster")
-	T.eq(f.header:GetText(), "NEXT 48 HOURS", "the band says what it shows")
+	T.has(f.header:GetText(), "NEXT 48 HOURS  ·  Le Nette full in ", "the band says what it shows, and who fills next")
 	local shown = 0
 	for _, l in ipairs(f.timeline.lanes) do if l:IsShown() then shown = shown + 1 end end
 	T.eq(shown, 2, "one lane per character")

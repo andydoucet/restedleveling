@@ -98,6 +98,7 @@ function A.CloseButton(f)
 		b:SetScript("OnClick", function() f:Hide() end)
 	end
 	b:SetPoint("TOPRIGHT", -8, -8)
+	b:SetHitRectInsets(-4, -4, -4, -4)   -- a 32 px target around the 24 px cross
 	return b
 end
 

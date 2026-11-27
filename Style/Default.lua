@@ -120,14 +120,15 @@ end
 function D.Button(btn) end
 function D.Close(btn) end
 
--- One button family: enamel faces (gold for the main action, blue otherwise) with a 1 px bronze rim and a cream
--- label, 24 px tall (h overrides, e.g. 22 under a host skin). Red is kept for the "not resting" state alone.
+-- One button family per theme: bronze on our oak, the host's blue enamel under ElvUI, with a cream label, 24 px tall
+-- (h overrides, e.g. 22 under a host skin). The main action is the same button with a 1 px gold rim instead of the
+-- dark lip, so it leads without a second colour. Red is kept for the "not resting" state alone.
 -- enamel: secondary buttons in blue enamel (the ElvUI path); otherwise they are quiet bronze ghosts on our oak.
 function D.MakeButton(parent, w, label, primary, h, enamel)
-	local face = primary and "btn_gold" or (enamel and "btn_blue" or "sw_bronze_btn")   -- one family: gold, blue, bronze
+	local face = enamel and "btn_blue" or "sw_bronze_btn"
 	local b = CreateFrame("Button", nil, parent, "BackdropTemplate")
 	b:SetSize(w, h or 24)
-	St.Backdrop(b, face, "sw_lip", 1)
+	St.Backdrop(b, face, primary and "sw_gold" or "sw_lip", 1)
 	b.hl = b:CreateTexture(nil, "HIGHLIGHT")
 	b.hl:SetPoint("TOPLEFT", 1, -1)
 	b.hl:SetPoint("BOTTOMRIGHT", -1, 1)
@@ -158,23 +159,24 @@ function D.MakeButton(parent, w, label, primary, h, enamel)
 	return b
 end
 
--- The close button: a bronze cross on dark red enamel, 22 px, with a 26 px hit area.
+-- The close button: a cream cross on the bronze button face with a gold rim, 24 px, with a 30 px hit area.
 function D.MakeClose(parent)
 	local b = CreateFrame("Button", nil, parent, "BackdropTemplate")
 	b:SetSize(24, 24)
 	b:SetHitRectInsets(-3, -3, -3, -3)
-	St.Backdrop(b, "btn_red", "sw_lip", 1)
+	St.Backdrop(b, "sw_bronze_btn", "sw_gold", 1)
 	b.hl = b:CreateTexture(nil, "HIGHLIGHT")
 	b.hl:SetPoint("TOPLEFT", 1, -1)
 	b.hl:SetPoint("BOTTOMRIGHT", -1, 1)
-	St.Paint(b.hl, "btn_red_hi")
+	St.Paint(b.hl, "sw_bronze_hi")
+	b.hl:SetVertexColor(1, 1, 1, 0.35)
 	b.face = CreateFrame("Frame", nil, b)   -- the cross above the hover face, as on every button
 	b.face:SetAllPoints()
 	b.x = b.face:CreateFontString(nil, "OVERLAY")
 	D.Font(b.x, "number", 15)
 	b.x:SetPoint("CENTER", 0, 1)
 	b.x:SetText("X")
-	b.x:SetTextColor(0.85, 0.68, 0.40)
+	b.x:SetTextColor(0.96, 0.89, 0.77)
 	b:SetScript("OnClick", function() parent:Hide() end)
 	return b
 end

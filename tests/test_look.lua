@@ -552,7 +552,6 @@ function cases.portraits_badge_by_what_is_in_the_disc()
 		if main_ then T.eq(p.tex.__atlas, main_, what .. ": the picture") end
 		T.eq(p.crest.__atlas, badge, what .. ": the badge")
 		T.ok(p.crest:IsShown() and p.crestRing:IsShown(), what .. ": the badge shown")
-		T.eq(p.crestLift:IsShown(), kind == "crest", what .. ": only a race emblem is lifted")
 	end
 	-- the hero is Le Jette (more banked), with her saved look; Le Dette is the row under her, with none
 	check(main.hero.portrait, "look", "classicon-warrior", "classicon-warrior", "hero, saved look")

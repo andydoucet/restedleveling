@@ -1,4 +1,4 @@
--- Rested Leveling: the plain-words lines shown in the window ("Full for 9h. 1.5 levels of double XP waiting.").
+-- Rested Leveling: the plain-words lines shown in the window ("Full since 9h ago. 1.5 levels of double XP waiting.").
 -- Pure functions, tested headless.
 
 local _, ns = ...
@@ -33,12 +33,13 @@ function Wd.When(ts, now, dateFn)
 end
 
 -- How much longer until fully rested, in real time, everywhere a character's rest shows (one formatter):
--- "Full in 9d 23h (Thu 4 Dec, 22:40)", "Full in 6h 20m (today 18:40)", and once full "Full for 2d 4h".
+-- "Full in 9d 23h (Thu 4 Dec, 22:40)", "Full in 6h 20m (today 18:40)", and once full "Full since 2d 4h ago" (never
+-- "Full for", which reads like time remaining).
 function Wd.FullLine(p, now, dateFn)
 	if not p then return "" end
 	if p.left == 0 then
 		local since = now - (p.fullSince or now)
-		return since < 60 and "Full now" or ("Full for " .. U.Duration(since))
+		return since < 60 and "Full now" or ("Full since " .. U.Duration(since) .. " ago")
 	end
 	local left = math.max(60, p.left)
 	return ("Full in %s (%s)"):format(U.Duration(left), Wd.When(now + left, now, dateFn))
@@ -109,7 +110,7 @@ function Wd.HeroWhy(r, now, dateFn)
 	if r.state == "full" then   -- not a countdown: it has been full that long, and the rest since is wasted
 		local since = now - (p.fullSince or now)
 		if since < 60 then return "Fully rested just now." end
-		return ("Full since %s ago: rest is going to waste."):format(U.Duration(since))
+		return ("Full since %s ago · more rest is wasted."):format(U.Duration(since))
 	end
 	if r.state == "near" then return ("%d%% full. %s."):format(math.floor(p.pct * 100), full) end
 	if r.state == "resting" then return ("Resting. %s."):format(full) end
@@ -154,14 +155,11 @@ end
 
 -- Why #1 beats #2, in one short line with the same rounding as the rows: "2d ahead of Le Beouf (full for 8h)".
 function Wd.Ahead(rows, now)
-	local a, b = rows[1], rows[2]
-	if not (a and b and a.p and b.p) or a.group ~= b.group or a.group > 3 then return nil end
+	local b = rows[2]
+	if not (rows[1] and b and b.p and b.group and b.group <= 4) then return nil end
 	local name = b.c.full or "?"
-	if a.group == 1 then
-		return ("Then %s, full for %s"):format(name, U.Short(now - (b.p.fullSince or now)))
-	elseif a.group == 2 then
-		return ("Then %s at %d%%"):format(name, math.floor(b.p.pct * 100))
-	end
+	if b.p.left == 0 then return ("Then %s, full since %s ago"):format(name, U.Short(now - (b.p.fullSince or now))) end
+	if b.group == 2 then return ("Then %s, full in %s"):format(name, U.Short(b.p.left)) end
 	return ("Then %s with %s"):format(name, Wd.Levels(b.p.levels))
 end
 
