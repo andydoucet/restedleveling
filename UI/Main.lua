@@ -62,15 +62,7 @@ function Main.Create()
 	tinsert(UISpecialFrames, "RestedLevelingMain")
 
 	St.Scale(f)
-	f.compactBtn = St.MakeButton(f, 96, "Compact", false, St.HostFrame() and 22 or 24)
-	-- On our own frame it sits on the title rail; under a host skin the title band is the skin's, so it goes in the
-	-- footer, bottom right, as on the host's own skinned windows.
-	if St.HostFrame() then   -- in the host's title bar, left of its close button
-		f.compactBtn:SetPoint("TOPRIGHT", -36, -8)
-	else
-		f.compactBtn:SetPoint("TOPRIGHT", -48, -(St.BAND + (St.RAIL_H - 24) / 2))
-	end
-	f.compactBtn:SetScript("OnClick", function() if ns.Compact then ns.Compact.Toggle(true) end end)
+	Main.TitleButtons(f, "chevron_up")
 
 	local inner = Main.W - PAD * 2
 	f.hero = ns.Hero.Create(f, inner, f.heroH)
@@ -191,6 +183,25 @@ function Main.Create()
 	Main.frame = f
 	f:Hide()
 	return f
+end
+
+-- The title bar's controls, right to left: X, the cog (settings; right-click: unlock or lock the notifications) and
+-- the chevron (up: into compact mode; down, on the compact bar: back to this window). Shared with the compact bar.
+function Main.TitleButtons(f, chevron)
+	f.cogBtn = St.AddTitleButton(f, "cog", "Settings", function()
+		return ns.Move.Active() and "Right-click: lock the notifications" or "Right-click: unlock the notifications to move them"
+	end)
+	f.cogBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	f.cogBtn:SetScript("OnClick", function(_, button)
+		GameTooltip:Hide()   -- its right-click line is stale now; the next hover shows the new state
+		if button == "RightButton" then ns.Move.Toggle() else ns.OpenOptions() end
+	end)
+	local up = chevron == "chevron_up"
+	f.compactBtn = St.AddTitleButton(f, chevron, up and "Compact mode" or "Expand",
+		up and "One line of state pips" or "Back to the full window")
+	f.compactBtn:SetScript("OnClick", function()
+		if up then ns.Compact.Toggle(true) else ns.Compact.Toggle(false); ns.ToggleMain() end
+	end)
 end
 
 function Main.AccountTip(owner)

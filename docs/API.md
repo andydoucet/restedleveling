@@ -150,13 +150,17 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetBottom` | doc | doc |  |
 | method | `GetCenter` | doc | doc |  |
 | method | `GetChecked` | doc | doc |  |
+| method | `GetDisabledTexture` | doc | doc |  |
 | method | `GetDrawLayer` | doc | doc |  |
 | method | `GetEffectiveScale` | doc | doc |  |
 | method | `GetFrameLevel` | doc | doc |  |
 | method | `GetHeight` | doc | doc |  |
 | method | `GetID` | doc | doc |  |
 | method | `GetLeft` | doc | doc |  |
+| method | `GetName` | doc | doc |  |
+| method | `GetNormalTexture` | doc | doc |  |
 | method | `GetParent` | doc | doc |  |
+| method | `GetPushedTexture` | doc | doc |  |
 | method | `GetRegions` | doc | doc |  |
 | method | `GetStatusBarTexture` | doc | doc |  |
 | method | `GetStringHeight` | doc | doc |  |

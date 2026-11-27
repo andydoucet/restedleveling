@@ -1,6 +1,6 @@
 -- Rested Leveling: LibDataBroker feed ("3 full | 2 resting | 1 outside", tooltip = mini roster) and the minimap
--- button. ElvUI turns any LDB feed into a datatext by itself. The minimap button hides when ElvUI is loaded
--- (option to show it anyway).
+-- button (the app icon, shown by default with or without ElvUI; one switch, or /rlvl minimap, hides it). ElvUI
+-- turns any LDB feed into a datatext by itself. Left-click: the window, right-click: our settings.
 
 local _, ns = ...
 local St, M = ns.Style, ns.Model
@@ -24,7 +24,10 @@ Br.feed = LDB:NewDataObject("RestedLeveling", {
 		if button == "RightButton" and ns.OpenOptions then ns.OpenOptions() else ns.ToggleMain() end
 	end,
 	-- Our own themed tip rather than the host's generic tooltip (LDB displays call OnEnter / OnLeave).
-	OnEnter = function(owner) ns.Tip.Show(owner) end,
+	OnEnter = function(owner)   -- LibDBIcon's button can also be dragged around the minimap
+		local minimap = owner and owner.GetName and tostring(owner:GetName() or ""):find("^LibDBIcon10_")
+		ns.Tip.Show(owner, minimap and (ns.Tip.HINT .. "  ·  Drag: move") or nil)
+	end,
 	OnLeave = function() ns.Tip.Hide() end,
 })
 
@@ -35,9 +38,18 @@ end
 function Br.UpdateMinimap()
 	if not ICON then return end
 	local o = ns.DB().opts
-	local hide = o.minimap.hide or (ns.Style.Pick("auto") == "elvui" and not o.showMinimapWithElvUI)
-	if hide then ICON:Hide("RestedLeveling") else ICON:Show("RestedLeveling") end
+	if o.minimap.hide then ICON:Hide("RestedLeveling") else ICON:Show("RestedLeveling") end
 end
+
+-- /rlvl minimap: show or hide the button (for whoever hid it and lost the switch).
+ns.slash.minimap = function()
+	local o = ns.DB().opts
+	o.minimap.hide = not o.minimap.hide
+	Br.UpdateMinimap()
+	if ns.Options then ns.Options.RefreshAll() end
+	ns.Util.Print(o.minimap.hide and "minimap button hidden (/rlvl minimap brings it back)." or "minimap button shown.")
+end
+ns.slashHelp[#ns.slashHelp + 1] = "/rlvl minimap - show or hide the minimap button"
 
 ns.RegisterCallback(Br, "LOGIN_DONE", function()
 	if ICON and not ICON:IsRegistered("RestedLeveling") then ICON:Register("RestedLeveling", Br.feed, ns.DB().opts.minimap) end

@@ -15,10 +15,8 @@ O.SWITCHES = {
 		set = function(_, v) if ns.Compact then ns.Compact.Toggle(v) end end },
 	{ key = "showGrey", label = "Show max level and hidden characters (dimmed, at the bottom)",
 		get = function(d) return d.opts.showGrey ~= false end, set = function(d, v) d.opts.showGrey = v end },
-	{ key = "minimap", label = "Minimap button", get = function(d) return not d.opts.minimap.hide end,
+	{ key = "minimap", label = "Minimap button (also /rlvl minimap)", get = function(d) return not d.opts.minimap.hide end,
 		set = function(d, v) d.opts.minimap.hide = not v end },
-	{ key = "minimapElv", label = "Minimap button even with ElvUI", get = function(d) return d.opts.showMinimapWithElvUI end,
-		set = function(d, v) d.opts.showMinimapWithElvUI = v end },
 }
 O.SWITCHES[#O.SWITCHES + 1] = { key = "bigger", label = "Bigger windows (115%, for high resolutions; after /reload)",
 	get = function(d) return (tonumber(d.opts.scale) or 1) > 1 end, set = function(d, v) d.opts.scale = v and 1.15 or nil end }
@@ -244,6 +242,9 @@ function O.RefreshPanel(p)
 	p.low:SetValue(d.opts.lowPct)
 	O.ShowLow(p.low)
 end
+
+-- Show the saved options on the page (after a change made elsewhere, such as /rlvl minimap).
+function O.RefreshAll() if O.panel then O.RefreshPanel(O.panel) end end
 
 function ns.OpenOptions()
 	O.Panel()

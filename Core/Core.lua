@@ -8,10 +8,9 @@ local CBH = LibStub("CallbackHandler-1.0")
 ns.callbacks = CBH:New(ns)
 function ns.Fire(event, ...) ns.callbacks:Fire(event, ...) end
 
-local DB_VERSION = 2
+local DB_VERSION = 3
 local DEFAULTS = {
-	style = "auto", compact = false, showGrey = true, minimap = { hide = false }, showMinimapWithElvUI = false,
-	lowPct = 10,
+	style = "auto", compact = false, showGrey = true, minimap = { hide = false }, lowPct = 10,
 }
 ns.LOW_MIN, ns.LOW_MAX = 5, 50   -- the low-rest warning threshold, % of a full bar left
 
@@ -43,13 +42,18 @@ function ns.DB()
 	if loaded then return d end
 	loaded = true
 	d.__ready, d.xpTable, d.lastLogin, d.lastSeen = nil, nil, nil, nil   -- retired keys
-	if (tonumber(d.version) or 0) < DB_VERSION then d.version = DB_VERSION end
+	local from = tonumber(d.version) or 0
+	if from < DB_VERSION then d.version = DB_VERSION end
 	d.chars, d.calib, d.hidden, d.alertsOff, d.opts = tbl(d.chars), tbl(d.calib), tbl(d.hidden), tbl(d.alertsOff), tbl(d.opts)
 	for k, v in pairs(DEFAULTS) do
 		if d.opts[k] == nil or (type(v) == "table" and type(d.opts[k]) ~= "table") then
 			d.opts[k] = (type(v) == "table") and U.Copy(v) or v
 		end
 	end
+	-- v3 (ILL-1299): the minimap button shows with or without ElvUI. 1.2 hid it under ElvUI unless a second switch
+	-- (default off, so nobody chose it) was on; that switch is gone. Only opts.minimap.hide, the player's own choice,
+	-- hides it now, so the old flag is simply dropped.
+	if from < 3 then d.opts.showMinimapWithElvUI = nil end
 	-- v2 (ILL-1272): the low-rest threshold (whole %, 5..50) and the account filter (nil = all, "mine", or an id).
 	local low = tonumber(d.opts.lowPct)
 	d.opts.lowPct = low and U.Clamp(math.floor(low + 0.5), ns.LOW_MIN, ns.LOW_MAX) or DEFAULTS.lowPct

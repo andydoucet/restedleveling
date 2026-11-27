@@ -85,7 +85,10 @@ function X.Window(frame, title)
 		frame.rlHostTitle:SetTextColor(0.94, 0.75, 0.30)   -- his gold (#F0D890 as rendered)   -- gold, like his Options and Character titles
 		frame.rlHostTitle:SetPoint("TOP", 0, -12)
 		if frame.CloseButton then handle("HandleCloseButton", frame.CloseButton)
-		else frame.rlClose = X.MakeClose(frame); frame.rlClose:SetPoint("TOPRIGHT", -6, -6) end
+		else   -- centred on the title line (TOP -12, 16 px type)
+			frame.rlClose = X.MakeIconButton(frame, "close")
+			frame.rlClose:SetPoint("TOPRIGHT", -4, -7)
+		end
 	end
 	frame.rlHostTitle:SetText(title or "")
 end
@@ -105,6 +108,46 @@ function X.MakeClose(parent)
 	b:SetSize(24, 24)
 	b:SetScript("OnClick", function() parent:Hide() end)
 	handle("HandleCloseButton", b)
+	return b
+end
+
+-- Window icon buttons (ILL-1299) through ElvUI's own skin calls, so a skin on top (WC3: a red enamel X in an iron
+-- bezel, small forged-iron squares with cream glyphs) dresses them like its own: X is S:HandleCloseButton (ElvUI's
+-- Close glyph, 26 px, whose plate a skin insets 4 px), the chevron is S:HandleNextPrevButton (ElvUI's ArrowUp, turned
+-- for down) and the cog the same small icon button with our cog glyph (ElvUI has none). rlInset: how far inside the
+-- button's rect its visible plate starts (spacing is measured between plates). Own-frame mode: our bronze family.
+X.ICON = 18   -- the chevron and cog squares; the X's plate inside its 26 px button matches them
+local ARROW = { chevron_up = "up", chevron_down = "down" }
+local function setGlyph(b, glyph)
+	b.glyph = glyph
+	local textures = { b:GetNormalTexture(), b:GetPushedTexture(), b:GetDisabledTexture() }
+	local turns = S and type(S.ArrowRotation) == "table" and S.ArrowRotation
+	local rot = ARROW[glyph] and turns and turns[ARROW[glyph]] or 0
+	for _, t in ipairs(textures) do
+		if glyph == "cog" then   -- our cog fills its texture; ElvUI's arrow has padding: inset it to match
+			t:SetTexture(St.MEDIA .. "cog")
+			t:ClearAllPoints()
+			t:SetPoint("TOPLEFT", 3, -3)
+			t:SetPoint("BOTTOMRIGHT", -3, 3)
+		end
+		t:SetRotation(rot)
+	end
+end
+function X.MakeIconButton(parent, glyph, size)
+	if X.Own() then return St.backends.default.MakeIconButton(parent, glyph, size) end
+	if glyph == "close" then
+		local b = X.MakeClose(parent)
+		b:SetSize(26, 26)
+		b.rlInset = 4
+		return b
+	end
+	local b = CreateFrame("Button", nil, parent)
+	b:SetSize(X.ICON, X.ICON)
+	if not handle("HandleNextPrevButton", b, ARROW[glyph] or "up", nil, false, nil, nil, X.ICON) then
+		return St.backends.default.MakeIconButton(parent, glyph, size)
+	end
+	b.SetGlyph = setGlyph
+	setGlyph(b, glyph)
 	return b
 end
 

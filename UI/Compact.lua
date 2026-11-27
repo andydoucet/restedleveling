@@ -1,5 +1,7 @@
 -- Rested Leveling: compact mode. One line of coloured state pips (best to play first, left to right) plus the
 -- play-next name; hover a pip for that character, click it for the card, click the icon to open the full window.
+-- On the right the window's own controls: the chevron (expand), the cog (settings) and X (hides the bar until the
+-- next /rlvl or minimap click; compact mode stays on).
 
 local _, ns = ...
 local St, Wg, Wd = ns.Style, ns.Widgets, ns.Words
@@ -44,7 +46,7 @@ function Cp.Create()
 	f.icon.tex:SetAllPoints()
 	f.icon.tex:SetTexture(St.MEDIA .. "icon")
 	f.icon:SetScript("OnClick", function() Cp.Toggle(false); ns.ToggleMain() end)
-	f.icon:SetScript("OnEnter", function() ns.Tip.Show(f) end)
+	f.icon:SetScript("OnEnter", function() ns.Tip.Show(f, "Click: open the full window") end)
 	f.icon:SetScript("OnLeave", function() ns.Tip.Hide() end)
 	f.pips = {}
 	for i = 1, MAX do
@@ -64,6 +66,10 @@ function Cp.Create()
 	end
 	f.next = Wg.Text(f, "body", nil, 13)
 	f.next:SetTextColor(0.9, 0.88, 0.8)
+	f.rlClose = St.MakeIconButton(f, "close", St.TITLE_BTN)
+	f.rlClose:SetPoint("RIGHT", -(8 - (f.rlClose.rlInset or 0)), 0)
+	f.rlClose:SetScript("OnClick", function() f:Hide() end)
+	ns.Main.TitleButtons(f, "chevron_down")
 	Cp.frame = f
 	f:Hide()
 	return f
@@ -101,7 +107,7 @@ function Cp.Refresh()
 	else
 		f.next:SetText("No alts yet")
 	end
-	f:SetWidth(math.max(340, 46 + n * (PIP + 3) + f.next:GetStringWidth() + 22))
+	f:SetWidth(math.max(420, 46 + n * (PIP + 3) + f.next:GetStringWidth() + 22 + 3 * St.TITLE_BTN + 2 * St.TITLE_GAP + 8))
 end
 
 -- on: true shows the compact bar (and hides the window), false hides it.

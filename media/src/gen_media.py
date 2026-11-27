@@ -4,11 +4,16 @@
     python3 media/src/gen_media.py
 
 Sources (all generated for this project, no third-party art):
-  logo_concept_v0.png  desk concept (grok-imagine): bedroll under a crescent moon
+  logo_concept_v0.png  desk concept (grok-imagine): bedroll under a crescent moon (hero background)
+  appicon_master.png   the app icon, generated for this addon (ILL-1299): golden hourglass, silver crescent moon,
+                       blue moonlight sand. icon.tga (64: LDB feed, minimap button, datatext, addon list) and
+                       logo.tga (128) are straight Lanczos downsizes of it.
   stage_inn_src.png    grok-imagine-image-quality: tavern interior at night (detail-card stage, resting)
   stage_wild_src.png   grok-imagine-image-quality: forest road at night (detail-card stage, not resting)
   wood_src.png         grok-imagine-image-quality: seamless dark oak planks (Default-style title rail and body)
-Procedural textures (bar, ring, glow, pip, hatch, disc) are drawn here. Output is 32-bit TGA, power-of-two sizes.
+Procedural textures (bar, ring, glow, pip, hatch, disc, and the window glyphs: close, chevron, cog, lock,
+unlock) are drawn
+here. Output is 32-bit TGA, power-of-two sizes.
 """
 import math
 import os
@@ -43,18 +48,78 @@ def vignette(img, strength=0.65):
     return Image.composite(img.convert("RGB"), black, v)
 
 
-def icon(size, name):
-    src = Image.open(os.path.join(SRC, "logo_concept_v0.png")).convert("RGB")
-    crop = src.crop((170, 30, 730, 590)).resize((size, size), Image.LANCZOS)   # the moon and the zZz only
-    crop = ImageEnhance.Contrast(crop).enhance(1.25)
-    crop = ImageEnhance.Brightness(crop).enhance(1.1)
-    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    out.paste(crop, (0, 0), round_mask(size))
-    ring = Image.new("RGBA", (size * 4, size * 4), (0, 0, 0, 0))
-    w = max(2, size // 22) * 4
-    ImageDraw.Draw(ring).ellipse((w // 2, w // 2, size * 4 - w // 2, size * 4 - w // 2), outline=(214, 172, 84, 255), width=w)
-    out.alpha_composite(ring.resize((size, size), Image.LANCZOS))
+def appicon(size, name):
+    src = Image.open(os.path.join(SRC, "appicon_master.png")).convert("RGBA")
+    save(src.resize((size, size), Image.LANCZOS), name)
+
+
+# Window glyphs: white on transparent (tinted in game), 32 px, drawn 8x and downsampled so the edges are clean.
+def glyph(name, draw_fn, size=32, ss=8):
+    big = Image.new("L", (size * ss, size * ss), 0)
+    draw_fn(ImageDraw.Draw(big), size * ss)
+    a = big.resize((size, size), Image.LANCZOS)
+    out = Image.new("RGBA", (size, size), (255, 255, 255, 0))
+    out.putalpha(a)
     save(out, name)
+
+
+def stroke(d, pts, w):
+    d.line(pts, fill=255, width=int(w), joint="curve")
+    for x, y in (pts[0], pts[-1]):
+        d.ellipse((x - w / 2, y - w / 2, x + w / 2, y + w / 2), fill=255)
+
+
+def chevron(d, S):   # pointing up; flipped with tex coords for down
+    stroke(d, [(S * 0.20, S * 0.66), (S * 0.50, S * 0.36), (S * 0.80, S * 0.66)], S * 0.15)
+
+
+def cross(d, S):   # the close X, the chevron's stroke
+    a, b = S * 0.27, S * 0.73
+    stroke(d, [(a, a), (b, b)], S * 0.15)
+    stroke(d, [(a, b), (b, a)], S * 0.15)
+
+
+def cog(d, S, teeth=8):
+    c, tip, body, hole = S / 2, S * 0.47, S * 0.35, S * 0.15
+    pts = []
+    for i in range(teeth * 32):
+        t = i / (teeth * 32)
+        f = (t * teeth) % 1.0   # where in one tooth period: flat-topped teeth with sloped flanks
+        r = tip if 0.12 < f < 0.42 else (body if f > 0.58 or f < 0.0 else None)
+        if r is None:
+            r = body + (tip - body) * (f / 0.12 if f <= 0.12 else (0.58 - f) / 0.16)
+        a = 2 * math.pi * t
+        pts.append((c + r * math.cos(a), c + r * math.sin(a)))
+    d.polygon(pts, fill=255)
+    d.ellipse((c - hole, c - hole, c + hole, c + hole), fill=0)
+
+
+def padlock(d, S, open_=False):
+    bx0, bx1, by0, by1 = S * 0.20, S * 0.80, S * 0.46, S * 0.90
+    d.rounded_rectangle((bx0, by0, bx1, by1), radius=S * 0.07, fill=255)
+    w = S * 0.11
+    cx, r = S * 0.50, S * 0.19
+    lift = S * 0.10 if open_ else 0
+    shift = S * 0.16 if open_ else 0
+    top = S * 0.12 - lift
+    d.arc((cx - r + shift, top, cx + r + shift, top + 2 * r), 180, 360, fill=255, width=int(w))
+    leg_y = top + r
+    d.rectangle((cx - r + shift, leg_y, cx - r + shift + w, by0 if not open_ else leg_y + S * 0.10), fill=255)
+    if not open_:
+        d.rectangle((cx + r - w, leg_y, cx + r, by0), fill=255)
+    else:
+        d.rectangle((cx + r + shift - w, leg_y, cx + r + shift, by0), fill=255)
+    kx, ky = S * 0.50, S * 0.64   # the keyhole
+    d.ellipse((kx - S * 0.055, ky - S * 0.055, kx + S * 0.055, ky + S * 0.055), fill=0)
+    d.rectangle((kx - S * 0.025, ky, kx + S * 0.025, ky + S * 0.13), fill=0)
+
+
+def glyphs():
+    glyph("chevron.tga", chevron)
+    glyph("close.tga", cross)
+    glyph("cog.tga", cog)
+    glyph("lock.tga", lambda d, S: padlock(d, S))
+    glyph("unlock.tga", lambda d, S: padlock(d, S, True))
 
 
 def hero_bg():
@@ -396,8 +461,9 @@ def hatch(size=32):
 
 
 if __name__ == "__main__":
-    icon(64, "icon.tga")
-    icon(128, "logo.tga")
+    appicon(64, "icon.tga")
+    appicon(128, "logo.tga")
+    glyphs()
     hero_bg()
     stage("stage_inn_src.png", "stage_inn.tga")
     stage("stage_wild_src.png", "stage_wild.tga")

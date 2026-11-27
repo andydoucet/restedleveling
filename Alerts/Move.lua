@@ -2,7 +2,7 @@
 -- of the player's choosing, saved per account in RestedLevelingDB.positions as { point, relPoint, x, y } against
 -- UIParent, anchored to the nearest edge (so it survives a resolution or UI scale change) and clamped to the screen.
 --
--- /rlvl move (or Options > Move notifications) shows each one as a labelled placeholder in its real size and style,
+-- /rlvl move (Options > Move notifications, or a right-click on the cog) shows each one as a labelled placeholder in its real size and style,
 -- to drag, with Reset per item, Reset all and Done; Esc leaves. The Esc-menu card hangs under the menu until it is
 -- moved (detached); Reset attaches it again. With ElvUI the three are also ElvUI movers in their own "Rested Leveling"
 -- group in /moveui; both ways of moving them save to the same place. Not in combat.
@@ -328,6 +328,12 @@ function Mv.Stop()
 	for _, f in pairs(Mv.frames or {}) do f:StopMovingOrSizing(); f:Hide() end
 	if Mv.bar then Mv.bar.shade:Hide(); Mv.bar:Hide() end
 	Mv.stopping = nil
+end
+
+-- Unlocked <-> locked: the cog's right-click. True when it is now unlocked.
+function Mv.Toggle()
+	if Mv.Active() then Mv.Stop() return false end
+	return Mv.Start()
 end
 
 local ev = CreateFrame("Frame")

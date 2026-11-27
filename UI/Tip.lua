@@ -13,6 +13,7 @@ local function create()
 	St.Ensure()
 	local f = CreateFrame("Frame", "RestedLevelingTip", UIParent, "BackdropTemplate")
 	f:SetFrameStrata("TOOLTIP")
+	f:SetClampedToScreen(true)   -- by a minimap button in the top-right corner it would run off the screen
 	f:SetWidth(W)
 	St.Panel(f, "tooltip")
 	f.title = Wg.Text(f, "title", nil, 16)
@@ -52,13 +53,15 @@ local function create()
 	f.empty:SetText("No other characters yet. Log each one in and out once.")
 	f.hint = Wg.Text(f, "small", nil, 12)
 	St.Color(f.hint, St.SECOND)
-	f.hint:SetText("Click: open the window  ·  Right-click: options")
 	f:Hide()
 	return f
 end
 
--- Show the tip by `owner`, below it (or above when the owner is low on the screen).
-function Tip.Show(owner)
+-- What a click on the owner does: the minimap button and a datatext open the window or the settings.
+Tip.HINT = "Left-click: open  ·  Right-click: settings"
+
+-- Show the tip by `owner`, below it (or above when the owner is low on the screen). hint: the line at the bottom.
+function Tip.Show(owner, hint)
 	Tip.frame = Tip.frame or create()
 	local f = Tip.frame
 	local rows, now = ns.Rows({ hideGrey = true }), time()
@@ -84,6 +87,7 @@ function Tip.Show(owner)
 	end
 	f.empty:SetShown(n == 0)
 	local body = n > 0 and n * ROW or 40
+	f.hint:SetText(hint or Tip.HINT)
 	f.hint:ClearAllPoints()
 	f.hint:SetPoint("TOPLEFT", 16, -64 - body)
 	f:SetHeight(64 + body + 30)

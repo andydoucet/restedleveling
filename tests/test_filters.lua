@@ -38,7 +38,7 @@ local cases = {}
 function cases.v1_saved_data_migrates_with_defaults()
 	local h = world({ style = "auto", lowPct = "abc", accounts = "not-an-id" })
 	local d = W.DB(h)
-	T.eq(d.version, 2, "saved data is version 2")
+	T.eq(d.version, 3, "saved data is version 3")
 	T.eq(d.opts.lowPct, 10, "a damaged threshold falls back to 10%")
 	T.eq(d.opts.accounts, nil, "a damaged filter shows all")
 	local h2 = world({ lowPct = 80, accounts = "bbbbbb" })

@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: Rested Leveling |cff7fd4ff@project-version@|r
 ## Notes: Never level unrested. Every character's rested XP, sorted so the top one is who to play next. /rlvl
-## IconTexture: Interface\Icons\Spell_Nature_Sleep
+## IconTexture: Interface\AddOns\RestedLeveling\media\icon
 ## Author: Andy Doucet
 ## Version: @project-version@
 ## X-License: GPL-3.0

@@ -1,5 +1,7 @@
 # Rested Leveling
 
+<img src="docs/icon.png" alt="Rested Leveling icon: a golden hourglass under a crescent moon" width="96" align="right">
+
 **Never level unrested.** A WoW Forever addon that shows every character's rested XP at a glance, sorts your roster
 so the top character is the one to play next, and warns you (no popups) before you log out somewhere you aren't
 resting.
@@ -28,9 +30,13 @@ resting.
   ![Alerts](docs/screenshots/alerts.png)
 
 - **Compact mode** (one line of state pips) and a **LibDataBroker feed** ("2 full | 3 resting | 2 outside", the
-  tooltip is the mini roster), which ElvUI shows as a datatext. Minimap button (hidden when ElvUI is loaded, switchable).
+  tooltip is the mini roster), which ElvUI shows as a datatext. A minimap button with the app icon (left-click: the
+  window, right-click: settings; hide it in the settings or with `/rlvl minimap`).
 
   ![Compact mode and datatext tooltip](docs/screenshots/compact.png)
+
+- **Title bar.** The cog by the window's close button opens the settings (right-click it to unlock the notifications
+  and drag them where you want them); the chevron beside it switches to compact mode.
 
 - **ElvUI.** With ElvUI loaded, the windows go through ElvUI's own skin functions, fonts and bar texture, so ElvUI
   skins such as ElvUI_WC3 apply to them too. Options also appear in `/ec`. Style can be forced: auto, default, elvui.
@@ -56,7 +62,8 @@ Limits (the game's, not the addon's):
 ## Commands
 
 `/rlvl` (or `/restedleveling`) opens the window. `/rlvl help` lists the rest: `list`, `target <level|off>`,
-`hide|show <name>`, `account <label>`, `link <Name>`, `sync`, `alerts [kind]`, `options`, `ranks <0-5>`.
+`hide|show <name>`, `account <label>`, `link <Name>`, `sync`, `alerts [kind]`, `options`, `move`, `minimap`,
+`ranks <0-5>`.
 
 ## How the numbers work
 
@@ -79,6 +86,8 @@ value and corrects the rate or cap. The 30 bubbles on each bar are 5% of a level
 Rested Leveling builds on [Rested Watch](https://gitlab.com/docbiddle/RestedWatch) by doc_biddle (GPL-3.0): its
 rested-XP projection, self-calibration, Well Rested rank reader and sleeping-bag logic, and the test harness idea.
 Thank you.
+
+The app icon was generated for this addon.
 
 Embedded libraries: LibStub, CallbackHandler-1.0, LibDataBroker-1.1 and LibDBIcon-1.0, each under its own licence.
 
