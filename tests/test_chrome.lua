@@ -1,4 +1,5 @@
--- ILL-1299: the minimap button (shown with or without ElvUI) and the title bar's X / cog / chevron.
+-- ILL-1299: the minimap button (shown with or without ElvUI), the title bar's X / cog / chevron, the Settings window
+-- and the "Unlock notifications" toggle.
 
 local W = dofile("tests/world.lua")
 local D = 86400
@@ -68,10 +69,8 @@ function cases.a_hidden_minimap_button_stays_hidden()
 end
 
 function cases.minimap_clicks_and_tip()
-	local h, state = stubbedWorld()
+	local h = stubbedWorld()
 	local env = h.Env()
-	local opened = 0
-	state.ns.OpenOptions = function() opened = opened + 1 end
 	local feed = env.LibStub("LibDataBroker-1.1"):GetDataObjectByName("RestedLeveling")
 	T.has(feed.icon, "media\\icon", "the app icon")
 	feed.OnClick(nil, "LeftButton")
@@ -79,7 +78,7 @@ function cases.minimap_clicks_and_tip()
 	feed.OnClick(nil, "LeftButton")
 	T.ok(not env.RestedLevelingMain:IsShown(), "and closes it")
 	feed.OnClick(nil, "RightButton")
-	T.eq(opened, 1, "right-click opens the settings")
+	T.ok(env.RestedLevelingSettings and env.RestedLevelingSettings:IsShown(), "right-click opens our settings window")
 	local button = env.CreateFrame("Button", "LibDBIcon10_RestedLeveling", env.Minimap)
 	feed.OnEnter(button)
 	T.eq(env.RestedLevelingTip.hint:GetText(), "Left-click: open  ·  Right-click: settings  ·  Drag: move", "minimap hint")
@@ -90,9 +89,7 @@ end
 
 -- Right to left: X, cog, chevron; one size, 5 px apart, each centred on the one to its right.
 function cases.title_bar_has_chevron_cog_and_close()
-	local h, state = stubbedWorld()
-	local opened = 0
-	state.ns.OpenOptions = function() opened = opened + 1 end
+	local h = stubbedWorld()
 	h.Slash("RESTEDLEVELING", "")
 	local m = h.Env().RestedLevelingMain
 	for _, b in ipairs({ m.rlClose, m.cogBtn, m.compactBtn }) do T.eq(b:GetWidth() .. "x" .. b:GetHeight(), "22x22", "22 px") end
@@ -105,7 +102,9 @@ function cases.title_bar_has_chevron_cog_and_close()
 	T.has(m.cogBtn.icon:GetTexture(), "media\\cog", "our cog glyph")
 	T.has(m.rlClose.icon:GetTexture(), "media\\close", "our cross")
 	FakeWoW.RunScript(m.cogBtn, "OnClick", "LeftButton")
-	T.eq(opened, 1, "the cog opens the settings")
+	T.ok(h.Env().RestedLevelingSettings:IsShown(), "the cog opens the settings")
+	FakeWoW.RunScript(m.cogBtn, "OnClick", "LeftButton")
+	T.ok(not h.Env().RestedLevelingSettings:IsShown(), "and closes them")
 	T.clean(h)
 end
 
@@ -118,6 +117,61 @@ function cases.right_click_on_the_cog_unlocks_the_notifications()
 	FakeWoW.RunScript(m.cogBtn, "OnClick", "RightButton")
 	T.ok(not Mv.Active(), "again: locked")
 	T.clean(h)
+end
+
+function cases.settings_window_holds_the_same_page_and_toggles_move_mode()
+	local h, state = stubbedWorld()
+	local env, Mv = h.Env(), state.ns.Move
+	h.Slash("RESTEDLEVELING", "options")
+	local f = env.RestedLevelingSettings
+	T.ok(f:IsShown(), "/rlvl options opens our window")
+	local esc = false
+	for _, name in ipairs(env.UISpecialFrames) do if name == "RestedLevelingSettings" then esc = true end end
+	T.ok(esc, "Esc closes it")
+	local keys = {}
+	for _, cb in ipairs(env.RestedLevelingOptions.checks) do keys[#keys + 1] = cb.sw.key end
+	local mine = {}
+	for _, cb in ipairs(f.page.checks) do mine[#mine + 1] = cb.sw.key end
+	T.eq(table.concat(mine, ","), table.concat(keys, ","), "the same switches as the Blizzard Settings page")
+	local heads = {}
+	for _, s in ipairs(f.page.sections) do heads[#heads + 1] = s.head:GetText() end
+	T.eq(table.concat(heads, ","), "GENERAL,ACCOUNTS,ALERTS,POSITIONS,ABOUT", "the sections, top to bottom")
+	T.eq(f.page.move.label:GetText(), "Unlock notifications", "locked at first")
+	T.has(f.page.lock:GetTexture(), "media\\lock", "a closed lock")
+	FakeWoW.RunScript(f.page.move, "OnClick")
+	T.ok(Mv.Active(), "unlock: move mode")
+	T.ok(f:IsShown(), "the window stays open")
+	T.eq(f.page.move.label:GetText(), "Lock notifications", "the toggle says what it does next")
+	T.has(f.page.lock:GetTexture(), "media\\unlock", "an open lock")
+	local p, rel = f:GetPoint(1)
+	T.ok(p == "LEFT" and rel == env.UIParent, "docked at the left edge, beside the placeholders")
+	h.Slash("RESTEDLEVELING", "move")   -- /rlvl move while unlocked: still unlocked
+	T.ok(Mv.Active(), "/rlvl move keeps it unlocked")
+	FakeWoW.RunScript(f.page.move, "OnClick")
+	T.ok(not Mv.Active(), "lock: move mode ends")
+	T.eq(f.page.move.label:GetText(), "Unlock notifications", "back to unlock")
+	T.eq((f:GetPoint(1)), "CENTER", "back where it was")
+	T.clean(h)
+end
+
+function cases.settings_window_remembers_where_it_was_dragged()
+	local h = stubbedWorld()
+	local env = h.Env()
+	env.UIParent:SetSize(1920, 1080)
+	h.Slash("RESTEDLEVELING", "options")
+	local f = env.RestedLevelingSettings
+	f.__left, f.__bottom = 100, 300
+	f:SetSize(668, 600)
+	FakeWoW.RunScript(f, "OnDragStop")
+	local pos = W.DB(h).positions.settings
+	T.eq(pos.point, "TOPLEFT", "anchored to the nearest corner")
+	T.eq(pos.x .. "," .. pos.y, "100,-180", "where it was left")
+	local h2 = stubbedWorld(nil, nil, false, { settings = pos })
+	h2.Slash("RESTEDLEVELING", "options")
+	local p, rel, rp, x, y = h2.Env().RestedLevelingSettings:GetPoint(1)
+	T.eq(table.concat({ p, rp, x, y }, ","), "TOPLEFT,TOPLEFT,100,-180", "opens there next session")
+	T.ok(rel == h2.Env().UIParent, "against the screen")
+	T.clean(h); T.clean(h2)
 end
 
 function cases.compact_bar_has_the_same_controls()

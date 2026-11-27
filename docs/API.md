@@ -11,6 +11,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 |---|---|---|---|---|
 | global | `AuctionHouseFrame` | used | used | yes |
 | global | `BankFrame` | used | used | yes |
+| global | `C_AddOns` | doc | doc |  |
 | global | `C_CVar` | doc | doc |  |
 | global | `C_ChatInfo` | doc | doc |  |
 | global | `C_Container` | doc | doc |  |
@@ -109,6 +110,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `tinsert` | used | used |  |
 | harness | `tremove` | used | used |  |
 | harness | `wipe` | used | used |  |
+| field | `C_AddOns.GetAddOnMetadata` | doc | doc |  |
 | field | `C_CVar.GetCVar` | doc | doc |  |
 | field | `C_CVar.SetCVar` | doc | doc |  |
 | field | `C_ChatInfo.AreOutgoingAddonChatMessagesRestricted` | doc | doc | yes |
@@ -131,9 +133,12 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | field | `C_Traits.GetNodeInfo` | doc | doc | yes |
 | field | `C_Traits.GetTreeNodes` | doc | doc | yes |
 | field | `C_UnitAuras.GetPlayerAuraBySpellID` | doc | doc | yes |
-| field | `Settings.OpenToCategory` | used | used | yes |
 | field | `Settings.RegisterAddOnCategory` | used | used | yes |
 | field | `Settings.RegisterCanvasLayoutCategory` | used | used | yes |
+| field | `Settings.Show` | - | - | yes |
+| field | `Settings.Toggle` | - | - | yes |
+| field | `Settings.frame` | - | - | yes |
+| field | `Settings.lua` | - | used | yes |
 | method | `AddMaskTexture` | doc | doc |  |
 | method | `ClearAllPoints` | doc | doc |  |
 | method | `ClearFocus` | doc | doc |  |
@@ -155,7 +160,6 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `GetEffectiveScale` | doc | doc |  |
 | method | `GetFrameLevel` | doc | doc |  |
 | method | `GetHeight` | doc | doc |  |
-| method | `GetID` | doc | doc |  |
 | method | `GetLeft` | doc | doc |  |
 | method | `GetName` | doc | doc |  |
 | method | `GetNormalTexture` | doc | doc |  |
@@ -180,6 +184,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `IsShown` | doc | doc |  |
 | method | `LockHighlight` | doc | doc |  |
 | method | `Play` | doc | doc |  |
+| method | `Raise` | doc | doc |  |
 | method | `RegisterEvent` | doc | doc |  |
 | method | `RegisterForClicks` | doc | doc |  |
 | method | `RegisterForDrag` | doc | doc |  |

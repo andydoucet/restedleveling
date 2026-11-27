@@ -2,10 +2,11 @@
 -- of the player's choosing, saved per account in RestedLevelingDB.positions as { point, relPoint, x, y } against
 -- UIParent, anchored to the nearest edge (so it survives a resolution or UI scale change) and clamped to the screen.
 --
--- /rlvl move (Options > Move notifications, or a right-click on the cog) shows each one as a labelled placeholder in
--- its real size and style, to drag, with Reset per item, Reset all and Done; Esc leaves. The Esc-menu card hangs under
--- the menu until it is moved (detached); Reset attaches it again. With ElvUI the three are also ElvUI movers in their
--- own "Rested Leveling" group in /moveui; both ways of moving them save to the same place. Not in combat.
+-- /rlvl move (Settings > Positions > Unlock notifications, or a right-click on the cog) shows each one as a labelled
+-- placeholder in its real size and style, to drag, with Reset per item, Reset all and Done; Esc leaves. The Esc-menu
+-- card hangs under the menu until it is moved (detached); Reset attaches it again. With ElvUI the three are also ElvUI
+-- movers in their own "Rested Leveling" group in /moveui; both ways of moving them save to the same place. Not in
+-- combat.
 
 local _, ns = ...
 local St, Wg, U = ns.Style, ns.Widgets, ns.Util
@@ -305,7 +306,7 @@ local function bar()
 	return f
 end
 
-function Mv.Active() return Mv.bar ~= nil and Mv.bar:IsShown() end
+function Mv.Active() return Mv.on == true end
 
 function Mv.Start()
 	if U.Call(InCombatLockdown) then U.Print("you can move notifications after combat.") return false end
@@ -319,18 +320,22 @@ function Mv.Start()
 	Mv.bar = Mv.bar or bar()
 	Mv.bar.shade:Show()
 	Mv.bar:Show()
+	if not Mv.on then Mv.on = true; ns.Fire("MOVE_MODE", true) end
 	return true
 end
 
 function Mv.Stop()
 	if Mv.stopping then return end
 	Mv.stopping = true
+	local was = Mv.on
+	Mv.on = false
 	for _, f in pairs(Mv.frames or {}) do f:StopMovingOrSizing(); f:Hide() end
 	if Mv.bar then Mv.bar.shade:Hide(); Mv.bar:Hide() end
 	Mv.stopping = nil
+	if was then ns.Fire("MOVE_MODE", false) end
 end
 
--- Unlocked <-> locked: the cog's right-click. True when it is now unlocked.
+-- Unlocked <-> locked: the cog's right-click and Settings > Positions. True when it is now unlocked.
 function Mv.Toggle()
 	if Mv.Active() then Mv.Stop() return false end
 	return Mv.Start()

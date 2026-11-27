@@ -56,3 +56,4 @@ Alerts\Bag.lua
 
 Broker.lua
 Options.lua
+UI\Settings.lua

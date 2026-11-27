@@ -35,8 +35,9 @@ resting.
 
   ![Compact mode and datatext tooltip](docs/screenshots/compact.png)
 
-- **Title bar.** The cog by the window's close button opens the settings (right-click it to unlock the notifications
-  and drag them where you want them); the chevron beside it switches to compact mode.
+- **Settings.** The cog by the window's close button opens them: general switches, whose accounts to show, each
+  alert and the low rest threshold, and "Unlock notifications" to drag the logout warning, the toasts and the Esc menu
+  card where you want them (right-click the cog for that directly). The chevron beside it switches to compact mode.
 
 - **ElvUI.** With ElvUI loaded, the windows go through ElvUI's own skin functions, fonts and bar texture, so ElvUI
   skins such as ElvUI_WC3 apply to them too. Options also appear in `/ec`. Style can be forced: auto, default, elvui.

@@ -14,7 +14,7 @@ local DEFAULTS = {
 }
 ns.LOW_MIN, ns.LOW_MAX = 5, 50   -- the low-rest warning threshold, % of a full bar left
 
-local POSITION_KEYS = { banner = true, toasts = true, menu = true }
+local POSITION_KEYS = { banner = true, toasts = true, menu = true, settings = true }   -- settings: our Settings window
 local POINTS = { TOP = true, BOTTOM = true, LEFT = true, RIGHT = true, CENTER = true, TOPLEFT = true, TOPRIGHT = true,
 	BOTTOMLEFT = true, BOTTOMRIGHT = true }
 
