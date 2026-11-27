@@ -1,77 +1,72 @@
 {
   "scores": {
-    "visual_appeal": 7,
+    "visual_appeal": 8,
     "play_next_clarity": 8,
     "state_colours": 8,
-    "character_identity": 7,
-    "default_theme": 7,
-    "elvui_wc3_fit": 6,
-    "alerts_ux": 8,
-    "readability": 7,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 7,
+    "readability": 8,
     "layout_polish": 7,
     "delight": 7
   },
   "changes": {
     "visual_appeal": [
-      "The promised 6 px oak frame does not read at 1600x900. It looks like a 2 px brown hairline with pin-prick rivets. Make the outer oak band 8 px with visible grain (#3A2616 to #5A3B22 plank texture). Put a 2 px #121212 iron line inside it and a 1 px #A07A3C bronze lip. Make the corner rivets 8 px with a 2 px #E0B870 specular dot.",
-      "The title rail still looks like a flat dark strip. A lone vertical seam at about x=460 cuts the rail left of the title and reads as a rendering glitch. Either space three seams evenly (25/50/75%) or none. Raise rail contrast so the planks are visible (#4A3020 mid, #2A1A10 seams). Add two 6 px iron strap bands with 4 px rivets, like the door reference.",
-      "The hero art (tavern) is so dark it reads as mud. Raise it to about 35% opacity behind a left-to-right gradient (#0E0A06 at 90% to 40%) so the scene shows on the right half.",
-      "The hero's cyan portrait ring (#4FD0E0) clashes with the bronze/gold palette. Keep class colour for the name only. Use a 3 px bronze ring (#B8893E) with an inner 1 px state-coloured line (green when full)."
+      "The NOW PLAYING strip has a hole in the middle. The sentence 'No rested XP: kills give normal XP' floats centred with no bar. Put back the 10 px empty rest bar (track #1a1410, red #d03a2a 1 px edge) at x 390-640 and move the sentence under it at 12 px, so the strip has the same columns as the rows below it.",
+      "The RESTING chip glyph (12 px) renders as a brown smudge on both themes. Use a crisp 2-tone glyph: a bed or Zzz outline in the state orange #f39a2b on transparent. Do not use a cropped item texture.",
+      "Hero right column: '1.5' is about 34 px and 'LEVELS BANKED' about 10 px. 'Then Le Bankken, full in 19h' at about 10 px is too faint to read as information. Raise it to 12 px in #c9b892 and add 6 px above it."
     ],
     "play_next_clarity": [
-      "The hero says 'Le Beouf only 8 hours 55 min' but row 2 says 'full for 8h'. Use the same rounding everywhere ('8h 55m' or '9h').",
-      "The #1 gold disc is 26 px but sits on the portrait ring and is visually lost. Move it to overlap the portrait's top-left at 30 px with a 2 px #2A1A0A ring and an 18 px numeral.",
-      "Group 'Next: log out and select Le Nette.' with 'Open card': put them on one baseline with the gold line left and the button right. Give the gold line a small arrow glyph and 14 px size so it is the last thing the eye lands on.",
-      "'0.6 of a level left' in the now-playing strip is ambiguous (left of rest? of the level?). Write '0.6 levels of rest left \u00b7 not resting', and colour 'not resting' #E05050."
+      "The runner-up line is the least readable text in the hero. Move it under the action line, right-aligned before View details, at 12 px: 'After: Le Bankken \u00b7 full 23:12'. Or give it 12 px and a #d8c79a tint where it is now.",
+      "The action line 'First: hearth Le Jette to an inn. Then: play Le Dette.' is 14 px cream, the same weight as body text. Make it 15 px. Split it into two clauses with a 10 px gap and a 12 px hearthstone icon before 'hearth', so the order of steps reads without colour.",
+      "Le Dette's portrait has a green ring, yet it is the full character. Add a 16 px 'FULL' corner tag (green #3fcf5a on #0c1a0f) at the portrait's lower right, opposite the race badge, so #1's state reads at a glance and not only from the rail."
     ],
     "state_colours": [
-      "The yellow rows (Le Dette, Amdo Moto) still pick up an olive cast from the 7% tint over brown. Drop the yellow tint to 4%, or use a desaturated #D8B830 at 6%.",
-      "Amdo Moto is yellow at 91% but 'full in 3d 14h', which means it is not resting. The state hides a real problem. Add a 10 px red \u26a0 after the time, or append 'not resting' in #E05050 when a 90%+ character is outside a rested area.",
-      "The unlit moons (#5A4E38) at about 8 px are invisible on the red and brown rows. Raise them to 11 px and use unlit #6E5F44 with a 1 px #1A120A outline.",
-      "The max-level row shows five lit moons, which implies rested XP that does not matter. Replace them with a dim '\u2014' or hide the moon column for max level."
+      "The NEARLY FULL chip glyph (a yellow star) and the RESTING glyph differ in visual weight. Put all four chip glyphs on a 12x12 grid with a 1.5 px stroke and the same optical size.",
+      "Timeline night bands still read slate blue, about #343c4c. Use #2a2a2c at 70% so they do not compete with the blue ElvUI buttons or tint the orange lanes.",
+      "The red lane for Jacques Hammer looks like the other long lanes apart from its hue. Add a 1 px dashed red end cap and the text 'Outside \u00b7 4x slower' at 11 px under the date in the AFTER 48H column."
     ],
     "character_identity": [
-      "The card repeats the name three times (title rail, stage overlay, and the main window). Make the card's title rail say 'Character card' or show the realm. Keep the large name only on the stage.",
-      "Neither the 'pedestal line' nor the 'floor shadow' is visible in either card render. Draw a 120x14 px elliptical shadow (#000 at 60%) and a 2 px #A07A3C pedestal arc under the figure, so the fallback framing proves itself.",
-      "The class crest overlapping the portrait ring at 28 px crowds the face on both cards. Shrink it to 22 px and pin it to the ring's 4 o'clock outside edge.",
-      "Give each card stage a location tint: the night-blue for Durotar works well. Use an inn-warm amber (#3A2410) for rested characters so the background communicates state too."
+      "Card scene 06: the bar text wraps badly ('0.1 of a level / banked.'). Widen the text box to the full 390 px card width, or rewrite it as two deliberate lines: 'Resting at Thunder Bluff \u00b7 0.1 level banked' and 'Full in 9d \u00b7 Thu 3 Dec, 05:00'.",
+      "Badge discs at 19 px in rows (Le Jedde's draenei badge) blur into the class icon edge. Increase the overlap offset by 3 px outward and add a 1 px #0a0806 gap ring between disc and portrait.",
+      "The level medallion '11' on the card sits close to the class badge and reads as a second badge. Move it to the top-left of the portrait, or into the meta line."
     ],
     "default_theme": [
-      "Make the datatext tooltip in scene 06 match the oak style. It is a generic black box with a 1 px white border. Use the same 2 px iron and 1 px bronze lip and the cream/gold palette.",
-      "The compact bar is a plain dark strip with a 1 px tan border. Give it the oak fill and the corner rivets so it belongs to the same family.",
-      "The Esc strip and banner use flat #2A0E0E with a 1 px red line. Add the bronze lip inside the red border and a 3 px left enamel stripe (#B02020) for consistency with the row stripes."
+      "The default close button is a bare 'X' letterform in a bronze box, which looks placeholder. Use a drawn 2 px cross glyph at 10 px in #f0e2c0, centred, with a 1 px #c9a24a rim and a #3a2a18 to #261a10 vertical gradient.",
+      "Row alternation in the default theme (brown vs darker brown) is about 4% luminance. Raise it to 7%, or drop alternation and use 1 px #4a3a24 separators as in the ElvUI theme.",
+      "The title-bar orb icon next to 'Rested Leveling' is muddy at its size. Use a 16 px crisp inn or moon glyph, or remove it."
     ],
     "elvui_wc3_fit": [
-      "In ElvUI mode the WC3 skin paints the 'Compact' and 'Open card' buttons with a bright bevel sliver on the right edge that reads as a glitch. Clip the skin's highlight texture to the button bounds, or set the button width so the skin's end-cap fits (\u2265 80 px).",
-      "The footer checkbox renders as an empty grey square under ElvUI, while the default shows a check. The checked state is lost. Force SetCheckedTexture after HandleCheckBox, or verify the state is restored.",
-      "The ElvUI-mode window is otherwise identical to the default, so the WC3 user gets almost none of the door look. Without writing WC3-specific code, expose the frame materials (plank colour, strap colour, rivet size) as skin-readable values or E.media hooks. A skin can then tint them, and ElvUI users get ElvUI's border colour on the iron line.",
-      "Use ElvUI's font face for the body, but keep the 15 px name size. The user's real UI uses gold window titles; match the title colour to ElvUI's value colour if it is set."
+      "The host Options (image 3) uses gold-yellow labels, about #ffd100, on near-black. Your option labels and section heads are cream. Use the host yellow for checkbox labels and keep section heads cream caps, so the panel sits beside Blizzard's skinned pages.",
+      "ElvUI host buttons are 22 px tall with centred 12 px text. Your 'Move notifications' button is wider and heavier than any host button. Cap it at 160x22.",
+      "Tab labels ROSTER and TIMELINE with an underline are a third control style. Under ElvUI, use the host's tab look: a 1 px border box with the active tab filled #2a2a2a."
     ],
     "alerts_ux": [
-      "Banner title: replace the hyphen with an em dash or a colon ('Not resting: move to cancel the logout').",
-      "Fix the body wrap so 'slower.' is not an orphan: widen the banner to 380 px or shorten the copy to 'In The Barrens, outside any inn; rest builds 4x slower.'",
-      "Add Le Nette's 24 px portrait next to 'Or play next: Le Nette (full)' so the alternative is visual, as the toast already does.",
-      "The toast title 'RESTED XP USED UP' conflicts with the main window ('0.6 of a level left' for Jacques). Make the fixture consistent so judges and users trust the copy."
+      "Move mode (scene 04) still shows the warning triangle on the 'Esc menu card' placeholder. The notes say the Esc card now uses an inn icon. Each placeholder must show its real alert's icon.",
+      "Banner vs Esc card (scene 05): titles, layout, Next row and Details button are nearly the same, and the Esc card's inn icon is an unreadable blob at about 20 px. Give the Esc card a 24 px clear inn glyph, a 2-line max body and no Details button, so it differs in shape and not only in icon.",
+      "Banner hierarchy: 'Le Jette is outside a rest area.' and the hearth instruction look the same cream. Make the situation line #a89a80 at 12 px and the instruction #f2e6c8 at 13 px, so the change is visible.",
+      "Toast: the amber trigger line at 12 px sits above an amber-cream headline of nearly the same hue. Make the trigger #c98a3a at 11 px caps-free and the headline #f2e6c8 at 14 px, so the two lines read as cause and then action.",
+      "Logout placeholder: the dark block on the right reads as broken, even if it is skin art. Size the placeholder to the banner's real width in scene 05 so the skin lays out the same as the banner."
     ],
     "readability": [
-      "The 10 px hint line under the banner ('Click to dismiss...') and the 9 px chart axis labels ('48h ago', 'now') are below comfortable size at 1080p. Use a minimum of 11 px, colour #BBA888.",
-      "The 'NEXT BEST' summary row's counts are 10 px and coloured; raise them to 12 px. Add 6 px vertical padding so the row does not hug the now-playing strip.",
-      "Truncation: 'Stonetalon Moun...' and 'Tailoring 145, Enchanti...'. Use known short forms (Stonetalon, Tailor 145 / Ench 120) before falling back to ellipsis.",
-      "The '~' in 'full in ~27d' renders as a raised macron-like glyph in this font. Use '\u2248' or 'about 27d', or a font that has a proper tilde."
+      "Row meta at about 11 px ('Lv 8 \u00b7 Goldshire inn \u00b7 3d ago') is the minimum, and the dividers are hard to see. Use 12 px with the '\u00b7' at #7a6c55.",
+      "Timeline lanes 3-5 all say 'Full Wed 2 Dec'. Add the time ('Wed 2 Dec 01:36') so the lanes can be told apart. The compact tip already has these times.",
+      "Legend counts ('1 full', '1 nearly full') at 11 px on the band: raise them to 12 px and add 14 px between groups."
     ],
     "layout_polish": [
-      "Card height differs between scenes (it ends at 740 px in scene 03 and 705 px in scene 04) and never matches the main window bottom (773 px). Lock the card height to the main window and let the stats panel or chart absorb the slack.",
-      "The full-rest chart is an empty box with 'Full the whole time.' Draw the flat full line in #3CC850 at the top with a soft fill, and keep the caption. An empty box looks broken.",
-      "Card reason line: 'Park it in an inn.' wraps with an orphan 'an inn.' Tighten the copy or allow 2 lines at 13 px with balanced breaks.",
-      "The getting-started panel (scene 07) has about 40 px of dead space under 'Link account...'. Either shrink the window or add a 4th tip.",
-      "Align the right edge of the chips (x\u2248897) with the right edge of the hero bar (x\u2248958). Currently the hero bar extends past the row grid; use one right gutter."
+      "Options: the gap above 'WINDOW AND DISPLAY' is about 6 px, while APPEARANCE and ACCOUNTS have about 16 px. Use 18 px above every heading and 8 px below it.",
+      "Options: there is about 120 px of dead space below About. Reduce the panel's min height, or move About into a footer line at 11 px #8a7d66.",
+      "Card: the stage leaves about 200x90 px empty left of the portrait under the speech bubble. Move the name/state block up beside the portrait, or centre the bubble vertically against the portrait.",
+      "Card: the rest bar is 10 px tall and stops about 40 px short of the right edge. Make it 14 px and full width, 12 px insets on both sides.",
+      "Timeline: the 100% label and the 'Full now' dot touch the NOW line. Add 6 px of padding after the percent column."
     ],
     "delight": [
-      "The speech bubble works, but the copy is the only voice. Add a subtle 1.5 s idle bob (2 px) to the fallback portrait and animate the 'zZ' rising and fading so the placeholder state still feels alive.",
-      "On the hero, flash a gentle 600 ms gold sheen across the full bar on open. That celebrates 'full' and pays off the 30-bubble segmentation.",
-      "The first-run quote chip is the best moment in the set. Give each row a hover-only one-liner in the tooltip in the same voice (e.g. Colonol: 'Cold out here.')."
+      "Use the breathing accent on #1 for one more small moment: when a character crosses into full while the window is open, give a single 600 ms shimmer across its bar (off under Reduce motion).",
+      "Rotate speech lines with class and race flavour in rows on hover (a tooltip quip). Today only the hero and card have personality.",
+      "The zzZ on resting cards is good. Give the timeline 'Full now' dot a tiny star or tick glyph instead of a plain green circle."
     ]
   },
-  "overall_notes": "Clear progress. The play-next hero now explains itself (banked levels, why #1 beats #2, a gold action line), the alerts are well-judged and non-modal, and the state system (stripe + chip + bar + moons) reads at a glance. What keeps it out of 9 territory is material and finish. The promised oak/iron/bronze chrome barely registers at real scale, so the window reads as 'dark ElvUI box with a brown hairline' rather than the WC3 door. The ElvUI mode introduces small skin glitches (button highlight slivers, a lost checkbox check). The secondary surfaces (tooltip, compact bar) drop the theme entirely. There are also several copy and data inconsistencies (8h vs 8h 55m; 'used up' vs '0.6 left'; moons on a max-level character) that a demanding user will notice. Fix the frame weight, unify the secondary surfaces and clean up the data and copy, and this is a 9.",
+  "overall_notes": "This is a large step up from the real v1.1.2 baseline. The hierarchy is clear, the state colour language is consistent, the badges now separate the rows, and there is one button family per theme. The timeline and compact tooltip are the strongest pieces. It is still not 9-level because of polish gaps a demanding user will see: the hollow NOW PLAYING strip, a smudgy RESTING glyph, banner and Esc card alerts that are near twins (and a move-mode placeholder whose icon contradicts the notes), awkward text wrapping on the card, and uneven spacing and host-mismatched label colour in Options. Fix those and this is an 8.5-9 addon.",
   "model": "claude-opus-5-5"
 }
