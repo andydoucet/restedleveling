@@ -119,6 +119,7 @@ optional sound, chat line. No StaticPopup.
 - Login digest in chat: who's full, who fills soon, last logout was outside.
 - Cozy Sleeping Bag ready (from RW).
 - Optional resting pill near the XP bar: Resting / Not resting.
+- v1.1: the logout banner, toasts and Esc-menu card can be moved (/rlvl move; ElvUI movers too).
 
 ## 7. Architecture
 

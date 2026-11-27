@@ -125,6 +125,20 @@ function O.Panel()
 	end)
 	p.low = sl
 	y = y - 72
+	-- Where the notifications show: a button into move mode (the same as /rlvl move).
+	local mvLabel = Wg.Text(p, "label", nil, 11)
+	mvLabel:SetPoint("TOPLEFT", 16, y)
+	mvLabel:SetText("NOTIFICATIONS")
+	p.move = St.MakeButton(p, 170, "Move notifications", false, 24)
+	p.move:SetPoint("TOPLEFT", 16, y - 20)
+	p.move:SetScript("OnClick", function()
+		if ns.Move.Start() and SettingsPanel and SettingsPanel.IsShown and SettingsPanel:IsShown() then HideUIPanel(SettingsPanel) end
+	end)
+	local mvText = Wg.Text(p, "small", nil, 12)
+	mvText:SetPoint("LEFT", p.move, "RIGHT", 12, 0)
+	mvText:SetText("Drag the logout warning, the toasts and the Esc menu card where you want them.")
+	St.Color(mvText, St.SECOND)
+	y = y - 60
 	p.checks = {}
 	for _, sw in ipairs(O.SWITCHES) do
 		local cb = CreateFrame("CheckButton", nil, p, "UICheckButtonTemplate")
@@ -206,6 +220,12 @@ local function elvOptions()
 			end,
 			get = function() return ns.AccountFilter() and (ns.DB().opts.accounts or "all") or "all" end,
 			set = function(_, v) O.SetAccounts(v ~= "all" and v or nil) end },
+		move = { order = 5, type = "execute", name = "Move notifications", func = function()
+			if ns.Move.Start() then
+				local e = ElvUI and ElvUI[1]
+				if e and e.Config_CloseWindow then pcall(e.Config_CloseWindow, e) end
+			end
+		end },
 		lowPct = { order = 4, type = "range", name = "Low rest warning (% of a full bar left)", min = ns.LOW_MIN,
 			max = ns.LOW_MAX, step = 1, get = function() return ns.DB().opts.lowPct end, set = function(_, v) O.SetLow(v) end },
 	}

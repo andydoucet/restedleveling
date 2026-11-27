@@ -103,7 +103,7 @@ function A.Banner()
 	St.Ensure()
 	local f = CreateFrame("Frame", "RestedLevelingBanner", UIParent, "BackdropTemplate")
 	f:SetSize(470, 112)   -- wide enough to name the character on one line
-	f:SetPoint("TOP", 0, -8)   -- top-centre, above the game's own logout countdown
+	ns.Move.Apply(f, "banner")   -- top-centre (above the game's own logout countdown) unless moved
 	f:SetFrameStrata("DIALOG")
 	surface(f, "warn", "outside")
 	f.icon = f:CreateTexture(nil, "ARTWORK")
@@ -144,6 +144,7 @@ function A.ShowBanner(title, text, state, action, alt, empty)
 	local f = A.Banner()
 	local s = St.STATE[state] or St.STATE.outside
 	surface(f, "warn", state)
+	ns.Move.Apply(f, "banner")
 	f.icon:SetTexture(s.icon)
 	f.title:SetText(title)
 	f.title:SetTextColor(0.94, 0.84, 0.55)
@@ -228,8 +229,7 @@ function A.Toast(t)
 	local slot = 1
 	while A.toasts[slot] and A.toasts[slot]:IsShown() and slot < 4 do slot = slot + 1 end
 	local f = toastFrame(slot)
-	f:ClearAllPoints()
-	f:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 150 + (slot - 1) * 78)
+	ns.Move.PlaceToast(f, slot)   -- at the bottom, where the game's own alerts appear, unless moved
 	local s = St.STATE[t.accent or t.state] or St.STATE.full
 	surface(f, "toast", t.accent or t.state)
 	f.icon:SetTexture(t.icon or s.icon)
@@ -338,8 +338,10 @@ function A.LayoutStrip(f)
 	local menu = f:GetParent()
 	local mw = menu and menu.GetWidth and menu:GetWidth() or 0
 	f:SetWidth(math.max(A.STRIP_MIN, math.min(A.STRIP_MAX, math.floor(mw * 1.6))))
-	f:ClearAllPoints()
-	f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
+	if not ns.Move.Apply(f, "menu") then   -- attached (the default) unless it was moved
+		f:ClearAllPoints()
+		f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
+	end
 	local top = 14 + f.text:GetStringHeight() + 4 + f.who:GetStringHeight() + 3 + f.action:GetStringHeight() + 8
 	local bottom = f.alt:IsShown() and layoutAlt(f, 54, top) or (top - 8)   -- 54: under the text, right of the icon
 	f:SetHeight(bottom + 12)

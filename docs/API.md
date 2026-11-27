@@ -47,6 +47,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GetXPExhaustion` | doc | doc |  |
 | global | `GossipFrame` | used | used | yes |
 | global | `GuildRegistrarFrame` | used | used | yes |
+| global | `HideUIPanel` | used | used |  |
 | global | `InCombatLockdown` | used | used |  |
 | global | `IsInGroup` | used | used |  |
 | global | `IsInGuild` | doc | doc |  |
@@ -71,6 +72,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `Screenshot` | doc | doc |  |
 | global | `SetPortraitTexture` | doc | doc |  |
 | global | `Settings` | used | used | yes |
+| global | `SettingsPanel` | used | used |  |
 | global | `SlashCmdList` | used | used |  |
 | global | `StaticPopup1` | used | used | yes |
 | global | `StaticPopup2` | used | used | yes |
@@ -246,7 +248,9 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetWidth` | doc | doc |  |
 | method | `SetWordWrap` | doc | doc |  |
 | method | `Show` | doc | doc |  |
+| method | `StartMoving` | doc | doc |  |
 | method | `Stop` | doc | doc |  |
+| method | `StopMovingOrSizing` | doc | doc |  |
 | method | `UndressSlot` | doc | doc |  |
 | method | `UnlockHighlight` | doc | doc |  |
 | method | `UnregisterAllEvents` | doc | doc |  |
@@ -267,6 +271,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `CHAT_MSG_SYSTEM` | doc | doc |  |
 | event | `CLAMPTOBLACKADDITIVE` | used | used |  |
 | event | `DIALOG` | used | used |  |
+| event | `DISPLAY_SIZE_CHANGED` | doc | doc |  |
 | event | `ESCAPE` | used | used |  |
 | event | `FULLSCREEN_DIALOG` | used | used |  |
 | event | `GROUP_ROSTER_UPDATE` | doc | doc |  |
@@ -297,6 +302,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | event | `TOPLEFT` | used | used |  |
 | event | `TOPRIGHT` | used | used |  |
 | event | `TRAIT_CONFIG_UPDATED` | doc | doc |  |
+| event | `UI_SCALE_CHANGED` | doc | doc |  |
 | event | `UPDATE_EXHAUSTION` | doc | doc |  |
 | event | `WELCOME` | used | used |  |
 | event | `WHISPER` | used | used |  |
