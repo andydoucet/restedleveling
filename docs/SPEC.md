@@ -110,11 +110,13 @@ Styling:
 
 Delivery: centre banner (fades, click to dismiss, right-click "don't show this kind again"),
 optional sound, chat line. No StaticPopup.
-- Camping or quitting outside a rested area: banner + sound + chat with nearest inn/city if cheap,
-  "move to cancel".
-- Game Menu guard: when Esc menu opens while not resting, a slim red strip under the menu:
-  "Not resting: this character will fill 4x slower". Informational only.
-- Rested ran out on the current character: "Out of rested. Next up: Le Nette (full)."
+- Camping or quitting outside a rested area: banner + sound + chat. Title "Rest at an inn before logging out", then
+  "Cancel the logout, then hearth to <bind>." and why; the next character with View details. (An addon cannot
+  cancel a logout: the player does.)
+- Game Menu guard: when the Esc menu opens while not resting, a small card under it (moon, the same title, the hearth
+  line, who is next; no button). Informational only; hidden while the banner shows.
+- Rested ran out on the current character: a toast, "Play Le Dette · 1.5 levels banked", the cause above it.
+- A character parked outside a rest area never shows a fill time: "Not filling: rest at an inn".
 - Rested low (threshold 5..50% of a full bar, default 10%, v1.1): heads-up in chat.
 - An alt filled up while you play: toast, digested if several.
 - Login digest in chat: who's full, who fills soon, last logout was outside.

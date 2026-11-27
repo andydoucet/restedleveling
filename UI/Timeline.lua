@@ -14,7 +14,7 @@ Tl.LABEL_W = 216        -- portrait, name and how full it is now
 Tl.AXIS_H = 24          -- the tick labels over the plot
 Tl.NIGHT_FROM, Tl.NIGHT_TO = 20, 6   -- local hours drawn as night
 Tl.MAX_LANE_H = 46
-Tl.GUTTER = 126         -- right of the plot: the date for a lane that fills after the window
+Tl.GUTTER = 150   -- right of the plot: "Wed 2 Dec" / "01:36" or "Not filling", with padding
 local DAYS = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
@@ -214,7 +214,7 @@ function Tl.Update(f, rows, now, h)
 	for i, nt in ipairs(nights) do
 		local s = pool(f.shades, i, function()
 			local t = f:CreateTexture(nil, "BACKGROUND")
-			t:SetColorTexture(0.13, 0.13, 0.14, 0.45)   -- night: neutral grey, no fifth hue; the state colours lead
+			t:SetColorTexture(0, 0, 0, 0.3)   -- night: a neutral shade (no fifth hue), visible but under the state colours
 			return t
 		end)
 		s:ClearAllPoints()
@@ -237,7 +237,7 @@ function Tl.Update(f, rows, now, h)
 		t.text:ClearAllPoints()
 		t.text:SetPoint("BOTTOM", f, "TOPLEFT", x(f, tk.frac), plotTop + 6)
 		t.text:SetText(tk.label)
-		if tk.day then St.Color(t.text, St.CREAM) else St.Color(t.text, St.SECOND) end
+		St.Color(t.text, St.CREAM)   -- axis labels at full reading contrast
 		-- "NOW" and "+48H" own the ends of the axis: no tick label within 44 px of them.
 		t.text:SetShown(not tk.quiet and tk.frac * f.plotW > 44 and (1 - tk.frac) * f.plotW > 60)
 	end

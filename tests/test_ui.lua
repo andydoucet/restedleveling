@@ -36,7 +36,7 @@ function cases.main_window_shows_the_play_next_order()
 	T.ok(main and main:IsShown(), "window open")
 	T.eq(main.hero.name:GetText():gsub("|c%x+", ""):gsub("|r", ""), "Le Nette", "hero is the full one")
 	T.eq(main.hero.why:GetText(), "Full since 2d ago", "hero says why, in real time")
-	T.eq(main.hero.waste:GetText(), "More rest is wasted.", "and the reason to switch, apart (amber)")
+	T.eq(main.hero.waste:GetText(), "Bank is full: time logged out adds nothing now.", "and the reason to switch, apart (amber)")
 	local first = main.roster.rows[1].name:GetText():gsub("|c%x+", ""):gsub("|r", "")
 	T.eq(first, "Le Dette", "then the resting one")
 	T.eq(main.roster.rows[2].chip.text:GetText(), "NOT RESTING", "the outside one says not resting")
@@ -47,10 +47,13 @@ function cases.main_window_shows_the_play_next_order()
 	for i = 1, 2 do
 		local r = main.roster.rows[i]
 		T.eq(r.chip:GetWidth(), W_.CHIP_W, "row " .. i .. ": the fixed chip width")
-		T.eq(r.chip.__points[#r.chip.__points][2], W_.COL.chip, "row " .. i .. ": on the chip column")
+		local pt = r.chip.__points[#r.chip.__points]
+		T.eq(pt[1] .. pt[4], "RIGHT" .. (W_.COL.chip + W_.CHIP_W), "row " .. i .. ": right-aligned on the chip column")
+		local icon = r.chip.icon:IsShown() and (r.chip.icon:GetWidth() + 5) or 0
+		T.ok(r.chip:GetWidth() >= r.chip.text:GetStringWidth() + icon, "row " .. i .. ": the chip holds its word")
 	end
 	T.ok(W_.COL.value + W_.VALUE_W < W_.COL.chip, "the value column ends before the chips")
-	T.eq(main.current.pill.__points[#main.current.pill.__points][2], 4 + W_.COL.chip, "NOW PLAYING's chip on the rows' chip column")
+	T.eq(main.current.pill.__points[#main.current.pill.__points][4], 4 + W_.COL.chip + W_.CHIP_W, "NOW PLAYING's chip on the rows' right edge")
 	T.eq(main.hero.acct:GetText(), "", "no account tag for this account's own characters")
 	T.has(main.current.name:GetText(), "Le Jette", "current character strip")
 	T.clean(h)

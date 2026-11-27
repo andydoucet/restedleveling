@@ -44,8 +44,7 @@ end
 function O.AccountChoices()
 	local out = { { nil, "All accounts" } }
 	for _, a in ipairs(ns.Accounts()) do
-		local label = a.label:match("^#(%d+)$") and ("Account " .. a.label:sub(2)) or a.label   -- not a bare "#3"
-		out[#out + 1] = { a.mine and "mine" or a.id, a.mine and "This account" or label }
+		out[#out + 1] = { a.mine and "mine" or a.id, a.mine and "This account" or ns.AccountName(a.id) }
 	end
 	return out
 end

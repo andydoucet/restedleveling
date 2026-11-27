@@ -113,7 +113,7 @@ local function createRow(parent, w)
 	f.time:SetWidth(COL.value + Wg.VALUE_W - COL.bar)
 	St.Color(f.time, St.CREAM)
 	f.chip = Wg.Chip(f, 20)
-	f.chip:SetPoint("LEFT", COL.chip, 0)
+	f.chip:SetPoint("RIGHT", f, "LEFT", COL.chip + Wg.CHIP_W, 0)   -- right-aligned: one right edge even if a word grows it
 	f:SetScript("OnEnter", rowTooltip)
 	f:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	f:SetScript("OnClick", function(self) if self.data and ns.ShowDetail then ns.ShowDetail(self.data.key) end end)
@@ -217,7 +217,6 @@ local function fillRow(row, r, n, now, calibrated, alt)
 	end
 	row.bar:SetShown(p ~= nil and not grey)
 	if p and not grey then Wg.SetBubbleBar(row.bar, p.pct, r.state, not calibrated) end
-	row.bar.fill:SetAlpha(r.state == "outside" and 0.45 or 1)   -- banked, but not moving: no live-looking fill
 	row.time:SetWidth(COL.value + Wg.VALUE_W - COL.bar)
 	row.time:SetText(r.hidden and "hidden" or Wd.RowWhen(r, now))
 	row.value:SetText(p and ((calibrated and "" or "~") .. math.floor(p.pct * 100) .. "%") or "")
@@ -228,8 +227,7 @@ local function fillRow(row, r, n, now, calibrated, alt)
 	row:SetAlpha(grey and 0.7 or 1)   -- max level and hidden rows recede
 	row.time:SetAlpha(grey and 0.7 or 1)
 	Wg.SetChip(row.chip, r.state, Wd.Chip(r))
-	local tag = St.AccountTag(c)
-	row.acct:SetText(tag or "")
+	row.acct:SetText(St.AccountTag(c) or "")   -- beside the name: the 13 px meta line has no room left for it
 	for _, o in ipairs(row.sel) do o:SetShown(ns.selectedKey == r.key) end
 	row:Show()
 end

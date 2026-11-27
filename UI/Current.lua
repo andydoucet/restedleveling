@@ -37,7 +37,7 @@ function Cur.Create(parent, w, h)
 	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -5)
 	f.left:SetWidth(C.value + Wg.VALUE_W - C.bar)
 	f.pill = Wg.Chip(f, 20)   -- the rows' chip, in the rows' STATE column
-	f.pill:SetPoint("LEFT", X + C.chip, 0)
+	f.pill:SetPoint("RIGHT", f, "LEFT", X + C.chip + Wg.CHIP_W, 0)   -- the rows' right edge
 	f.detail = Wg.Text(f, "small", nil, 13)   -- under the name, in the text column
 	f.detail:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 0, -3)
 	f.detail:SetWidth(C.bar - C.text - 10)
@@ -84,7 +84,11 @@ function Cur.Update(f)
 	local none = s.levels < Wd.BANKED_MIN   -- under a twentieth of a level: nothing worth counting
 	f.bar:SetShown(not none)
 	f.left:ClearAllPoints()
-	if none then f.left:SetPoint("LEFT", f, "LEFT", X + Wg.COL.bar, 0) else f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7) end
+	if none then   -- on the rows' bar line
+		f.left:SetPoint("TOPLEFT", f, "TOPLEFT", X + Wg.COL.bar, -12)
+	else
+		f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7)
+	end
 	if none then
 		f.left:SetText("No rested XP: kills give normal XP")
 		St.Color(f.left, St.CREAM)

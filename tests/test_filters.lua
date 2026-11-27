@@ -59,7 +59,11 @@ function cases.the_filter_drops_hidden_accounts_everywhere()
 	T.has(ns.Broker.Text(ns.Rows({ hideGrey = true })), "1 full", "the datatext counts only the shown account")
 	ns.Options.SetAccounts("bbbbbb")
 	T.eq(names(ns.Rows()), "Le Bankken", "the other account only")
-	T.eq(ns.AccountFilterLabel(), "#3", "labelled with the peer's label")
+	T.eq(ns.AccountFilterLabel(), "Account 3", "named the one way: Account 3")
+	local names_ = {}
+	for _, c in ipairs(ns.Options.AccountChoices()) do names_[#names_ + 1] = c[2] end
+	T.eq(table.concat(names_, "|"), "All accounts|This account|Account 3", "the options say the same")
+	T.eq(state.ns.Style.AccountTag({ account = "bbbbbb" }), "Account 3", "and the rows' tag")
 	W.DB(h).chars["N:Le Bankken@?"] = nil   -- that account's characters are gone (pruned)
 	T.eq(names(ns.Rows()), "Le Dette,Le Nette", "a filter for an account with no characters shows all")
 	T.clean(h)
@@ -77,7 +81,7 @@ function cases.footer_control_cycles_the_accounts()
 		FakeWoW.RunScript(f.acctBtn, "OnClick")
 		seen[i] = ns.AccountFilterLabel()
 	end
-	T.eq(table.concat(seen, "|"), "This account|#3|All accounts", "all -> this account -> #3 -> all")
+	T.eq(table.concat(seen, "|"), "This account|Account 3|All accounts", "all -> this account -> Account 3 -> all")
 	FakeWoW.RunScript(f.acctBtn, "OnClick")
 	T.eq(f.acctBtn.label:GetText(), "This account", "the button's visible label follows the filter")
 	W.DB(h).chars["N:Le Bankken@?"] = nil
@@ -155,6 +159,26 @@ function cases.a_filter_that_leaves_nobody_says_so()
 	T.ok(not roster.guide:IsShown(), "no GETTING STARTED guide")
 	T.ok(roster.none:IsShown(), "one line instead")
 	T.has(roster.none:GetText(), "No other characters on this account", "naming the filter")
+	T.clean(h)
+end
+
+-- Review round 2 (ILL-1272): when the #1 lives on the other account, its "Account 3" tag sits on the meta line (not
+-- under the chip, over the bar's right end), and the hero chip is as wide as its word ("NEARLY FULL").
+function cases.hero_account_tag_on_the_meta_line_and_the_chip_holds_its_word()
+	local h, state = world()
+	local ns = state.ns
+	local c = W.DB(h).chars["N:Le Bankken@?"]
+	c.rested, c.t = math.floor(1.38 * 10000), W.NOW   -- 92%: nearly full
+	ns.Options.SetAccounts("bbbbbb")
+	h.Slash("RESTEDLEVELING", "")
+	local hero = ns.Main.frame.hero
+	T.has(hero.acct:GetText(), "Account 3", "the tag shows")
+	local pt = hero.acct.__points[#hero.acct.__points]
+	T.ok(pt[1] == "LEFT" and pt[2] == hero.sub and pt[3] == "RIGHT", "anchored after the meta line, not under the chip")
+	local chip = hero.chip
+	T.eq(chip.text:GetText(), "NEARLY FULL", "the nearly-full chip")
+	local icon = chip.icon:IsShown() and (chip.icon:GetWidth() + 5) or 0
+	T.ok(chip:GetWidth() >= chip.text:GetStringWidth() + icon + 14, "wide enough for its word")
 	T.clean(h)
 end
 

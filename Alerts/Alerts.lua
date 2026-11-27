@@ -199,7 +199,7 @@ local function toastFrame(i)
 	f.kicker = Wg.Text(f, "name", nil, 12)   -- what happened (the trigger), in amber; the line under it says what to do
 	f.kicker:SetPoint("TOPLEFT", 76, -11)
 	f.kicker:SetWidth(A.WIDTH - 118)   -- clear of the close button
-	f.kicker:SetTextColor(0.82, 0.55, 0.23)
+	St.Color(f.kicker, St.MUTED)   -- the cause, quiet; the advice under it is the headline
 	f.text = Wg.Text(f, "name", nil, 15)   -- the advice: cream, after a 6 px gap from its cause
 	f.text:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -6)
 	St.Color(f.text, St.CREAM)
@@ -268,7 +268,7 @@ local function chat(kind, text) if enabled(kind) then U.Print(text) end end
 
 -- The Esc-menu strip: informational only, under the Game Menu while not resting and no banner is up.
 A.MENU_ICON = "Interface\\AddOns\\RestedLeveling\\media\\moon_gold"   -- the Esc card's gold crescent (and its mover's)
-A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 340, 380, 12   -- about 70% of the banner: a small card, not a second banner   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
+A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 340, 380, 12   -- about 70% of the banner: a small card, not a second banner
 function A.MenuStrip()
 	if A.strip or not GameMenuFrame then return A.strip end
 	-- A top-level window like the banner and the toasts (so a host skin dresses all three alike), shown and hidden
@@ -290,7 +290,7 @@ function A.MenuStrip()
 	f.text = Wg.Text(f, "name", nil, 15)
 	f.text:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 10, 0)
 	f.text:SetTextColor(0.98, 0.55, 0.15)
-	f.text:SetText("Find an inn before you log out")
+	f.text:SetText("Rest at an inn before logging out")   -- the banner's title: one wording
 	f.who = Wg.Text(f, "name", nil, 13)
 	f.who:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -4)
 	St.Color(f.who, St.CREAM)
@@ -359,6 +359,13 @@ function A.LayoutStrip(f)
 		f:ClearAllPoints()
 		f:SetPoint("TOP", menu, "BOTTOM", 0, -A.STRIP_GAP)
 	end
+	-- Measured wrapping inside the card: text from the moon's right to 12 px short of the close column (24 + 8).
+	local textW = f:GetWidth() - 48 - 12 - 32
+	for _, fs in ipairs({ f.text, f.action }) do
+		fs:SetWidth(textW)
+		fs:SetWordWrap(true)
+		fs:SetHeight(0)
+	end
 	local top = 16 + f.text:GetStringHeight() + 4 + f.action:GetStringHeight() + 8
 	local bottom = f.alt:IsShown() and layoutAlt(f, 48, top) or (top - 8)   -- 48: under the text, right of the icon
 	f:SetHeight(bottom + 12)
@@ -379,7 +386,7 @@ function A.OnSessionChanged(rested)
 		local me = ns.Me()
 		A.Toast({ kind = "outrest", kicker = (me and me.full or "This character") .. ": rested XP used up", text = text,
 			sub = sub, state = top and top.state or "outside", row = top,
-			accent = S.RestingNow() and "resting" or "outside" })   -- the rail is about who ran out; green stays on the advice
+			accent = "max" })   -- a recommendation, not a warning: a neutral rail (red is the logout warning's)
 	elseif Ru.WentLow(before / xpMax, rested / xpMax, cap, Ru.LowFraction(ns.DB())) then
 		chat("lowrest", ("rested XP is running low here: %s left, under %d%% of full."):format(
 			ns.Words.Levels(rested / xpMax), math.floor(Ru.LowFraction(ns.DB()) * 100 + 0.5)))
