@@ -120,7 +120,7 @@ end
 -- The interface. kind for Panel: "card", "inset", "row", "strip", "toast", "tooltip".
 -- role for Font: "title", "hero", "name", "body", "small", "number", "label".
 for _, m in ipairs({ "Window", "Panel", "Button", "Close", "Check", "Bar", "Tab", "ScrollBar", "Font", "BarTexture",
-	"MakeButton", "MakeClose", "Slider" }) do
+	"MakeButton", "MakeClose", "MakeIconButton", "Slider" }) do
 	St[m] = call(m)
 end
 
@@ -139,6 +139,28 @@ end
 function St.SkinnedWindow(frame)
 	St.Ensure()
 	return St.HostFrame() and St.backend.SkinnedWindow and St.backend.SkinnedWindow(frame) or false
+end
+
+-- Title-bar buttons, right to left: X (the window's own, from St.Window), then each one added here (the cog, then the
+-- chevron), all one size, TITLE_GAP apart (between their visible plates), centred on the X. Returns the button.
+St.TITLE_BTN, St.TITLE_GAP = 22, 5
+function St.AddTitleButton(frame, glyph, tip, line)
+	frame.rlTitleButtons = frame.rlTitleButtons or {}
+	local prev = frame.rlTitleButtons[#frame.rlTitleButtons] or frame.rlClose
+	local b = St.MakeIconButton(frame, glyph, St.TITLE_BTN)
+	b:SetPoint("RIGHT", prev, "LEFT", -(St.TITLE_GAP - (prev.rlInset or 0) - (b.rlInset or 0)), 0)
+	frame.rlTitleButtons[#frame.rlTitleButtons + 1] = b
+	b.tip, b.tipLine = tip, line
+	function b.ShowTip(self)
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+		GameTooltip:AddLine(self.tip)
+		local l = type(self.tipLine) == "function" and self.tipLine() or self.tipLine
+		if l then GameTooltip:AddLine(l, 0.9, 0.9, 0.9) end
+		GameTooltip:Show()
+	end
+	b:HookScript("OnEnter", b.ShowTip)   -- hooks: a skin's own hover colouring stays
+	b:HookScript("OnLeave", function() GameTooltip:Hide() end)
+	return b
 end
 
 -- The window scale option (a readable-size preset): 0.8 to 1.4, applied to our own windows only.

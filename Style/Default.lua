@@ -97,9 +97,12 @@ function D.Chrome(frame, title)
 	St.Font(frame.rlTitle, "title", 15)
 	frame.rlTitle:SetText(title or "")
 	if frame.CloseButton then frame.CloseButton:Hide() end
-	frame.rlClose = frame.rlClose or St.MakeClose(frame)
-	frame.rlClose:ClearAllPoints()
-	frame.rlClose:SetPoint("TOPRIGHT", -(St.BAND + 6), -(St.BAND + (St.RAIL_H - 24) / 2))
+	if not frame.rlClose then
+		frame.rlClose = D.MakeIconButton(frame, "close", St.TITLE_BTN)
+		frame.rlClose:SetScript("OnClick", function() frame:Hide() end)
+	end
+	frame.rlClose:ClearAllPoints()   -- centred on the rail, its right edge 8 px in from the rail's
+	frame.rlClose:SetPoint("TOPRIGHT", -(St.BAND + 8), -(St.BAND + (St.RAIL_H - St.TITLE_BTN) / 2))
 end
 
 function D.Window(frame, title) D.Chrome(frame, title) end
@@ -160,10 +163,27 @@ function D.MakeButton(parent, w, label, primary, h, enamel)
 	return b
 end
 
--- The close button: a cream cross on the bronze button face with a gold rim, 24 px, with a 30 px hit area.
-function D.MakeClose(parent)
+-- Window icon buttons (ILL-1299): X (close), chevron (compact / expand) and cog (settings), one family on the
+-- bronze button face with a gold rim and a cream glyph, the same size and spacing wherever they sit. The glyphs are ours
+-- (media/close, chevron, cog: one stroke weight; the game's ReadyCheck cross drew thinner and greyer beside them). The
+-- hit area is 3 px larger on each side; pressed, the glyph drops 1 px.
+D.GLYPHS = {
+	close = { file = "close", size = 16 },
+	chevron_up = { file = "chevron", size = 16 },
+	chevron_down = { file = "chevron", size = 16, flip = true },
+	cog = { file = "cog", size = 16 },
+}
+local function setGlyph(b, glyph)
+	local g = D.GLYPHS[glyph]
+	b.glyph = glyph
+	b.icon:SetTexture(St.MEDIA .. g.file)
+	b.icon:SetTexCoord(0, 1, g.flip and 1 or 0, g.flip and 0 or 1)
+	b.icon:SetSize(g.size, g.size)
+end
+
+function D.MakeIconButton(parent, glyph, size)
 	local b = CreateFrame("Button", nil, parent, "BackdropTemplate")
-	b:SetSize(24, 24)
+	b:SetSize(size or 22, size or 22)
 	b:SetHitRectInsets(-3, -3, -3, -3)
 	St.Backdrop(b, "sw_bronze_btn", "sw_gold", 1)
 	b.hl = b:CreateTexture(nil, "HIGHLIGHT")
@@ -171,19 +191,22 @@ function D.MakeClose(parent)
 	b.hl:SetPoint("BOTTOMRIGHT", -1, 1)
 	St.Paint(b.hl, "sw_bronze_hi")
 	b.hl:SetVertexColor(1, 1, 1, 0.35)
-	b.face = CreateFrame("Frame", nil, b)   -- the cross above the hover face, as on every button
+	b.face = CreateFrame("Frame", nil, b)   -- the glyph above the hover face, as on every button
 	b.face:SetAllPoints()
-	b.x = b.face:CreateTexture(nil, "OVERLAY")   -- a drawn cross (the game's own), in cream: not a letter X
-	b.x:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
-	b.x:SetDesaturated(true)
-	b.x:SetVertexColor(0.98, 0.92, 0.80, 1)
-	b.x:SetSize(14, 14)
-	b.x:SetPoint("CENTER")
-	b.xLift = b.face:CreateTexture(nil, "OVERLAY", nil, 1)   -- an additive copy: a bright cross, not a disabled grey one
-	b.xLift:SetTexture("Interface\\RaidFrame\\ReadyCheck-NotReady")
-	b.xLift:SetDesaturated(true)
-	b.xLift:SetBlendMode("ADD")
-	b.xLift:SetAllPoints(b.x)
+	b.icon = b.face:CreateTexture(nil, "OVERLAY")   -- drawn glyphs (white art) in cream, never letters
+	b.icon:SetVertexColor(0.98, 0.92, 0.80, 1)
+	b.icon:SetPoint("CENTER")
+	b:SetScript("OnMouseDown", function(self) self.icon:SetPoint("CENTER", 0, -1) end)
+	b:SetScript("OnMouseUp", function(self) self.icon:SetPoint("CENTER", 0, 0) end)
+	setGlyph(b, glyph)
+	b.SetGlyph = setGlyph
+	if glyph == "close" then b.x = b.icon end
+	return b
+end
+
+-- The close button for floating panels: the window X at 24 px.
+function D.MakeClose(parent)
+	local b = D.MakeIconButton(parent, "close", 24)
 	b:SetScript("OnClick", function() parent:Hide() end)
 	return b
 end

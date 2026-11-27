@@ -67,17 +67,28 @@ function cases.windows_go_through_the_elvui_skin_by_default()
 	T.clean(h)
 end
 
-function cases.compact_sits_in_the_title_bar_in_both_styles()
-	local h = world()
+-- The title bar, right to left: X, cog, chevron, each through ElvUI's own skin call (so WC3 dresses them as its red
+-- enamel close and iron icon squares), the same visible size, 5 px apart.
+function cases.title_bar_controls_go_through_the_skin()
+	local h, calls = world()
 	h.Slash("RESTEDLEVELING", "")
 	local main = h.Env().RestedLevelingMain
-	local point = main.compactBtn:GetPoint(1)
-	T.eq(point, "TOPRIGHT", "Compact sits in the title bar, as on the default frame")
-	T.eq(main.compactBtn:GetHeight(), 22, "22 px, like the host's buttons")
+	T.ok(handled(calls, "HandleCloseButton", main.rlClose), "X: ElvUI's close")
+	T.ok(handled(calls, "HandleNextPrevButton", main.cogBtn), "cog: ElvUI's small icon button")
+	T.ok(handled(calls, "HandleNextPrevButton", main.compactBtn), "chevron: ElvUI's arrow button")
+	local p, rel, relp, x = main.cogBtn:GetPoint(1)
+	T.ok(p == "RIGHT" and rel == main.rlClose and relp == "LEFT", "cog left of the X")
+	T.eq(x, -1, "5 px between plates (the X's plate is inset 4 px)")
+	p, rel, _, x = main.compactBtn:GetPoint(1)
+	T.ok(p == "RIGHT" and rel == main.cogBtn, "chevron left of the cog")
+	T.eq(x, -5, "5 px apart")
+	T.eq(main.cogBtn:GetHeight(), main.rlClose:GetHeight() - 2 * main.rlClose.rlInset, "cog the size of the X's plate")
 	T.clean(h)
 	h = world({ elvuiWindow = "own" })
 	h.Slash("RESTEDLEVELING", "")
-	T.eq((h.Env().RestedLevelingMain.compactBtn:GetPoint(1)), "TOPRIGHT", "on our own frame it stays on the rail")
+	main = h.Env().RestedLevelingMain
+	T.eq(main.compactBtn:GetHeight(), 22, "own frame: our bronze family, 22 px")
+	T.eq((main.compactBtn:GetPoint(1)), "RIGHT", "on the rail, left of the cog")
 	T.clean(h)
 end
 

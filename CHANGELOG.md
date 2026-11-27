@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+v1.3 (ILL-1299), icon and title bar:
+
+- An app icon: a golden hourglass under a silver crescent moon, with blue moonlight sand (generated for this addon).
+  It is the minimap button, the datatext icon and the addon list icon.
+- The minimap button now shows by default, with or without ElvUI (1.2 hid it whenever ElvUI was loaded, so it
+  looked missing). One switch, "Minimap button", and `/rlvl minimap` hide or show it; a button you hid stays hidden.
+  Left-click opens the window, right-click opens the settings, drag moves it around the minimap. Saved data moves to
+  version 3 (the old "even with ElvUI" flag is dropped).
+- The title bar's top right is now chevron, cog and X: the chevron (up) goes to compact mode, the cog opens the
+  settings (right-click it to unlock or lock the notifications), X closes. The compact bar has the same three, with
+  the chevron pointing down to expand. While compact mode is on, /rlvl and a minimap left-click show or hide the
+  compact bar (its X hides it too); the chevron is the way back to the full window. Under ElvUI they go
+  through ElvUI's own close and arrow-button skins, so a skin such as WC3 dresses them as its own.
+- The roster tip stays on screen when it opens by a minimap button in the top-right corner.
+
 v1.1 (ILL-1272), sync:
 
 - Once two accounts are paired, logging in on one while the other is online syncs both ways at once: the online

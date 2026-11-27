@@ -38,12 +38,12 @@ function cases.button_labels_draw_above_the_hover_face()
 	local h = andy()
 	h.Slash("RESTEDLEVELING", "")
 	local main = h.Env().RestedLevelingMain
-	local buttons = { main.compactBtn, main.hero.open, main.roster.guide.link.open, main.roster.guide.link.unlink,
+	local buttons = { main.compactBtn, main.cogBtn, main.hero.open, main.roster.guide.link.open, main.roster.guide.link.unlink,
 		main.roster.guide.link.ok, main.roster.guide.link.cancel, main.rlClose }
 	for i, b in ipairs(buttons) do
 		T.eq(b.hl:GetDrawLayer(), "HIGHLIGHT", "button " .. i .. ": hover face on the highlight layer")
 		T.ok(b.hl:GetParent() == b, "button " .. i .. ": hover face belongs to the button")
-		local text = b.label or b.x   -- the close cross
+		local text = b.label or b.icon   -- icon buttons: the cross, chevron or cog
 		local holder = text:GetParent()
 		T.ok(holder ~= b, "button " .. i .. ": label not on the button itself")
 		T.ok(holder:GetParent() == b, "button " .. i .. ": label on a child of the button")
