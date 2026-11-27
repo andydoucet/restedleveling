@@ -21,17 +21,20 @@ local MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
 -- Pure layout ---------------------------------------------------------------------------------------------------------
 
 -- The lanes: every row with a projection (not max level or hidden), soonest full first, then by name. Each lane:
--- { row, left (s to full), frac (0..1 of the window), beyond (fills after the window) }.
+-- { row, left (s to full), frac (0..1 of the window), beyond (fills after the window), still (parked outside: not
+-- filling to speak of, so it sorts after every filling lane and is never "next", like Words.RowFull) }.
 function Tl.Lanes(rows, span)
 	span = span or Tl.SPAN
 	local out = {}
 	for _, r in ipairs(rows or {}) do
 		if r.p and r.group ~= 5 then
 			local left = r.p.left or 0
-			out[#out + 1] = { row = r, left = left, frac = math.min(1, left / span), beyond = left > span }
+			local still = r.state == "outside" and left > 0
+			out[#out + 1] = { row = r, left = left, frac = math.min(1, left / span), beyond = left > span, still = still }
 		end
 	end
 	table.sort(out, function(a, b)
+		if a.still ~= b.still then return b.still end
 		if a.left ~= b.left then return a.left < b.left end
 		return (a.row.c.full or "") < (b.row.c.full or "")
 	end)
@@ -153,6 +156,13 @@ end
 function Tl.Create(parent, w)
 	local f = CreateFrame("Frame", nil, parent)
 	f:SetWidth(w)
+	-- More lanes than fit: the mouse wheel scrolls them, as it scrolls the roster.
+	f.offset = 0
+	f:EnableMouseWheel(true)
+	f:SetScript("OnMouseWheel", function(self, delta)
+		self.offset = (self.offset or 0) - delta
+		if self.rows then Tl.Update(self, self.rows, self.now, self:GetHeight()) end
+	end)
 	f.plotX, f.plotW = Tl.LABEL_W, w - Tl.LABEL_W - Tl.GUTTER - 8
 	f.shades, f.ticks, f.lanes = {}, {}, {}
 	f.nowLine = f:CreateTexture(nil, "OVERLAY", nil, 2)
@@ -187,6 +197,8 @@ function Tl.Update(f, rows, now, h)
 	f:SetHeight(h)
 	local lanes = Tl.Lanes(rows)
 	local n = math.min(#lanes, ns.Main.VISIBLE)
+	f.rows, f.now = rows, now
+	f.offset = math.max(0, math.min(f.offset or 0, #lanes - n))
 	f.empty:SetShown(n == 0)
 	local laneH = n > 0 and math.min(Tl.MAX_LANE_H, math.floor((h - Tl.AXIS_H - 4) / n)) or 0
 	local plotTop, plotH = -Tl.AXIS_H, n * laneH
@@ -239,7 +251,7 @@ function Tl.Update(f, rows, now, h)
 	f.order:SetPoint("BOTTOMLEFT", f, "TOPLEFT", 8, plotTop + 6)
 	for _, t in ipairs({ f.nowLine, f.nowLabel, f.endLabel, f.gutter, f.gutterLine, f.order }) do t:SetShown(n > 0) end
 	for i = 1, n do
-		local ln, l = lanes[i], pool(f.lanes, i, function() return lane(f) end)
+		local ln, l = lanes[i + f.offset], pool(f.lanes, i, function() return lane(f) end)
 		local r = ln.row
 		l.lane, l.now, l.endX = ln, now, ln.frac * f.plotW
 		l:ClearAllPoints()
@@ -301,7 +313,7 @@ end
 -- The band's heading over the timeline, with the next one to fill: "NEXT 48 HOURS  ·  Le Bankken full in 19h 11m".
 function Tl.Header(rows)
 	for _, ln in ipairs(Tl.Lanes(rows)) do
-		if ln.left > 0 then return ("NEXT 48 HOURS  ·  %s full in %s"):format(ln.row.c.full or "?", U.Duration(ln.left)) end
+		if ln.left > 0 and not ln.still then return ("NEXT 48 HOURS  ·  %s full in %s"):format(ln.row.c.full or "?", U.Duration(ln.left)) end
 	end
 	return "NEXT 48 HOURS"
 end

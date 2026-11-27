@@ -88,4 +88,40 @@ function cases.main_window_switches_to_the_timeline_and_remembers_it()
 	T.clean(h)
 end
 
+-- Review (ILL-1272): a character parked outside is not filling: it never heads the timeline as "full in 2d" and sorts
+-- after every filling lane.
+function cases.a_near_cap_outside_alt_is_not_next()
+	local _, _, state = W.New({})
+	local Tl = state.ns.Timeline
+	local rows = { row("Parked", 2 * D, "outside"), row("Inn", 5 * D, "resting") }
+	local lanes = Tl.Lanes(rows)
+	T.eq(lanes[1].row.c.full, "Inn", "the filling one first")
+	T.ok(lanes[2].still, "the parked one marked still")
+	T.has(Tl.Header(rows), "Inn full in", "the heading names the one that fills")
+	T.lacks(Tl.Header(rows), "Parked", "not the parked one")
+end
+
+-- Review (ILL-1272): more characters than lanes: the mouse wheel scrolls the timeline like the roster.
+function cases.the_wheel_scrolls_lanes_past_the_ninth()
+	local chars = {}
+	for i = 1, 12 do chars[("N:Alt %02d@?"):format(i)] = alt(("Alt %02d"):format(i), 0.05 * i, true) end
+	local state = { saved = { opts = { view = "timeline" }, chars = chars }, setup = function(game)
+		game.UISpecialFrames = {}
+		game.GameTooltip = game.CreateFrame("GameTooltip", "GameTooltip")
+		game.SetPortraitTexture = function() end
+	end }
+	local _, h = W.New(state)
+	h.Slash("RESTEDLEVELING", "")
+	local tl = state.ns.Main.frame.timeline
+	local function first() return tl.lanes[1].lane.row.c.full end
+	local top = first()
+	FakeWoW.RunScript(tl, "OnMouseWheel", -3)
+	T.ok(first() ~= top, "scrolled: the first lane is another character")
+	FakeWoW.RunScript(tl, "OnMouseWheel", -10)
+	T.eq(tl.offset, 12 - state.ns.Main.VISIBLE, "no further than the last lane")
+	FakeWoW.RunScript(tl, "OnMouseWheel", 20)
+	T.eq(first(), top, "and back to the top")
+	T.clean(h)
+end
+
 return cases
