@@ -272,8 +272,8 @@ function cases.the_hero_action_line_is_never_cut()
 	local Hero, hero = state.ns.Hero, h.Env().RestedLevelingMain.hero
 	T.ok(hero.cta:GetText() and #hero.cta:GetText() > 10, "an action line")
 	local lines = {
-		"Next, log |cffc69b6dLe Jedde|r out here. Then play |cffc69b6dLe Jette|r.",
-		"First, take |cffc69b6dColonol Sunders|r to an inn (hearth). Then play |cff3fc7ebAmdo Moto|r.",
+		"First: log |cffc69b6dLe Jedde|r out here. Then: play |cffc69b6dLe Jette|r.",
+		"First: hearth |cffc69b6dColonol Sunders|r to an inn. Then: play |cff3fc7ebAmdo Moto|r.",
 		"Nobody to switch to yet. When you stop, log |cffc69b6dColonol Sunders|r out in an inn.",
 	}
 	for _, scale in ipairs({ 1, 1.35, 1.6 }) do
@@ -311,6 +311,22 @@ function cases.bubble_drops_one_font_step_only_when_it_must()
 	fits(Card, f.stage, "long line, one step down")
 	FakeWoW.sizeAware, FakeWoW.fontScale = nil, nil
 	T.clean(h)
+end
+
+-- Council r2: one place, one tile. Hearth and the logout place merge when they name the same town.
+function cases.hearth_and_logout_place_merge_when_they_match()
+	local _, _, state = W.New({})
+	local Tb = state.ns.Tidbits
+	local function labels(c)
+		local out = {}
+		for _, t in ipairs(Tb.List(c, W.NOW)) do out[#out + 1] = t[1] .. "=" .. t[2] end
+		return table.concat(out, "|")
+	end
+	T.has(labels({ bind = "Thunder Bluff", zone = "Thunder Bluff" }), "Hearth · logged out=Thunder Bluff", "merged")
+	T.lacks(labels({ bind = "Thunder Bluff", zone = "Thunder Bluff" }), "Logged out in", "not twice")
+	local apart = labels({ bind = "Goldshire", zone = "Elwynn Forest", subzone = "Northshire" })
+	T.has(apart, "Hearth=Goldshire", "different places: the hearth")
+	T.has(apart, "Logged out in=Northshire, Elwynn Forest", "and where it logged out")
 end
 
 return cases

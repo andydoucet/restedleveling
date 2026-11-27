@@ -84,7 +84,10 @@ function Wg.Portrait(parent, size)
 	f.stateRing:SetPoint("CENTER")
 	f.stateRing:SetSize(size * 1.0, size * 1.0)
 	-- The class crest sits outside the ring at 4 o'clock, in its own dark circle.
-	local cs = math.max(14, math.min(22, math.floor(size * 0.24)))
+	local cs = math.max(19, math.min(28, math.floor(size * 0.25)))   -- legible: the race or class reads at a glance
+	f.noBadge = size < 36   -- a small disc (alert rows, timeline lanes) shows the picture alone: no double blob
+	f.crestEdge = f:CreateTexture(nil, "OVERLAY", nil, 1)   -- a 1 px bronze rim parts the badge from the portrait
+	St.Paint(f.crestEdge, "ring_bronze")
 	f.crestRing = f:CreateTexture(nil, "OVERLAY", nil, 2)
 	St.Paint(f.crestRing, "disc_dark")
 	f.crestRing:SetSize(cs + 4, cs + 4)
@@ -92,16 +95,12 @@ function Wg.Portrait(parent, size)
 	f.crest = f:CreateTexture(nil, "OVERLAY", nil, 3)
 	f.crest:SetSize(cs, cs)
 	f.crest:SetPoint("CENTER", f.crestRing)
+	f.crestEdge:SetSize(cs + 8, cs + 8)
+	f.crestEdge:SetPoint("CENTER", f.crestRing)
 	f.crestMask = f:CreateMaskTexture()
 	f.crestMask:SetTexture(MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 	f.crestMask:SetAllPoints(f.crest)
 	f.crest:AddMaskTexture(f.crestMask)
-	-- An additive copy of the race emblem over it: lifts the dark parts so the race reads on the dark disc.
-	f.crestLift = f:CreateTexture(nil, "OVERLAY", nil, 4)
-	f.crestLift:SetAllPoints(f.crest)
-	f.crestLift:SetBlendMode("ADD")
-	f.crestLift:SetAlpha(0.8)
-	f.crestLift:AddMaskTexture(f.crestMask)
 	return f
 end
 
@@ -130,14 +129,13 @@ function Wg.SetPortrait(f, c, isMe, state)
 	local face = isMe or saved
 	local badge = face and crest or Wg.RaceAtlas(c)
 	if badge then f.crest:SetAtlas(badge) end
-	-- The race emblem partly washed out, so it names the race without claiming a skin or hair colour, and lifted by
-	-- its additive copy so it reads as a face on the dark disc, not a grey blob. The class crest as drawn.
-	local lift = badge ~= nil and not face
-	f.crest:SetDesaturation(face and 0 or 0.5)
-	if lift then f.crestLift:SetAtlas(badge) f.crestLift:SetDesaturation(0.5) end
-	f.crestLift:SetShown(lift)
+	-- The badge in colour (council r2: washed-out race emblems read as identical grey heads): a stock race icon at
+	-- badge size names the race; it does not claim this character's own look.
+	f.crest:SetDesaturation(0)
+	if f.noBadge then badge = nil end
 	f.crest:SetShown(badge ~= nil)
 	f.crestRing:SetShown(badge ~= nil)
+	f.crestEdge:SetShown(badge ~= nil)
 	f.kind = isMe and "live" or (saved and "look" or "crest")
 	return f.kind
 end
@@ -218,30 +216,27 @@ function Wg.Chip(parent, h, w)
 	f:SetSize(w or Wg.CHIP_W, h or 20)
 	f.fixed = w ~= false
 	f.icon = f:CreateTexture(nil, "ARTWORK")
-	f.icon:SetSize((h or 20) - 6, (h or 20) - 6)
+	f.icon:SetSize(12, 12)   -- one icon size in every chip
 	f.icon:SetPoint("LEFT", 4, 0)
 	f.text = Wg.Text(f, "label", nil, 13)
 	f.text:SetPoint("LEFT", f.icon, "RIGHT", 5, 0)
 	return f
 end
 
--- Chip colours: a dark state-tinted fill with light state-coloured text, so the word clears the fill.
-local CHIP_TEXT = { full = { 0.90, 1, 0.91 }, near = { 0.89, 0.94, 0.42 }, resting = { 0.94, 0.77, 0.54 },   -- not UI gold
-	outside = { 1, 0.83, 0.83 }, max = { 0.75, 0.72, 0.67 }, done = { 0.75, 0.72, 0.67 } }
 
 function Wg.SetChip(f, state, text)
 	local s = St.STATE[state] or St.STATE.max
 	f.icon:SetTexture(s.icon)
 	f.text:SetText(text or s.word:upper())
 	local key = St.STATE[state] and state or "max"
-	f.text:SetTextColor(unpack(CHIP_TEXT[key]))
-	-- Only "not resting" keeps its bright edge: it is the one state that asks you to do something.
-	St.Backdrop(f, "chipfill_" .. key, key == "outside" and ("st_" .. key) or "sw_lip", 1)
+	f.text:SetTextColor(St.StateColor(key))   -- the word in the state's own colour, the same as its edge and bar
+	-- One chip family: a near-black fill, a 1 px edge and the word in the state colour (the bars' own token).
+	St.Backdrop(f, "chipfill_max", "st_" .. key, 1)
 	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.35) end   -- quiet fills, like his flat cells
 	local group = f.text:GetStringWidth() + f.icon:GetWidth() + 5
 	if not f.fixed then f:SetWidth(group + 14) end
 	f.icon:ClearAllPoints()   -- icon and word centred as one group: no dead space on the right
-	f.icon:SetPoint("LEFT", math.max(4, math.floor((f:GetWidth() - group) / 2)), 0)
+	f.icon:SetPoint("LEFT", math.max(6, math.floor((f:GetWidth() - group) / 2)), 0)
 end
 
 -- Place badge: icon (+ optional text).

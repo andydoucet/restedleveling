@@ -35,15 +35,15 @@ local ICONS = {
 	Gold = "Interface\\Icons\\INV_Misc_Coin_01", Professions = "Interface\\Icons\\Trade_Engineering",
 	Guild = "Interface\\Icons\\INV_Shirt_GuildTabard_01", Title = "Interface\\Icons\\INV_Scroll_11",
 	Gear = "Interface\\Icons\\INV_Chest_Chain", ["Logged out in"] = "Interface\\Icons\\INV_Misc_Map_01",
+	["Hearth · logged out"] = "Interface\\Icons\\INV_Misc_Rune_01",
 	["Rest bonus"] = "Interface\\Icons\\Spell_Nature_Sleep", ["Time at full"] = "Interface\\Icons\\INV_Misc_PocketWatch_02",
 }
 
-local function drift(parent, text, x, delay)
+local function drift(parent, text, delay)
 	local z = parent:CreateFontString(nil, "OVERLAY")
-	St.Font(z, "hero", 12)
+	St.Font(z, "hero", 14)
 	z:SetText(text)
-	z:SetTextColor(0.77, 0.72, 0.60)
-	z:SetPoint("BOTTOM", parent, "BOTTOM", x, 236)
+	z:SetTextColor(0.96, 0.94, 0.90)
 	local g = z:CreateAnimationGroup()
 	g:SetLooping("REPEAT")
 	local mv = g:CreateAnimation("Translation")
@@ -90,7 +90,7 @@ local function makeStage(f)
 	s.shade:SetPoint("BOTTOMLEFT", 3, 3)
 	s.shade:SetPoint("BOTTOMRIGHT", -3, 3)
 	s.shade:SetHeight(110)
-	s.zs = { drift(s, "z", 150, 0), drift(s, "z", 162, 1.1), drift(s, "Z", 174, 2.2) }   -- just above the head
+	s.zs = { drift(s, "z", 0), drift(s, "z", 1.1), drift(s, "Z", 2.2) }   -- placed over the disc below
 	-- The live model: the logged-in character only, in the figure column from the top of the stage down to just
 	-- above the name plate (the frame clips the model: waist up, head in the upper middle).
 	s.model = CreateFrame("PlayerModel", nil, s)
@@ -109,6 +109,10 @@ local function makeStage(f)
 	s.pedestal:SetPoint("BOTTOM", FIG_X, 76)
 	s.figure = Wg.Portrait(s, DISC)
 	s.figure:SetPoint("BOTTOM", FIG_X, 78)
+	for i, z in ipairs(s.zs) do   -- the sleep cluster belongs to the sleeper: just over the disc's top right
+		z:ClearAllPoints()
+		z:SetPoint("BOTTOMLEFT", s.figure, "TOPRIGHT", -34 + i * 9, -14 + i * 5)
+	end
 	s.note = Wg.Text(s, "small", "OVERLAY", 12)   -- beside the crest, under the bubble: why there is no face
 	s.note:SetPoint("BOTTOMRIGHT", s.figure, "BOTTOMLEFT", -20, 8)
 	s.note:SetWidth(160)
@@ -231,12 +235,19 @@ function Card.Create()
 	St.Window(f, "")
 	tinsert(UISpecialFrames, "RestedLevelingCard")
 	f.typer = CreateFrame("Frame", nil, f)
+	-- One panel: the stage, then its rest bar and line inside the same box (not a bar floating between two panels).
+	f.box = CreateFrame("Frame", nil, f, "BackdropTemplate")
 	f.stage = makeStage(f)
-	f.bar = Wg.BubbleBar(f, IW - 4, 16, 30)   -- inside the panels' edges, like the stage and the facts
-	f.bar:SetPoint("TOPLEFT", f.stage, "BOTTOMLEFT", 0, -10)
-	f.why = Wg.Text(f, "body", nil, 13)
-	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 10, -8)
-	f.why:SetWidth(IW - 20)
+	f.stage:SetFrameLevel(f.box:GetFrameLevel() + 1)
+	f.bar = Wg.BubbleBar(f.box, IW - 28, 10, 30)
+	f.bar:SetPoint("TOPLEFT", f.stage, "BOTTOMLEFT", 12, -10)
+	f.why = Wg.Text(f.box, "body", nil, 13)
+	f.why:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 0, -8)
+	f.why:SetWidth(IW - 24)
+	f.box:SetPoint("TOPLEFT", f.stage, "TOPLEFT")
+	f.box:SetPoint("TOPRIGHT", f.stage, "TOPRIGHT")
+	f.box:SetPoint("BOTTOM", f.why, "BOTTOM", 0, -8)
+	St.Panel(f.box, "inset")
 	f.why:SetHeight(36)
 	f.why:SetJustifyV("TOP")
 	f.why:SetWordWrap(true)
@@ -377,7 +388,7 @@ local function fillTiles(f, c, now)
 	local full = IW - 16
 	local half = (full - 8) / 2
 	f.stats:ClearAllPoints()
-	f.stats:SetPoint("TOPLEFT", f.why, "BOTTOMLEFT", -10, -6)
+	f.stats:SetPoint("TOPLEFT", f.box, "BOTTOMLEFT", 0, -10)
 	local y, col, n = -4, 0, 0
 	for i, t in ipairs(f.tiles) do
 		local item = list[i]
@@ -451,7 +462,10 @@ function Card.Show(key)
 	s.note:SetShown(not modelShown)
 	s.pedestal:SetShown(false)   -- no rule under the portrait
 	if not modelShown then
-		Wg.SetPortrait(s.figure, c, false, state)   -- the saved look, or the class crest with the race emblem
+		-- The saved look, or the class crest with the race emblem. Only the crest needs a note (why there is no face);
+		-- under a face it would repeat the meta line.
+		local kind = Wg.SetPortrait(s.figure, c, false, state)
+		s.note:SetShown(kind ~= "look")
 		s.note:SetText(Card.OfflineNote(c))
 		Wg.Balance(s.note, 160)   -- no "them." alone on the last line
 		St.Paint(s.lvl, host and "disc_dark" or "disc_gold")   -- under ElvUI a restrained dark disc, not a gold medallion
@@ -476,7 +490,7 @@ function Card.Show(key)
 	Wg.SetChip(s.chip, isMe and "resting" or state, isMe and "NOW PLAYING" or Wd.Chip(row))
 	Wg.SetBubbleBar(f.bar, p and p.pct or 0, state, false)
 	f.why:SetText(isMe and "This is the character you're on." or Wd.Why(row, now))   -- ends with the real-life time to full
-	Wg.Balance(f.why, IW - 20)
+	Wg.Balance(f.why, IW - 24)
 	local n = fillTiles(f, c, now)
 	-- Sit next to the main window, top edges level.
 	f:ClearAllPoints()
@@ -484,7 +498,7 @@ function Card.Show(key)
 	local docked = main and main:IsShown()
 	if docked then f:SetPoint("TOPLEFT", main, "TOPRIGHT", 10, 0) else f:SetPoint("CENTER", 220, 10) end
 	f:Show()
-	local top, bottom = f:GetTop(), (n > 0 and f.stats or f.why):GetBottom()   -- the card ends at its tidbits
+	local top, bottom = f:GetTop(), (n > 0 and f.stats or f.box):GetBottom()   -- the card ends at its tidbits
 	if top and bottom then f:SetHeight(top - bottom + PAD) end
 	-- a different line on each open, never the one the hero is saying (the hero uses turn 1)
 	Card.opens = Card.opens or {}

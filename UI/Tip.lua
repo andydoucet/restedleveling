@@ -73,7 +73,7 @@ function Tip.Show(owner)
 			local s = St.STATE[r.state] or St.STATE.max
 			line.rank:SetText(i)
 			line.name:SetText(St.ClassText(r.c.class, r.c.full or "?", true) .. ("  |cffb9b0a0· Lv %d|r"):format(r.c.level or 0))
-			-- one phrase per row, with the real-life time to full: "Full for 2d 4h", "93% · Full in 3h (today 07:00)"
+			-- one phrase per row, with the real-life time to full: "Full since 2d 4h ago", "93% · Full in 3h (today 07:00)"
 			local p = r.p
 			local word, detail
 			if not p then word = s.word

@@ -32,7 +32,7 @@ function cases.card_reason_for_each_state_ends_with_the_real_time_to_full()
 	local ns = load()
 	local Wd = ns.Words
 	T.eq(Wd.Why(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 9 * H }), NOW, utc),
-		"Full for 9h. 1.5 levels of double XP waiting.", "full")
+		"Full since 9h ago. 1.5 levels of double XP waiting.", "full")
 	T.eq(Wd.Why(row("near", { pct = 0.93, levels = 1.4, left = 2 * H }), NOW, utc),
 		"93% full. Full in 2h (today 22:00). 1.4 levels of double XP ready.", "near")
 	T.eq(Wd.Why(row("resting", { pct = 0.5, levels = 0.75, left = 5 * H }, { resting = true, restKind = "inn", subzone = "Goldshire" }), NOW, utc),
@@ -47,7 +47,7 @@ end
 function cases.hero_line_is_the_state_then_the_real_time_to_full()
 	local Wd = load().Words
 	T.eq(Wd.HeroWhy(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 2 * D - 4 * H }), NOW, utc),
-		"Fully rested. Full for 2d 4h.", "full")
+		"Full since 2d 4h ago · more rest is wasted.", "full")
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 2 * H, utc),
 		"Resting. Full in 6h 20m (tomorrow 00:20).", "resting")   -- 18:00 + 6h 20m crosses midnight: says which day
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 8 * H, utc),
@@ -66,7 +66,7 @@ function cases.full_line_at_its_boundaries()
 	T.eq(at(D), "Full in 1d (tomorrow 20:00)", "1d")
 	T.eq(at(9 * D + 23 * H), "Full in 9d 23h (Mon 23 Nov, 19:00)", "9d23h")
 	T.eq(at(10), "Full in 1m (today 20:01)", "under a minute rounds up to 1m")
-	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 2 * D - 4 * H }, NOW, utc), "Full for 2d 4h", "full")
+	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 2 * D - 4 * H }, NOW, utc), "Full since 2d 4h ago", "full")
 	T.eq(Wd.FullLine({ left = 0, fullSince = NOW - 30 }, NOW, utc), "Full now", "just filled")
 	T.eq(Wd.FullLine(nil, NOW, utc), "", "max level: nothing to fill")
 end
@@ -103,8 +103,8 @@ end
 
 function cases.action_line_only_says_hearth_about_the_character_you_are_on()
 	local Wd = load().Words
-	T.eq(Wd.Action("Le Jette", "Le Nette", false, false), "First, take Le Nette to an inn (hearth). Then play Le Jette.", "outside")
-	T.eq(Wd.Action("Le Jette", "Le Nette", true, false), "Next, log Le Nette out here. Then play Le Jette.", "resting")
+	T.eq(Wd.Action("Le Jette", "Le Nette", false, false), "First: hearth Le Nette to an inn. Then: play Le Jette.", "outside")
+	T.eq(Wd.Action("Le Jette", "Le Nette", true, false), "First: log Le Nette out here. Then: play Le Jette.", "resting")
 	T.eq(Wd.Action("Le Jette", "Le Nette", false, true), "Nobody to switch to yet. When you stop, log Le Nette out in an inn.", "empty, outside")
 	T.eq(Wd.Action("Le Jette", "Le Nette", true, true), "Nobody to switch to yet. Keep playing Le Nette; it rests here too.", "empty, resting")
 	T.lacks(Wd.Action("Le Jette", "Le Nette", false, true), "play Le Jette", "nobody to send you to")
@@ -124,8 +124,8 @@ function cases.link_line_for_each_pairing_state()
 	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = false }, "Le Nette", NOW),
 		"Linked to Le Bankken. Waiting for them to link you back (/rlvl link Le Nette on that account).", "waiting")
 	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true, lastSync = NOW - 5 * 60 }, "Le Nette", NOW),
-		"Paired with Le Bankken, synced 5m ago", "paired")
-	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true }, "Le Nette", NOW), "Paired with Le Bankken, not synced yet", "paired, no data yet")
+		"Paired: Le Bankken  ·  synced 5m ago", "paired")
+	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true }, "Le Nette", NOW), "Paired: Le Bankken  ·  not synced yet", "paired, no data yet")
 end
 
 function cases.rows_show_the_real_time_to_full_even_outside()
@@ -158,10 +158,16 @@ function cases.hero_says_why_number_one_beats_number_two()
 	local a = row("full", { pct = 1, levels = 1.7, left = 0, fullSince = NOW - 2 * D }, { full = "Le Nette" })
 	local b = row("full", { pct = 1, levels = 1.6, left = 0, fullSince = NOW - 8 * H }, { full = "Le Beouf" })
 	a.group, b.group = 1, 1
-	T.eq(Wd.Ahead({ a, b }, NOW), "Then Le Beouf, full for 8h", "both full")
+	T.eq(Wd.Ahead({ a, b }, NOW), "Then Le Beouf, full since 8h ago", "both full")
 	local c = row("resting", { pct = 0.5, levels = 0.8, left = H }, { full = "Le Bankke" })
 	c.group = 3
-	T.eq(Wd.Ahead({ a, c }, NOW), nil, "different groups need no explanation")
+	T.eq(Wd.Ahead({ a, c }, NOW), "Then Le Bankke with 0.8 of a level", "the runner-up, whatever its group")
+	local n = row("near", { pct = 0.92, levels = 1.38, left = 19 * H }, { full = "Le Bankken" })
+	n.group = 2
+	T.eq(Wd.Ahead({ a, n }, NOW), "Then Le Bankken, full in 19h", "nearly full: how soon")
+	local m = row("max", nil, { full = "Le Max" })
+	m.group = 5
+	T.eq(Wd.Ahead({ a, m }, NOW), nil, "nobody worth naming")
 end
 
 -- Wg.Fit cuts whole UTF-8 characters only: never half a "·" or an accented letter (review of ILL-1274).

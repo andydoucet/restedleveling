@@ -27,7 +27,7 @@ function Hero.Create(parent, w, h)
 	f.shadeArt:SetPoint("TOPLEFT", f.art)
 	f.shadeArt:SetPoint("BOTTOMRIGHT", f.art)
 	St.Paint(f.shadeArt, "sw_black")
-	f.shadeArt:SetVertexColor(1, 1, 1, 0.1)   -- the inn reads as an inn; the fade keeps text clear
+	f.shadeArt:SetVertexColor(1, 1, 1, 0.22)   -- the inn reads as an inn; the fade keeps text clear
 	f.fade = f:CreateTexture(nil, "BACKGROUND", nil, 2)   -- dark under the text, the inn shows on the right
 	f.fade:SetTexture(St.MEDIA .. "fade_h")
 	f.fade:SetPoint("TOPLEFT", 1, -1)
@@ -37,13 +37,19 @@ function Hero.Create(parent, w, h)
 	f.edge:SetPoint("TOPLEFT", 1, -1)
 	f.edge:SetPoint("BOTTOMLEFT", 1, 1)
 	f.edge:SetWidth(4)
+	f.pulse = f.edge:CreateAnimationGroup()   -- a slow breath on the accent while a full #1 wastes rest
+	f.pulse:SetLooping("BOUNCE")
+	local breath = f.pulse:CreateAnimation("Alpha")
+	breath:SetFromAlpha(1)
+	breath:SetToAlpha(0.5)
+	breath:SetDuration(2)
 	f.hover = f:CreateTexture(nil, "HIGHLIGHT")
 	f.hover:SetPoint("TOPLEFT", 1, -1)
 	f.hover:SetPoint("BOTTOMRIGHT", -1, ACTION_H)
 	St.Paint(f.hover, "sw_btn_hi")
 	f.hover:SetAlpha(0.2)
 
-	f.portrait = Wg.Portrait(f, 104)
+	f.portrait = Wg.Portrait(f, 112)
 	f.portrait:SetPoint("TOPLEFT", 28, -22)
 	f.badge = f.portrait:CreateTexture(nil, "OVERLAY", nil, 6)
 	St.Paint(f.badge, "disc_gold")
@@ -60,19 +66,19 @@ function Hero.Create(parent, w, h)
 	f.badgeText:SetTextColor(0.10, 0.07, 0.02)
 	f.badgeText:SetShadowOffset(0, 0)
 
-	f.kicker = text(f, "label", 12, { r = 0.90, g = 0.80, b = 0.60 })   -- cream, like his section labels
-	f.kicker:SetPoint("TOPLEFT", f.portrait, "TOPRIGHT", 24, 0)
+	f.kicker = text(f, "label", 13, { r = 0.94, g = 0.82, b = 0.50 })   -- #1 · PLAY NEXT: a heading, not a caption
+	f.kicker:SetPoint("TOPLEFT", f.portrait, "TOPRIGHT", 28, 0)   -- clear of the portrait's badge
 	f.chip = Wg.Chip(f, 22, 86)
 	f.chip:SetPoint("LEFT", f.kicker, "RIGHT", 10, 0)
-	f.name = Wg.Text(f, "hero", nil, 28)
+	f.name = Wg.Text(f, "hero", nil, 30)
 	f.name:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -6)
 	-- The #1 speaks on its own row under its name, decision first ("Send me. 1.7 levels banked."), in a dark bubble
 	-- whose tail points back at the portrait. One line; the row is reserved so the layout holds without it.
-	f.say = Wg.Bubble(f, 13)
-	f.say:SetHeight(22)
-	f.say:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 14, -6)   -- the tail clear of the class badge; 6 px gaps
+	f.say = Wg.Bubble(f, 14)
+	f.say:SetHeight(24)
+	f.say:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 24, -6)   -- the tail clear of the class badge; 6 px gaps
 	f.sayText = f.say.text
-	f.sayText:SetPoint("LEFT", 9, 0)
+	f.sayText:SetPoint("LEFT", 10, 0)
 	Wg.PointTail(f.say, "left")
 	f.sub = text(f, "body", 13, St.SECOND)
 	f.sub:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 1, -34)   -- 6 px under the speech bubble
@@ -85,14 +91,14 @@ function Hero.Create(parent, w, h)
 	f.statSub = text(f, "label", 12, St.CREAM)
 	f.statSub:SetPoint("TOPRIGHT", f.stat, "BOTTOMRIGHT", 0, -2)   -- one right edge for the figure, unit and runner-up
 	f.statSub:SetJustifyH("RIGHT")
-	f.ahead = text(f, "small", 13, St.MUTED)   -- the runner-up, read last
+	f.ahead = text(f, "small", 12, St.MUTED)   -- the runner-up, read last: fills the column under the figure
 	f.ahead:SetPoint("TOPRIGHT", f.statSub, "BOTTOMRIGHT", 0, -8)
 	f.ahead:SetJustifyH("RIGHT")
 	f.acct = Wg.Text(f, "label", nil, 11)
 	f.acct:SetPoint("TOPRIGHT", f.ahead, "BOTTOMRIGHT", 0, -4)
 	f.acct:SetTextColor(0.62, 0.78, 0.95)
 
-	Hero.BAR_W = w - 156 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
+	Hero.BAR_W = w - 168 - 24   -- from the text column to the figure's right edge: no gutter between bar and number
 	f.bar = Wg.BubbleBar(f, Hero.BAR_W, 18, BAR_SEGS)
 	f.bar:SetPoint("TOPLEFT", f.sub, "BOTTOMLEFT", -1, -10)
 	f.sheen = f.bar.bar:CreateTexture(nil, "OVERLAY", nil, 6)   -- a gold sheen sweeps the bar when the window opens
@@ -125,7 +131,7 @@ function Hero.Create(parent, w, h)
 	f.actionRule:SetPoint("TOPLEFT")
 	f.actionRule:SetPoint("TOPRIGHT")
 	f.actionRule:SetHeight(1)
-	f.cta = text(f.action, "name", 16, St.ACTION)
+	f.cta = text(f.action, "name", 16, { r = 0.95, g = 0.89, b = 0.69 })   -- cream: the names in it keep their class colours
 	f.cta:SetPoint("LEFT", 22, 0)
 	f.open = St.MakeButton(f.action, 120, "View card", true)
 	f.open:SetPoint("RIGHT", -8, 0)
@@ -163,7 +169,7 @@ local function setShown(f, on)
 	-- Under a host skin the hero is a flat well like its own windows: no painting, no bright rule.
 	f.art:SetShown(not St.HostFrame())
 	f.fade:SetShown(not St.HostFrame())
-	f.edge:SetShown(not St.HostFrame())
+	f.edge:SetShown(true)   -- the #1's state accent in both themes: it belongs to the ranked list below
 	-- no gold medallion or bronze ring under a host skin: the kicker already says #1, the ring is the state line
 	for _, k in ipairs({ "badge", "badgeRing", "badgeText" }) do f[k]:SetShown(false) end   -- the kicker says #1
 	f.portrait.ring:SetShown(not St.HostFrame())
@@ -175,7 +181,7 @@ local function say(f, line)
 	f.say:SetShown(line ~= nil and line ~= "")
 	if not line then return end
 	Wg.Fit(f.sayText, line, f:GetWidth() - 340)
-	f.say:SetWidth(f.sayText:GetStringWidth() + 20)
+	f.say:SetWidth(f.sayText:GetStringWidth() + 22)
 end
 
 -- The next step, whole: one line at the normal size, else a smaller one, else two balanced lines (word breaks only),
@@ -218,6 +224,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 	local c, p = row.c, row.p
 	local r, g, b = St.StateColor(row.state)
 	St.Paint(f.edge, "st_" .. row.state)
+	if row.state == "full" and not ns.DB().opts.reduceMotion then f.pulse:Play() else f.pulse:Stop() end
 	Wg.SetPortrait(f.portrait, c, false, row.state)
 	Wg.SetChip(f.chip, row.state, Wd.Chip(row))
 	f.name:SetText(St.ClassText(c.class, c.full or "?"))
@@ -238,7 +245,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 		f.why:SetText(Wd.HeroWhy(row, now))   -- the state, then the real-life time to full
 		f.ahead:SetText(rows and Wd.Ahead(rows, now) or "")
 	end
-	if St.HostFrame() then f.stat:SetTextColor(0.94, 0.74, 0.25) else f.stat:SetTextColor(r, g, b) end   -- host: his gold
+	f.stat:SetTextColor(0.96, 0.86, 0.58)   -- one warm cream-gold figure in both themes; the accent and bar carry state
 	f.why:SetTextColor(0.5 + r * 0.5, 0.5 + g * 0.5, 0.5 + b * 0.5)   -- it belongs to the bar: a light state colour
 	-- The next step. Any "first, ..." is about the character you are on, never the one to play next.
 	local name = St.ClassText(c.class, c.full or "them")
