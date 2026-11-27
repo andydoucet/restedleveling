@@ -211,7 +211,7 @@ function Main.Refresh()
 	ns.Link.Refresh(f.link, now)
 	local multi = #ns.Accounts() > 1
 	f.acctBtn:SetShown(multi)
-	if multi then f.acctBtn:SetText(ns.AccountFilterLabel()) end
+	if multi then f.acctBtn:SetLabel(ns.AccountFilterLabel()) end   -- our buttons draw their text in b.label
 	ns.Link.SetWidth(f.link, Main.W - PAD * 2 - 236 - (multi and 160 or 0))
 	f.greyCheck:SetChecked(ns.DB().opts.showGrey ~= false)
 	f.greyCheck:SetShown(#rows > 0)   -- first run: nothing to filter yet

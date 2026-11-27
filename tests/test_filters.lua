@@ -78,6 +78,8 @@ function cases.footer_control_cycles_the_accounts()
 		seen[i] = ns.AccountFilterLabel()
 	end
 	T.eq(table.concat(seen, "|"), "This account|#3|All accounts", "all -> this account -> #3 -> all")
+	FakeWoW.RunScript(f.acctBtn, "OnClick")
+	T.eq(f.acctBtn.label:GetText(), "This account", "the button's visible label follows the filter")
 	W.DB(h).chars["N:Le Bankken@?"] = nil
 	ns.Main.Refresh()
 	T.ok(not f.acctBtn:IsShown(), "hidden with one account")
@@ -118,6 +120,27 @@ function cases.low_rest_warning_uses_the_threshold()
 	local out = table.concat(h.Printed(), "\n")
 	T.has(out, "running low", "the chat line fires")
 	T.has(out, "under 30% of full", "and says the threshold")
+	T.clean(h)
+end
+
+-- Review (ILL-1272): the account filter is a view filter. A fill on a hidden account still toasts (once); showing that
+-- account again replays nothing.
+function cases.alerts_ignore_the_view_filter()
+	local h, state = world()
+	local ns = state.ns
+	ns.Options.SetAccounts("mine")
+	local c = W.DB(h).chars["N:Le Bankken@?"]
+	c.rested, c.t = math.floor(1.45 * 10000), W.NOW   -- 0.05 levels short of full, in an inn: full in 8 hours
+	ns.Alerts.CheckFills(true)   -- what login does: the ones already full are known
+	W.Advance(h, 10 * 3600)
+	ns.Alerts.CheckFills()
+	local toast = ns.Alerts.toasts[1]
+	T.ok(toast and toast:IsShown(), "the other account's alt filling up toasts while the window shows only this account")
+	T.has(toast.text:GetText(), "Le Bankken", "naming it")
+	toast:Hide()
+	ns.Options.SetAccounts(nil)
+	ns.Alerts.CheckFills()
+	T.ok(not toast:IsShown(), "switching to all accounts replays no stale toast")
 	T.clean(h)
 end
 

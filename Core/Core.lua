@@ -260,13 +260,14 @@ C_Timer.NewTicker(60, function()
 end)
 
 -- Rows for display: everyone but the logged-in character, sorted play-next first, on the shown account(s) only
--- (hero, roster, compact, datatext, timeline and the alerts' "play next" all read these).
+-- (hero, roster, compact, datatext, timeline). The account filter is a view filter: alerts pass allAccounts, so a fill
+-- or "play next" is never held back (or replayed later) because of what the window was showing.
 function ns.Rows(opts)
 	local d = ns.DB()
 	opts = opts or {}
 	return M.BuildRows(d.chars, opts.now or time(), d.calib, {
 		me = myKey, hidden = d.hidden, target = d.opts.target, maxLevel = S.MaxLevel(),
-		account = ns.AccountFilter(), myAccount = d.account,
+		account = not opts.allAccounts and ns.AccountFilter() or nil, myAccount = d.account,
 		hideGrey = opts.hideGrey ~= nil and opts.hideGrey or not d.opts.showGrey,
 	})
 end
