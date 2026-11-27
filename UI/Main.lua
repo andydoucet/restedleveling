@@ -18,9 +18,13 @@ local function legend(parent)
 	local prev
 	for _, state in ipairs({ "full", "near", "resting", "outside" }) do   -- each item follows the last one's text
 		local s = St.STATE[state]
-		local icon = f:CreateTexture(nil, "ARTWORK")   -- a dot in the state colour: the chips carry the icons
+		local icon = f:CreateTexture(nil, "ARTWORK", nil, 1)   -- a dot in the state colour: the chips carry the icons
 		St.Paint(icon, "pip_" .. state)
 		icon:SetSize(10, 10)
+		local ring = f:CreateTexture(nil, "ARTWORK")   -- a dark ring, so yellow and orange part on the band
+		St.Paint(ring, "disc_dark")
+		ring:SetSize(13, 13)
+		ring:SetPoint("CENTER", icon)
 		if prev then icon:SetPoint("LEFT", prev, "RIGHT", 14, 0) else icon:SetPoint("LEFT", 0, 0) end
 		local t = Wg.Text(f, "small", nil, 13)
 		t:SetPoint("LEFT", icon, "RIGHT", 4, 0)
@@ -171,7 +175,7 @@ function Main.Create()
 	end)
 
 	-- Whose characters to show, when more than one account is in the roster: click for the next choice.
-	f.acctBtn = St.MakeButton(f, 140, "All accounts", false, St.HostFrame() and 22 or 24)
+	f.acctBtn = St.MakeButton(f, 120, "All accounts", false, St.HostFrame() and 22 or 24)
 	f.acctBtn:SetPoint("RIGHT", f.greyCheck, "LEFT", -18, 0)
 	f.acctBtn:SetScript("OnClick", function(self)
 		local choices, at = ns.Options.AccountChoices(), 1
@@ -247,7 +251,7 @@ function Main.Refresh()
 	local multi = #ns.Accounts() > 1
 	f.acctBtn:SetShown(multi)
 	if multi then f.acctBtn:SetLabel(ns.AccountFilterLabel()) end   -- our buttons draw their text in b.label
-	ns.Link.SetWidth(f.link, Main.W - PAD * 2 - 236 - (multi and 160 or 0))
+	ns.Link.SetWidth(f.link, Main.W - PAD * 2 - 236 - (multi and 140 or 0))
 	f.greyCheck:SetChecked(ns.DB().opts.showGrey ~= false)
 	f.greyCheck:SetShown(#rows > 0)   -- first run: nothing to filter yet
 	f.greyLabel:SetShown(#rows > 0)

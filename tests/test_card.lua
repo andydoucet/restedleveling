@@ -272,8 +272,8 @@ function cases.the_hero_action_line_is_never_cut()
 	local Hero, hero = state.ns.Hero, h.Env().RestedLevelingMain.hero
 	T.ok(hero.cta:GetText() and #hero.cta:GetText() > 10, "an action line")
 	local lines = {
-		"Next, log |cffc69b6dLe Jedde|r out here. Then play |cffc69b6dLe Jette|r.",
-		"First, take |cffc69b6dColonol Sunders|r to an inn (hearth). Then play |cff3fc7ebAmdo Moto|r.",
+		"First: log |cffc69b6dLe Jedde|r out here. Then: play |cffc69b6dLe Jette|r.",
+		"First: hearth |cffc69b6dColonol Sunders|r to an inn. Then: play |cff3fc7ebAmdo Moto|r.",
 		"Nobody to switch to yet. When you stop, log |cffc69b6dColonol Sunders|r out in an inn.",
 	}
 	for _, scale in ipairs({ 1, 1.35, 1.6 }) do

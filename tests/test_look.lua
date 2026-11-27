@@ -530,7 +530,7 @@ function cases.a_saved_look_shows_in_the_ring_wherever_an_offline_portrait_does(
 	FakeWoW.RunScript(main.hero, "OnClick")
 	local card = h.Env().RestedLevelingCard
 	T.ok(card.stage.figure.look:IsShown(), "the card's figure")
-	T.eq(card.stage.note:GetText(), "Last seen as a level 46 Gnome Warrior.", "no 'log in to see them' under her own face")
+	T.ok(not card.stage.note:IsShown(), "no note under her own face: the meta line already says who she is")
 	T.ok(not card.stage.lookBox:IsShown(), "no Save my look on an offline character")
 	T.ok(not main.current.portrait.look:IsShown(), "the character you are on keeps its live portrait")
 	T.clean(h)

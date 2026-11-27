@@ -106,7 +106,11 @@ function Wd.HeroWhy(r, now, dateFn)
 	local p = r.p
 	if not p then return "Max level. Nothing left to rest for." end
 	local full = Wd.FullLine(p, now, dateFn)
-	if r.state == "full" then return ("Fully rested. %s."):format(full) end
+	if r.state == "full" then   -- not a countdown: it has been full that long, and the rest since is wasted
+		local since = now - (p.fullSince or now)
+		if since < 60 then return "Fully rested just now." end
+		return ("Full since %s ago: rest is going to waste."):format(U.Duration(since))
+	end
 	if r.state == "near" then return ("%d%% full. %s."):format(math.floor(p.pct * 100), full) end
 	if r.state == "resting" then return ("Resting. %s."):format(full) end
 	return ("Not resting, fills 4x slower. %s."):format(full)
@@ -134,8 +138,8 @@ function Wd.Action(name, meName, restingNow, empty)
 		if restingNow then return ("Nobody to switch to yet. Keep playing %s; it rests here too."):format(meName) end
 		return ("Nobody to switch to yet. When you stop, log %s out in an inn."):format(meName)
 	end
-	if restingNow then return ("Next, log %s out here. Then play %s."):format(meName, name) end
-	return ("First, take %s to an inn (hearth). Then play %s."):format(meName, name)
+	if restingNow then return ("First: log %s out here. Then: play %s."):format(meName, name) end
+	return ("First: hearth %s to an inn. Then: play %s."):format(meName, name)
 end
 
 -- The roster's time line for a row: "93%  ·  Full in 14h 25m (today 18:25)". Over two days away the clock time is
@@ -173,7 +177,7 @@ function Wd.LinkLine(link, meName, now)
 		return ("Linked to %s. Waiting for them to link you back (/rlvl link %s on that account)."):format(link.name,
 			meName or "<your name>")
 	end
-	return ("Paired with %s, %s"):format(link.name, link.lastSync and ("synced " .. U.Ago(now - link.lastSync)) or "not synced yet")
+	return ("Paired: %s  ·  %s"):format(link.name, link.lastSync and ("synced " .. U.Ago(now - link.lastSync)) or "not synced yet")
 end
 
 return Wd

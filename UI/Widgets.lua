@@ -84,7 +84,9 @@ function Wg.Portrait(parent, size)
 	f.stateRing:SetPoint("CENTER")
 	f.stateRing:SetSize(size * 1.0, size * 1.0)
 	-- The class crest sits outside the ring at 4 o'clock, in its own dark circle.
-	local cs = math.max(14, math.min(22, math.floor(size * 0.24)))
+	local cs = math.max(17, math.min(24, math.floor(size * 0.24)))   -- legible: the race or class reads at a glance
+	f.crestEdge = f:CreateTexture(nil, "OVERLAY", nil, 1)   -- a 1 px bronze rim parts the badge from the portrait
+	St.Paint(f.crestEdge, "ring_bronze")
 	f.crestRing = f:CreateTexture(nil, "OVERLAY", nil, 2)
 	St.Paint(f.crestRing, "disc_dark")
 	f.crestRing:SetSize(cs + 4, cs + 4)
@@ -92,6 +94,8 @@ function Wg.Portrait(parent, size)
 	f.crest = f:CreateTexture(nil, "OVERLAY", nil, 3)
 	f.crest:SetSize(cs, cs)
 	f.crest:SetPoint("CENTER", f.crestRing)
+	f.crestEdge:SetSize(cs + 8, cs + 8)
+	f.crestEdge:SetPoint("CENTER", f.crestRing)
 	f.crestMask = f:CreateMaskTexture()
 	f.crestMask:SetTexture(MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 	f.crestMask:SetAllPoints(f.crest)
@@ -138,6 +142,7 @@ function Wg.SetPortrait(f, c, isMe, state)
 	f.crestLift:SetShown(lift)
 	f.crest:SetShown(badge ~= nil)
 	f.crestRing:SetShown(badge ~= nil)
+	f.crestEdge:SetShown(badge ~= nil)
 	f.kind = isMe and "live" or (saved and "look" or "crest")
 	return f.kind
 end
@@ -235,8 +240,8 @@ function Wg.SetChip(f, state, text)
 	f.text:SetText(text or s.word:upper())
 	local key = St.STATE[state] and state or "max"
 	f.text:SetTextColor(unpack(CHIP_TEXT[key]))
-	-- Only "not resting" keeps its bright edge: it is the one state that asks you to do something.
-	St.Backdrop(f, "chipfill_" .. key, key == "outside" and ("st_" .. key) or "sw_lip", 1)
+	-- One chip family: a near-black fill, a 1 px edge and the word in the state colour (the bars' own token).
+	St.Backdrop(f, "chipfill_max", "st_" .. key, 1)
 	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.35) end   -- quiet fills, like his flat cells
 	local group = f.text:GetStringWidth() + f.icon:GetWidth() + 5
 	if not f.fixed then f:SetWidth(group + 14) end

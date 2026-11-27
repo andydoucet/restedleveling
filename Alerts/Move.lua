@@ -15,7 +15,7 @@ ns.Move = Mv
 
 Mv.KEYS = { "banner", "toasts", "menu" }
 Mv.ITEMS = {
-	banner = { label = "Logout warning", note = "When you log out outside a rest area.", state = "outside", w = 470, h = 112,
+	banner = { label = "Logout warning", note = "When you log out outside a rest area.", state = "outside", w = 510, h = 112,
 		default = { point = "TOP", relPoint = "TOP", x = 0, y = -8 } },
 	toasts = { label = "Toasts", note = "Filled up, ran out, running low, sleeping bag.", state = "full", w = 360, h = 74,
 		default = { point = "BOTTOM", relPoint = "BOTTOM", x = 0, y = 150 } },

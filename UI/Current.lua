@@ -27,7 +27,7 @@ function Cur.Create(parent, w, h)
 	St.Color(f.kicker, St.GOLD)
 	f.name = Wg.Text(f, "name", nil, 15)
 	f.name:SetPoint("TOPLEFT", f.kicker, "BOTTOMLEFT", 0, -3)
-	f.bar = Wg.BubbleBar(f, C.chip - C.bar - 26, 11, 30)   -- the roster bars' width
+	f.bar = Wg.BubbleBar(f, C.chip - C.bar - 26, 13, 30)   -- the roster bars' width and height
 	f.bar:SetPoint("TOPLEFT", X + C.bar, -12)
 	f.left = Wg.Text(f, "small", nil, 13)
 	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -5)
@@ -69,16 +69,24 @@ function Cur.Update(f)
 		f.detail:SetText("")
 		return
 	end
+	-- Under the name: whether this character is banking rest right now, and what to do if not.
+	f.detail:SetText(resting and "Banking rest here" or "Not banking: log out in an inn")
+	-- The bar column: what is left (and the double-XP kills it buys), or, with nothing left, one plain line and no
+	-- empty track.
 	local used = (s.used or 0) / s.xpMax
-	if s.rested <= 0 then
-		f.left:SetText("|cffff6040No rested XP left|r")
-	else
-		f.left:SetText(("%.1f rested levels left"):format(math.floor(s.levels * 10 + 0.5) / 10))
-		St.Color(f.left, St.CREAM)
+	local none = s.levels < Wd.BANKED_MIN   -- under a twentieth of a level: nothing worth a bar
+	f.bar:SetShown(not none)
+	f.left:ClearAllPoints()
+	if none then
+		f.left:SetPoint("LEFT", f, "LEFT", X + Wg.COL.bar, 0)
+		f.left:SetText("No rested XP: kills give normal XP")
+		St.Color(f.left, St.SECOND)
+		return
 	end
-	-- Whole, never "0.0 of a level...": the kills left, then what this session used (dropped when there is no room).
-	local usedText = used >= 0.05 and ("used " .. Wd.Levels(used)) or "none used yet"
-	local kills = s.kills and ("~%d double-XP kill%s"):format(s.kills, s.kills == 1 and "" or "s")
-	f.detail:SetText(kills and (kills .. "  ·  " .. usedText) or (usedText:gsub("^%l", string.upper)))
-	if kills and f.detail:GetStringWidth() > f.detail:GetWidth() then f.detail:SetText(kills) end
+	f.left:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -7)
+	local parts = { Wd.Levels(s.levels) .. " left" }
+	if s.kills then parts[#parts + 1] = ("~%d double-XP kill%s"):format(s.kills, s.kills == 1 and "" or "s") end
+	if used >= 0.05 then parts[#parts + 1] = "used " .. Wd.Levels(used) end
+	f.left:SetText(table.concat(parts, "  ·  "))
+	St.Color(f.left, St.CREAM)
 end

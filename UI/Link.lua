@@ -1,7 +1,7 @@
 -- Rested Leveling: the inline "Link account..." field, no popup. Click the button and a name field opens in place;
 -- Enter (or Link) runs the same code as "/rlvl link <Full Name>", Esc (or Cancel) closes it. Once linked it says
--- where the pairing stands ("Linked to Le Bankken. Waiting for them to link you back ...", then "Paired with Le
--- Bankken, synced 5m ago") with an Unlink button. Used in the first-run guide and in the main window's footer.
+-- where the pairing stands ("Linked to Le Bankken. Waiting for them to link you back ...", then "Paired: Le
+-- Bankken · synced 5m ago") with an Unlink button. Used in the first-run guide and in the main window's footer.
 
 local _, ns = ...
 local St, Wg, Wd = ns.Style, ns.Widgets, ns.Words
@@ -21,7 +21,7 @@ end
 -- The room the field has (the footer gives some to the account filter when there is one).
 function Lk.SetWidth(f, w)
 	f:SetWidth(w)
-	f.status:SetWidth(w - 142)
+	f.status:SetWidth(w - (f.link and 92 or 142))   -- after Unlink (80) or Link account... (130), 12 px on
 end
 
 -- w: the room the field has; the status text wraps onto a second line when it needs to.

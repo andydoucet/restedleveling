@@ -82,10 +82,10 @@ function cases.link_button_opens_an_inline_field_and_links()
 	T.ok(link.unlink:IsShown() and not link.open:IsShown(), "Unlink offered")
 	-- The other account links back: its whisper hello confirms, and the state becomes "paired".
 	h.Fire("CHAT_MSG_ADDON", "RLVL1", "Hbbbbbb;00000000;#3;1", "WHISPER", "Le Bankken")
-	T.has(link.status:GetText(), "Paired with Le Bankken", "paired once they link back")
+	T.has(link.status:GetText(), "Paired: Le Bankken", "paired once they link back")
 	W.DB(h).sync.peers.bbbbbb.lastSync = W.NOW - 5 * 60
 	state.ns.Link.RefreshAll()
-	T.eq(main.roster.guide.link.status:GetText(), "Paired with Le Bankken, synced 5m ago", "and when it last synced")
+	T.eq(main.roster.guide.link.status:GetText(), "Paired: Le Bankken  ·  synced 5m ago", "and when it last synced")
 	FakeWoW.RunScript(link.unlink, "OnClick")
 	T.ok(not W.DB(h).sync.links["Le Bankken"], "Unlink removes it")
 	T.eq(link.status:GetText(), "No other account linked yet.", "back to no link")
@@ -228,7 +228,7 @@ function cases.hero_with_rest_names_the_current_character_in_first_hearth()
 	h.Slash("RESTEDLEVELING", "")
 	local hero = h.Env().RestedLevelingMain.hero
 	T.eq(hero.kicker:GetText(), "#1  ·  PLAY NEXT", "rest banked: play next")
-	T.eq(strip(hero.cta:GetText()), "First, take Le Nette to an inn (hearth). Then play Le Jette.", "hearth is about Le Nette")
+	T.eq(strip(hero.cta:GetText()), "First: hearth Le Nette to an inn. Then: play Le Jette.", "hearth is about Le Nette")
 	T.has(hero.why:GetText(), "Full in ", "real-life time to full")
 	T.clean(h)
 end

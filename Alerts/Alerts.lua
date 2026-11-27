@@ -102,7 +102,7 @@ function A.Banner()
 	if A.banner then return A.banner end
 	St.Ensure()
 	local f = CreateFrame("Frame", "RestedLevelingBanner", UIParent, "BackdropTemplate")
-	f:SetSize(470, 112)   -- wide enough to name the character on one line
+	f:SetSize(510, 112)   -- wide enough for the hearth line on one line
 	ns.Move.Apply(f, "banner")   -- top-centre (above the game's own logout countdown) unless moved
 	f:SetFrameStrata("DIALOG")
 	surface(f, "warn", "outside")
@@ -112,14 +112,14 @@ function A.Banner()
 	-- Two steps, then the alternative: "Move to cancel the logout." / "Then hearth or reach an inn..." / Or play next.
 	f.title = Wg.Text(f, "name", nil, 15)
 	f.title:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 12, 0)
-	f.title:SetWidth(330)
+	f.title:SetWidth(360)
 	f.text = Wg.Text(f, "name", nil, 14)
 	f.text:SetPoint("TOPLEFT", f.title, "BOTTOMLEFT", 0, -3)
-	f.text:SetWidth(320)
+	f.text:SetWidth(400)
 	St.Color(f.text, St.CREAM)
 	f.action = Wg.Text(f, "body", nil, 13)   -- the second step
 	f.action:SetPoint("TOPLEFT", f.text, "BOTTOMLEFT", 0, -3)
-	f.action:SetWidth(380)   -- the inn guidance on one line where it can be
+	f.action:SetWidth(420)   -- the inn guidance on one line where it can be
 	f.action:SetWordWrap(true)
 	St.Color(f.action, St.CREAM)   -- only "4x slower" is coloured
 	altLine(f)
@@ -150,9 +150,9 @@ function A.ShowBanner(title, text, state, action, alt, empty)
 	f.title:SetTextColor(0.94, 0.84, 0.55)
 	f.text:SetText(text)
 	f.text:SetWordWrap(true)
-	Wg.Balance(f.text, 380)   -- a long hearth name wraps evenly; the banner grows to fit
+	Wg.Balance(f.text, 420)   -- a long hearth name wraps evenly; the banner grows to fit
 	f.action:SetText(action or "")
-	Wg.Balance(f.action, 380)
+	Wg.Balance(f.action, 420)
 	f.action:SetShown(action ~= nil and action ~= "")
 	f.title:SetTextColor(0.98, 0.55, 0.15)   -- warning orange: the instruction reads before the explanation
 	setAlt(f, alt, empty)
@@ -268,7 +268,13 @@ local function chat(kind, text) if enabled(kind) then U.Print(text) end end
 A.STRIP_MIN, A.STRIP_MAX, A.STRIP_GAP = 420, 460, 12   -- 420: "Next: <name> · Full · 1.7 levels banked" fits whole
 function A.MenuStrip()
 	if A.strip or not GameMenuFrame then return A.strip end
-	local f = CreateFrame("Frame", "RestedLevelingMenuStrip", GameMenuFrame, "BackdropTemplate")
+	-- A top-level window like the banner and the toasts (so a host skin dresses all three alike), shown and hidden
+	-- with the Game Menu.
+	local f = CreateFrame("Frame", "RestedLevelingMenuStrip", UIParent, "BackdropTemplate")
+	f:SetFrameStrata("DIALOG")
+	f:Hide()
+	f.menu = GameMenuFrame
+	GameMenuFrame:HookScript("OnHide", function() f:Hide() end)
 	f:SetSize(A.STRIP_MAX, 112)   -- A.LayoutStrip sizes it from the menu on every show
 	surface(f, "toast", "outside")   -- a neutral panel: it must not read as another red menu button
 	local s = St.STATE.outside
@@ -311,7 +317,7 @@ function A.OnCamping()
 	if not enabled("logout") or not Ru.LogoutWarning(context()) then return end
 	local top, empty = nextUp()
 	local me = ns.Me()
-	A.ShowBanner("Cancel the logout first", ((me and me.full) or "This character") .. " is outside a rest area.", "outside",
+	A.ShowBanner("Cancel logout, then rest in an inn", ((me and me.full) or "This character") .. " is outside a rest area.", "outside",
 		A.HearthLine(me), top, empty)
 	pcall(PlaySound, SOUNDKIT.RAID_WARNING)
 	chat("logout", "|cffff5a45logging out outside a rested area.|r Move to cancel, then find an inn or a city.")
@@ -335,7 +341,7 @@ end
 -- Sized from the menu (a little wider than it, within min/max) and hung under its bottom edge with a gap, never over
 -- it; the text block, then the next-character row, decide the height.
 function A.LayoutStrip(f)
-	local menu = f:GetParent()
+	local menu = f.menu
 	local mw = menu and menu.GetWidth and menu:GetWidth() or 0
 	f:SetWidth(math.max(A.STRIP_MIN, math.min(A.STRIP_MAX, math.floor(mw * 1.6))))
 	if not ns.Move.Apply(f, "menu") then   -- attached (the default) unless it was moved

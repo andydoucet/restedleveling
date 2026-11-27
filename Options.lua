@@ -58,7 +58,11 @@ end
 function O.ShowLow(sl)
 	local pct = ns.DB().opts.lowPct
 	sl.value:SetText(O.LowText(pct))
-	sl.fill:SetWidth(math.max(1, (sl:GetWidth() - 2) * (pct - ns.LOW_MIN) / (ns.LOW_MAX - ns.LOW_MIN)))
+	local w = math.max(1, (sl:GetWidth() - 2) * (pct - ns.LOW_MIN) / (ns.LOW_MAX - ns.LOW_MIN))
+	sl.fill:SetWidth(w)
+	sl.knob:ClearAllPoints()
+	sl.knob:SetPoint("CENTER", sl, "LEFT", 1 + w, 0)
+	if O.panel and O.panel.lowLabel then O.panel.lowLabel:SetText(("LOW REST WARNING  ·  %d%%"):format(pct)) end
 end
 function O.LowText(pct) return ("Warn when under %d%% of a full bar is left"):format(pct) end
 
@@ -71,30 +75,46 @@ end
 
 local STYLES = { { "auto", "Auto (ElvUI when loaded)" }, { "default", "Default" }, { "elvui", "ElvUI" } }
 
+-- The page's text roles: gold section headings, cream settings, softer helper lines (no yellow paragraphs).
+local function heading(p, text, x, y)
+	local h = Wg.Text(p, "label", nil, 12)
+	h:SetPoint("TOPLEFT", x, y)
+	h:SetText(text)
+	St.Color(h, St.GOLD)
+	return h
+end
+local function words(parent, text, size, color)
+	local t = Wg.Text(parent, size and size < 12 and "small" or "body", nil, size or 12)
+	t:SetText(text)
+	St.Color(t, color or St.CREAM)
+	return t
+end
+
 function O.Panel()
 	if O.panel then return O.panel end
 	St.Ensure()
 	local p = CreateFrame("Frame", "RestedLevelingOptions")
 	p.name = "Rested Leveling"
+	p.bg = p:CreateTexture(nil, "BACKGROUND")   -- our own near-black panel, like the roster's wells, in both themes
+	St.Paint(p.bg, "sw_host_well")
+	p.bg:SetAllPoints()
 	local title = Wg.Text(p, "title", nil, 20)
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetText("Rested Leveling")
 	title:SetTextColor(St.GOLD.r, St.GOLD.g, St.GOLD.b)
-	local sub = Wg.Text(p, "small", nil, 11)
+	local sub = words(p, "Never level unrested. /rlvl opens the roster, /rlvl help lists commands.", 12, St.SECOND)
 	sub:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -4)
-	sub:SetText("Never level unrested. /rlvl opens the roster, /rlvl help lists commands.")
 	local y = -64
-	local styleLabel = Wg.Text(p, "label", nil, 11)
-	styleLabel:SetPoint("TOPLEFT", 16, y)
-	styleLabel:SetText("STYLE (takes effect after /reload)")
+	heading(p, "APPEARANCE  (style applies after /reload)", 16, y)
 	y = y - 20
 	p.styleButtons = {}
-	for i, s in ipairs(STYLES) do
+	local x = 16
+	for i, s in ipairs(STYLES) do   -- one 24 px gap between choices
 		local b = CreateFrame("CheckButton", nil, p, "UIRadioButtonTemplate")
-		b:SetPoint("TOPLEFT", 16 + (i - 1) * 190, y)
-		local t = Wg.Text(b, "body", nil, 12)
+		b:SetPoint("TOPLEFT", x, y)
+		local t = words(b, s[2])
 		t:SetPoint("LEFT", b, "RIGHT", 4, 0)
-		t:SetText(s[2])
+		x = x + 20 + t:GetStringWidth() + 24
 		b:SetScript("OnClick", function()
 			ns.DB().opts.style = s[1]
 			for _, o in ipairs(p.styleButtons) do o:SetChecked(o == b) end
@@ -104,15 +124,11 @@ function O.Panel()
 	end
 	y = y - 38
 	-- Show accounts: radio buttons, rebuilt on show (accounts come and go with links).
-	local accLabel = Wg.Text(p, "label", nil, 11)
-	accLabel:SetPoint("TOPLEFT", 16, y)
-	accLabel:SetText("SHOW ACCOUNTS")
+	heading(p, "ACCOUNTS", 16, y)
 	p.accButtons = {}
 	p.accY = y - 20
 	-- Low-rest warning threshold: a slider, 5 to 50%.
-	local lowLabel = Wg.Text(p, "label", nil, 11)
-	lowLabel:SetPoint("TOPLEFT", 380, y)
-	lowLabel:SetText("LOW REST WARNING")
+	p.lowLabel = heading(p, "LOW REST WARNING", 380, y)
 	local sl = CreateFrame("Slider", nil, p, "BackdropTemplate")
 	sl:SetOrientation("HORIZONTAL")
 	sl:SetSize(200, 14)
@@ -128,6 +144,9 @@ function O.Panel()
 	sl.fill:SetColorTexture(0.84, 0.66, 0.30, 0.85)
 	sl.fill:SetPoint("TOPLEFT", 1, -1)
 	sl.fill:SetPoint("BOTTOMLEFT", 1, 1)
+	sl.knob = sl.over:CreateTexture(nil, "OVERLAY", nil, 1)   -- a visible thumb at the value, on any skin
+	sl.knob:SetColorTexture(0.98, 0.88, 0.60, 1)
+	sl.knob:SetSize(6, 20)
 	for i, v in ipairs({ ns.LOW_MIN, ns.LOW_MAX }) do
 		local e = Wg.Text(p, "small", nil, 12)
 		e:SetPoint(i == 1 and "RIGHT" or "LEFT", sl, i == 1 and "LEFT" or "RIGHT", i == 1 and -6 or 6, 0)
@@ -142,38 +161,33 @@ function O.Panel()
 		O.ShowLow(self)
 	end)
 	p.low = sl
-	y = y - 72
+	y = y - 66
 	-- Where the notifications show: a button into move mode (the same as /rlvl move).
-	local mvLabel = Wg.Text(p, "label", nil, 11)
-	mvLabel:SetPoint("TOPLEFT", 16, y)
-	mvLabel:SetText("NOTIFICATIONS")
+	heading(p, "NOTIFICATIONS", 16, y)
 	p.move = St.MakeButton(p, 170, "Move notifications", false, 24)
 	p.move:SetPoint("TOPLEFT", 16, y - 20)
 	p.move:SetScript("OnClick", function()
 		if ns.Move.Start() and SettingsPanel and SettingsPanel.IsShown and SettingsPanel:IsShown() then HideUIPanel(SettingsPanel) end
 	end)
-	local mvText = Wg.Text(p, "small", nil, 12)
+	local mvText = words(p, "Drag the logout warning, the toasts and the Esc menu card where you want them.", 12, St.SECOND)
 	mvText:SetPoint("LEFT", p.move, "RIGHT", 12, 0)
-	mvText:SetText("Drag the logout warning, the toasts and the Esc menu card where you want them.")
-	St.Color(mvText, St.SECOND)
-	y = y - 52
+	y = y - 50
+	heading(p, "WINDOW AND DISPLAY", 16, y)
+	y = y - 20
 	p.checks = {}
 	local col, alerts = 0, false
 	for _, sw in ipairs(O.SWITCHES) do
 		if sw.key:find("^alert_") and not alerts then   -- the alert kinds: their own heading, two columns
 			alerts = true
-			local h = Wg.Text(p, "label", nil, 11)
-			h:SetPoint("TOPLEFT", 16, y - 6)
-			h:SetText("ALERTS")
-			y = y - 26
+			heading(p, "ALERTS", 16, y - 8)
+			y = y - 28
 		end
 		local cb = CreateFrame("CheckButton", nil, p, "UICheckButtonTemplate")
 		cb:SetSize(24, 24)
 		cb:SetPoint("TOPLEFT", 16 + col * 300, y)
 		St.Check(cb)
-		local t = Wg.Text(cb, "body", nil, 12)
+		local t = words(cb, sw.label)
 		t:SetPoint("LEFT", cb, "RIGHT", 4, 0)
-		t:SetText(sw.label)
 		cb:SetScript("OnClick", function(self) apply(sw, self:GetChecked()) end)
 		cb.sw = sw
 		p.checks[#p.checks + 1] = cb
@@ -181,12 +195,12 @@ function O.Panel()
 		if col == 0 then y = y - 24 end
 	end
 	if col == 1 then y = y - 24 end
-	local about = Wg.Text(p, "small", nil, 11)
-	about:SetPoint("TOPLEFT", 16, y - 10)
+	local about = words(p, "", 11, St.MUTED)
+	about:SetPoint("TOPLEFT", 16, y - 12)
 	about:SetWidth(600)   -- the canvas has no width of its own when this runs: wrap at a fixed measure
 	about:SetWordWrap(true)
-	about:SetText("|cffffd100About|r  " .. O.CREDITS .. "\nGPL-3.0. Cross-account sync uses hidden addon messages only, between your "
-		.. "own clients on the same realm and faction.")
+	about:SetText("|cffd6b56bAbout|r  Builds on Rested Watch by doc_biddle (GPL-3.0). Thank you. Sync uses hidden addon "
+		.. "messages between your own clients only.")
 	p:SetScript("OnShow", function() O.RefreshPanel(p) end)
 	O.panel = p
 	if Settings and Settings.RegisterCanvasLayoutCategory then
@@ -207,7 +221,7 @@ function O.RefreshPanel(p)
 		local b = p.accButtons[i]
 		if not b then
 			b = CreateFrame("CheckButton", nil, p, "UIRadioButtonTemplate")
-			b.text = Wg.Text(b, "body", nil, 12)
+			b.text = words(b, "")
 			b.text:SetPoint("LEFT", b, "RIGHT", 4, 0)
 			b:SetScript("OnClick", function(self) O.SetAccounts(self.value); O.RefreshPanel(p) end)
 			p.accButtons[i] = b

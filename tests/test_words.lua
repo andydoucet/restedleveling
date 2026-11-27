@@ -47,7 +47,7 @@ end
 function cases.hero_line_is_the_state_then_the_real_time_to_full()
 	local Wd = load().Words
 	T.eq(Wd.HeroWhy(row("full", { pct = 1, levels = 1.5, left = 0, fullSince = NOW - 2 * D - 4 * H }), NOW, utc),
-		"Fully rested. Full for 2d 4h.", "full")
+		"Full since 2d 4h ago: rest is going to waste.", "full")
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 2 * H, utc),
 		"Resting. Full in 6h 20m (tomorrow 00:20).", "resting")   -- 18:00 + 6h 20m crosses midnight: says which day
 	T.eq(Wd.HeroWhy(row("resting", { pct = 0.5, levels = 0.75, left = 6 * H + 20 * 60 }), NOW - 8 * H, utc),
@@ -103,8 +103,8 @@ end
 
 function cases.action_line_only_says_hearth_about_the_character_you_are_on()
 	local Wd = load().Words
-	T.eq(Wd.Action("Le Jette", "Le Nette", false, false), "First, take Le Nette to an inn (hearth). Then play Le Jette.", "outside")
-	T.eq(Wd.Action("Le Jette", "Le Nette", true, false), "Next, log Le Nette out here. Then play Le Jette.", "resting")
+	T.eq(Wd.Action("Le Jette", "Le Nette", false, false), "First: hearth Le Nette to an inn. Then: play Le Jette.", "outside")
+	T.eq(Wd.Action("Le Jette", "Le Nette", true, false), "First: log Le Nette out here. Then: play Le Jette.", "resting")
 	T.eq(Wd.Action("Le Jette", "Le Nette", false, true), "Nobody to switch to yet. When you stop, log Le Nette out in an inn.", "empty, outside")
 	T.eq(Wd.Action("Le Jette", "Le Nette", true, true), "Nobody to switch to yet. Keep playing Le Nette; it rests here too.", "empty, resting")
 	T.lacks(Wd.Action("Le Jette", "Le Nette", false, true), "play Le Jette", "nobody to send you to")
@@ -124,8 +124,8 @@ function cases.link_line_for_each_pairing_state()
 	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = false }, "Le Nette", NOW),
 		"Linked to Le Bankken. Waiting for them to link you back (/rlvl link Le Nette on that account).", "waiting")
 	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true, lastSync = NOW - 5 * 60 }, "Le Nette", NOW),
-		"Paired with Le Bankken, synced 5m ago", "paired")
-	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true }, "Le Nette", NOW), "Paired with Le Bankken, not synced yet", "paired, no data yet")
+		"Paired: Le Bankken  ·  synced 5m ago", "paired")
+	T.eq(Wd.LinkLine({ name = "Le Bankken", confirmed = true }, "Le Nette", NOW), "Paired: Le Bankken  ·  not synced yet", "paired, no data yet")
 end
 
 function cases.rows_show_the_real_time_to_full_even_outside()

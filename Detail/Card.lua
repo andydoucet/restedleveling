@@ -38,12 +38,11 @@ local ICONS = {
 	["Rest bonus"] = "Interface\\Icons\\Spell_Nature_Sleep", ["Time at full"] = "Interface\\Icons\\INV_Misc_PocketWatch_02",
 }
 
-local function drift(parent, text, x, delay)
+local function drift(parent, text, delay)
 	local z = parent:CreateFontString(nil, "OVERLAY")
-	St.Font(z, "hero", 12)
+	St.Font(z, "hero", 14)
 	z:SetText(text)
-	z:SetTextColor(0.77, 0.72, 0.60)
-	z:SetPoint("BOTTOM", parent, "BOTTOM", x, 236)
+	z:SetTextColor(0.96, 0.94, 0.90)
 	local g = z:CreateAnimationGroup()
 	g:SetLooping("REPEAT")
 	local mv = g:CreateAnimation("Translation")
@@ -90,7 +89,7 @@ local function makeStage(f)
 	s.shade:SetPoint("BOTTOMLEFT", 3, 3)
 	s.shade:SetPoint("BOTTOMRIGHT", -3, 3)
 	s.shade:SetHeight(110)
-	s.zs = { drift(s, "z", 150, 0), drift(s, "z", 162, 1.1), drift(s, "Z", 174, 2.2) }   -- just above the head
+	s.zs = { drift(s, "z", 0), drift(s, "z", 1.1), drift(s, "Z", 2.2) }   -- placed over the disc below
 	-- The live model: the logged-in character only, in the figure column from the top of the stage down to just
 	-- above the name plate (the frame clips the model: waist up, head in the upper middle).
 	s.model = CreateFrame("PlayerModel", nil, s)
@@ -109,6 +108,10 @@ local function makeStage(f)
 	s.pedestal:SetPoint("BOTTOM", FIG_X, 76)
 	s.figure = Wg.Portrait(s, DISC)
 	s.figure:SetPoint("BOTTOM", FIG_X, 78)
+	for i, z in ipairs(s.zs) do   -- the sleep cluster belongs to the sleeper: just over the disc's top right
+		z:ClearAllPoints()
+		z:SetPoint("BOTTOMLEFT", s.figure, "TOPRIGHT", -34 + i * 9, -14 + i * 5)
+	end
 	s.note = Wg.Text(s, "small", "OVERLAY", 12)   -- beside the crest, under the bubble: why there is no face
 	s.note:SetPoint("BOTTOMRIGHT", s.figure, "BOTTOMLEFT", -20, 8)
 	s.note:SetWidth(160)
@@ -451,7 +454,10 @@ function Card.Show(key)
 	s.note:SetShown(not modelShown)
 	s.pedestal:SetShown(false)   -- no rule under the portrait
 	if not modelShown then
-		Wg.SetPortrait(s.figure, c, false, state)   -- the saved look, or the class crest with the race emblem
+		-- The saved look, or the class crest with the race emblem. Only the crest needs a note (why there is no face);
+		-- under a face it would repeat the meta line.
+		local kind = Wg.SetPortrait(s.figure, c, false, state)
+		s.note:SetShown(kind ~= "look")
 		s.note:SetText(Card.OfflineNote(c))
 		Wg.Balance(s.note, 160)   -- no "them." alone on the last line
 		St.Paint(s.lvl, host and "disc_dark" or "disc_gold")   -- under ElvUI a restrained dark disc, not a gold medallion
