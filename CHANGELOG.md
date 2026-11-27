@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+v1.1 (ILL-1272), sync:
+
+- Once two accounts are paired, logging in on one while the other is online syncs both ways at once: the online
+  client answers the login hello, so the newcomer sends its roster too (before, it waited for the 15-minute ticker
+  unless the two shared a guild or group).
+- A long roster no longer fails to arrive: the half-received buffer expires 60 s after its last chunk, not its first.
+- /rlvl unlink frees that account's peer slot (at most 8), so a new account can pair later.
+- A sender's "-Realm" is kept when it is not our realm, so a same-named character on another realm never matches a
+  link (Forever reports no realm, so nothing changes there).
+
 Fixes from the first in-game run (ILL-1274):
 
 - Button labels stay readable on hover (every button and the close cross): the label draws above the hover face.

@@ -26,6 +26,7 @@ local queue, tokens, lastRefill = {}, S.BURST, nil
 local buffers = {}       -- the one partial roster in flight per sender
 local hinted = {}        -- senders told how to pair, this session
 local replied = {}       -- sender -> time of our last confirming hello
+local echoed = {}        -- linked name -> time we last whispered it a hello (Announce, or an echo to a peer's hello)
 local recentWhisper = {} -- names whispered recently, to hide "player not found" for offline ones
 local sentTo = {}        -- peer name -> { digest, t }
 local msgSeq = 0
@@ -42,12 +43,24 @@ end
 local function count(t) local n = 0 for _ in pairs(t) do n = n + 1 end return n end
 
 -- A character name as typed or as the game reports a sender: trimmed, inner spaces collapsed ("Le  Bankken" ->
--- "Le Bankken": Forever names have a surname), any "-Realm" dropped. S.NameKey is its lower-case form; every link,
+-- "Le Bankken": Forever names have a surname). A "-Realm" suffix is dropped when it is our own realm (or ours cannot
+-- be read) and kept when it names another realm, so a same-named character elsewhere never matches a link. Forever
+-- reports senders without a realm, so there this changes nothing. S.NameKey is its lower-case form; every link,
 -- confirm and per-sender table is compared through it.
+local function ownRealm()
+	local r = U.Str(U.Call(GetNormalizedRealmName))
+	return r and r:gsub("[%s%-]", ""):lower()
+end
 function S.CleanName(name)
 	if type(name) ~= "string" then return nil end
-	name = name:gsub("%-.*$", ""):gsub("%s+", " "):match("^%s*(.-)%s*$")
-	return name ~= "" and name or nil
+	local base, realm = name:match("^([^%-]*)%-(.*)$")
+	name = base or name
+	realm = realm and realm:gsub("[%s%-]", "")
+	local mine = realm and realm ~= "" and ownRealm()
+	name = name:gsub("%s+", " "):match("^%s*(.-)%s*$")
+	if name == "" then return nil end
+	if mine and realm:lower() ~= mine then name = name .. "-" .. realm end
+	return name
 end
 function S.NameKey(name)
 	local n = S.CleanName(name)
@@ -123,7 +136,10 @@ function S.Announce()
 	if U.Call(IsInRaid) then enqueue(msg, "RAID") elseif U.Call(IsInGroup) then enqueue(msg, "PARTY") end
 	local n = 0
 	for name in pairs(s.links) do
-		if n < S.MAX_WHISPERS then enqueue(hello(name), "WHISPER", name); n = n + 1 end
+		if n < S.MAX_WHISPERS then
+			enqueue(hello(name), "WHISPER", name); n = n + 1
+			echoed[S.NameKey(name)] = time()
+		end
 	end
 	S.Pump()
 end
@@ -162,7 +178,13 @@ local function onHello(body, sender, channel)
 	if peer.label and not d.accountLabels[account] then d.accountLabels[account] = peer.label end
 	if newly then
 		enqueue(hello(sender), "WHISPER", sender)   -- confirm back once, so they send theirs too
+		echoed[key] = time()
 		ns.Fire("LINK_CHANGED")
+	elseif not echoed[key] or time() - echoed[key] > S.RESEND then
+		-- A confirmed peer just logged in and said hello: say hello back, so it compares digests and sends its roster
+		-- now rather than on its next 15-minute announce. Bounded: the hello we answer with is not answered again.
+		echoed[key] = time()
+		enqueue(hello(sender), "WHISPER", sender)
 	end
 	if newly or digest ~= C.Digest(d.chars) then sendRoster(sender) end
 	S.Pump()
@@ -179,12 +201,15 @@ local function onData(body, sender)
 	local b = buffers[key]   -- one roster in flight per sender; a new id replaces it
 	if not b or b.id ~= id or b.total ~= total then
 		if not b and count(buffers) >= S.MAX_BUFFERS then return end
-		b = { id = id, total = total, got = 0, parts = {} }
+		b = { id = id, total = total, got = 0, parts = {}, stamp = 0 }
 		buffers[key] = b
-		C_Timer.After(60, function() if buffers[key] == b then buffers[key] = nil end end)
 	end
 	if b.parts[seq] then return end
 	b.parts[seq], b.got = data, b.got + 1
+	-- Expire a roster 60 s after its LAST chunk (a long roster at 1.2 s a chunk takes longer than 60 s in all).
+	b.stamp = b.stamp + 1
+	local stamp = b.stamp
+	C_Timer.After(60, function() if buffers[key] == b and b.stamp == stamp then buffers[key] = nil end end)
 	if b.got < total then return end
 	buffers[key] = nil
 	local payload = table.concat(b.parts, "", 1, total)
@@ -283,7 +308,12 @@ ns.slash.unlink = function(arg)
 	local name, s = S.CleanName(arg), sync()
 	local stored = name and linked(name)
 	if not stored then U.Print("not linked: " .. tostring(name)) return end
+	local account = s.confirmed[S.NameKey(name)]
 	s.links[stored], s.confirmed[S.NameKey(name)] = nil, nil
+	-- Free the peer slot too (at most 8), unless another link still confirms that account. Its characters stay.
+	local still = false
+	for _, a in pairs(s.confirmed) do if a == account then still = true end end
+	if account and not still then s.peers[account] = nil end
 	U.Print("unlinked " .. stored .. ".")
 	ns.Fire("LINK_CHANGED")
 end

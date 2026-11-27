@@ -37,6 +37,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GetMaxLevelForPlayerExpansion` | doc | doc | yes |
 | global | `GetMaxPlayerLevel` | doc | used |  |
 | global | `GetMoney` | doc | used |  |
+| global | `GetNormalizedRealmName` | doc | doc |  |
 | global | `GetPhysicalScreenSize` | doc | used | yes |
 | global | `GetRealZoneText` | doc | doc |  |
 | global | `GetRealmName` | doc | doc |  |
