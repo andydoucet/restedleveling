@@ -198,7 +198,8 @@ function Main.Refresh()
 	ns.Roster.Update(f.roster, list, now, (hero and hero == rows[1]) and 2 or 1)
 	-- Fit the window to the roster: between 3 and 9 rows tall (the first-run guide needs about 4).
 	local shown = math.max(3, math.min(Main.VISIBLE, #list))
-	local listH = #list == 0 and (f.roster.guide:GetHeight() + 16) or shown * ns.Roster.ROW_H
+	local listH = #list == 0 and (f.roster.guide:IsShown() and (f.roster.guide:GetHeight() + 16) or ns.Roster.ROW_H)
+		or shown * ns.Roster.ROW_H
 	f.list:SetHeight(listH + 8)
 	f:SetHeight(chromeH(f, listH))
 	local n = { full = 0, near = 0, resting = 0, outside = 0 }

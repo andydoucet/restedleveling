@@ -144,4 +144,18 @@ function cases.alerts_ignore_the_view_filter()
 	T.clean(h)
 end
 
+-- Review round 2 (ILL-1272): a filter that leaves nobody in the list says so in one line, not the first-run guide.
+function cases.a_filter_that_leaves_nobody_says_so()
+	local h, state = world()
+	local ns = state.ns
+	W.DB(h).chars["N:Le Dette@?"] = nil   -- this account keeps only Le Nette (the hero), so the list under it is empty
+	ns.Options.SetAccounts("mine")
+	h.Slash("RESTEDLEVELING", "")
+	local roster = ns.Main.frame.roster
+	T.ok(not roster.guide:IsShown(), "no GETTING STARTED guide")
+	T.ok(roster.none:IsShown(), "one line instead")
+	T.has(roster.none:GetText(), "No other characters on this account", "naming the filter")
+	T.clean(h)
+end
+
 return cases
