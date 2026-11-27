@@ -8,9 +8,11 @@ local function alt(full, levels, ago, resting)
 		rested = math.floor(levels * 10000), resting = resting, restKind = resting and "inn" or "outside", t = W.NOW - ago }
 end
 
--- A minimal ElvUI whose Skins module accepts every S:Handle* call.
-local function elvui()
-	local S = setmetatable({}, { __index = function() return function() end end })
+-- A minimal ElvUI whose Skins module accepts every S:Handle* call (failing: those named in it raise an error).
+local function elvui(failing)
+	local S = setmetatable({}, { __index = function(_, method)
+		return function() if failing and failing[method] then error("skin failed") end end
+	end })
 	local E = { media = {} }
 	function E:GetModule(name) if name == "Skins" then return S end end
 	return { E }
@@ -20,14 +22,14 @@ local cases = {}
 
 -- opts: saved options; version: the saved data's version; withElvUI: ElvUI loaded; positions: saved positions.
 -- LibDBIcon is loaded from the TOC; its Show / Hide are recorded (in `minimap`, in order) before our login work runs.
-local function stubbedWorld(opts, version, withElvUI, positions)
+local function stubbedWorld(opts, version, withElvUI, positions, failing)
 	local saved = { version = version, opts = opts or {}, positions = positions, chars = {
 		["N:Le Nette@?"] = alt("Le Nette", 1.5, 2 * D, true),
 		["N:Le Dette@?"] = alt("Le Dette", 0.5, D, true),
 	} }
 	local minimap = {}
 	local state = { saved = saved, noLogin = true, setup = function(game, h)
-		if withElvUI then rawset(h.Env(), "ElvUI", elvui()) end
+		if withElvUI then rawset(h.Env(), "ElvUI", elvui(failing)) end
 		game.UISpecialFrames = {}
 		game.GameTooltip = game.CreateFrame("GameTooltip", "GameTooltip")
 		game.SetPortraitTexture = function() end
@@ -130,10 +132,42 @@ function cases.compact_bar_has_the_same_controls()
 	FakeWoW.RunScript(c.rlClose, "OnClick")
 	T.ok(not c:IsShown(), "X hides the bar")
 	T.ok(W.DB(h).opts.compact, "compact mode stays on")
-	c:Show()
+	h.Slash("RESTEDLEVELING", "")
+	T.ok(c:IsShown() and not env.RestedLevelingMain:IsShown(), "/rlvl in compact mode brings the bar back")
+	local feed = env.LibStub("LibDataBroker-1.1"):GetDataObjectByName("RestedLeveling")
+	feed.OnClick(nil, "LeftButton")
+	T.ok(not c:IsShown() and W.DB(h).opts.compact, "a minimap left-click hides it again, still compact")
+	feed.OnClick(nil, "LeftButton")
+	T.ok(c:IsShown() and not env.RestedLevelingMain:IsShown(), "and shows it")
 	FakeWoW.RunScript(c.compactBtn, "OnClick")
 	T.ok(env.RestedLevelingMain:IsShown() and not c:IsShown(), "chevron down: the full window")
 	T.ok(not W.DB(h).opts.compact, "compact mode off")
+	T.clean(h)
+end
+
+-- Under ElvUI the three are one visual size: 22 px squares, the X's 30 px button with its plate inset 4.
+function cases.elvui_title_buttons_are_one_size()
+	local h = stubbedWorld(nil, nil, true)
+	h.Slash("RESTEDLEVELING", "")
+	local m = h.Env().RestedLevelingMain
+	T.eq(m.rlClose:GetHeight() - 2 * m.rlClose.rlInset, 22, "the X's plate: 22 px")
+	T.eq(m.cogBtn:GetWidth() .. "x" .. m.cogBtn:GetHeight(), "22x22", "cog square")
+	T.eq(m.compactBtn:GetWidth() .. "x" .. m.compactBtn:GetHeight(), "22x22", "chevron square")
+	T.clean(h)
+end
+
+-- A skin call that throws part way: the half-skinned button is dropped (hidden, unparented), ours takes its place.
+function cases.a_failing_skin_call_leaves_no_half_skinned_button()
+	local h = stubbedWorld(nil, nil, true, nil, { HandleNextPrevButton = true })
+	h.Slash("RESTEDLEVELING", "")
+	local m = h.Env().RestedLevelingMain
+	T.ok(m.cogBtn.hl and m.compactBtn.hl, "our own bronze buttons instead")
+	T.ok(m.cogBtn:GetParent() == m and m.cogBtn:IsShown(), "on the title bar")
+	local dropped = 0
+	for _, f in ipairs(h.Frames()) do
+		if f.__kind == "Button" and f:GetParent() == nil and not f:IsShown() then dropped = dropped + 1 end
+	end
+	T.ok(dropped >= 2, "the failed chevron and cog are hidden and unparented")
 	T.clean(h)
 end
 

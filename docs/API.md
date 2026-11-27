@@ -218,6 +218,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | method | `SetOffset` | doc | doc |  |
 | method | `SetOrder` | doc | doc |  |
 | method | `SetOrientation` | doc | doc |  |
+| method | `SetParent` | doc | doc |  |
 | method | `SetPoint` | doc | doc |  |
 | method | `SetPortraitZoom` | doc | doc |  |
 | method | `SetPropagateKeyboardInput` | doc | doc |  |

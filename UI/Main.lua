@@ -268,9 +268,14 @@ function Main.Refresh()
 	f.greyLabel:SetShown(#rows > 0)
 end
 
+-- /rlvl and the minimap button's left-click: the window, or in compact mode the compact bar (its chevron expands).
 function ns.ToggleMain()
+	if ns.Compact and ns.DB().opts.compact then
+		local c = ns.Compact.Create()
+		if c:IsShown() then c:Hide() else ns.Compact.Toggle(true) end   -- hidden, not left: compact mode stays on
+		return
+	end
 	local f = Main.Create()
-	if ns.Compact and ns.DB().opts.compact then ns.Compact.Toggle(false) end
 	f:SetShown(not f:IsShown())
 end
 

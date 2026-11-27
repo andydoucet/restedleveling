@@ -113,10 +113,10 @@ end
 
 -- Window icon buttons (ILL-1299) through ElvUI's own skin calls, so a skin on top (WC3: a red enamel X in an iron
 -- bezel, small forged-iron squares with cream glyphs) dresses them like its own: X is S:HandleCloseButton (ElvUI's
--- Close glyph, 26 px, whose plate a skin insets 4 px), the chevron is S:HandleNextPrevButton (ElvUI's ArrowUp, turned
+-- Close glyph, 30 px, whose plate a skin insets 4 px), the chevron is S:HandleNextPrevButton (ElvUI's ArrowUp, turned
 -- for down) and the cog the same small icon button with our cog glyph (ElvUI has none). rlInset: how far inside the
 -- button's rect its visible plate starts (spacing is measured between plates). Own-frame mode: our bronze family.
-X.ICON = 18   -- the chevron and cog squares; the X's plate inside its 26 px button matches them
+X.ICON, X.CLOSE = 22, 30   -- the chevron and cog squares; the X's plate (inset 4 in its 30 px button) matches them
 local ARROW = { chevron_up = "up", chevron_down = "down" }
 local function setGlyph(b, glyph)
 	b.glyph = glyph
@@ -127,8 +127,8 @@ local function setGlyph(b, glyph)
 		if glyph == "cog" then   -- our cog fills its texture; ElvUI's arrow has padding: inset it to match
 			t:SetTexture(St.MEDIA .. "cog")
 			t:ClearAllPoints()
-			t:SetPoint("TOPLEFT", 3, -3)
-			t:SetPoint("BOTTOMRIGHT", -3, 3)
+			t:SetPoint("TOPLEFT", 4, -4)   -- a 14 px cog in the 22 px square
+			t:SetPoint("BOTTOMRIGHT", -4, 4)
 		end
 		t:SetRotation(rot)
 	end
@@ -137,13 +137,15 @@ function X.MakeIconButton(parent, glyph, size)
 	if X.Own() then return St.backends.default.MakeIconButton(parent, glyph, size) end
 	if glyph == "close" then
 		local b = X.MakeClose(parent)
-		b:SetSize(26, 26)
+		b:SetSize(X.CLOSE, X.CLOSE)
 		b.rlInset = 4
 		return b
 	end
 	local b = CreateFrame("Button", nil, parent)
 	b:SetSize(X.ICON, X.ICON)
 	if not handle("HandleNextPrevButton", b, ARROW[glyph] or "up", nil, false, nil, nil, X.ICON) then
+		b:Hide()   -- the skin call failed part way: drop the half-skinned button, use our own
+		b:SetParent(nil)
 		return St.backends.default.MakeIconButton(parent, glyph, size)
 	end
 	b.SetGlyph = setGlyph

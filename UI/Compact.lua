@@ -1,7 +1,7 @@
 -- Rested Leveling: compact mode. One line of coloured state pips (best to play first, left to right) plus the
 -- play-next name; hover a pip for that character, click it for the card, click the icon to open the full window.
--- On the right the window's own controls: the chevron (expand), the cog (settings) and X (hides the bar until the
--- next /rlvl or minimap click; compact mode stays on).
+-- On the right the window's own controls: the chevron (expand: the full window, compact mode off), the cog
+-- (settings) and X (hides the bar; compact mode stays on, so /rlvl or a minimap left-click brings the bar back).
 
 local _, ns = ...
 local St, Wg, Wd = ns.Style, ns.Widgets, ns.Words

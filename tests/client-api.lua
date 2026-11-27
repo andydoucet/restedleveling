@@ -199,6 +199,7 @@ return {
 		["SetOffset"] = true,
 		["SetOrder"] = true,
 		["SetOrientation"] = true,
+		["SetParent"] = true,
 		["SetPoint"] = true,
 		["SetPortraitZoom"] = true,
 		["SetPropagateKeyboardInput"] = true,

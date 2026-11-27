@@ -12,7 +12,8 @@ v1.3 (ILL-1299), icon and title bar:
   version 3 (the old "even with ElvUI" flag is dropped).
 - The title bar's top right is now chevron, cog and X: the chevron (up) goes to compact mode, the cog opens the
   settings (right-click it to unlock or lock the notifications), X closes. The compact bar has the same three, with
-  the chevron pointing down to expand; its X hides the bar until the next /rlvl or minimap click. Under ElvUI they go
+  the chevron pointing down to expand. While compact mode is on, /rlvl and a minimap left-click show or hide the
+  compact bar (its X hides it too); the chevron is the way back to the full window. Under ElvUI they go
   through ElvUI's own close and arrow-button skins, so a skin such as WC3 dresses them as its own.
 - The roster tip stays on screen when it opens by a minimap button in the top-right corner.
 
