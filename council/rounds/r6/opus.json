@@ -1,4 +1,69 @@
 {
-  "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 189 (char 188)",
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 8,
+    "alerts_ux": 8,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 8
+  },
+  "changes": {
+    "visual_appeal": [
+      "Hero band: the green bar (about 545x18 px) is the loudest object in the window and pulls the eye away from the name. Drop its height to 12 px. Drop the segment tick alpha to about 0.25 so it reads as a fill, not a ruler.",
+      "The hero art behind Le Dette fades to flat black on the right half (default theme). Extend the art or its vignette across the full 735 px width so the 1.5 figure sits on texture, not a void.",
+      "Warm the inner well one step in WC3 mode (about #1E1812 instead of the current #17130F). It still reads slightly cold next to the wood at 1:1."
+    ],
+    "play_next_clarity": [
+      "The lit step-2 pill (#5A5040-ish khaki flat fill) reads like a disabled button. Give it a 1 px #C9A24A border and a slightly lighter interior (#3A3020). Make Le Dette 14 px bold so the lit step clearly outranks step 1.",
+      "Step 1's number badge (dim gold disc) and step 2's badge look identical in weight. Desaturate step 1's disc to #6E6250 so the sequence reads 'do this, then THIS'.",
+      "Move 'More rest is wasted.' onto the same line as 'Full since 1d 16h ago', separated by a middle dot. Two stacked 12 px lines under the bar crowd the plan strip below.",
+      "NOW PLAYING: 'No rested XP: kills give normal XP' floats centred with nothing around it. Left-align it to the roster bar column (x of the 92% bars) so it scans as the same column."
+    ],
+    "state_colours": [
+      "Le Bankken is a Warrior but renders near-white in the roster, the timeline and compact. Class colour should be #C79C6E. Check whether the paired-account entries lose their classFile. Le Jette in NOW PLAYING also looks too pale.",
+      "The NEARLY FULL chip is now a dark yellow tint but its text is still #FFE24A at full brightness. Use #E8CF5A so it does not outshine FULL (#7FD98A).",
+      "Row 4's red 20% bar still draws an orange-like 'progress' fill. To match the new timeline language, draw the not-filling roster bar hatched or at 50% alpha, so it does not suggest it is moving."
+    ],
+    "character_identity": [
+      "NOW PLAYING shows the warrior class icon. Per the settled rule the logged-in character shows its live face (SetPortraitTexture 'player'). If the sim stubs it, confirm in game; if not, fix it.",
+      "Hero portrait ring is green (state) at 2 px. Raise it to 3 px with a 1 px #000 inner line so it does not bleed into the purple class art.",
+      "Card: '41s 20c' should use the coin textures (|TInterface\\MoneyFrame\\UI-SilverIcon:0|t) like the host does."
+    ],
+    "default_theme": [
+      "The close button is a plain grey square with an X. Use UIPanelCloseButton or a gold-rimmed equivalent to match the gold frame.",
+      "The 'Unlink' and 'All accounts' buttons are muddy brown on brown. Give them a 1 px #8A6A30 border and #E8D8A8 text so they read as clickable."
+    ],
+    "elvui_wc3_fit": [
+      "Panels now sit inside the wood properly. The remaining break is the blue stock ElvUI buttons (Compact, View details, Unlink, All accounts) against WC3 wood; the Character window uses a red bevel. If the skin exposes a button style, inherit it rather than ElvUI blue.",
+      "Esc card: the wood texture ends at about 60% width and turns grey-blue metal on the right. Tile or stretch the backdrop to the full frame width. The logout banner has the same right-side metal strip.",
+      "Compact tooltip: the brown header block behind 'Rested Leveling' stops at about 150 px and looks like a mis-sized tile. Either span it across the full width or remove it."
+    ],
+    "alerts_ux": [
+      "Move mode: the Logout warning placeholder's wood stops at about x=850, leaving a black slab on the right. Same on the Esc card placeholder. Size the textures to the frame.",
+      "The logout placeholder has a 40 px dead gap between the description and 'Default position. Drag to move.' Use 6 px spacing.",
+      "Copy mismatch: the timeline says 'Not filling: find an inn' while the roster and compact say 'rest at an inn'. Pick one.",
+      "Banner: 'Le Jette is outside a rest area.' at about 10 px is smaller than everything else and is the actual reason. Make it 12 px and move it above the hearth line."
+    ],
+    "readability": [
+      "Roster 'Acct #3' tag contradicts the new Options wording 'Account 3'. Use 'Account 3', or 'Acct 3' if space is tight.",
+      "Meta lines at 12 px in muted #B8B0A0 over the brown well are borderline. Bump them to #CFC6B4.",
+      "Timeline: the 'NOW' and '+48h' header labels are 10 px. Use 11 px and align '+48h' to its gridline."
+    ],
+    "layout_polish": [
+      "The timeline tooltip still covers the Le Nette lane (the orange arrow passes under it). Anchor it to the hovered row with its top at the row top, or flip it above when it would overlap the next lane.",
+      "The hero speech bubble overlaps the vertical space between the name and the meta line, and the meta line starts under the bubble tail. Add 4 px below the bubble.",
+      "Options: the left nav column (about 180 px) is empty below one entry, so the right panel feels cramped. Accept it as host behaviour, but cut the gap after the APPEARANCE radios (about 20 px of dead space) and align the LOW REST WARNING block top with ACCOUNTS.",
+      "Roster rows: the chip column is not vertically centred to the two-line text (it sits about 2 px high). Centre it on the row."
+    ],
+    "delight": [
+      "The card's zzz and speech are charming. Bring the same personality to the hero: a 1 s soft glow pulse on the FULL chip when a character has been full more than 24 h (respect Reduce motion).",
+      "In the toast, 'double XP waiting' could carry a tiny bed or moon icon to match the Esc card's moon."
+    ]
+  },
+  "overall_notes": "This round restores the r3 warm wells and the window no longer reads as black slabs, so ElvUI/WC3 fit recovers to 8. The plan strip, the not-filling timeline lane and the chip unification are real improvements. What keeps it from 9: backdrop textures that stop short (Esc card, move placeholders, compact header), the timeline tooltip still covering a lane, Le Bankken apparently losing its Warrior colour, copy drift (Acct #3 vs Account 3; find vs rest at an inn), and a step-2 pill that looks disabled rather than lit. Fix those and polish and alerts can reach 9.",
   "model": "claude-opus-5-5"
 }

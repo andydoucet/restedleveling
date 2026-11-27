@@ -124,6 +124,11 @@ function St.HostFill(fade)
 	local c = St.HostFrame() and St.backend.HostColors and St.backend.HostColors(fade)
 	return c and c.bg or nil
 end
+-- True when a skin on top of the host painted its own window art around `frame` (see Style/ElvUI.lua).
+function St.SkinnedWindow(frame)
+	St.Ensure()
+	return St.HostFrame() and St.backend.SkinnedWindow and St.backend.SkinnedWindow(frame) or false
+end
 
 -- The window scale option (a readable-size preset): 0.8 to 1.4, applied to our own windows only.
 function St.Scale(frame)

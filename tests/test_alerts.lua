@@ -239,7 +239,7 @@ function cases.esc_strip_lays_out_from_its_own_edges_the_same_on_every_show()
 	T.ok(tr and tr[2] == f and tr[3] == "RIGHT" and tr[4] == -A.INSET, "text ends at the card's right inset")
 	local room = f:GetWidth() - 48 - 22 - 12 - A.INSET
 	T.ok(f.altText:GetStringWidth() <= room, "the long line is shortened to fit")
-	T.has(f.altText:GetText(), "...", "with an ellipsis")
+	T.lacks(f.altText:GetText(), "banked", "who and their state only: the banked amount is the banner's")
 	-- The first show matches the next: the queued relayout and a second Esc change nothing.
 	local function snapshot()
 		local out = { f:GetWidth(), f:GetHeight(), f.altText:GetText() }
@@ -335,11 +335,11 @@ end
 
 -- Council r3: the Esc card has its own shape, so it never reads as a second banner.
 function cases.esc_card_has_its_own_shape()
-	local _, h = world({ resting = false, saved = { chars = { ["N:Le Nette@?"] = alt("Le Nette", 1.5, 2 * D, true) } } })
+	local _, h, state = world({ resting = false, saved = { chars = { ["N:Le Nette@?"] = alt("Le Nette", 1.5, 2 * D, true) } } })
 	FakeWoW.RunScript(h.Env().GameMenuFrame, "OnShow")
 	local strip = h.Env().RestedLevelingMenuStrip
 	T.ok(strip:IsShown(), "shown under the menu")
-	T.eq(strip.tag:GetText(), "ESC MENU", "tagged")
+	T.eq(strip.icon:GetTexture(), state.ns.Alerts.MENU_ICON, "the gold moon marks it, not the banner's warning")
 	T.ok(not strip.altBtn:IsShown(), "no View details button: the menu is open")
 	T.ok(not strip.who:IsShown(), "one instruction, not the banner's three lines")
 	T.has(strip.altText:GetText(), "Le Nette", "still names who is next")

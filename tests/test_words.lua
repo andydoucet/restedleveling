@@ -164,7 +164,7 @@ function cases.hero_says_why_number_one_beats_number_two()
 	T.eq(Wd.Ahead({ a, c }, NOW), "Then Le Bankke with 0.8 of a level", "the runner-up, whatever its group")
 	local n = row("near", { pct = 0.92, levels = 1.38, left = 19 * H }, { full = "Le Bankken" })
 	n.group = 2
-	T.eq(Wd.Ahead({ a, n }, NOW), "Then Le Bankken, full in 19h", "nearly full: how soon")
+	T.eq(Wd.Ahead({ a, n }, NOW), "Then Le Bankken, full in 19h", "nearly full: how soon (exact)")
 	local m = row("max", nil, { full = "Le Max" })
 	m.group = 5
 	T.eq(Wd.Ahead({ a, m }, NOW), nil, "nobody worth naming")

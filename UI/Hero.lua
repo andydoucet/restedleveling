@@ -6,7 +6,7 @@ local St, Wg, Wd, U = ns.Style, ns.Widgets, ns.Words, ns.Util
 local Hero = {}
 ns.Hero = Hero
 
-local BAR_SEGS, ACTION_H = 30, 58   -- the plan strip: its two steps, then who comes after on a line of its own
+local BAR_SEGS, ACTION_H = 30, 60   -- the plan strip: its two steps, then who comes after on a line of its own
 
 local function text(f, role, size, color)
 	local t = Wg.Text(f, role, nil, size)
@@ -150,10 +150,19 @@ function Hero.Create(parent, w, h)
 		v:SetPoint("LEFT", t, "RIGHT", 5, 0)
 		f.steps[i] = { disc = disc, n = n, text = t, verb = v }
 	end
-	f.steps[1].disc:SetPoint("TOPLEFT", 18, -9)
-	f.steps[2].disc:SetPoint("LEFT", f.steps[1].verb, "RIGHT", 24, 0)
-	f.ahead = text(f.action, "small", 12, { r = 0.85, g = 0.79, b = 0.66 })   -- who comes after: a line of its own
-	f.ahead:SetPoint("TOPLEFT", f.steps[1].disc, "BOTTOMLEFT", 1, -7)
+	f.steps[1].disc:SetPoint("TOPLEFT", 18, -10)
+	f.steps[2].disc:SetPoint("LEFT", f.steps[1].verb, "RIGHT", 30, 0)
+	-- Step 1 is the errand (quieter); step 2 is the point of it all: a lit pill behind it (council r5: opus, grok).
+	St.Font(f.steps[1].text, "name", 13)
+	St.Font(f.steps[1].verb, "name", 13)
+	f.steps[1].verb:SetTextColor(0.81, 0.76, 0.65)
+	f.steps[2].verb:SetTextColor(1, 0.95, 0.79)
+	f.pill = f.action:CreateTexture(nil, "BACKGROUND", nil, 2)
+	f.pill:SetColorTexture(1, 0.88, 0.6, 0.12)
+	f.pill:SetPoint("TOPLEFT", f.steps[2].disc, "TOPLEFT", -6, 4)
+	f.pill:SetPoint("BOTTOMRIGHT", f.steps[2].verb, "BOTTOMRIGHT", 10, -5)
+	f.ahead = text(f.action, "small", 13, { r = 0.83, g = 0.77, b = 0.66 })   -- who comes after: a line of its own
+	f.ahead:SetPoint("TOPLEFT", f.steps[1].text, "BOTTOMLEFT", 0, -8)   -- on the steps' text edge, not the disc
 	f.open = St.MakeButton(f.action, 120, "View card", true)
 	f.open:SetPoint("RIGHT", -8, 0)
 	f.ctaW = w - 6 - 22 - 120 - 8 - 12   -- from its inset to 12 px short of the button
@@ -279,6 +288,7 @@ function Hero.Update(f, row, now, me, rows, empty)
 	f.cta:SetShown(s1 == nil)
 	for i, st in ipairs(f.steps) do
 		for _, k in ipairs({ "disc", "n", "text", "verb" }) do st[k]:SetShown(s1 ~= nil) end
+		f.pill:SetShown(s1 ~= nil)
 		local who, verb = (i == 1 and s1 or s2 or ""):match("^(.-:)%s+(.+)$")   -- the name coloured, the verb cream
 		st.text:SetText(who or "")
 		st.verb:SetText(verb or "")

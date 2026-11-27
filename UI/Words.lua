@@ -176,7 +176,7 @@ function Wd.Ahead(rows, now)
 	if not (rows[1] and b and b.p and b.group and b.group <= 4) then return nil end
 	local name = b.c.full or "?"
 	if b.p.left == 0 then return ("Then %s, full since %s ago"):format(name, U.Short(now - (b.p.fullSince or now))) end
-	if b.group == 2 then return ("Then %s, full in %s"):format(name, U.Short(b.p.left)) end
+	if b.group == 2 then return ("Then %s, full in %s"):format(name, U.Duration(b.p.left)) end
 	return ("Then %s with %s"):format(name, Wd.Levels(b.p.levels))
 end
 
