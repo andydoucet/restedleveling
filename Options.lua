@@ -55,6 +55,11 @@ function O.SetLow(v)
 	if not n then return end
 	ns.DB().opts.lowPct = U.Clamp(math.floor(n + 0.5), ns.LOW_MIN, ns.LOW_MAX)
 end
+function O.ShowLow(sl)
+	local pct = ns.DB().opts.lowPct
+	sl.value:SetText(O.LowText(pct))
+	sl.fill:SetWidth(math.max(1, (sl:GetWidth() - 2) * (pct - ns.LOW_MIN) / (ns.LOW_MAX - ns.LOW_MIN)))
+end
 function O.LowText(pct) return ("Warn when under %d%% of a full bar is left"):format(pct) end
 
 local function apply(sw, v)
@@ -106,22 +111,35 @@ function O.Panel()
 	p.accY = y - 20
 	-- Low-rest warning threshold: a slider, 5 to 50%.
 	local lowLabel = Wg.Text(p, "label", nil, 11)
-	lowLabel:SetPoint("TOPLEFT", 400, y)
+	lowLabel:SetPoint("TOPLEFT", 380, y)
 	lowLabel:SetText("LOW REST WARNING")
 	local sl = CreateFrame("Slider", nil, p, "BackdropTemplate")
 	sl:SetOrientation("HORIZONTAL")
 	sl:SetSize(200, 14)
-	sl:SetPoint("TOPLEFT", 404, y - 26)
+	sl:SetPoint("TOPLEFT", 412, y - 26)
 	sl:SetMinMaxValues(ns.LOW_MIN, ns.LOW_MAX)
 	sl:SetValueStep(1)
 	sl:SetObeyStepOnDrag(true)
 	St.Slider(sl)
+	sl.over = CreateFrame("Frame", nil, sl)   -- above any backdrop a skin adds to the slider
+	sl.over:SetAllPoints()
+	sl.over:SetFrameLevel(sl:GetFrameLevel() + 3)
+	sl.fill = sl.over:CreateTexture(nil, "OVERLAY")   -- the value as a gold fill from the left, whatever the skin's thumb
+	sl.fill:SetColorTexture(0.84, 0.66, 0.30, 0.85)
+	sl.fill:SetPoint("TOPLEFT", 1, -1)
+	sl.fill:SetPoint("BOTTOMLEFT", 1, 1)
+	for i, v in ipairs({ ns.LOW_MIN, ns.LOW_MAX }) do
+		local e = Wg.Text(p, "small", nil, 12)
+		e:SetPoint(i == 1 and "RIGHT" or "LEFT", sl, i == 1 and "LEFT" or "RIGHT", i == 1 and -6 or 6, 0)
+		e:SetText(v .. "%")
+		St.Color(e, St.MUTED)
+	end
 	sl.value = Wg.Text(p, "small", nil, 12)
-	sl.value:SetPoint("TOPLEFT", sl, "BOTTOMLEFT", -4, -6)
+	sl.value:SetPoint("TOPLEFT", sl, "BOTTOMLEFT", -32, -8)
 	St.Color(sl.value, St.SECOND)
 	sl:SetScript("OnValueChanged", function(self, v)
 		O.SetLow(v)
-		self.value:SetText(O.LowText(ns.DB().opts.lowPct))
+		O.ShowLow(self)
 	end)
 	p.low = sl
 	y = y - 72
@@ -138,11 +156,20 @@ function O.Panel()
 	mvText:SetPoint("LEFT", p.move, "RIGHT", 12, 0)
 	mvText:SetText("Drag the logout warning, the toasts and the Esc menu card where you want them.")
 	St.Color(mvText, St.SECOND)
-	y = y - 60
+	y = y - 52
 	p.checks = {}
+	local col, alerts = 0, false
 	for _, sw in ipairs(O.SWITCHES) do
+		if sw.key:find("^alert_") and not alerts then   -- the alert kinds: their own heading, two columns
+			alerts = true
+			local h = Wg.Text(p, "label", nil, 11)
+			h:SetPoint("TOPLEFT", 16, y - 6)
+			h:SetText("ALERTS")
+			y = y - 26
+		end
 		local cb = CreateFrame("CheckButton", nil, p, "UICheckButtonTemplate")
-		cb:SetPoint("TOPLEFT", 16, y)
+		cb:SetSize(24, 24)
+		cb:SetPoint("TOPLEFT", 16 + col * 300, y)
 		St.Check(cb)
 		local t = Wg.Text(cb, "body", nil, 12)
 		t:SetPoint("LEFT", cb, "RIGHT", 4, 0)
@@ -150,11 +177,13 @@ function O.Panel()
 		cb:SetScript("OnClick", function(self) apply(sw, self:GetChecked()) end)
 		cb.sw = sw
 		p.checks[#p.checks + 1] = cb
-		y = y - 28
+		if alerts then col = 1 - col end
+		if col == 0 then y = y - 24 end
 	end
+	if col == 1 then y = y - 24 end
 	local about = Wg.Text(p, "small", nil, 11)
-	about:SetPoint("TOPLEFT", 16, y - 16)
-	about:SetPoint("RIGHT", -16, 0)
+	about:SetPoint("TOPLEFT", 16, y - 10)
+	about:SetWidth(600)   -- the canvas has no width of its own when this runs: wrap at a fixed measure
 	about:SetWordWrap(true)
 	about:SetText("|cffffd100About|r  " .. O.CREDITS .. "\nGPL-3.0. Cross-account sync uses hidden addon messages only, between your "
 		.. "own clients on the same realm and faction.")
@@ -192,7 +221,7 @@ function O.RefreshPanel(p)
 	end
 	for i = #O.AccountChoices() + 1, #p.accButtons do p.accButtons[i]:Hide() end
 	p.low:SetValue(d.opts.lowPct)
-	p.low.value:SetText(O.LowText(d.opts.lowPct))
+	O.ShowLow(p.low)
 end
 
 function ns.OpenOptions()

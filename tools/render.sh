@@ -10,6 +10,8 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 OUT=${1:?usage: tools/render.sh <outdir> [filter]}
 FILTER=${2:-}
+SCENES=${RL_SCENES:-$ROOT/tools/sim/scenes}   # tools/render_council.sh points this at tools/sim/council
+MAX=${RL_MAX_SCENES:-16}
 mkdir -p "$OUT"
 OUT=$(cd "$OUT" && pwd)
 
@@ -38,11 +40,11 @@ stage_addon() {
 
 fail=0
 count=0
-for scene in "$ROOT"/tools/sim/scenes/[0-9][0-9]_*.lua; do
+for scene in "$SCENES"/[0-9][0-9]_*.lua; do
 	name=$(basename "$scene" .lua)
 	[[ -n "$FILTER" && "$name" != *"$FILTER"* ]] && continue
 	count=$((count + 1))
-	[[ $count -gt 16 ]] && { echo "more than 16 scenes" >&2; exit 2; }
+	[[ $count -gt $MAX ]] && { echo "more than $MAX scenes" >&2; exit 2; }
 	box="$WORK/$name"
 	mkdir -p "$box/AddOns" "$box/wtf"
 	stage_addon "$box/AddOns"
@@ -77,6 +79,7 @@ for scene in "$ROOT"/tools/sim/scenes/[0-9][0-9]_*.lua; do
 		echo 'local RLScene = CreateFrame("Frame"); RLScene:RegisterEvent("PLAYER_ENTERING_WORLD")'
 		echo 'RLScene:SetScript("OnEvent", function(self) self:UnregisterAllEvents(); C_Timer.After(4, function()'
 		cat "$ROOT/tools/sim/scenes/_prelude.lua" "$scene"
+		echo
 		# ElvUI scenes: the skin's art must be on our windows, checked after the skin has applied.
 		[[ "$style" == elvui ]] && echo 'C_Timer.After(1, function() RLCheckWC3(RestedLevelingMain, "RestedLevelingMain") end)'
 		echo 'end) end)'

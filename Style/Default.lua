@@ -120,11 +120,11 @@ end
 function D.Button(btn) end
 function D.Close(btn) end
 
--- One button family: enamel faces like the door's QUIT / OPTIONS (red for the main action, blue otherwise) with a
--- 1 px bronze rim and a cream label, 24 px tall (h overrides, e.g. 22 under a host skin).
+-- One button family: enamel faces (gold for the main action, blue otherwise) with a 1 px bronze rim and a cream
+-- label, 24 px tall (h overrides, e.g. 22 under a host skin). Red is kept for the "not resting" state alone.
 -- enamel: secondary buttons in blue enamel (the ElvUI path); otherwise they are quiet bronze ghosts on our oak.
 function D.MakeButton(parent, w, label, primary, h, enamel)
-	local face = primary and "btn_red" or (enamel and "btn_blue" or "sw_bronze_btn")   -- one family: red, bronze
+	local face = primary and "btn_gold" or (enamel and "btn_blue" or "sw_bronze_btn")   -- one family: gold, blue, bronze
 	local b = CreateFrame("Button", nil, parent, "BackdropTemplate")
 	b:SetSize(w, h or 24)
 	St.Backdrop(b, face, "sw_lip", 1)

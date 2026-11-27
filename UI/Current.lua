@@ -76,6 +76,9 @@ function Cur.Update(f)
 		f.left:SetText(("%.1f rested levels left"):format(math.floor(s.levels * 10 + 0.5) / 10))
 		St.Color(f.left, St.CREAM)
 	end
-	local usedText = used > 0 and (Wd.Levels(used) .. " used this session") or "none used this session"
-	f.detail:SetText(s.kills and ("~%d double-XP kills  ·  %s"):format(s.kills, usedText) or usedText)
+	-- Whole, never "0.0 of a level...": the kills left, then what this session used (dropped when there is no room).
+	local usedText = used >= 0.05 and ("used " .. Wd.Levels(used)) or "none used yet"
+	local kills = s.kills and ("~%d double-XP kill%s"):format(s.kills, s.kills == 1 and "" or "s")
+	f.detail:SetText(kills and (kills .. "  ·  " .. usedText) or (usedText:gsub("^%l", string.upper)))
+	if kills and f.detail:GetStringWidth() > f.detail:GetWidth() then f.detail:SetText(kills) end
 end

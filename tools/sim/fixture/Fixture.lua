@@ -13,22 +13,34 @@ RLFIX = { rested = 15200, xp = 9100, xpMax = 25200, level = 24, resting = false,
 if RLFIX_CASE == "andy" then   -- Andy's first in-game run (ILL-1274): on Le Nette, level 1, nothing rested, outside
 	RLFIX = { rested = 0, xp = 120, xpMax = 400, level = 1, resting = false, first = "Le", surname = "Nette" }
 end
+if RLFIX_CASE == "v112" then   -- Andy's 1.1.2 screenshot (ILL-1272): on Le Jette, level 48 gnome warrior, outside
+	RLFIX = { rested = 260, xp = 40100, xpMax = 93800, level = 48, resting = false, first = "Le", surname = "Jette",
+		race = "Gnome", class = "WARRIOR", zone = "Feralas", subzone = "The Twin Colossals", bind = "Feathermoon Stronghold" }
+end
 local function wrap(name, fn) local orig = _G[name]; _G[name] = function(...) return fn(orig, ...) end end
 wrap("UnitNameUnmodified", function(o, u, ...) if u == "player" then return RLFIX.first, RLFIX.surname end return o(u, ...) end)
 wrap("UnitName", function(o, u, ...) if u == "player" then return RLFIX.first, RLFIX.surname end return o(u, ...) end)
 wrap("UnitLevel", function(o, u, ...) if u == "player" then return RLFIX.level end return o(u, ...) end)
 wrap("UnitXP", function(o, u, ...) if u == "player" then return RLFIX.xp end return o(u, ...) end)
 wrap("UnitXPMax", function(o, u, ...) if u == "player" then return RLFIX.xpMax end return o(u, ...) end)
-wrap("UnitRace", function(o, u, ...) if u == "player" then return "Orc", "Orc", 2 end return o(u, ...) end)
+wrap("UnitRace", function(o, u, ...) if u == "player" then return RLFIX.race or "Orc", RLFIX.race or "Orc", 2 end return o(u, ...) end)
+if RLFIX.class then
+	wrap("UnitClass", function(o, u, ...) if u == "player" then return "Warrior", RLFIX.class, 1 end return o(u, ...) end)
+	wrap("UnitSex", function(o, u, ...)
+		if u == "player" then return 3 end
+		if type(u) ~= "string" then return nil end   -- the sim's UnitSex refuses what the game's tolerates (ElvUI)
+		return o(u, ...)
+	end)
+end
 wrap("UnitFactionGroup", function(o, u, ...) if u == "player" then return "Horde", "Horde" end return o(u, ...) end)
 wrap("GetXPExhaustion", function() return RLFIX.rested end)
 wrap("IsResting", function() return RLFIX.resting end)
 wrap("GetRealmName", function() return "" end)            -- Forever hides the realm
-wrap("GetRealZoneText", function() return "The Barrens" end)
-wrap("GetSubZoneText", function() return "Southern Barrens" end)
+wrap("GetRealZoneText", function() return RLFIX.zone or "The Barrens" end)
+wrap("GetSubZoneText", function() return RLFIX.subzone or "Southern Barrens" end)
 wrap("GetMaxPlayerLevel", function() return 60 end)
 if GetMaxLevelForPlayerExpansion then wrap("GetMaxLevelForPlayerExpansion", function() return 60 end) end
-if GetBindLocation then wrap("GetBindLocation", function() return "Crossroads" end) end
+if GetBindLocation then wrap("GetBindLocation", function() return RLFIX.bind or "Crossroads" end) end
 if GetMoney then wrap("GetMoney", function() return 412345 end) end
 
 local A, B = "a7c2e1", "3fb904"   -- account ids: Andy's WoW accounts #2 and #3
@@ -116,7 +128,55 @@ if RLFIX_CASE == "andy" then
 		},
 	}
 end
-if RLFIX_CASE == "look" then
+if RLFIX_CASE == "v112" then
+	-- Andy's roster as his 1.1.2 screenshot shows it (refs/ingame/andy_v112_main.png), plus a saved look (Le Beouf,
+	-- a stand-in face) and Le Bankken on his linked account #3. `now` levels and "seen ... ago" are what the window
+	-- shows; the saved rested value is worked back from them (5% of a level per 8 h resting, a quarter outside).
+	local RATE = 0.05 / (8 * H)
+	local function alt(key, t)
+		local levels = t.now
+		t.now = nil
+		t.rested = math.max(0, math.floor((levels - RATE * (t.resting and 1 or 0.25) * t.ago) * t.xpMax))
+		return char(key, t)
+	end
+	RestedLevelingDB = { version = 1, account = A, accountLabels = { [A] = "#2", [B] = "#3" }, calib = { rate = 1.0, n = 3 },
+		opts = { style = RLFIX_STYLE or "auto", showGrey = true, minimap = { hide = false } }, hidden = {}, alertsOff = {},
+		sync = { links = { ["Le Bankken"] = true }, confirmed = { ["le bankken"] = B },
+			peers = { [B] = { name = "Le Bankken", seen = T0 - 3 * H, lastSync = T0 - 3 * H, label = "#3" } } },
+		chars = {
+			-- Full for 1d 17h: it hit 1.5 levels seven hours after logging out two days ago.
+			["N:Le Dette@?"] = char("N:Le Dette@?", { full = "Le Dette", class = "WARLOCK", race = "Gnome", sex = 3, level = 6,
+				xpMax = 2800, rested = math.floor((1.5 - RATE * 7 * H) * 2800), resting = true, restKind = "inn",
+				zone = "Dun Morogh", subzone = "Thunderbrew Distillery", ago = 2 * D, bind = "Thunderbrew Distillery",
+				played = 6 * H + 40 * 60, money = 1840, profs = "Tailoring 42" }),
+			["N:Le Nette@?"] = alt("N:Le Nette@?", { full = "Le Nette", class = "MAGE", race = "Gnome", sex = 3, level = 6,
+				xpMax = 2800, now = 0.315, resting = true, restKind = "inn", zone = "Dun Morogh",
+				subzone = "Thunderbrew Distillery", ago = 2 * D + 2 * H, bind = "Thunderbrew Distillery", played = 5 * H,
+				money = 950, profs = "Enchanting 31, Tailoring 40" }),
+			["N:Jacques Hammer@?"] = alt("N:Jacques Hammer@?", { full = "Jacques Hammer", class = "SHAMAN", race = "Dwarf", sex = 2,
+				level = 5, xpMax = 1900, now = 0.315, resting = false, restKind = "outside", zone = "Dun Morogh",
+				subzone = "Anvilmar", ago = D + 3 * H }),
+			["N:Le Jedde@?"] = alt("N:Le Jedde@?", { full = "Le Jedde", class = "PRIEST", race = "NightElf", sex = 3, level = 10,
+				xpMax = 7600, now = 0.225, resting = true, restKind = "inn", zone = "Teldrassil", subzone = "Dolanaar",
+				ago = D + 5 * H }),
+			["N:Amdo Rhen@?"] = alt("N:Amdo Rhen@?", { full = "Amdo Rhen", class = "MAGE", race = "Gnome", sex = 3, level = 7,
+				xpMax = 3600, now = 0.21, resting = true, restKind = "inn", zone = "Teldrassil", subzone = "Dolanaar",
+				ago = D + 1 * H }),
+			["N:Le Beouf@?"] = alt("N:Le Beouf@?", { full = "Le Beouf", class = "DRUID", race = "Tauren", sex = 2, level = 11,
+				xpMax = 8800, now = 0.135, resting = true, restKind = "city", zone = "Thunder Bluff", ago = 23 * H,
+				bind = "Thunder Bluff", played = 11 * H, money = 4120, profs = "Herbalism 64" }),
+			-- On the linked account #3, synced three hours ago: nearly full in an inn.
+			["N:Le Bankken@?"] = alt("N:Le Bankken@?", { full = "Le Bankken", class = "WARRIOR", race = "Human", sex = 2,
+				level = 8, xpMax = 5000, now = 1.38, resting = true, restKind = "inn", zone = "Elwynn Forest", subzone = "Goldshire",
+				account = B, src = "sync", via = B, syncedAt = T0 - 3 * H, ago = 3 * D }),
+			["N:Le Jette@?"] = char("N:Le Jette@?", { full = "Le Jette", class = "WARRIOR", race = "Gnome", sex = 3, level = 48,
+				xpMax = 93800, rested = 260, resting = false, restKind = "outside", zone = "Feralas", ranks = 3, ago = 20 * 60,
+				bind = "Feathermoon Stronghold", played = 9 * D + 2 * H, money = 638000, guild = "Exodar",
+				profs = "Blacksmithing 185, Mining 201" }),
+		},
+	}
+end
+if RLFIX_CASE == "look" or RLFIX_CASE == "v112" then
 	-- Saved looks (ILL-1279): Le Nette and Le Beouf each saved one. The sim has no screenshots and draws no 3D model,
 	-- so each "screenshot" is a stand-in made the way the capture stage lays out (look_*.tga, 960x540: the stage's
 	-- dark #0B0908 backdrop with a stock race portrait in the centred model square, at half the 1920x1080 size; the
@@ -127,7 +187,7 @@ if RLFIX_CASE == "look" then
 		for k, v in pairs(box) do t[k] = v end
 		return t
 	end
-	RestedLevelingDB.chars["N:Le Nette@?"].look = look("WoWScrnShot_112026_211430.tga", 4 * D + 2 * H)
+	if RLFIX_CASE == "look" then RestedLevelingDB.chars["N:Le Nette@?"].look = look("WoWScrnShot_112026_211430.tga", 4 * D + 2 * H) end
 	RestedLevelingDB.chars["N:Le Beouf@?"].look = look("WoWScrnShot_112026_174502.tga", 3 * D + 11 * H)
 	local FIX = "Interface\\AddOns\\!RLSimFixture\\"
 	local stand = { ["WoWScrnShot_112026_211430.tga"] = FIX .. "look_nette.tga", ["WoWScrnShot_112026_174502.tga"] = FIX .. "look_beouf.tga" }

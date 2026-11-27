@@ -100,7 +100,7 @@ local function createRow(parent, w)
 	f.sub = Wg.Text(f, "small", nil, 13)
 	f.sub:SetPoint("TOPLEFT", f.name, "BOTTOMLEFT", 0, -5)
 	St.Color(f.sub, St.SECOND)
-	f.bar = Wg.BubbleBar(f, COL.chip - COL.bar - 26, 11, 30)
+	f.bar = Wg.BubbleBar(f, COL.chip - COL.bar - 26, 13, 30)
 	f.bar:SetPoint("TOPLEFT", COL.bar, -10)
 	f.time = Wg.Text(f, "small", nil, 13)
 	f.time:SetPoint("TOPLEFT", f.bar, "BOTTOMLEFT", 1, -5)
@@ -197,7 +197,12 @@ local function fillRow(row, r, n, now, calibrated, alt)
 	if place then
 		row.sub:SetText(("Lv %d  ·    ·  %s"):format(c.level or 0, ago))
 		local fixed = row.sub:GetStringWidth()
-		local fitted = Wg.Fit(row.sub, place, math.max(30, room - fixed))
+		local fitted
+		for _, form in ipairs(Wd.PlaceForms(place)) do
+			row.sub:SetText(form)
+			if row.sub:GetStringWidth() <= room - fixed then fitted = form break end
+		end
+		fitted = fitted or Wg.Fit(row.sub, place, math.max(30, room - fixed))
 		row.sub:SetText(("Lv %d  ·  %s  ·  %s"):format(c.level or 0, fitted, ago))
 	else
 		row.sub:SetText(("Lv %d  ·  %s"):format(c.level or 0, ago))

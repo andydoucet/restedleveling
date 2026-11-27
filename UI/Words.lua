@@ -69,6 +69,17 @@ function Wd.ShortPlace(c)
 	return Wd.ShortZone(c.zone)
 end
 
+-- Shorter forms of a place, longest first: "Thunderbrew Distillery inn", "Thunderbrew inn", "Thunderbrew".
+function Wd.PlaceForms(place)
+	local out = { place }
+	local base, suffix = place:match("^(.-)( inn)$")
+	base = base or place
+	local first = base:match("^(%S+)%s")
+	if first then out[#out + 1] = first .. (suffix or "") end
+	if suffix then out[#out + 1] = first or base end
+	return out
+end
+
 -- "0.8 of a level banked", or "Nothing banked yet" under a twentieth of a level.
 local function banked(levels)
 	if levels < Wd.BANKED_MIN then return "Nothing banked yet" end

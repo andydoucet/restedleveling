@@ -94,7 +94,7 @@ end
 -- fonts: a skin's generic button art (in the simulator, end caps over the label) is not applied to them. The window
 -- itself, its close button, check boxes and bars still go through the skin.
 function X.MakeButton(parent, w, label, primary, h)
-	-- Like the host's Character window: the primary action in red enamel, the rest in its blue.
+	-- The primary action in gold enamel, the rest in the host's blue (red means "not resting" only).
 	local b = St.backends.default.MakeButton(parent, w, label, primary, h or (X.HostFrame() and 22 or nil), true)
 	X.Font(b.label, "name", 13)
 	return b

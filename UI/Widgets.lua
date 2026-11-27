@@ -183,7 +183,7 @@ function Wg.BubbleBar(parent, w, h, segs)
 	for i = 1, segs - 1 do
 		local d = bar:CreateTexture(nil, "OVERLAY", nil, 2)
 		St.Paint(d, "sw_well")
-		d:SetAlpha(0.15)   -- quiet bubble seams: they read on the fill without adding noise
+		d:SetAlpha(0.3)   -- bubble seams: 8 hours in an inn each, readable on the fill
 		d:SetWidth(1)
 		d:SetPoint("TOP", bar, "TOPLEFT", w * i / segs, 0)
 		d:SetPoint("BOTTOM", bar, "BOTTOMLEFT", w * i / segs, 0)
@@ -235,7 +235,8 @@ function Wg.SetChip(f, state, text)
 	f.text:SetText(text or s.word:upper())
 	local key = St.STATE[state] and state or "max"
 	f.text:SetTextColor(unpack(CHIP_TEXT[key]))
-	St.Backdrop(f, "chipfill_" .. key, "st_" .. key, 1)
+	-- Only "not resting" keeps its bright edge: it is the one state that asks you to do something.
+	St.Backdrop(f, "chipfill_" .. key, key == "outside" and ("st_" .. key) or "sw_lip", 1)
 	if St.HostFrame() and f.SetBackdropColor then f:SetBackdropColor(1, 1, 1, 0.35) end   -- quiet fills, like his flat cells
 	local group = f.text:GetStringWidth() + f.icon:GetWidth() + 5
 	if not f.fixed then f:SetWidth(group + 14) end

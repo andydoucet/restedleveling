@@ -1,80 +1,68 @@
 {
   "scores": {
-    "visual_appeal": 6,
+    "visual_appeal": 7,
     "play_next_clarity": 8,
-    "state_colours": 7,
+    "state_colours": 8,
     "character_identity": 7,
-    "default_theme": 6,
-    "elvui_wc3_fit": 5,
+    "default_theme": 7,
+    "elvui_wc3_fit": 7,
     "alerts_ux": 7,
     "readability": 7,
-    "layout_polish": 6,
-    "delight": 6
+    "layout_polish": 7,
+    "delight": 7
   },
   "changes": {
     "visual_appeal": [
-      "Replace the flat black fill with a vertical oak-plank backdrop (#2a1a0e boards, #3a2414 highlight, 8px board width) inside a 6px iron frame (#141416) and 8px bronze rivets (#8a6a3a) at each corner and mid-edge.",
-      "Hero portrait 84px, not ~64px; sit it on a warm inn vignette (#1c1408 to #0c0a08) instead of a featureless black card.",
-      "Speech bubble: #1e1810 fill, 1px #a68448 edge, 12px padding, and an 8px tail aimed at the portrait \u2014 the current borderless rectangle is dead.",
-      "One bar language everywhere: 22px tall, 30 segments, 2px gaps, track #1a120c. Kill the hairline red sparkline on the outside card."
+      "Raise every content well off pure black: panel fill #1a1612, inset well #12100e, 1px inner stroke #8a7040 and 8px padding so the roster is not a flat void.",
+      "Hero portrait is 38px beside a 28px name and reads as a bullet. Make it 64px, add 12px below the speech line, and keep the 1.5 figure at 36px so the card has a focal point.",
+      "The options page is a different, washed taupe slab. Rebuild it on the same dark panel as the roster; the about blurb in yellow on brown looks unfinished."
     ],
     "play_next_clarity": [
-      "Turn the tiny green PLAY NEXT label into a full-width 28px enamel banner: 16px #f4e4c1 'PLAY THIS CHARACTER' on #1f6b3a.",
-      "The hero's floating #2 reads as queue rank (the list starts at 2). Relabel it 'Acct 2' at 11px #cbb892 or drop it from the hero.",
-      "Make the hero the click target: 2px #e8b423 hover ring and a 32px right-side button 'Log this one' so the next action is obvious without reading the roster.",
-      "Queue index in a fixed 28px column, 18px #f0d090 numerals, so place is scannable before the name."
+      "Set the kicker to 14px Friz Quadrata #f0d080 with a 4px left bar in #e6c56a. At ~10px it loses to the 1.5 figure.",
+      "Replace the sentence in body gold with a 22px primary button Play Le Dette and a 13px secondary line Hearth Le Jette to an inn first. The current line matches surrounding text and does not look like the action.",
+      "Delete the empty black track and the line 0.0 rested levels left in NOW PLAYING. They look like a broken bar and repeat the NOT RESTING chip. One line: Not banking. Log out in an inn."
     ],
     "state_colours": [
-      "Separate the four states by at least 40\u00b0 of hue. Full #3DDC6A, nearly #E6B325 (the 93% bar is currently ~#8FBF3A and collides with full), resting #E07A2F, parked #E23B3B, max-level #6E6A64.",
-      "Chips: fixed 92\u00d720px, 12px bold label, 14px icon. FULL / NEARLY / RESTING / PARK ME must not rely on the bar alone.",
-      "Parked rows: tint the whole row #2a1212 at 40% so a red chip on a black row is not the only signal.",
-      "Max-level stays gray and is excluded from the play-next sort \u2014 say 'MAX' in the chip, not a near-empty bar that looks broken."
+      "Legend dots are ~8px. Use 10px circles with a 1px #000 ring, 6px apart, so green #3cba4c, yellow #e6c020, orange #e07a2f and red #d64545 separate at a glance.",
+      "RESTING chips are generic gold #c4a15a, which collides with nearly-full yellow. Tint each quiet chip with its row colour at 85% (orange row chip #e07a2f, not gold).",
+      "On the timeline, stop laying dates on the faded tail. Keep the bar solid until the clip edge and put Full Wed 2 Dec in 12px #f4e6c4 in a reserved 132px right column. Night bands at about 60% blue crush the orange; drop them to #1a2744 at 35% opacity."
     ],
     "character_identity": [
-      "Roster portraits 40px; class crest 16px in a #14120e circle placed 2px outside the ring at 4 o'clock. The fireball/weapon blob currently covers the face.",
-      "Card stage 280\u00d7160: state backdrop (inn candles #3a2060 for full, dusk road #1a2a18 for outside) with the portrait at 120px centered, not a muddy crop.",
-      "Name 22px in class colour; subtitle 13px #cbb892 as 'Lv 22 \u00b7 Undead \u00b7 Mage'. Repeat an 18px class crest to the left of every row name.",
-      "Tidbit tiles should lead with the identity fact (hearth, zone) in 14px, not a wall of equal gray boxes."
+      "Race/gender badges are ~12px and unreadable. Draw them at 18px with a 2px #f4efe6 ring, bottom-right of the 36px class icon.",
+      "Hero subtitle Level 6 Gnome Warlock is the same dim #9a8a70 as the inn line. Set race and class at 13px #e8dcc0 and leave only the location and seen-ago in #9a8a70.",
+      "Saved-look card: pin a 96px portrait to a 120px left column, speech bubble 8px above it, stats in a two-column grid with 12px row gaps. Add a 3px class-colour left edge (druid #ff7d0a). The current face sits in a large empty middle."
     ],
     "default_theme": [
-      "Ship a Gatewood-lite default even with no ElvUI: fill #14100c, 4px border #a68448, title 14px Friz Quadrata #f0d090. The stock portrait-frame chrome is generic.",
-      "Header 36px. Drop the empty gold bar and the stray moon tab, or put a 20px moon icon immediately left of the title.",
-      "Buttons 22px: red enamel #8b1e1e and blue #1a3a6b with a 1px top highlight #ffffff at 30%, matching the door's QUIT/OPTIONS.",
-      "Compact and first-run must use the same frame, not a second gray tooltip skin."
+      "Scene 02 is still the ElvUI near-black layout. Use a classic dialog: 32px gold edge, fill #2a2018, inset #3d2e22, title 16px Friz #ffd100.",
+      "Unlink stays a blue ElvUI button in the default scene. Every default button must be UIPanelButtonTemplate stone, 22px tall, including Unlink, All accounts and Close.",
+      "Keep the tavern hero art, but add a bottom gradient #000000 at 45% over the lower 48px so the name and bar stay legible."
     ],
     "elvui_wc3_fit": [
-      "Scene 02/04 are generic ElvUI black rectangles. Backdrop must be the Gatewood plank texture from the door, not S:HandleFrame's flat black.",
-      "Horizontal iron bands 4px #121214 across header and footer, bronze rivets every 48px. Square unadorned corners fail the skin.",
-      "Close control: 24px red enamel disc #8b1e1e, not the default ElvUI red X. Primary actions blue enamel #1a3a6b.",
-      "Stop the WC3 15% statusbar wash painting over the fill \u2014 draw the segmented bar above the skinned StatusBar. Text cream #f3e6c8; keep class colour only on names.",
-      "Steal the 16px gold corner filigree visible on the user's own panels; a handled frame without that ornament does not read as his UI."
+      "The roster frame is a 1px gold stroke. Load the Gatewood dialog backdrop, border and corner ornaments the character window uses, not a flat rectangle.",
+      "Options selection highlight is gold. ElvUI lists use a blue bar (#1a4a7a fill, #3d7ec0 edge). Match that, and match Close at 22px on the same blue template as Move notifications.",
+      "Options body and the GPL about line fail contrast on the taupe fill. Body 13px #e6d7b0 on #1a1612; about text 11px #b8a88a, not yellow #d6c04a."
     ],
     "alerts_ux": [
-      "One surface only. Keep the banner under the camp countdown and delete the duplicate strip under the Esc menu \u2014 three warnings for one logout is noise.",
-      "Banner 56px: 32px warning icon, title 15px bold #ffd0a8 'Not resting \u2014 move to cancel', body 13px #f3e6c8. 'Hearth first' as a 13px #e6b325 second line, not buried.",
-      "Dismiss hint 12px #d9c7a3. The current ~9px gray 'click to dismiss' is effectively invisible.",
-      "Toast 320\u00d764, portrait 48px, 'Next: Le Nette' 16px, 'Full \u00b7 double XP' 13px #3DDC6A, 8s timer bar 3px #e6b325. If '4 Second:Seconds' is your string, format it as '%d seconds'."
+      "Cancel the logout first and Find an inn before you log out share almost the same body. Use one title, Logout outside a rest area, and one body: Le Jette will not bank XP. Hearth to Feathermoon Stronghold or reach an inn, then log out.",
+      "Move mode shows Reset only on the toast. Add a 22px Reset at the top-right of the logout banner and the Esc card, same style as the toast.",
+      "Remove the stray 1px white line and the unlabelled gray square in the move overlay. Relabel the center card Drag the highlighted cards (16px), and replace the toast dump Filled up, ran out, running low, sleeping bag. with one example: Le Bankken is nearly full, 19h 11m left."
     ],
     "readability": [
-      "Roster primary 13px minimum, secondary 11px #c4b49a. 'seen 3d ago' and 'this session: none used yet' are below #6a6458 and fail on the plank background \u2014 lift them to #b3a48c.",
-      "Card body 14px / 20px line-height. The parked-outside paragraph is the one block that already works; match the tidbit values to it.",
-      "Sparkline at least 28px tall with the same 18px buckets as the full character. The red dashed 48h line is ~4px and unreadable.",
-      "Compact tooltip row height 18px, 13px text, 4px gap. Do not let the header icon row (checks, dots, Xs) be the only legend \u2014 add a 11px word under each."
+      "Secondary row text (level, inn, seen-ago) is under ~12px and near #8a7b66. Minimum 12px #d2c4a8. Same for the compact footer hint.",
+      "Timeline axis labels (12:00, Wed, +48H) are ~11px #a89880. Use 12px #e4d2b0. LEVELS BANKED at ~10px should be 11px #f3e6c4 with 1px tracking.",
+      "Options helper lines under checkboxes and the low-rest caption are gray-on-brown. Set them to 12px #d7cbb6. Do not use yellow for paragraph text."
     ],
     "layout_polish": [
-      "8px grid: 12px frame padding, 8px row gap, 48px row height. Bars, chips, and account tags share one right edge.",
-      "State chip column locked at 92px so FULL and PARK ME do not shove the account tag. Account tag 11px, always 'Acct 2', never a bare #2.",
-      "Class-icon badge must not intersect the portrait ring. Card width 420px, tiles 190\u00d752 with 8px gutters, 16px gap from the main window.",
-      "One sparkline component. The gold brick row and the red hairline are two different widgets and look unfinished.",
-      "First-run step rows align icon 32px / title 14px / body 12px to the same left edge as the welcome portrait, with 16px between steps."
+      "Footer controls do not share a metric: blue Unlink ~20px, gold All accounts ~24px, checkbox floating. Use one 22px row, 8px gaps: Unlink 80px, flex status, filter 110px, checkbox 12px from the right edge.",
+      "NOW PLAYING bar is a tall empty track unlike the 13px roster bars. Use the same 13px height, center the 32px face with the name and the chip, and align the chip column with the roster chips.",
+      "Reserve 140px on the timeline for date labels so Full Fri 25 Dec does not sit on the bar. Active tab ROSTER or TIMELINE needs a 2px #f0d080 underline and #fff2cc; inactive #9a8b72."
     ],
     "delight": [
-      "Keep the data-fed lines (mage water, Durotar cold). Shape the bubble and add a 400ms #ffcc66 glow on the newest glyph so the type-on has a target.",
-      "Stage reacts to state: candle pool for full, cold blue rim #3a4a6a for parked outside, desaturated planks for empty. A static face on black is not a stage.",
-      "Well-rested pips as 10px moons #e6b325, not anonymous dots. Empty first-run shows one sample line in the character's voice: 'I'll sit at the top once I'm full.'",
-      "Logout toast should feel like a handoff \u2014 portrait, one spoken clause, then the name \u2014 not a second system dialog."
+      "The imp line is an 11px gray bubble. Set it at 14px #f3ead6 directly under the name, and rotate three short lines so the hero is not a spreadsheet header.",
+      "Echo the timeline Full now pill (green fill, 11px #0e1a10 text, 4px radius) on the hero next to Full for 1d 16h so the reward is a status, not a caption.",
+      "On the saved-look card, draw the three z glyphs at 14px #f4efe6, staggered 4px, 6px above the portrait. That is the only charm on an otherwise empty card."
     ]
   },
-  "overall_notes": "The roster logic is the part that works: play-next hero, ordered list, worded state chips, and character-specific speech are the right product. It does not yet look like a crafted addon, and it does not look like his Gatewood UI. Default chrome is stock Blizzard, the ElvUI path is flat black without oak, iron, rivets, or enamel, yellow collides with green, and the card stage plus the duplicate logout warnings feel amateur. I would not approve it for a demanding user until the material language and the four state colours are unmistakable at a glance.",
+  "overall_notes": "Clearer than the 1.1.2 baseline: one red, thicker bars, a real timeline, and an explicit play-next sentence. It is still an admin panel. The default theme barely leaves the ElvUI palette, the options page does not wear Gatewood, the character card is mostly empty, and move mode looks unfinished. I would not ship this to a demanding user until the hero is an unmistakable action, the two themes use different chrome, and alert/move-mode copy and contrast are cleaned up.",
   "model": "grok-4.7"
 }
