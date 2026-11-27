@@ -1,67 +1,68 @@
 {
   "scores": {
     "visual_appeal": 8,
-    "play_next_clarity": 9,
+    "play_next_clarity": 8,
     "state_colours": 8,
     "character_identity": 8,
     "default_theme": 8,
     "elvui_wc3_fit": 7,
-    "alerts_ux": 8,
-    "readability": 7,
+    "alerts_ux": 7,
+    "readability": 8,
     "layout_polish": 7,
     "delight": 8
   },
   "changes": {
     "visual_appeal": [
-      "Make the banked figure the hero: 48px #7DDE5A, with \"levels banked\" at 11px #D4C7A1 only 2px under it. The current cluster competes with the green bar and the action line.",
-      "Drop 8px of the stacked gap between the rest bar, the \"Fully rested\u2026\" line, and the action row so the hero reads as one block, not three bands.",
-      "Replace the doodled zZ with the existing muted moon glyph at 40% opacity; it reads as a sketch on an otherwise finished frame."
+      "Drop the hero dim from a flat 45% black veil to a left-weighted vignette only: #000 at 80% over the left 220px, fading to 0% by 55% of the hero width, so the backdrop art is visible behind the 1.5 block.",
+      "Give every state chip one geometry: 22px tall, 3px radius, 8px horizontal padding, 1px border. Stop mixing a filled FULL pill with hollow RESTING buttons.",
+      "Section labels NOW PLAYING and NEXT BEST should be 11px, +80 tracking, #a89870, with 10px space above and 6px below so the black slabs separate."
+    ],
+    "play_next_clarity": [
+      "Make step 2 the only filled step: cream pill behind Le Dette: play now, and leave step 1 as plain text. Equal weight makes hearth and play look like the same job.",
+      "The runner-up line is ~11px and about #8a8070. Set it to 13px #d4c4a8 and write After Le Dette: Le Bankken, full in 19h so it reads as step 3, not a caption.",
+      "Put a 4px #5dce6a bar on the left of the hero only, and keep the red bar on NOW PLAYING, so the eye hits play-next before the logged-in warning."
     ],
     "state_colours": [
-      "Nearly-full is too close to UI gold. Use bar/pill #F0C93A on #3A3208 with label #1A1400, not the same hue as title text.",
-      "Resting orange should be #E36A1E, pill fill #4A240C, label #FFD2B0, so it separates from both gold chrome and the red not-resting pill (#C4382B, label #FFE8E4).",
-      "Add a 2px state-colour rail on the left of each row so green/yellow/orange/red reads before the pill text. Keep the now-playing bar at #3D8FD1 and never reuse it on the roster."
+      "RESTING fill is so dark it reads as an empty button. Use fill #3a2410, border #c47a2a, label #ffb060. NOT RESTING: fill #4a1818, border #e85d5d, label #ffb0a8. FULL: fill #16361f, border #3ecf6e, label #c8f5d4. NEARLY FULL: fill #3d3412, border #e2c15a, label #ffe7a3.",
+      "Jacques Hammer's red bar is a few pixels of #7a3030 on black. Paint the whole track #2a1212 and the fill #e85d5d at least 8px tall so 20% still reads as red.",
+      "Acct #3 is salmon and sits next to the not-resting red. Recolor account tags #9aa4b2 so red means only not resting."
     ],
     "character_identity": [
-      "Row portraits are ~24px. Bump to 36px and put a 14px class icon immediately left of the name.",
-      "Class-colour names at full WoW saturation (mage #69CCF0, hunter #ABD473, warrior #C79C6E) instead of washed white/gold.",
-      "Seat the level disc on the portrait ring at 4 o'clock: 28px disc, 14px bold numeral. It currently floats in the corner gap.",
-      "Cap speech at two lines, 13px, with the bubble tail aimed at the mouth."
+      "Race/gender badges on row discs are ~8px and unread. Draw them 16x16 at 4 o'clock with a 1px #000 ring.",
+      "Add a 2px class-colored ring on every disc, including the hero, so identity is not only in the name ink. Keep the state color on the row rail and the chip, not on that ring.",
+      "The hero disc is a noisy purple mass. Crop the class icon with 8px padding inside the circle so the imp/void mark has a quiet #1a1020 field and reads at a glance."
     ],
     "default_theme": [
-      "Title is lost on the three-board rail. Set it at 16px #F3E6C4, rail height 36px, 12px inset from the iron so it isn't sitting in the rivets.",
-      "Inner wells: fill #140E0A, 1px stroke #3A2E22, 8px padding, 6px corner radius so they don't fight the 48px outer frame.",
-      "Keep corner rivets only. Mid-edge rivets make the main window and the card look armored rather than furnished."
+      "Inner wells are still near-black, so Default looks like ElvUI without blue buttons. Well #1c140e, alternating rows #241a12 and #1a120c, hairline between rows #3a2c1c at 1px.",
+      "View details and Compact should be the only light bronze (#8a6a3a fill, #f0e2c4 label). Unlink and All accounts stay #3a2e22. That split is started; make the light pair 2px taller so primary is obvious.",
+      "Title bar: 28px, moon at 16px #e6c56a, title #f0e2c4. The current bar is thin and the moon does not anchor the classic frame."
     ],
     "elvui_wc3_fit": [
-      "The title plank sticks up above the frame. Andy's Character and Options titles sit inside a ~22px top band. Put \"Rested Leveling\" there at 13px #E6D7B0, no outline, no protruding wood sign.",
-      "Match his border: 6\u20138px #1A120C with 6px bronze studs only at the corners. The current portrait-frame weight is heavier than Guild, Reputation, and Options.",
-      "Fill #0C0A09, sub-panels #12100E with a 1px #2A241C line. Vignette the inn painting ~30% so the hero well stays as dark as the area around his character model.",
-      "Footer Compact: blue enamel #1E4E86, 22px tall, 8px above the skin's bottom strip. Primary \"View\" button #8E2A22, same 22px height as Expanded Stats."
+      "Alerts, the Esc card, and move placeholders are WC3 wood planks; the main window, card, and options are a 1px gold rectangle on flat black. One family only: either run the main frame, options, and character card through the same wood header and ~8px carved border as the logout banner, or flatten the alerts to ElvUI blankTex near-black. They currently cannot sit beside the character frame together.",
+      "Match the character frame's button metal: primary buttons 22px with the WC3 blue fill used on Expanded Stats' neighbors, not a flatter ElvUI rectangle next to a wood toast.",
+      "Options left nav highlight is a plain gold bar. Use the same selected-row treatment as the Game/AddOns tabs in the real options window so the page feels inherited, not a second settings skin."
     ],
     "alerts_ux": [
-      "Banner 420px wide with a 4px left accent #E24B3A. Title 14px, body 12px #F0E6D2. Rewrite the zone line to one sentence: \"Move to cancel. Then hearth \u2014 rest fills 4\u00d7 slower in The Barrens.\"",
-      "Turn \"Or play next: Le Nette\" into a 22px blue text button, not a caption under the warning.",
-      "Attach the right-click menu flush to the banner (0px gap, same left edge and width). It currently floats down-right as a second card.",
-      "On the Esc strip, leave an 8px gap under the menu and don't reuse the Exit Game red, or the alert reads as another menu button."
+      "The logout banner's only button is View details while the title says Cancel logout. Primary button Hearth to Feathermoon (or Cancel logout), secondary text button Details, 8px apart. Do not make the urgent control open a roster.",
+      "Never show the banner and the Esc card together; they repeat hearth, Le Dette, and 1.5 levels. If the logout banner is up, hide the Esc card. On the Esc card, drop the banked line and keep Find an inn before you log out plus the hearth sentence.",
+      "Move-mode wood frames have a large empty black interior (logout warning especially). Size each placeholder to its two text lines plus 12px padding, and put Drag to move on one shared hint, not as a dead area inside every panel."
     ],
     "readability": [
-      "Nothing that is a sentence should be under 12px. Row secondary (\"Lv 19 \u00b7 Thunder Bluff \u00b7 3d ago\") at 12px #D9D0C0.",
-      "Lift gray captions from ~#8A8478 to #C4B89A: \"none used this session\", \"scale 0\u2013100% of full\", \"Synced 2d ago from Acct #3\", chart axis labels.",
-      "Pills at 11px bold with 4px horizontal padding so \"NEARLY FULL\" and \"NOT RESTING\" don't crowd the bar."
+      "Then Le Bankken, full in 19h and seen 2d ago are below comfortable contrast. Secondary copy minimum #c8bba0 at 13px; metadata at 12px #b3a48c. Do not use #8a8070 on #0a0a0a.",
+      "Timeline ticks read NOW, 12:00, Wed 25 Nov, 12:00. Stack midnight as Wed 25 / 00:00 in the same two-line style as the FULL AFTER 48h dates so 12:00 is not an unlabeled noon.",
+      "Options slider ends say 5% and 50% while the header says 10%. Put the live value in a 36px box on the thumb (#f0e2c4) and label the ends Low and 50% so 10% is not a third competing number."
     ],
     "layout_polish": [
-      "Card and main window only share a top edge, so the pair looks unfinished. Pin both title bands to the same y with a 12px gutter, and give the card a min-height that meets the roster footer.",
-      "The 2px #E8C56B open-card stroke is not visible on Colonol Sunders in the ElvUI card scene. Draw it as a 2px inset on the row, above the bar.",
-      "Footer: one 28px row, checkbox and Compact vertically centered to each other, 10px clear of the skin's bottom strip.",
-      "\"NEXT BEST\" and the summary chips should share the row-name x, not the portrait x."
+      "NOW PLAYING still shows a ~280x18 empty track that reads as a text field. At 0 rested, delete the track and use one cream line, No rested XP: kills give normal XP, with a 3px #e85d5d underline.",
+      "Character card repeats Le Beouf in the title and the body, then leaves a dead black gap above the stat tiles. Remove the body name, and pull HEARTH / PLAYED / GOLD / PROFESSIONS up to 12px under the rested bar. Cap the portrait at 132px.",
+      "Roster chips must share a 92px column, right edge 12px inside the frame. NEARLY FULL is wider and lighter than RESTING and breaks the column. Timeline tooltip should open 8px right of the marker with a 16px gap before the time, not over the next lane's label."
     ],
     "delight": [
-      "Lead the toast with the imperative at 14px: \"Play Le Nette \u2014 1.7 levels banked.\" Demote \"rested XP used up\" to 11px #C4B89A.",
-      "Reuse the first-run speech tail on the #1 hero in the main window (max ~42 characters) so the character talks when they are who you should log, not only after the card opens.",
-      "The 48h chart is a flat slab. A 1px #E8C56B baseline and a single \"now\" tick would make \"Full the whole time.\" feel like a record, not an empty green bar."
+      "The imp line is the best writing on the screen and is drawn as a small gray system bubble. Set it 14px #f3ead8, with a 6px tail aimed at the portrait, directly under the name, not tucked beside the badge.",
+      "On the card, keep zzz but move it 8px outside the portrait ring at 1 o'clock, 14px #f0e2c4, so it is not clipped by the circle. One speech line at 15px is enough; do not also repeat the title.",
+      "When a bar is full, add a 1px #d8ffe4 inner highlight on the top of the green fill. The current flat green bar is correct but has no payoff."
     ]
   },
-  "overall_notes": "Default theme is a real classic-addon frame: oak rail, enamel buttons, sorted roster, and an action line that says what to do. ElvUI mode gets the fill, gold type, red primary, and footer blue right, but the protruding title plank and heavy portrait border do not sit next to Andy's flat Options and Character windows. Play-next is the strongest beat; small gray type, a missing selection stroke, and a muddy yellow-vs-gold state scale are what keep it off a 9.",
+  "overall_notes": "Round 5 fixes the real r4 failures: class color no longer paints the whole plan line, the waste reason is its own amber line, red rows refuse a fake fill time, and the Esc card is narrower with a moon instead of a red rail. The roster, legend, and 48-hour timeline are coherent enough for a serious addon. It is not a 9. The main window is still a flat black dashboard while alerts wear WC3 wood, the zero-rest track still looks like an empty input, RESTING chips still look like buttons, and the logout banner's only action is View details. Fix that family split and the empty-state chrome before calling it shippable for a demanding ElvUI user.",
   "model": "grok-4.7"
 }

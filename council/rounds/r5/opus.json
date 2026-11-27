@@ -1,4 +1,69 @@
 {
-  "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 189 (char 188)",
+  "scores": {
+    "visual_appeal": 8,
+    "play_next_clarity": 8,
+    "state_colours": 8,
+    "character_identity": 8,
+    "default_theme": 8,
+    "elvui_wc3_fit": 7,
+    "alerts_ux": 7,
+    "readability": 8,
+    "layout_polish": 7,
+    "delight": 7
+  },
+  "changes": {
+    "visual_appeal": [
+      "ElvUI hero: the darkened art is now invisible, so the hero, NOW PLAYING and roster are three identical pure-black slabs. Let the art read at about 20-25% (overlay 0.75, not 0.45 plus a wide fade on black), or give the hero a 1px inner highlight (#3a2e1f) and a 2px top gradient so it reads as the headline panel.",
+      "The 1.5 figure lost its punch compared with the baseline, where it was large and gold. Raise it to 34-36px in a warm gold (#f2c94c) and keep LEVELS BANKED at 10px with 0.1em tracking. It is the reward number, so it should outweigh the FULL chip under it.",
+      "Separate the roster rows with a 1px #1c1712 hairline or a 3% alternating tint in ElvUI mode. Pure-black rows on a pure-black well read as one mass."
+    ],
+    "play_next_clarity": [
+      "The plan strip now competes with the hero: step 1 is about Le Jette, while the hero says PLAY NEXT Le Dette. Make step 1 visually subordinate: muted cream #cfc3a6 at 12px. Make step 2 the bright one, Le Dette in class colour plus 'play now' in #fff1c9.",
+      "'Then Le Bankken, full in 19h' is about 10px grey and reads as a footnote. Set it to 11px #b8ab8a with the name in class colour. Indent it to align with step 1's text, not the disc, which means a left inset of about 22px.",
+      "Give the #1 portrait ring a 2px outer glow in the state colour (green #3fbf5f at 40% alpha). This ties the hero to the green FULL chip and bar at a glance."
+    ],
+    "state_colours": [
+      "The NEARLY FULL chip fill is far brighter than the other chips' dark fills, so it shouts louder than FULL, the actual best state. Use the same recipe for all four chips: fill at 25% of the hue on #120e0a, 1px edge at 80%, word at a 70% tint. For yellow that means fill #3a3410, edge #d9c23a, text #f3e48a.",
+      "The orange RESTING chip and the orange bars sit close to the WC3 bronze. Push resting to #e8892a for bars and the chip edge so it never reads as frame trim.",
+      "The toast for 'rested XP used up' uses a red rail, but red is reserved for not resting. Use the rail colour of the character being promoted (green for full Le Dette), or no rail. Use red only when the subject is logged out outside an inn."
+    ],
+    "character_identity": [
+      "Card (06): ' Level 11 Tauren Druid' and ' Seen 23 hours ago' are indented about 4px off the name's left edge. Align all three to the same x.",
+      "Card: there is about 60px of dead black between the speech bubble and the name block. Move the name block up 24px or drop the portrait 12px so the bubble tail points into the face, not the void.",
+      "Roster race/gender badges at 16px are illegible at 1x. Go to 18px with a 1px #000 ring plus a 1px gold outer ring. That matches the hero badge treatment, which already reads well."
+    ],
+    "default_theme": [
+      "The default hero art reads well, but the NOW PLAYING and roster wells are flat #2a2118. Add a subtle 1px inner bevel (top #4a3b28, bottom #120d08) so they feel like Blizzard inset panels, not filled rectangles.",
+      "The alternating row tint is too strong in places: rows 3 and 5 look like a different material. Cut the zebra difference to about 4% luminance."
+    ],
+    "elvui_wc3_fit": [
+      "The references (Character and Options windows) use a very dark WARM brown (about #15100c) with gold headings. Our ElvUI panels render as neutral #000-#080808. If E.media.backdropcolor is the source, also tint the roster well and card stage with backdropfadecolor so it matches the warm cast of the reference, not pure black.",
+      "Section headings in the reference are gold-yellow (#ffd100-ish, Blizzard normal font). Ours are cream. In ElvUI mode use E's value colour or #e6c35c for NOW PLAYING, NEXT BEST, BY TIME TO FULL and the Options section headers, so the addon sits beside the Options window as kin.",
+      "Options page (07): labels are cream on near-black, while the reference uses gold labels and larger filled checkboxes. Use gold #f0c419 for checkbox labels to match the Blizzard Options look the user already has."
+    ],
+    "alerts_ux": [
+      "Copy mismatch: the banner says 'Hearth to Feathermoon Stronghold, or find an inn.' and the Esc card omits the comma. Pick one string and reuse it.",
+      "Esc card: the ESC MENU tag sits crammed above the moon at the top-left corner. Move it to the top-right as a 9px tracked tag, or drop it; the moon plus the title already say what it is.",
+      "In both the banner and the move placeholders, the WC3 wood tile stops short of the right edge (banner: wood then grey stone; logout placeholder: wood to about 80% of the width). If it is our backdrop, tile to the full inset. If it is WC3's, size our frame to the tile's natural width.",
+      "Logout placeholder (04) has about 30px of empty space between the description and 'Default position. Drag to move.'. Trim the height to the content plus 10px padding. Also add a small 4-way move glyph at the top-right of each placeholder so the drag affordance is visible without reading."
+    ],
+    "readability": [
+      "Hero: 'More rest is wasted.' sits 2-3px above the plan-strip divider and looks clipped. Give it 6px clearance or raise the state lines by 4px.",
+      "Timeline: the hover tooltip covers the Le Nette and Le Jedde bars and their end arrows. Anchor it above the hovered lane's marker, or right of the marker with a max width that stops before the FULL AFTER 48h gutter.",
+      "Compact tip: the right column wraps long strings ('Outside \u00b7 Not filling: rest at an inn'). Set a min width of 520px, or drop 'Outside \u00b7' there, since red already says it."
+    ],
+    "layout_polish": [
+      "Options: 'Drag the logout warning...' butts directly against WINDOW AND DISPLAY with 0px gap, and About is jammed at the canvas bottom. Remove the extra blank line after the APPEARANCE radio row and reclaim about 8px; give each section header 8px above.",
+      "The '#3' account radio is cryptic. Use 'Account 3' or the paired character name ('Le Bankken's account'). It costs no height.",
+      "The plan-strip discs render '1' like 'I' in the ElvUI font. Use tabular numerals or nudge the glyph 1px right. Also, View details is vertically centred on the step row; centre it on the full strip, including the 'Then' line.",
+      "Timeline: Le Dette's lane draws a full-width empty dark track behind 'Full now'. Hide the track for full characters, or fill it green at 30%."
+    ],
+    "delight": [
+      "Nothing moves or celebrates in the stills. Add a 0.6s one-shot shimmer on the green hero bar when the window opens on a FULL #1, respecting Reduce motion.",
+      "Speech lines are good. Rotate a few state-aware ones for red characters too ('Brr, no inn out here.') and show them in the timeline tooltip for personality there.",
+      "Card: the zZZ is charming. Add a matching small gold moon on the RESTING chip in the card only, as a tie-in with the title moon."
+    ]
+  },
+  "overall_notes": "Solid round: the plan strip's name and verb split, filled chips, Not filling copy for red rows, the two-line timeline gutter and the slimmer Esc card all landed. The information design is now clearly better than the in-game baseline. What keeps it below 9: (1) the ElvUI mode is technically inherited but flattened. Hero, NOW PLAYING and roster are undifferentiated pure black and cooler than the warm-brown, gold-headed references, and the hero lost the big gold 1.5 that made the baseline feel rewarding. (2) The alerts have WC3 texture seams, copy drift between the banner and the Esc card, a crowded ESC MENU tag, and a red rail used for a non-red state. (3) Several 2-6px collisions and clearances (More rest is wasted against the divider, the Options section gaps, the misindented card lines) read as unfinished. The default theme is the most coherent of the set. Fix hierarchy in the ElvUI hero and tidy the alerts, and this reaches 8.5-9.",
   "model": "claude-opus-5-5"
 }
