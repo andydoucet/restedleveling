@@ -39,6 +39,7 @@ read_globals = {
 	"GetMaxLevelForPlayerExpansion",
 	"GetMaxPlayerLevel",
 	"GetMoney",
+	"GetNormalizedRealmName",
 	"GetPhysicalScreenSize",
 	"GetRealZoneText",
 	"GetRealmName",

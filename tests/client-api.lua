@@ -29,6 +29,7 @@ return {
 		["GetMaxLevelForPlayerExpansion"] = "f",
 		["GetMaxPlayerLevel"] = "f",
 		["GetMoney"] = "f",
+		["GetNormalizedRealmName"] = "f",
 		["GetPhysicalScreenSize"] = "f",
 		["GetRealZoneText"] = "f",
 		["GetRealmName"] = "f",

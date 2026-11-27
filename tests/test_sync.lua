@@ -11,7 +11,7 @@ local function rec(full, t, extra)
 end
 
 local cases = {}
-local function pair()
+local function pair(noGuild)
 	local net = {}
 	local function client(name, first, surname, class, extraChars)
 		local state = { first = first, surname = surname, class = class, realm = "",
@@ -25,7 +25,7 @@ local function pair()
 				end,
 				AreOutgoingAddonChatMessagesRestricted = function() return false end,
 			}
-			game.IsInGuild = function() return true end
+			game.IsInGuild = function() return not noGuild end
 			game.IsInGroup = function() return false end
 			game.IsInRaid = function() return false end
 		end
@@ -157,9 +157,117 @@ function cases.links_take_full_names_any_case_and_any_realm_suffix()
 	local data = false
 	for i = before + 1, #sent do if sent[i].text:sub(1, 1) == "D" then data = true end end
 	T.ok(data, "and the mutual link sends our roster")
+	T.ok(s.peers.bbbbbb, "the paired account takes a peer slot")
 	h.Slash("RESTEDLEVELING", "unlink Le Bankken")
 	T.ok(next(s.links) == nil and s.confirmed["le bankken"] == nil, "/rlvl unlink Le Bankken removes it")
+	T.ok(s.peers.bbbbbb == nil, "and frees its peer slot, so a ninth account can pair later")
 	T.clean(h)
+end
+
+function cases.a_later_login_syncs_both_ways_without_waiting_for_the_ticker()
+	local a, b, deliver = pair(true)   -- no shared guild or group: whispers only
+	a.h.Slash("RESTEDLEVELING", "link " .. b.name)
+	b.h.Slash("RESTEDLEVELING", "link " .. a.name)
+	deliver()
+	T.ok(W.Char(b.h, "Le Jette"), "paired and synced once")
+	-- Later: b stays online; a logs out, plays a new alt, and logs in again. Only a says hello (its login announce).
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 3600) end
+	W.DB(a.h).chars["N:Le Newbie@?"] = rec("Le Newbie", W.NOW + 3500, { account = "aaaaaa" })
+	a.state.ns.Sync.Announce()
+	deliver()
+	T.ok(W.Char(b.h, "Le Newbie"), "b answers a's login hello, so a sends its new roster at once")
+	T.clean(a.h); T.clean(b.h)
+end
+
+-- A mutually linked lone client, ready to receive chunks from "Le Bankken".
+local function confirmed()
+	local h, state, sent = lone()
+	h.Slash("RESTEDLEVELING", "link Le Bankken")
+	h.Fire("CHAT_MSG_ADDON", "RLVL1", "Hbbbbbb;00000000;Other;1", "WHISPER", "Le Bankken")
+	return h, state, sent
+end
+
+function cases.a_long_roster_reassembles_while_chunks_keep_coming()
+	local h, state = confirmed()
+	local C = state.ns.Codec
+	local function chunks(full) return C.Chunk(C.EncodeRoster({ ["N:" .. full .. "@?"] = rec(full, W.NOW) }, "bbbbbb"), 40) end
+	local function send(id, parts, i)
+		h.Fire("CHAT_MSG_ADDON", "RLVL1", ("D%d;%d;%d;%s"):format(id, i, #parts, parts[i]), "WHISPER", "Le Bankken")
+	end
+	W.RunTimers(state)
+	local far = chunks("Le Far")
+	T.ok(#far >= 3, "several chunks (" .. #far .. ")")
+	send(7, far, 1)
+	local first = table.remove(state.timers)   -- the expiry started by chunk 1
+	send(7, far, 2)
+	first()   -- 60 s after chunk 1, but chunk 2 came since: the roster is still being received
+	for i = 3, #far do send(7, far, i) end
+	T.ok(W.Char(h, "Le Far"), "the roster completes")
+	-- A roster that stops arriving still expires 60 s after its last chunk.
+	local gone = chunks("Le Gone")
+	send(8, gone, 1)
+	W.RunTimers(state)
+	for i = 2, #gone do send(8, gone, i) end
+	T.ok(not W.Char(h, "Le Gone"), "a stalled roster is dropped")
+	T.clean(h)
+end
+
+function cases.names_keep_a_realm_that_is_not_ours()
+	local state = { setup = function(game) game.GetNormalizedRealmName = function() return "Forever" end end }
+	local _, h = W.New(state)
+	local S = state.ns.Sync
+	T.eq(S.CleanName("Le Bankken-Forever"), "Le Bankken", "our own realm is dropped")
+	T.eq(S.CleanName("Le Bankken"), "Le Bankken", "no realm: as is")
+	T.eq(S.CleanName("Le Bankken-Other Realm"), "Le Bankken-OtherRealm", "another realm is kept")
+	T.ok(S.NameKey("Le Bankken-OtherRealm") ~= S.NameKey("Le Bankken"), "so it never matches a link to ours")
+	T.clean(h)
+end
+
+-- Review (ILL-1272): the peer said hello a minute ago, so it does not answer ours again (RESEND); our own announce
+-- must still send a changed roster to a confirmed peer.
+function cases.announce_sends_a_changed_roster_to_a_confirmed_peer_at_once()
+	local a, b, deliver = pair(true)
+	a.h.Slash("RESTEDLEVELING", "link " .. b.name)
+	b.h.Slash("RESTEDLEVELING", "link " .. a.name)
+	deliver()
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 60) end   -- well inside the 5-minute resend window
+	W.DB(a.h).chars["N:Le Fresh@?"] = rec("Le Fresh", W.NOW + 50, { account = "aaaaaa" })
+	a.state.ns.Sync.Announce()
+	deliver()
+	T.ok(W.Char(b.h, "Le Fresh"), "the new alt arrives without waiting for the ticker")
+	T.clean(a.h); T.clean(b.h)
+end
+
+-- Review (ILL-1272): a non-integer index never stores a part (the header takes digits only).
+function cases.a_chunk_with_a_fractional_index_is_dropped()
+	local h, state = confirmed()
+	local C = state.ns.Codec
+	local parts = C.Chunk(C.EncodeRoster({ ["N:Le Odd@?"] = rec("Le Odd", W.NOW) }, "bbbbbb"), 400)
+	h.Fire("CHAT_MSG_ADDON", "RLVL1", "D9;1.0;1;" .. parts[1], "WHISPER", "Le Bankken")
+	T.ok(not W.Char(h, "Le Odd"), "not a chunk index")
+	h.Fire("CHAT_MSG_ADDON", "RLVL1", "D9;1;1;" .. parts[1], "WHISPER", "Le Bankken")
+	T.ok(W.Char(h, "Le Odd"), "the same chunk with a whole index is taken")
+	T.clean(h)
+end
+
+-- Review round 2 (ILL-1272): our announce goes out while the peer is offline (lost); the peer logs in two minutes later.
+-- Its login hello must still get our new roster, and ours its, without waiting for the 15-minute ticker.
+function cases.a_peer_logging_in_after_our_announce_still_gets_our_roster()
+	local a, b, deliver, net = pair(true)
+	a.h.Slash("RESTEDLEVELING", "link " .. b.name)
+	b.h.Slash("RESTEDLEVELING", "link " .. a.name)
+	deliver()
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 3600) end
+	W.DB(a.h).chars["N:Le Newbie@?"] = rec("Le Newbie", W.NOW + 3500, { account = "aaaaaa" })
+	a.state.ns.Sync.Announce()   -- A's ticker; B is offline
+	for _ = 1, 50 do a.h.Env().__now = a.h.Env().__now + 2; a.state.ns.Sync.Pump() end
+	local q = net()
+	for i = #q, 1, -1 do q[i] = nil end   -- nobody there to receive it
+	for _, c in ipairs({ a, b }) do W.Advance(c.h, 120) end
+	b.state.ns.Sync.Announce()   -- B logs in
+	deliver()
+	T.ok(W.Char(b.h, "Le Newbie"), "B has A's new alt after its own login hello")
+	T.clean(a.h); T.clean(b.h)
 end
 
 return cases
