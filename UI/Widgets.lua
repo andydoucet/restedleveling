@@ -302,3 +302,140 @@ function Wg.Balance(fs, maxW)
 	if w > maxW then fs:SetWidth(math.min(maxW, math.ceil(w / math.ceil(w / maxW)) + 28)) end
 	return fs:GetWidth()
 end
+
+-- A vertical scrollbar for a list that shows `visible` of `total` items from `offset` (rows for the roster and the
+-- timeline, pixels for the settings page). A full-height track; a thumb sized to visible/total (at least SCROLL_MIN
+-- px) that can be dragged; a click on the track pages by `visible`; the wheel moves `step`. The owner keeps the offset:
+-- every input calls onScroll(wanted offset) and the owner clamps it, redraws and calls SetRange again. Hidden, track
+-- and all, when everything fits. Default style: our dark well and bronze thumb; under a host skin (ElvUI) the host's
+-- own scrollbar skin (S:HandleScrollBar finds the thumb as b.ThumbTexture), which skins on top of ElvUI follow.
+Wg.SCROLL_W, Wg.SCROLL_GAP, Wg.SCROLL_MIN = 8, 3, 24
+
+-- The thumb's height and its top (px down from the track's top).
+function Wg.ScrollThumb(trackH, visible, total, offset)
+	local max = math.max(0, (total or 0) - visible)
+	if max == 0 then return trackH, 0 end
+	local h = math.min(trackH, math.max(Wg.SCROLL_MIN, math.floor(trackH * visible / total + 0.5)))
+	offset = math.max(0, math.min(max, offset or 0))
+	return h, (trackH - h) * offset / max
+end
+
+-- The offset for a thumb whose top is `top` px down the track (a drag), nearest item, clamped.
+function Wg.ScrollOffsetAt(trackH, thumbH, top, max)
+	if max <= 0 or trackH <= thumbH then return 0 end
+	return math.max(0, math.min(max, math.floor(top / (trackH - thumbH) * max + 0.5)))
+end
+
+-- Where a click `y` px down the track goes: a page up above the thumb, a page down below it, nowhere on it.
+function Wg.ScrollPage(b, y)
+	local h, top = Wg.ScrollThumb(b:GetHeight(), b.visible, b.total, b.offset)
+	if y < top then return b.offset - b.visible end
+	if y > top + h then return b.offset + b.visible end
+	return b.offset
+end
+
+-- The cursor's height in `f`'s own units, and how far down `f`'s top it is (nil when the frame is not placed).
+local function cursorY(f)
+	local _, y = GetCursorPosition()
+	y = y / f:GetEffectiveScale()
+	local top = f:GetTop()
+	return y, top and (top - y)
+end
+
+local function lit(b)
+	b.grab.hl:SetShown(b.dragging or b.over or false)
+end
+
+local function stopDrag(b)
+	b.dragging = nil
+	b:SetScript("OnUpdate", nil)
+	lit(b)
+end
+
+local function dragUpdate(b)
+	if not IsMouseButtonDown("LeftButton") then stopDrag(b) return end
+	local y = cursorY(b)
+	local h = Wg.ScrollThumb(b:GetHeight(), b.visible, b.total, b.offset)
+	local at = Wg.ScrollOffsetAt(b:GetHeight(), h, b.dragTop + (b.dragY - y), b.total - b.visible)
+	if at ~= b.offset then b.onScroll(at) end
+end
+
+function Wg.ScrollBar(parent, onScroll, step)
+	local b = CreateFrame("Frame", nil, parent)
+	b:SetWidth(Wg.SCROLL_W)
+	b.onScroll, b.step = onScroll, step or 1
+	b.offset, b.visible, b.total = 0, 1, 0
+	b.ThumbTexture = b:CreateTexture(nil, "ARTWORK")   -- the name the host's scrollbar skin looks for
+	b.ThumbTexture:SetWidth(Wg.SCROLL_W)
+	if St.HostFrame() then
+		St.ScrollBar(b)   -- ElvUI: its backdrop on the track, its normTex and value colour on the thumb
+	else
+		b.track = b:CreateTexture(nil, "BACKGROUND")
+		b.track:SetAllPoints()
+		St.Paint(b.track, "sw_well")
+		b.edge = {}
+		for _, side in ipairs({ "TOP", "BOTTOM", "LEFT", "RIGHT" }) do   -- a 1 px edge: the track is a slot
+			local e = b:CreateTexture(nil, "BORDER")
+			St.Paint(e, "sw_edge")
+			if side == "TOP" or side == "BOTTOM" then
+				e:SetPoint(side .. "LEFT"); e:SetPoint(side .. "RIGHT"); e:SetHeight(1)
+			else
+				e:SetPoint("TOP" .. side); e:SetPoint("BOTTOM" .. side); e:SetWidth(1)
+			end
+			b.edge[#b.edge + 1] = e
+		end
+		St.Paint(b.ThumbTexture, "sw_bronze")
+		b.lip = b:CreateTexture(nil, "ARTWORK", nil, 1)   -- a gold lip along the thumb's top
+		St.Paint(b.lip, "sw_gold")
+		b.lip:SetPoint("TOPLEFT", b.ThumbTexture)
+		b.lip:SetPoint("TOPRIGHT", b.ThumbTexture)
+		b.lip:SetHeight(1)
+	end
+	-- The thumb's hit area, over whatever drew the thumb: drag it; hover or drag lights it.
+	b.grab = CreateFrame("Button", nil, b)
+	b.grab:SetPoint("TOPLEFT", b.ThumbTexture, "TOPLEFT", -1, 0)
+	b.grab:SetPoint("BOTTOMRIGHT", b.ThumbTexture, "BOTTOMRIGHT", 1, 0)
+	b.grab:SetFrameLevel(b:GetFrameLevel() + 4)   -- over a host skin's thumb backdrop
+	b.grab.hl = b.grab:CreateTexture(nil, "OVERLAY")
+	b.grab.hl:SetPoint("TOPLEFT", 1, 0)
+	b.grab.hl:SetPoint("BOTTOMRIGHT", -1, 0)
+	-- a warm wash: strong on our bronze, light over a host skin's own thumb art so that art still shows
+	b.grab.hl:SetColorTexture(1, 0.86, 0.5, St.HostFrame() and 0.16 or 0.35)
+	b.grab.hl:Hide()
+	b.grab:SetScript("OnEnter", function() b.over = true lit(b) end)
+	b.grab:SetScript("OnLeave", function() b.over = nil lit(b) end)
+	b.grab:SetScript("OnMouseDown", function(_, button)
+		if button ~= "LeftButton" then return end
+		b.dragY = cursorY(b)
+		b.dragTop = select(2, Wg.ScrollThumb(b:GetHeight(), b.visible, b.total, b.offset))
+		b.dragging = true
+		b:SetScript("OnUpdate", dragUpdate)
+		lit(b)
+	end)
+	b.grab:SetScript("OnMouseUp", function() stopDrag(b) end)
+	b:SetScript("OnHide", stopDrag)
+	b:EnableMouse(true)
+	b:SetScript("OnMouseDown", function(self, button)
+		if button ~= "LeftButton" then return end
+		local _, down = cursorY(self)
+		if down then self.onScroll(Wg.ScrollPage(self, down)) end
+	end)
+	b:EnableMouseWheel(true)
+	b:SetScript("OnMouseWheel", function(self, delta) self.onScroll(self.offset - delta * self.step) end)
+	b.SetRange = Wg.SetScrollRange
+	b:Hide()
+	return b
+end
+
+-- Show `visible` of `total` from `offset`: size and place the thumb, or hide the bar when everything fits.
+function Wg.SetScrollRange(b, total, visible, offset)
+	b.total, b.visible, b.offset = total or 0, visible, offset or 0
+	local over = b.total > b.visible
+	b:SetShown(over)
+	if not over then return end
+	local h, top = Wg.ScrollThumb(b:GetHeight(), b.visible, b.total, b.offset)
+	b.ThumbTexture:SetHeight(h)
+	b.ThumbTexture:ClearAllPoints()
+	b.ThumbTexture:SetPoint("TOPLEFT", b, "TOPLEFT", 0, -top)
+	b.ThumbTexture:SetPoint("TOPRIGHT", b, "TOPRIGHT", 0, -top)
+end

@@ -200,7 +200,7 @@ function cases.settings_scroll_on_a_small_screen()
 	h.Slash("RESTEDLEVELING", "options")
 	local f = env.RestedLevelingSettings
 	T.ok(f:GetHeight() * 1.15 <= 768 - 40, "fits the screen")
-	T.ok(f.scrollMax > 0 and f.thumb:IsShown(), "the page scrolls, with a thumb")
+	T.ok(f.scrollMax > 0 and f.bar:IsShown(), "the page scrolls, with a scrollbar")
 	FakeWoW.RunScript(f.scroll, "OnMouseWheel", -1)
 	T.eq(f.scrollAt, 40, "the wheel scrolls 40")
 	for _ = 1, 50 do FakeWoW.RunScript(f.scroll, "OnMouseWheel", -1) end
@@ -211,7 +211,7 @@ function cases.settings_scroll_on_a_small_screen()
 	f:SetScale(1)
 	f:Show()
 	T.eq(f.scrollMax, 0, "a full-size screen: no scrolling")
-	T.ok(not f.thumb:IsShown(), "and no thumb")
+	T.ok(not f.bar:IsShown(), "and no scrollbar")
 	T.clean(h)
 end
 

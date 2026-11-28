@@ -6,7 +6,9 @@ local St, Wg, Wd = ns.Style, ns.Widgets, ns.Words
 local Main = {}
 ns.Main = Main
 
-Main.W, Main.VISIBLE = 776, 9
+-- The list shows VISIBLE rows (or timeline lanes) and scrolls for the rest: the window is one fixed height whatever the
+-- roster size (Andy, 1.3.1: "I want the window to stay the same size and have it be able to just scroll the list").
+Main.W, Main.VISIBLE = 776, 5
 local PAD = 20   -- inside the frame band
 local TOP = 56   -- below the title rail and its rule (or the host skin's title band)
 
@@ -37,6 +39,8 @@ end
 
 local FOOT = St.FOOT + 14   -- the footer has room above and below it
 local function chromeH(f, listH) return TOP + f.heroH + 8 + f.curH + 36 + listH + 8 + FOOT end
+-- The window's one height: the full hero card and VISIBLE rows.
+function Main.Height(f) return TOP + f.fullHeroH + 8 + f.curH + 36 + Main.VISIBLE * ns.Roster.ROW_H + 8 + FOOT end
 
 function Main.Create()
 	if Main.frame then return Main.frame end
@@ -122,9 +126,9 @@ function Main.Create()
 	f.band:SetPoint("LEFT", f.list, "LEFT", 0, 0)   -- exactly the list's width
 	f.band:SetPoint("RIGHT", f.list, "RIGHT", 0, 0)
 	St.Panel(f.list, "inset")
-	f.roster = ns.Roster.Create(f.list, inner - 8, Main.VISIBLE)
+	f.roster = ns.Roster.Create(f.list, inner - 6, Main.VISIBLE)   -- its scrollbar 1 px inside the well's right edge
 	f.roster:SetPoint("TOPLEFT", 4, -4)
-	f.timeline = ns.Timeline.Create(f.list, inner - 8)
+	f.timeline = ns.Timeline.Create(f.list, inner - 6)
 	f.timeline:SetPoint("TOPLEFT", 4, -4)
 	-- The band's view tabs, on its right end: ROSTER | TIMELINE (the 48-hour fill timeline).
 	f.tabs = {}
@@ -179,7 +183,10 @@ function Main.Create()
 	f.acctBtn:SetScript("OnEnter", function(self) Main.AccountTip(self) end)
 	f.acctBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-	f:SetScript("OnShow", function() Main.Refresh() end)
+	f:SetScript("OnShow", function()   -- opened: both lists from the top
+		f.roster.offset, f.timeline.offset = 0, 0
+		Main.Refresh()
+	end)
 	Main.frame = f
 	f:Hide()
 	return f
@@ -235,12 +242,12 @@ function Main.Refresh()
 	for _, r in ipairs(rows) do if r ~= hero then list[#list + 1] = r end end
 	-- Numbered in sort order: from 2 under a #1 hero, from 1 when the hero is the one that fills first (not rows[1]).
 	ns.Roster.Update(f.roster, list, now, (hero and hero == rows[1]) and 2 or 1)
-	-- Fit the window to the roster: between 3 and 9 rows tall (the first-run guide needs about 4).
-	local shown = math.max(3, math.min(Main.VISIBLE, #list))
-	local listH = #list == 0 and (f.roster.guide:IsShown() and (f.roster.guide:GetHeight() + 16) or ns.Roster.ROW_H)
-		or shown * ns.Roster.ROW_H
+	-- One window height whatever the roster: VISIBLE rows, blank slots under a short list, a scrollbar for a long one.
+	-- The welcome card is shorter than the hero (no action bar); the list well takes up the difference.
+	local winH = Main.Height(f)
+	local listH = winH - chromeH(f, 0)
 	f.list:SetHeight(listH + 8)
-	f:SetHeight(chromeH(f, listH))
+	f:SetHeight(winH)
 	local n = { full = 0, near = 0, resting = 0, outside = 0 }
 	for _, r in ipairs(rows) do if r.group ~= 5 and n[r.state] then n[r.state] = n[r.state] + 1 end end
 	for state, t in pairs(f.legend.parts) do t:SetText(n[state] .. " " .. St.STATE[state].word:lower()) end

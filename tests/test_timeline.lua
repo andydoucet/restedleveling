@@ -102,7 +102,7 @@ function cases.a_near_cap_outside_alt_is_not_next()
 end
 
 -- Review (ILL-1272): more characters than lanes: the mouse wheel scrolls the timeline like the roster.
-function cases.the_wheel_scrolls_lanes_past_the_ninth()
+function cases.the_wheel_scrolls_lanes_past_the_fifth()
 	local chars = {}
 	for i = 1, 12 do chars[("N:Alt %02d@?"):format(i)] = alt(("Alt %02d"):format(i), 0.05 * i, true) end
 	local state = { saved = { opts = { view = "timeline" }, chars = chars }, setup = function(game)

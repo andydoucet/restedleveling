@@ -32,6 +32,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `GameTooltip` | used | used |  |
 | global | `GetBindLocation` | doc | doc |  |
 | global | `GetCurrentTitle` | doc | doc |  |
+| global | `GetCursorPosition` | doc | doc |  |
 | global | `GetGuildInfo` | used | used |  |
 | global | `GetInventoryItemLink` | used | used |  |
 | global | `GetInventoryItemQuality` | used | - |  |
@@ -54,6 +55,7 @@ Verified in game: not yet (the desk runs the in-game matrix). Unverified here: 0
 | global | `IsInGuild` | doc | doc |  |
 | global | `IsInInstance` | doc | doc |  |
 | global | `IsInRaid` | used | used |  |
+| global | `IsMouseButtonDown` | doc | used |  |
 | global | `IsResting` | doc | used |  |
 | global | `ItemTextFrame` | used | used | yes |
 | global | `LibStub` | - | - | yes |

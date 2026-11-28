@@ -2,10 +2,10 @@
 -- own movable window in the main window's chrome around the settings page (Options.lua builds the same page into the
 -- Blizzard Settings panel). Esc closes it; where it was dragged is saved (RestedLevelingDB.positions.settings).
 -- While the notifications are unlocked it docks at the left edge, above the dimmed screen, beside the placeholders.
--- Taller than the screen (a small screen with bigger windows): the page scrolls with the mouse wheel.
+-- Taller than the screen (a small screen with bigger windows): the page scrolls, with the main window's scrollbar.
 
 local _, ns = ...
-local St = ns.Style
+local St, Wg = ns.Style, ns.Widgets
 local Se = {}
 ns.Settings = Se
 
@@ -74,9 +74,9 @@ function Se.Create()
 	f.scroll:SetScrollChild(f.page)
 	f.scroll:EnableMouseWheel(true)
 	f.scroll:SetScript("OnMouseWheel", function(_, delta) Se.ScrollTo((f.scrollAt or 0) - delta * 40) end)
-	f.thumb = f.well:CreateTexture(nil, "OVERLAY")   -- where the view is, when the page scrolls
-	f.thumb:SetColorTexture(0.84, 0.66, 0.30, 0.8)
-	f.thumb:SetWidth(4)
+	f.bar = Wg.ScrollBar(f.well, function(at) Se.ScrollTo(at) end, 40)   -- drag, page, wheel; only when it scrolls
+	f.bar:SetPoint("TOPRIGHT", -3, -3)
+	f.bar:SetFrameLevel(f.scroll:GetFrameLevel() + 2)
 	ns.Options.Build(f.page, INSET, -INSET)
 	f:SetWidth(w + PAD * 2)
 	f:SetScript("OnShow", function() place(f) Se.Refresh() end)
@@ -101,20 +101,15 @@ function Se.Refresh()
 	Se.ScrollTo(f.scrollAt or 0)
 end
 
--- Scroll the page to `y` (clamped), and move the thumb to match.
+-- Scroll the page to `y` (clamped), and set the scrollbar to match.
 function Se.ScrollTo(y)
 	local f = Se.frame
 	local max = f.scrollMax or 0
 	f.scrollAt = math.max(0, math.min(max, y))
 	f.scroll:SetVerticalScroll(f.scrollAt)
-	f.thumb:SetShown(max > 0)
-	if max > 0 then
-		local view = f.well:GetHeight()
-		local th = math.max(24, view * view / (view + max))
-		f.thumb:SetHeight(th)
-		f.thumb:ClearAllPoints()
-		f.thumb:SetPoint("TOPRIGHT", f.well, "TOPRIGHT", -3, -(view - th) * f.scrollAt / max)
-	end
+	local view = f.well:GetHeight()
+	f.bar:SetHeight(math.max(1, view - 6))
+	f.bar:SetRange(view + max, view, f.scrollAt)
 end
 
 function Se.Show()
