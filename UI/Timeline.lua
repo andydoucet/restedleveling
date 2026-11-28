@@ -157,14 +157,13 @@ end
 function Tl.Create(parent, w)
 	local f = CreateFrame("Frame", nil, parent)
 	f:SetWidth(w)
-	-- More lanes than fit: the mouse wheel scrolls them, as it scrolls the roster.
+	-- More lanes than fit: the roster's scrollbar down the right, beside the lanes; the wheel scrolls them too.
 	f.offset = 0
 	f:EnableMouseWheel(true)
-	f:SetScript("OnMouseWheel", function(self, delta)
-		self.offset = (self.offset or 0) - delta
-		if self.rows then Tl.Update(self, self.rows, self.now, self:GetHeight()) end
-	end)
-	f.plotX, f.plotW = Tl.LABEL_W, w - Tl.LABEL_W - Tl.GUTTER - 8
+	f:SetScript("OnMouseWheel", function(self, delta) Tl.Scroll(self, self.offset - delta) end)
+	f.bar = Wg.ScrollBar(f, function(at) Tl.Scroll(f, at) end)
+	-- The lanes and the gutter leave the scrollbar its strip, as the roster rows do.
+	f.plotX, f.plotW = Tl.LABEL_W, w - Wg.SCROLL_W - Wg.SCROLL_GAP - Tl.LABEL_W - Tl.GUTTER - 8
 	f.shades, f.ticks, f.lanes = {}, {}, {}
 	f.nowLine = f:CreateTexture(nil, "OVERLAY", nil, 2)
 	f.nowLine:SetWidth(2)
@@ -196,6 +195,12 @@ function Tl.Create(parent, w)
 end
 
 local function x(f, frac) return f.plotX + frac * f.plotW end
+
+-- Scroll so lane `at` (0 = the first) is on top; clamped in Update.
+function Tl.Scroll(f, at)
+	f.offset = at
+	if f.rows then Tl.Update(f, f.rows, f.now, f:GetHeight()) end
+end
 
 -- Draw the timeline for `rows` at `now` in `h` px (the list's height).
 function Tl.Update(f, rows, now, h)
@@ -316,6 +321,10 @@ function Tl.Update(f, rows, now, h)
 		end
 	end
 	hideFrom(f.lanes, n + 1)
+	f.bar:ClearAllPoints()
+	f.bar:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, plotTop)
+	f.bar:SetHeight(math.max(1, plotH))
+	f.bar:SetRange(#lanes, n, f.offset)
 	return n
 end
 

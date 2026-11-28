@@ -129,7 +129,7 @@ local STEPS = {
 function R.Guide(parent, w)
 	local g = CreateFrame("Frame", nil, parent)
 	g:SetPoint("TOPLEFT", 8, -10)
-	g:SetSize(w - 16, 3 * 58 + 40)   -- room for the link field's two-line state under step 3
+	g:SetSize(w - 16, 3 * 58 + 54)   -- room for the link field's two-line state under step 3
 	for i, step in ipairs(STEPS) do
 		local icon = g:CreateTexture(nil, "ARTWORK")
 		icon:SetSize(34, 34)
@@ -150,34 +150,41 @@ function R.Guide(parent, w)
 		St.Color(d, St.CREAM)
 	end
 	g.link = ns.Link.Create(g, w - 90)   -- the inline name field: links in place, no popup
-	g.link:SetPoint("TOPLEFT", 66, -(3 * 58) - 4)   -- on the step text's left edge, 8 px under it
+	g.link:SetPoint("TOPLEFT", 66, -(3 * 58) - 18)   -- on the step text's left edge, clear of its second line
 	g:Hide()
 	return g
 end
 
+-- The list: `visible` rows, always that many slots (fewer characters leave the rest blank), and a scrollbar for the
+-- rest down its right side. The rows always leave the scrollbar its strip, so the columns never move when it appears;
+-- the chips' right edge (COL.chip + CHIP_W) stays inside the narrower row, on NOW PLAYING's.
 function R.Create(parent, w, visible)
 	local f = CreateFrame("Frame", nil, parent)
 	f:SetSize(w, visible * R.ROW_H)
 	f.rows, f.offset, f.visible = {}, 0, visible
+	f.rowW = w - Wg.SCROLL_W - Wg.SCROLL_GAP
 	for i = 1, visible do
-		local row = createRow(f, w - 6)
+		local row = createRow(f, f.rowW)
 		row:SetPoint("TOPLEFT", 0, -(i - 1) * R.ROW_H)
 		f.rows[i] = row
 	end
-	f.thumb = f:CreateTexture(nil, "OVERLAY")
-	St.Paint(f.thumb, "sw_bronze")
-	f.thumb:SetWidth(3)
+	f.bar = Wg.ScrollBar(f, function(at) R.Scroll(f, at) end)
+	f.bar:SetPoint("TOPRIGHT", 0, 0)
+	f.bar:SetHeight(visible * R.ROW_H - 2)   -- the rows' own height: the last row has no gap under it
 	f.guide = R.Guide(f, w)
 	f.none = Wg.Text(f, "body", nil, 13)   -- a filter that leaves nobody: one line, not the first-run guide
 	f.none:SetPoint("TOPLEFT", 12, -16)
 	St.Color(f.none, St.SECOND)
 	f.none:Hide()
 	f:EnableMouseWheel(true)
-	f:SetScript("OnMouseWheel", function(self, delta)
-		self.offset = math.max(0, math.min(#(self.list or {}) - self.visible, self.offset - delta))
-		R.Update(self, self.list, self.now, self.first)
-	end)
+	f:SetScript("OnMouseWheel", function(self, delta) R.Scroll(self, self.offset - delta) end)
 	return f
+end
+
+-- Scroll so the row at `at` (0 = the first) is on top; clamped to the list.
+function R.Scroll(f, at)
+	f.offset = math.max(0, math.min(#(f.list or {}) - f.visible, at))
+	R.Update(f, f.list, f.now, f.first)
 end
 
 local function fillRow(row, r, n, now, calibrated, alt)
@@ -246,12 +253,5 @@ function R.Update(f, list, now, first)
 	if #f.list == 0 and filtered then
 		f.none:SetText(("No other characters on %s."):format((ns.AccountFilterLabel():gsub("^This", "this"))))
 	end
-	local over = #f.list - f.visible
-	f.thumb:SetShown(over > 0)
-	if over > 0 then
-		local h = f:GetHeight() * f.visible / #f.list
-		f.thumb:SetHeight(h)
-		f.thumb:ClearAllPoints()
-		f.thumb:SetPoint("TOPRIGHT", 0, -(f:GetHeight() - h) * f.offset / over)
-	end
+	f.bar:SetRange(#f.list, f.visible, f.offset)
 end

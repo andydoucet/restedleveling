@@ -13,7 +13,7 @@ RLFIX = { rested = 15200, xp = 9100, xpMax = 25200, level = 24, resting = false,
 if RLFIX_CASE == "andy" then   -- Andy's first in-game run (ILL-1274): on Le Nette, level 1, nothing rested, outside
 	RLFIX = { rested = 0, xp = 120, xpMax = 400, level = 1, resting = false, first = "Le", surname = "Nette" }
 end
-if RLFIX_CASE == "v112" then   -- Andy's 1.1.2 screenshot (ILL-1272): on Le Jette, level 48 gnome warrior, outside
+if RLFIX_CASE == "v112" or RLFIX_CASE == "many" or RLFIX_CASE == "few" then   -- Andy's 1.1.2 screenshot (ILL-1272), 1.3.1 many/few: on Le Jette, level 48 gnome warrior, outside
 	RLFIX = { rested = 260, xp = 40100, xpMax = 93800, level = 48, resting = false, first = "Le", surname = "Jette",
 		race = "Gnome", class = "WARRIOR", zone = "Feralas", subzone = "The Twin Colossals", bind = "Feathermoon Stronghold" }
 end
@@ -175,6 +175,49 @@ if RLFIX_CASE == "v112" then
 				profs = "Blacksmithing 185, Mining 201" }),
 		},
 	}
+end
+if RLFIX_CASE == "many" or RLFIX_CASE == "few" then
+	-- 1.3.1 (ILL-1299 follow-up, refs/ingame/andy_v130_main.png): Andy's roster as it grows. "many": Le Dette full on top
+	-- and twelve characters under her, more than the five rows show, so the list scrolls. "few": the first three only
+	-- (the hero and two rows), so three of the five slots stay blank. `now` is the levels banked now, as in v112.
+	local RATE = 0.05 / (8 * H)
+	local function alt(full, class, race, sex, level, xpMax, now, where, ago, extra)
+		local resting = where[1] ~= "outside"
+		local t = { full = full, class = class, race = race, sex = sex, level = level, xpMax = xpMax, resting = resting,
+			restKind = where[1], zone = where[2], subzone = where[3], ago = ago }
+		t.rested = math.max(0, math.floor((now - RATE * (resting and 1 or 0.25) * ago) * xpMax))
+		for k, v in pairs(extra or {}) do t[k] = v end
+		return char("N:" .. full .. "@?", t)
+	end
+	local inn = { "inn", "Dun Morogh", "Thunderbrew Distillery" }
+	local dol = { "inn", "Teldrassil", "Dolanaar" }
+	local tb = { "city", "Thunder Bluff" }
+	local list = {
+		alt("Le Dette", "WARLOCK", "Gnome", 3, 6, 2800, 1.5, inn, 2 * D, { rested = math.floor((1.5 - RATE * 7 * H) * 2800) }),
+		alt("Le Nette", "MAGE", "Gnome", 3, 6, 2800, 0.62, inn, 2 * D + 2 * H),
+		alt("Le Jedde", "PRIEST", "NightElf", 3, 10, 7600, 0.51, dol, D + 5 * H),
+		alt("Jacques Hammer", "SHAMAN", "Dwarf", 2, 5, 1900, 0.42, { "outside", "Dun Morogh", "Anvilmar" }, D + 3 * H),
+		alt("Amdo Rhen", "MAGE", "Gnome", 3, 7, 3600, 0.38, dol, D + 1 * H),
+		alt("Le Beouf", "DRUID", "Tauren", 2, 11, 8800, 0.33, tb, 23 * H),
+		alt("Le Bankken", "WARRIOR", "Human", 2, 8, 5000, 0.30, { "inn", "Elwynn Forest", "Goldshire" }, 3 * D,
+			{ account = B, src = "sync", via = B, syncedAt = T0 - 3 * H }),
+		alt("Le Hette", "HUNTER", "Dwarf", 3, 9, 6100, 0.27, inn, D + 9 * H),
+		alt("Moto Rhen", "ROGUE", "Gnome", 2, 12, 9400, 0.24, { "city", "Ironforge" }, 20 * H),
+		alt("Le Zette", "PALADIN", "Human", 3, 14, 12400, 0.21, { "inn", "Westfall", "Sentinel Hill" }, 18 * H),
+		alt("Dette Rhen", "WARLOCK", "Human", 3, 8, 5000, 0.17, { "outside", "Elwynn Forest", "Fargodeep Mine" }, 15 * H),
+		alt("Le Mette", "PRIEST", "Dwarf", 3, 6, 2800, 0.12, inn, 9 * H),
+		alt("Le Kette", "DRUID", "NightElf", 3, 5, 1900, 0.06, dol, 4 * H),
+	}
+	if RLFIX_CASE == "few" then for i = #list, 4, -1 do list[i] = nil end end
+	local chars = {}
+	for _, c in ipairs(list) do chars[c.key] = c end
+	chars["N:Le Jette@?"] = char("N:Le Jette@?", { full = "Le Jette", class = "WARRIOR", race = "Gnome", sex = 3, level = 48,
+		xpMax = 93800, rested = 260, resting = false, restKind = "outside", zone = "Feralas", ranks = 3, ago = 20 * 60 })
+	RestedLevelingDB = { version = 1, account = A, accountLabels = { [A] = "#2", [B] = "#3" }, calib = { rate = 1.0, n = 3 },
+		opts = { style = RLFIX_STYLE or "auto", showGrey = true, minimap = { hide = false } }, hidden = {}, alertsOff = {},
+		sync = { links = { ["Le Bankken"] = true }, confirmed = { ["le bankken"] = B },
+			peers = { [B] = { name = "Le Bankken", seen = T0 - 3 * H, lastSync = T0 - 3 * H, label = "#3" } } },
+		chars = chars }
 end
 if RLFIX_CASE == "look" or RLFIX_CASE == "v112" then
 	-- Saved looks (ILL-1279): Le Nette and Le Beouf each saved one. The sim has no screenshots and draws no 3D model,

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+v1.3.1 (ILL-1299 follow-up), a window that stays one size:
+
+- The list under the #1 card shows five characters, and the window keeps one height however many characters you
+  have: fewer than five leave the empty slots blank, and more than five get a scrollbar. Drag its thumb, click the
+  track to move a page of five, or use the mouse wheel to move one row. The window opens at the top of the list, and
+  the list keeps its place while it updates.
+- The rows always leave room for the scrollbar, so the columns never move, and the state chips stay lined up with
+  NOW PLAYING's.
+- Under ElvUI the scrollbar goes through ElvUI's own scrollbar skin, so a skin such as WC3 dresses it too.
+- The timeline shows five lanes and uses the same scrollbar. The Settings page, when it scrolls, uses it as well.
+
 v1.3 (ILL-1299), icon, title bar and settings:
 
 - An app icon: a golden hourglass under a silver crescent moon, with blue moonlight sand (generated for this addon).
